@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Developer Toolkit & Resources</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-glow: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 60%);
+            --secondary-glow: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 60%);
+            
+            --glass-bg: rgba(13, 20, 35, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-hover: rgba(0, 210, 255, 0.3);
+            
+            --text-primary: #f0f8ff;
+            --text-secondary: #94a3b8;
+            --accent-cyan: #00f5d4;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            
+            --font-main: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #030712;
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        /* Ambient background blobs for glassmorphism pop */
+        .ambient-bg {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .blob-1 {
+            width: 350px;
+            height: 350px;
+            background: #6366f1;
+            top: -50px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: #06b6d4;
+            bottom: 10%;
+            right: 5%;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 300px;
+            height: 300px;
+            background: #ec4899;
+            top: 40%;
+            left: 50%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) scale(1) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-50px) scale(1.1) rotate(120deg);
+            }
+            66% {
+                transform: translateY(40px) scale(0.9) rotate(240deg);
+            }
+        }
+
+        header {
+            max-width: 1200px;
+            margin: 0 auto 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .header-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #fff 40%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-title p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Glass Container Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Glassmorphic Panel Base style */
+        .glass-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Controls Section */
+        .controls-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 245, 212, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.5;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            padding: 0.75rem 1.25rem;
+            font-family: var(--font-main);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            color: var(--text-primary);
+            background: rgba(0, 245, 212, 0.1);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Resource Grid */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resource-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 245, 212, 0.05), rgba(139, 92, 246, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--glass-border-hover);
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.05);
+        }
+
+        .resource-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 2;
+        }
+
+        .category-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(139, 92, 246, 0.2);
+            color: #c084fc;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .category-badge.ui {
+            background: rgba(6, 182, 212, 0.2);
+            color: #22d3ee;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .category-badge.design {
+            background: rgba(236, 72, 153, 0.2);
+            color: #f472b6;
+            border: 1px solid rgba(236, 72, 153, 0.3);
+        }
+
+        .category-badge.sandbox {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .category-badge.hosting {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .favorite-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .favorite-btn:hover {
+            color: #ef4444;
+            transform: scale(1.15);
+        }
+
+        .favorite-btn.active {
+            color: #ef4444;
+        }
+
+        .card-body {
+            z-index: 2;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            min-height: 52px;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: flex-end;
+            z-index: 2;
+        }
+
+        .visit-link {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .visit-link:hover {
+            color: #fff;
+        }
+
+        /* Glass Generator Panel */
+        .generator-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.5rem;
+        }
+
+        .gen-control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .control-label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .control-val {
+            font-family: var(--font-mono);
+            color: var(--accent-cyan);
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            transition: background 0.3s;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 245, 212, 0.5);
+            transition: transform 0.1s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Live Preview Container */
+        .preview-container {
+            position: relative;
+            height: 150px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #1e1b4b, #311042);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .preview-shape-1 {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #8b5cf6;
+            left: 20%;
+            top: 15%;
+            filter: blur(2px);
+        }
+
+        .preview-shape-2 {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            background: #00f5d4;
+            right: 15%;
+            bottom: 10%;
+            transform: rotate(45deg);
+            filter: blur(1px);
+        }
+
+        .preview-glass-card {
+            width: 80%;
+            height: 70%;
+            border-radius: 12px;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+            color: #fff;
+            font-size: 0.8rem;
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3);
+        }
+
+        .preview-glass-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Code box */
+        .code-box-wrapper {
+            position: relative;
+        }
+
+        .code-box {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            resize: none;
+            height: 120px;
+            outline: none;
+            line-height: 1.4;
+        }
+
+        .btn-copy {
+            background: var(--accent-cyan);
+            border: none;
+            border-radius: 6px;
+            color: #030712;
+            padding: 0.5rem 1rem;
+            font-family: var(--font-main);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .btn-copy:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 0 15px rgba(0, 245, 212, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient background blobs -->
+    <div class="ambient-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Header Section -->
+    <header>
+        <div class="header-title">
+            <h1>Web Developer Toolkit</h1>
+            <p> Frosted-glass resource deck & CSS Morphism designer </p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Main Workspace -->
+        <main class="glass-panel">
+            <div class="controls-row">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="resource-search" class="search-input" placeholder="Search toolkit resources..." oninput="filterResources()">
+                </div>
+                <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+                <button class="filter-btn" onclick="setFilter('icons', this)">Icons</button>
+                <button class="filter-btn" onclick="setFilter('ui', this)">UI Libraries</button>
+                <button class="filter-btn" onclick="setFilter('design', this)">Design Tools</button>
+                <button class="filter-btn" onclick="setFilter('sandbox', this)">Playgrounds</button>
+                <button class="filter-btn" onclick="setFilter('hosting', this)">Hosting</button>
+                <button class="filter-btn" onclick="setFilter('starred', this)">⭐ Starred</button>
+            </div>
+
+            <div class="resource-grid" id="resource-grid">
+                <!-- Dynamic cards populated by script -->
+            </div>
+        </main>
+
+        <!-- Sidebar Designer -->
+        <aside class="glass-panel generator-sidebar">
+            <div>
+                <h2 class="section-title"> ✨ Glassmorphism Generator </h2>
+                <div class="preview-container">
+                    <div class="preview-shape-1"></div>
+                    <div class="preview-shape-2"></div>
+                    <div id="preview-card" class="preview-glass-card">
+                        <div class="preview-glass-title">Frosted Preview</div>
+                        <div style="font-size: 0.7rem; opacity: 0.8;">Live Morphism Render</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gen-controls">
+                <div class="gen-control-group">
+                    <div class="control-label-row">
+                        <span>Background Blur</span>
+                        <span class="control-val" id="val-blur">16px</span>
+                    </div>
+                    <input type="range" id="input-blur" class="slider" min="0" max="40" value="16" oninput="updateGenerator()">
+                </div>
+
+                <div class="gen-control-group">
+                    <div class="control-label-row">
+                        <span>Glass Opacity</span>
+                        <span class="control-val" id="val-opacity">0.45</span>
+                    </div>
+                    <input type="range" id="input-opacity" class="slider" min="0" max="100" value="45" oninput="updateGenerator()">
+                </div>
+
+                <div class="gen-control-group">
+                    <div class="control-label-row">
+                        <span>Saturation</span>
+                        <span class="control-val" id="val-saturate">180%</span>
+                    </div>
+                    <input type="range" id="input-saturate" class="slider" min="100" max="300" value="180" oninput="updateGenerator()">
+                </div>
+
+                <div class="gen-control-group">
+                    <div class="control-label-row">
+                        <span>Border Opacity</span>
+                        <span class="control-val" id="val-border">0.08</span>
+                    </div>
+                    <input type="range" id="input-border" class="slider" min="0" max="100" value="8" oninput="updateGenerator()">
+                </div>
+            </div>
+
+            <div>
+                <h3 style="font-size: 0.9rem; font-weight:600; margin-bottom: 0.5rem;"> Generated CSS </h3>
+                <div class="code-box-wrapper">
+                    <textarea id="css-output" class="code-box" readonly></textarea>
+                    <button class="btn-copy" onclick="copyCSS()">Copy CSS Stylesheet</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // Database of premium web tool assets
+        const resources = [
+            {
+                id: 1,
+                title: "Google Fonts / Icons",
+                desc: "High quality font catalog and clean vector iconography package.",
+                category: "icons",
+                url: "https://fonts.google.com/"
+            },
+            {
+                id: 2,
+                title: "SVGRepo",
+                desc: "Over 500,000+ free SVG vectors, icons, and logo sets for developers.",
+                category: "icons",
+                url: "https://www.svgrepo.com/"
+            },
+            {
+                id: 3,
+                title: "Heroicons",
+                desc: "Beautiful hand-crafted SVG icons by the makers of Tailwind CSS.",
+                category: "icons",
+                url: "https://heroicons.com/"
+            },
+            {
+                id: 4,
+                title: "Uiverse.io",
+                desc: "Community-built library of UI assets including buttons, cards, and inputs.",
+                category: "ui",
+                url: "https://uiverse.io/"
+            },
+            {
+                id: 5,
+                title: "DaisyUI",
+                desc: "Clean Tailwind CSS component class utilities with rich themes.",
+                category: "ui",
+                url: "https://daisyui.com/"
+            },
+            {
+                id: 6,
+                title: "Aceternity UI",
+                desc: "Stunning futuristic components to copy/paste into React & Next.js.",
+                category: "ui",
+                url: "https://ui.aceternity.com/"
+            },
+            {
+                id: 7,
+                title: "CSS Glassmorphism",
+                desc: "Fast glass-frosted generator tool to visualize complex layered UI.",
+                category: "design",
+                url: "https://css.glass/"
+            },
+            {
+                id: 8,
+                title: "Neumorphism.io",
+                desc: "Generate soft UI shadow styles for widgets and cards.",
+                category: "design",
+                url: "https://neumorphism.io/"
+            },
+            {
+                id: 9,
+                title: "CSS Gradient",
+                desc: "Interactive tool to create colorful gradients and export code.",
+                category: "design",
+                url: "https://cssgradient.io/"
+            },
+            {
+                id: 10,
+                title: "CodePen",
+                desc: "Social development environment to preview HTML/CSS/JS snippets.",
+                category: "sandbox",
+                url: "https://codepen.io/"
+            },
+            {
+                id: 11,
+                title: "StackBlitz",
+                desc: "Complete WebContainers powered node development environment in the browser.",
+                category: "sandbox",
+                url: "https://stackblitz.com/"
+            },
+            {
+                id: 12,
+                title: "Vercel Hosting",
+                desc: "Deploy web applications and serverless modules directly from Git.",
+                category: "hosting",
+                url: "https://vercel.com/"
+            },
+            {
+                id: 13,
+                title: "Netlify",
+                desc: "Instant build and global hosting platform for modern web projects.",
+                category: "hosting",
+                url: "https://www.netlify.com/"
+            }
+        ];
+
+        let currentFilter = 'all';
+        let starredIds = JSON.parse(localStorage.getItem('dev-bookmarks') || '[]');
+
+        function logConsoleAction(message, level = 'info') {
+            if (window.parent) {
+                window.parent.postMessage({
+                    type: 'log',
+                    message: message,
+                    level: level,
+                    app: 'Web Developer Toolkit'
+                }, '*');
+            }
+        }
+
+        // Initialize resource cards
+        function renderResources() {
+            const grid = document.getElementById('resource-grid');
+            grid.innerHTML = '';
+            
+            const searchTerm = document.getElementById('resource-search').value.toLowerCase();
+
+            const filtered = resources.filter(res => {
+                const matchesCategory = (currentFilter === 'all') || 
+                                        (currentFilter === 'starred' && starredIds.includes(res.id)) ||
+                                        (res.category === currentFilter);
+                
+                const matchesSearch = res.title.toLowerCase().includes(searchTerm) || 
+                                      res.desc.toLowerCase().includes(searchTerm);
+                
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 3rem;">No resources found. Try another query or category filter.</div>`;
+                return;
+            }
+
+            filtered.forEach(res => {
+                const isStarred = starredIds.includes(res.id);
+                const card = document.createElement('div');
+                card.className = 'resource-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="category-badge ${res.category}">${res.category}</span>
+                        <button class="favorite-btn ${isStarred ? 'active' : ''}" onclick="toggleStar(${res.id})" title="Add to My Toolkit">
+                            ${isStarred ? '★' : '☆'}
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">${res.title}</h3>
+                        <p class="card-desc">${res.desc}</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="${res.url}" target="_blank" class="visit-link" onclick="logConsoleAction('Navigating to external resource: ${res.title}')">
+                            Open Tool ↗
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleStar(id) {
+            if (starredIds.includes(id)) {
+                starredIds = starredIds.filter(x => x !== id);
+                logConsoleAction(`Removed item ID ${id} from toolkit bookmarks.`);
+            } else {
+                starredIds.push(id);
+                logConsoleAction(`Added item ID ${id} to toolkit bookmarks.`);
+            }
+            localStorage.setItem('dev-bookmarks', JSON.stringify(starredIds));
+            renderResources();
+        }
+
+        function setFilter(filter, el) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+            logConsoleAction(`Changed resource category filter to: ${filter}`);
+            renderResources();
+        }
+
+        function filterResources() {
+            renderResources();
+        }
+
+        // CSS Glassmorphism Generator Logic
+        function updateGenerator() {
+            const blur = document.getElementById('input-blur').value;
+            const opacity = document.getElementById('input-opacity').value / 100;
+            const saturate = document.getElementById('input-saturate').value;
+            const borderOpacity = document.getElementById('input-border').value / 100;
+
+            document.getElementById('val-blur').innerText = `${blur}px`;
+            document.getElementById('val-opacity').innerText = opacity;
+            document.getElementById('val-saturate').innerText = `${saturate}%`;
+            document.getElementById('val-border').innerText = borderOpacity;
+
+            // Apply preview styles
+            const previewCard = document.getElementById('preview-card');
+            
+            const backgroundStr = `rgba(255, 255, 255, ${opacity})`;
+            const borderStr = `1px solid rgba(255, 255, 255, ${borderOpacity})`;
+            const backdropFilterStr = `blur(${blur}px) saturate(${saturate}%)`;
+
+            previewCard.style.backgroundColor = backgroundStr;
+            previewCard.style.border = borderStr;
+            previewCard.style.backdropFilter = backdropFilterStr;
+            previewCard.style.webkitBackdropFilter = backdropFilterStr;
+
+            // Update code output
+            const cssText = `background: rgba(255, 255, 255, ${opacity});\n` +
+                            `border: 1px solid rgba(255, 255, 255, ${borderOpacity});\n` +
+                            `backdrop-filter: blur(${blur}px) saturate(${saturate}%);\n` +
+                            `-webkit-backdrop-filter: blur(${blur}px) saturate(${saturate}%);\n` +
+                            `border-radius: 12px;\n` +
+                            `box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);`;
+            
+            document.getElementById('css-output').value = cssText;
+        }
+
+        function copyCSS() {
+            const copyText = document.getElementById("css-output");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            
+            const copyBtn = document.querySelector('.btn-copy');
+            const originalText = copyBtn.innerText;
+            copyBtn.innerText = 'Copied to Clipboard! ✓';
+            logConsoleAction('Copied glassmorphism generator CSS styles.');
+            
+            setTimeout(() => {
+                copyBtn.innerText = originalText;
+            }, 2000);
+        }
+
+        // On Page Load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderResources();
+            updateGenerator();
+            logConsoleAction('Toolkit app page initialized.');
+        });
+    </script>
+</body>
+</html>

@@ -820,6 +820,10 @@
         <!-- Utilities Section -->
         <div class="nav-section" data-group="utilities">
             <div class="nav-section-title">Utilities</div>
+            <a class="nav-item" id="nav-app-toolkit" onclick="launchApp('Web Developer Toolkit', 'apps/WebToolsResources.html', 'nav-app-toolkit')" data-tooltip="Frosted-glass resource deck & CSS Morphism designer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                Web Developer Toolkit
+            </a>
             <a class="nav-item" id="nav-remover" onclick="showRemoverView()" data-tooltip="Open official Adobe Express background isolator">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 18V6"/><path d="M6 12h12"/></svg>
                 Background Remover
@@ -961,6 +965,7 @@
                         <button class="quick-btn" onclick="launchApp('Connect 4', 'apps/C4N8.htm', 'nav-game-c4')">Connect 4</button>
                         <button class="quick-btn" onclick="launchApp('Stix Stax Stonz', 'apps/StixStaxStonzV1.htm', 'nav-game-ss')">Stix Stax</button>
                         <button class="quick-btn" onclick="launchApp('Qamelot TD', 'apps/QamelotTacticalDefensev1.htm', 'nav-game-td1')">Qamelot TD</button>
+                        <button class="quick-btn" onclick="launchApp('Web Developer Toolkit', 'apps/WebToolsResources.html', 'nav-app-toolkit')">Dev Toolkit</button>
                         <button class="quick-btn" onclick="showRemoverView()">AI Remover</button>
                     </div>
                 </div>
@@ -1178,9 +1183,30 @@
             logConsoleAction(`Active style template changed to: ${theme}.`, "info");
         }
 
-        // 5. Iframe Load Spinner (Feature 3)
+        // 5. Iframe Load Spinner & Key Propagation (Feature 3 & 7)
         function hideIframeLoader() {
             document.getElementById("iframe-loader").classList.add("hidden");
+            
+            // Access same-origin iframe document to propagate hotkeys
+            const iframe = document.getElementById("app-iframe");
+            try {
+                if (iframe && iframe.contentWindow) {
+                    // Avoid duplicate event listener bindings
+                    iframe.contentWindow.document.removeEventListener("keydown", propagateIframeKeydown);
+                    iframe.contentWindow.document.addEventListener("keydown", propagateIframeKeydown);
+                }
+            } catch (err) {
+                console.warn("Could not bind iframe key listener:", err);
+            }
+        }
+
+        function propagateIframeKeydown(e) {
+            window.dispatchEvent(new KeyboardEvent('keydown', {
+                key: e.key,
+                altKey: e.altKey,
+                ctrlKey: e.ctrlKey,
+                shiftKey: e.shiftKey
+            }));
         }
 
         // 6. Metrics & LocalStorage Score Recorder (Feature 5)
