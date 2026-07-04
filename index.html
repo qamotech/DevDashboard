@@ -800,6 +800,426 @@
         .console-log-line.warn { color: var(--warning-color); }
         .console-log-line.error { color: var(--error-color); }
         .console-log-line.success { color: var(--success-color); }
+
+        /* Integrated Bookmarks Directory Styles */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
+        .category-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            backdrop-filter: blur(20px);
+            transition: var(--transition-smooth);
+        }
+        .category-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-active);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px var(--accent-glow-purple);
+        }
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.75rem;
+        }
+        .category-icon {
+            font-size: 1.3rem;
+        }
+        .bookmark-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+        .bookmark-item a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            transition: var(--transition-smooth);
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid transparent;
+        }
+        .bookmark-item a:hover {
+            color: var(--text-primary);
+            background: rgba(0, 210, 255, 0.08);
+            border-color: rgba(0, 210, 255, 0.15);
+            padding-left: 1rem;
+        }
+        .bookmark-item a::after {
+            content: "→";
+            opacity: 0;
+            transition: transform 0.2s, opacity 0.2s;
+            transform: translateX(-4px);
+            font-weight: bold;
+            color: var(--accent-cyan);
+        }
+        .bookmark-item a:hover::after {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Integrated Dev Tools Layout Styles */
+        .tools-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 2rem;
+            width: 100%;
+        }
+        @media (max-width: 900px) {
+            .tools-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .tools-sidebar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            height: fit-content;
+        }
+        .tool-nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: var(--font-main);
+            transition: var(--transition-smooth);
+        }
+        .tool-nav-btn:hover, .tool-nav-btn.active {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .tool-nav-btn.active {
+            background: rgba(0, 210, 255, 0.1);
+            border-left: 3px solid var(--accent-indigo);
+            border-radius: 4px 8px 8px 4px;
+        }
+        .tool-content-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+        }
+        .tool-panel {
+            display: none;
+        }
+        .tool-panel.active {
+            display: block;
+        }
+        .tool-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .tool-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        .btn-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        button.action-btn {
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
+            border: none;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-family: var(--font-main);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        button.action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--accent-glow-purple);
+        }
+        button.secondary-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-family: var(--font-main);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        button.secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--text-secondary);
+        }
+        .tool-output {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            min-height: 120px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            overflow-x: auto;
+            position: relative;
+        }
+        .regex-match {
+            background-color: rgba(245, 158, 11, 0.3);
+            border-bottom: 2px solid var(--warning-color);
+            color: white;
+        }
+
+        /* Integrated Optimizations Styles */
+        .guide-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            width: 100%;
+        }
+        @media (max-width: 900px) {
+            .guide-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .guide-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            backdrop-filter: blur(20px);
+        }
+        .guide-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.75rem;
+        }
+        .guide-card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .guide-item h4 {
+            font-size: 0.95rem;
+            color: var(--accent-cyan);
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+        .guide-item p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .guide-item code {
+            background: rgba(0, 0, 0, 0.4);
+            color: var(--error-color);
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+        }
+
+        /* 20 Features Integration Styles */
+        .md-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            height: 380px;
+            margin-bottom: 1.25rem;
+        }
+        @media (max-width: 768px) {
+            .md-layout {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+        .md-editor {
+            height: 100%;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            resize: none;
+            margin-bottom: 0 !important;
+        }
+        .md-preview {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-y: auto;
+            height: 100%;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+        .md-preview h1, .md-preview h2, .md-preview h3 {
+            margin-bottom: 0.5rem;
+            color: var(--accent-cyan);
+        }
+        .md-preview p {
+            margin-bottom: 0.75rem;
+        }
+        .md-preview ul {
+            margin-left: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        .shadow-generator-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .shadow-generator-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .shadow-preview-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+        }
+        .shadow-preview-box {
+            width: 140px;
+            height: 140px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            transition: box-shadow 0.1s ease;
+        }
+        .flexbox-playground {
+            display: flex;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            min-height: 200px;
+            padding: 1rem;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .flexbox-item {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-family: var(--font-mono);
+        }
+        .palette-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .palette-color {
+            height: 90px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s ease;
+        }
+        .palette-color:hover {
+            transform: scale(1.05);
+        }
+        .contrast-preview {
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+        .contrast-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.25rem;
+        }
+        .badge-pass { background-color: var(--success-color); color: #000; }
+        .badge-fail { background-color: var(--error-color); color: #fff; }
+
+        .viewport-ruler-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .custom-link-form {
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            background: rgba(0,0,0,0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .custom-link-form.active {
+            display: flex;
+        }
     </style>
 </head>
 <body>
@@ -827,6 +1247,23 @@
             <a class="nav-item" id="nav-remover" onclick="showRemoverView()" data-tooltip="Open official Adobe Express background isolator">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 18V6"/><path d="M6 12h12"/></svg>
                 Background Remover
+            </a>
+        </div>
+
+        <!-- Developer Suite Section -->
+        <div class="nav-section" data-group="devsuite">
+            <div class="nav-section-title">Developer Suite</div>
+            <a class="nav-item" id="nav-bookmarks" onclick="showBookmarksView()" data-tooltip="Curated directory of 100+ developer links">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                Bookmarks Directory
+            </a>
+            <a class="nav-item" id="nav-devtools" onclick="showDevToolsView()" data-tooltip="Offline helper utilities: JSON, Regex, Color, Text">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                Instant DevTools
+            </a>
+            <a class="nav-item" id="nav-optimizations" onclick="showOptimizationsView()" data-tooltip="Chrome developer flags and key shortcuts">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                Chrome Optimizations
             </a>
         </div>
 
@@ -895,9 +1332,13 @@
                     <option value="glass">Glassmorphic</option>
                 </select>
             </div>
-            <div class="status-badge">
-                <span class="status-dot"></span>
-                <span>Environment: Static/Web</span>
+            <div class="status-badge" id="network-badge">
+                <span class="status-dot" id="network-dot" style="background-color: var(--success-color); box-shadow: 0 0 8px var(--success-color);"></span>
+                <span id="network-text">Status: Online</span>
+            </div>
+            <div class="viewport-ruler-badge">
+                <span>📏 Viewport:</span>
+                <span id="viewport-dims" style="font-family: var(--font-mono); color: var(--accent-cyan);">0x0</span>
             </div>
         </div>
     </aside>
@@ -927,6 +1368,10 @@
                         📓 Developer Notebook (Autosaves)
                     </div>
                     <textarea class="notepad-textarea" id="notepad" placeholder="Write temporary developer notes, CNAME configs, or session details here... (Saves automatically to browser)" oninput="saveNote(this.value)"></textarea>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                        <button class="quick-btn" style="flex: 1;" onclick="clearNotepad()">Clear Notepad</button>
+                        <button class="quick-btn" style="flex: 1;" onclick="exportNotepad()">Export .TXT</button>
+                    </div>
                 </div>
 
                 <!-- High Scores / Metrics Widget -->
@@ -959,7 +1404,7 @@
                     <div class="widget-title">
                         🚀 Quick Launch Deck
                     </div>
-                    <div class="quick-grid">
+                    <div class="quick-grid" id="quick-launch-grid">
                         <button class="quick-btn" onclick="launchApp('CalcuN8r', 'apps/CalcuN8r.html', 'nav-app-calc')">CalcuN8r</button>
                         <button class="quick-btn" onclick="launchApp('QamoMATH', 'apps/QamoMATH/QamoMATH.html', 'nav-app-math')">QamoMATH</button>
                         <button class="quick-btn" onclick="launchApp('Connect 4', 'apps/C4N8.htm', 'nav-game-c4')">Connect 4</button>
@@ -967,6 +1412,25 @@
                         <button class="quick-btn" onclick="launchApp('Qamelot TD', 'apps/QamelotTacticalDefensev1.htm', 'nav-game-td1')">Qamelot TD</button>
                         <button class="quick-btn" onclick="launchApp('Web Developer Toolkit', 'apps/WebToolsResources.html', 'nav-app-toolkit')">Dev Toolkit</button>
                         <button class="quick-btn" onclick="showRemoverView()">AI Remover</button>
+                    </div>
+                    <div id="quick-launch-custom-container" class="quick-grid" style="margin-top: 0.5rem; gap: 0.5rem;">
+                        <!-- Dynamic custom shortcuts loaded from localStorage -->
+                    </div>
+                    <button class="quick-btn" style="width: 100%; margin-top: 0.5rem; font-weight: 600;" onclick="toggleCustomLinkForm()">+ Add Custom Launch Link</button>
+                    <div id="custom-link-form" class="custom-link-form">
+                        <input type="text" id="custom-link-name" style="margin-bottom: 0.5rem;" placeholder="Name (e.g. My GitHub)">
+                        <input type="text" id="custom-link-url" style="margin-bottom: 0.5rem;" placeholder="URL (e.g. https://github.com)">
+                        <button class="action-btn" onclick="addCustomLaunchLink()">Add Shortcut</button>
+                    </div>
+                </div>
+
+                <!-- User Agent & System Info Widget -->
+                <div class="widget-card">
+                    <div class="widget-title">
+                        💻 System & Browser User Agent Info
+                    </div>
+                    <div style="font-size: 0.8rem; line-height: 1.6; color: var(--text-secondary);" id="user-agent-details">
+                        Loading system details...
                     </div>
                 </div>
 
@@ -1049,14 +1513,298 @@
             </div>
         </div>
 
+        <!-- VIEW 4: Bookmarks Directory -->
+        <div class="view-content" id="view-bookmarks">
+            <div class="search-wrapper" style="margin-bottom: 1.5rem; max-width: 600px;">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="sidebar-search" id="bookmark-search" placeholder="Search 100+ developer links..." oninput="filterBookmarks(this.value)">
+            </div>
+            <div class="category-grid" id="bookmark-grid">
+                <!-- Loaded dynamically by JS -->
+            </div>
+        </div>
+
+        <!-- VIEW 5: Instant DevTools -->
+        <div class="view-content" id="view-devtools">
+            <div class="tools-layout">
+                <div class="tools-sidebar">
+                    <button class="tool-nav-btn active" id="btn-tool-json" onclick="switchTool('json')">🔧 JSON Suite</button>
+                    <button class="tool-nav-btn" id="btn-tool-regex" onclick="switchTool('regex')">🔬 Regex Tester</button>
+                    <button class="tool-nav-btn" id="btn-tool-color" onclick="switchTool('color')">🎨 Color & Contrast</button>
+                    <button class="tool-nav-btn" id="btn-tool-text" onclick="switchTool('text')">📝 Text & Cryptography</button>
+                    <button class="tool-nav-btn" id="btn-tool-markdown" onclick="switchTool('markdown')">✍️ Markdown Live</button>
+                    <button class="tool-nav-btn" id="btn-tool-styling" onclick="switchTool('styling')">📐 Layout & Styling</button>
+                    <button class="tool-nav-btn" id="btn-tool-epoch" onclick="switchTool('epoch')">⏱️ Unix Epoch</button>
+                    <button class="tool-nav-btn" id="btn-tool-jwt" onclick="switchTool('jwt')">🔑 JWT Decoder</button>
+                </div>
+                <div class="tool-content-card">
+                    <!-- Tool: JSON Formatter & Converter -->
+                    <div id="tool-json" class="tool-panel active">
+                        <h2 class="tool-title">JSON Formatter & Converter</h2>
+                        <p class="tool-desc">Validate, format, minify JSON or convert structures to CSV format.</p>
+                        <textarea class="notepad-textarea" style="height: 180px; font-family: var(--font-mono);" id="json-input" placeholder='[{"name":"dev","active":true},{"name":"admin","active":false}]'></textarea>
+                        <div class="btn-row">
+                            <button class="action-btn" onclick="formatJSON(2)">Format (2 Spaces)</button>
+                            <button class="action-btn" onclick="formatJSON(4)">Format (4 Spaces)</button>
+                            <button class="secondary-btn" onclick="minifyJSON()">Minify</button>
+                            <button class="action-btn" style="background: linear-gradient(135deg, var(--success-color), var(--accent-cyan)); color:#000;" onclick="convertJSONToCSV()">Convert to CSV</button>
+                            <button class="secondary-btn" onclick="clearTool('json-input', 'json-output')">Clear</button>
+                        </div>
+                        <div class="tool-output" id="json-output">// Output will appear here</div>
+                    </div>
+
+                    <!-- Tool: Regex Tester -->
+                    <div id="tool-regex" class="tool-panel">
+                        <h2 class="tool-title">Regex Tester</h2>
+                        <p class="tool-desc">Test regular expressions against target strings in real-time.</p>
+                        <label>Regular Expression (without slashes)</label>
+                        <input type="text" style="font-family: var(--font-mono);" id="regex-pattern" placeholder="[a-zA-Z0-9]+@[a-z]+\.[a-z]+">
+                        <label>Target String</label>
+                        <textarea class="notepad-textarea" style="height: 100px; font-family: var(--font-mono);" id="regex-text" placeholder="Enter test string here... example@test.com"></textarea>
+                        <div class="btn-row">
+                            <button class="action-btn" onclick="runRegex()">Test Matches</button>
+                            <button class="secondary-btn" onclick="clearTool('regex-pattern', 'regex-output'); document.getElementById('regex-text').value=''">Clear</button>
+                        </div>
+                        <div class="tool-output" id="regex-output">// Results will appear here</div>
+                    </div>
+
+                    <!-- Tool: Color, Palette & Contrast -->
+                    <div id="tool-color" class="tool-panel">
+                        <h2 class="tool-title">Color Space, Palette & Contrast</h2>
+                        <p class="tool-desc">Convert spaces, check WCAG contrast accessibility ratios, or generate harmonized color sets.</p>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.25rem;">
+                            <div>
+                                <label>Convert HEX / RGB Input</label>
+                                <input type="text" style="font-family: var(--font-mono);" id="color-input" placeholder="#06b6d4 or rgb(6, 182, 212)">
+                                <button class="action-btn" style="width: 100%;" onclick="convertColor()">Convert Spaces</button>
+                            </div>
+                            <div>
+                                <label>WCAG Contrast Ratio Checker</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <input type="text" id="contrast-bg" style="font-family: var(--font-mono);" placeholder="BG: #030712" value="#030712">
+                                    <input type="text" id="contrast-fg" style="font-family: var(--font-mono);" placeholder="FG: #00f5d4" value="#00f5d4">
+                                </div>
+                                <button class="action-btn" style="width: 100%;" onclick="checkContrast()">Calculate Contrast</button>
+                            </div>
+                        </div>
+                        <div class="contrast-preview" id="contrast-box" style="background-color: #030712; color: #00f5d4;">
+                            Contrast Preview Text (Normal & Large)
+                            <div style="margin-top: 0.5rem;" id="contrast-badges">
+                                <!-- Badges loaded here -->
+                            </div>
+                        </div>
+                        <label>Generate Harmonious Color Palette</label>
+                        <div class="palette-container" id="palette-container">
+                            <!-- Colors generated here -->
+                        </div>
+                        <button class="secondary-btn" style="width: 100%;" onclick="generatePalette()">🎲 Generate Random Palette</button>
+                        <div class="tool-output" style="margin-top: 1rem;" id="color-output">// Conversion values will appear here</div>
+                    </div>
+
+                    <!-- Tool: Text & Cryptography Utilities -->
+                    <div id="tool-text" class="tool-panel">
+                        <h2 class="tool-title">Text & Cryptographic Utilities</h2>
+                        <p class="tool-desc">Encode inputs, calculate hash digests, generate Lorem Ipsum or secure UUIDs offline.</p>
+                        <textarea class="notepad-textarea" style="height: 120px; font-family: var(--font-mono);" id="text-input" placeholder="Type or paste target text here..."></textarea>
+                        
+                        <div class="btn-row">
+                            <button class="action-btn" onclick="textStats()">Analyze Stats</button>
+                            <button class="action-btn" onclick="base64Encode()">Base64 Encode</button>
+                            <button class="action-btn" onclick="base64Decode()">Base64 Decode</button>
+                            <button class="secondary-btn" onclick="urlEncode()">URL Encode</button>
+                            <button class="secondary-btn" onclick="urlDecode()">URL Decode</button>
+                            <button class="secondary-btn" onclick="htmlEntityEncode()">HTML Encode</button>
+                            <button class="secondary-btn" onclick="htmlEntityDecode()">HTML Decode</button>
+                        </div>
+                        <div style="border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 1rem; display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem;">
+                            <div>
+                                <label>Generate SHA-256 Digest Hash</label>
+                                <button class="action-btn" style="width: 100%;" onclick="generateHashSHA256()">Generate SHA-256 Hash</button>
+                            </div>
+                            <div>
+                                <label>Lorem Ipsum Dummy Text Generator</label>
+                                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                    <input type="number" id="lorem-paragraphs" style="background: rgba(3,7,18,0.8); border: 1px solid var(--border-color); border-radius: 8px; color: white; padding: 0.8rem; font-size: 0.95rem; width: 80px;" min="1" max="10" value="3">
+                                    <button class="secondary-btn" style="flex:1;" onclick="generateLoremIpsum()">Generate Lorem</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <label>Secure Cryptographic UUID/GUID v4 Generator</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="number" id="uuid-count" style="background: rgba(3,7,18,0.8); border: 1px solid var(--border-color); border-radius: 8px; color: white; padding: 0.8rem; font-size: 0.95rem; width: 80px;" min="1" max="50" value="5">
+                                <button class="action-btn" style="flex: 1;" onclick="generateUUIDv4()">Generate UUID v4 List</button>
+                            </div>
+                        </div>
+                        <div class="tool-output" style="margin-top: 1rem;" id="text-output">// Results will appear here</div>
+                    </div>
+
+                    <!-- Tool: Markdown Previewer -->
+                    <div id="tool-markdown" class="tool-panel">
+                        <h2 class="tool-title">Markdown Editor & Live Previewer</h2>
+                        <p class="tool-desc">Draft styled outlines or README documentation with instant parsed HTML preview.</p>
+                        <div class="md-layout">
+                            <textarea class="notepad-textarea md-editor" id="markdown-input" placeholder="# Document Header&#10;&#10;Use markdown syntax like:&#10;- **Bold font**&#10;- *Italics*&#10;- [Hyperlinks](https://google.com)" oninput="renderMarkdownPreview()"></textarea>
+                            <div class="md-preview" id="markdown-preview"></div>
+                        </div>
+                        <button class="secondary-btn" style="width:100%;" onclick="clearTool('markdown-input', 'markdown-preview')">Clear Editor</button>
+                    </div>
+
+                    <!-- Tool: Layout & Styling Playroom -->
+                    <div id="tool-styling" class="tool-panel">
+                        <h2 class="tool-title">Layout & Shadow Playground</h2>
+                        <p class="tool-desc">Visualize box shadow properties, customize layouts, and export clean CSS declarations.</p>
+                        <div class="shadow-generator-layout">
+                            <div>
+                                <label>Offset X (<span id="val-shadow-x">8px</span>)</label>
+                                <input type="range" class="slider" id="shadow-x" min="-50" max="50" value="8" oninput="updateBoxShadow()">
+                                <label>Offset Y (<span id="val-shadow-y">8px</span>)</label>
+                                <input type="range" class="slider" id="shadow-y" min="-50" max="50" value="8" oninput="updateBoxShadow()">
+                                <label>Blur Radius (<span id="val-shadow-blur">24px</span>)</label>
+                                <input type="range" class="slider" id="shadow-blur" min="0" max="100" value="24" oninput="updateBoxShadow()">
+                                <label>Spread Radius (<span id="val-shadow-spread">0px</span>)</label>
+                                <input type="range" class="slider" id="shadow-spread" min="-20" max="50" value="0" oninput="updateBoxShadow()">
+                                <label>Opacity (<span id="val-shadow-opacity">0.25</span>)</label>
+                                <input type="range" class="slider" id="shadow-opacity" min="0" max="100" value="25" oninput="updateBoxShadow()">
+                            </div>
+                            <div class="shadow-preview-container">
+                                <div class="shadow-preview-box" id="shadow-preview-box"></div>
+                            </div>
+                        </div>
+                        <label>Flexbox Layout Playground</label>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem;">
+                            <div>
+                                <label>Flex Direction</label>
+                                <select id="flex-dir" class="theme-select" style="width: 100%; height: 38px; border: 1px solid var(--border-color); border-radius: 8px; background:#000;" onchange="updateFlexbox()">
+                                    <option value="row">row</option>
+                                    <option value="row-reverse">row-reverse</option>
+                                    <option value="column">column</option>
+                                    <option value="column-reverse">column-reverse</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Justify Content</label>
+                                <select id="flex-justify" class="theme-select" style="width: 100%; height: 38px; border: 1px solid var(--border-color); border-radius: 8px; background:#000;" onchange="updateFlexbox()">
+                                    <option value="flex-start">flex-start</option>
+                                    <option value="flex-end">flex-end</option>
+                                    <option value="center">center</option>
+                                    <option value="space-between">space-between</option>
+                                    <option value="space-around">space-around</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Align Items</label>
+                                <select id="flex-align" class="theme-select" style="width: 100%; height: 38px; border: 1px solid var(--border-color); border-radius: 8px; background:#000;" onchange="updateFlexbox()">
+                                    <option value="stretch">stretch</option>
+                                    <option value="flex-start">flex-start</option>
+                                    <option value="flex-end">flex-end</option>
+                                    <option value="center">center</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flexbox-playground" id="flexbox-playground">
+                            <div class="flexbox-item">1</div>
+                            <div class="flexbox-item">2</div>
+                            <div class="flexbox-item">3</div>
+                        </div>
+                        <div class="tool-output" id="styling-output">// CSS layouts will appear here</div>
+                    </div>
+
+                    <!-- Tool: Unix Timestamp Converter -->
+                    <div id="tool-epoch" class="tool-panel">
+                        <h2 class="tool-title">Unix Epoch Timestamp Converter</h2>
+                        <p class="tool-desc">Calculate dates from epoch timestamps, or fetch the exact numerical system epoch value.</p>
+                        <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1.25rem; text-align: center;">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase;">Current Epoch Timestamp</span>
+                            <div style="font-family: var(--font-mono); font-size: 2rem; font-weight: 700; color: var(--accent-cyan); margin: 0.25rem 0;" id="live-epoch">LOADING...</div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.25rem;">
+                            <div>
+                                <label>Convert Timestamp to Date</label>
+                                <input type="text" id="epoch-input-val" style="font-family: var(--font-mono);" placeholder="e.g. 1782079525">
+                                <button class="action-btn" style="width: 100%;" onclick="convertEpochToDate()">Convert Epoch</button>
+                            </div>
+                            <div>
+                                <label>Convert Date to Timestamp</label>
+                                <input type="text" id="epoch-input-date" style="font-family: var(--font-mono);" placeholder="e.g. 2026-07-04T05:00:00">
+                                <button class="action-btn" style="width: 100%;" onclick="convertDateToEpoch()">Convert Date</button>
+                            </div>
+                        </div>
+                        <div class="tool-output" id="epoch-output">// Conversion results will appear here</div>
+                    </div>
+
+                    <!-- Tool: JWT Decoder -->
+                    <div id="tool-jwt" class="tool-panel">
+                        <h2 class="tool-title">JWT Decoder</h2>
+                        <p class="tool-desc">Decode JSON Web Tokens instantly offline. (Token details are parsed locally without transmission).</p>
+                        <textarea class="notepad-textarea" style="height: 100px; font-family: var(--font-mono);" id="jwt-input" placeholder="Paste your jwt token here..."></textarea>
+                        <div class="btn-row">
+                            <button class="action-btn" onclick="decodeJWT()">Decode JWT</button>
+                            <button class="secondary-btn" onclick="clearTool('jwt-input', 'jwt-output')">Clear</button>
+                        </div>
+                        <div class="tool-output" id="jwt-output">// JWT Payload elements will be rendered here</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 6: Chrome Optimizations -->
+        <div class="view-content" id="view-optimizations">
+            <div class="guide-grid">
+                <div class="guide-card">
+                    <h3>⚙️ Chrome Flags & Hidden Settings</h3>
+                    <ul>
+                        <li class="guide-item">
+                            <h4>JavaScript Harmony</h4>
+                            <p>Enable experimental JavaScript features: Go to <code>chrome://flags/#enable-javascript-harmony</code> and set to Enabled.</p>
+                        </li>
+                        <li class="guide-item">
+                            <h4>Experimental WebAssembly</h4>
+                            <p>Test cutting-edge WebAssembly features: Go to <code>chrome://flags/#enable-experimental-web-assembly-features</code>.</p>
+                        </li>
+                        <li class="guide-item">
+                            <h4>Developer Tools Experiments</h4>
+                            <p>Access hidden features in DevTools: Open DevTools, click Settings Gear -> Experiments, and check experimental options.</p>
+                        </li>
+                        <li class="guide-item">
+                            <h4>Local Overrides (Extremely Powerful)</h4>
+                            <p>Save local modifications of assets to serve instead of remote ones. Go to DevTools -> Sources -> Overrides and select a local directory.</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="guide-card">
+                    <h3>⌨️ Key DevTools Keyboard Shortcuts</h3>
+                    <ul>
+                        <li class="guide-item">
+                            <h4>Command Menu</h4>
+                            <p>Open settings, run code snippets, or run commands: <code>Ctrl + Shift + P</code> (Windows) / <code>Cmd + Shift + P</code> (Mac).</p>
+                        </li>
+                        <li class="guide-item">
+                            <h4>Console Clear & Toggle</h4>
+                            <p>Toggle DevTools: <code>F12</code> or <code>Ctrl + Shift + I</code>. Clear Console: <code>Ctrl + L</code>.</p>
+                        </li>
+                        <li class="guide-item">
+                            <h4>Inspect Mode</h4>
+                            <p>Select an element on the page to inspect: <code>Ctrl + Shift + C</code>.</p>
+                        </li>
+                        <li class="guide-item">
+                            <h4>Device Mode</h4>
+                            <p>Toggle mobile/responsive layout simulation: <code>Ctrl + Shift + M</code>.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         <!-- collapsible logs drawer -->
         <div class="dev-console collapsed" id="dev-console">
-            <div class="dev-console-header" onclick="toggleDevConsole()">
-                <span style="display: flex; align-items: center; gap: 0.5rem;">
+            <div class="dev-console-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="display: flex; align-items: center; gap: 0.5rem; flex: 1;" onclick="toggleDevConsole()">
                     <span class="console-indicator"></span>
                     Developer Console Logs
                 </span>
-                <span id="dev-console-toggle-icon">▲</span>
+                <button class="quick-btn" style="padding: 0.2rem 0.5rem; font-size: 0.7rem; margin-right: 0.75rem;" onclick="exportConsoleLogs(event)">💾 Export Logs</button>
+                <span id="dev-console-toggle-icon" onclick="toggleDevConsole()">▲</span>
             </div>
             <div class="dev-console-body" id="dev-console-body">
                 <div class="console-log-line info">> DevConsole initialized. Listening to dashboard events.</div>
@@ -1084,6 +1832,22 @@
 
             // Load metrics from localStorage
             loadMetrics();
+
+            // Initialize Bookmarks Directory
+            initBookmarks();
+
+            // Load custom shortcuts & viewport metrics
+            initCustomLaunchLinks();
+            initSystemInfo();
+            updateNetworkStatus();
+            window.addEventListener('online', updateNetworkStatus);
+            window.addEventListener('offline', updateNetworkStatus);
+            
+            updateViewportDimensions();
+            window.addEventListener('resize', updateViewportDimensions);
+            
+            setInterval(updateLiveEpoch, 1000);
+            updateLiveEpoch();
 
             // Setup iframe console message listener (Feature 5 & 10)
             window.addEventListener("message", (event) => {
@@ -1258,6 +2022,18 @@
             body.scrollTop = body.scrollHeight;
         }
 
+        function exportConsoleLogs(e) {
+            if (e) e.stopPropagation();
+            const lines = Array.from(document.querySelectorAll("#dev-console-body .console-log-line")).map(el => el.innerText);
+            const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "dev_console_logs.log";
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
         // Navigation Views Controller
         function showHomeView() {
             // Clean sidebar state
@@ -1266,6 +2042,9 @@
             // Toggle panels
             document.getElementById("view-app-viewer").classList.remove("active");
             document.getElementById("view-remover").classList.remove("active");
+            document.getElementById("view-bookmarks").classList.remove("active");
+            document.getElementById("view-devtools").classList.remove("active");
+            document.getElementById("view-optimizations").classList.remove("active");
             document.getElementById("view-home").classList.add("active");
 
             // Titles reset
@@ -1282,6 +2061,9 @@
 
             document.getElementById("view-home").classList.remove("active");
             document.getElementById("view-app-viewer").classList.remove("active");
+            document.getElementById("view-bookmarks").classList.remove("active");
+            document.getElementById("view-devtools").classList.remove("active");
+            document.getElementById("view-optimizations").classList.remove("active");
             document.getElementById("view-remover").classList.add("active");
 
             document.getElementById("view-title").innerText = "AI Background Remover";
@@ -1300,6 +2082,9 @@
             // Hide normal panels, show app frame
             document.getElementById("view-home").classList.remove("active");
             document.getElementById("view-remover").classList.remove("active");
+            document.getElementById("view-bookmarks").classList.remove("active");
+            document.getElementById("view-devtools").classList.remove("active");
+            document.getElementById("view-optimizations").classList.remove("active");
             document.getElementById("view-app-viewer").classList.add("active");
 
             // Setup loading loader overlay
@@ -1334,6 +2119,939 @@
                 });
             } else {
                 document.exitFullscreen();
+            }
+        }
+
+        // --- Integrated Developer Suite Logic ---
+
+        function showBookmarksView() {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById("nav-bookmarks").classList.add('active');
+
+            document.getElementById("view-home").classList.remove("active");
+            document.getElementById("view-remover").classList.remove("active");
+            document.getElementById("view-app-viewer").classList.remove("active");
+            document.getElementById("view-devtools").classList.remove("active");
+            document.getElementById("view-optimizations").classList.remove("active");
+            document.getElementById("view-bookmarks").classList.add("active");
+
+            document.getElementById("view-title").innerText = "Bookmarks Directory";
+            document.getElementById("view-subtitle").innerText = "Curated directory of 100+ developer links";
+
+            document.getElementById("app-iframe").src = '';
+            logConsoleAction("Switched workspace view to: Bookmarks Directory.", "info");
+        }
+
+        function showDevToolsView() {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById("nav-devtools").classList.add('active');
+
+            document.getElementById("view-home").classList.remove("active");
+            document.getElementById("view-remover").classList.remove("active");
+            document.getElementById("view-app-viewer").classList.remove("active");
+            document.getElementById("view-bookmarks").classList.remove("active");
+            document.getElementById("view-optimizations").classList.remove("active");
+            document.getElementById("view-devtools").classList.add("active");
+
+            document.getElementById("view-title").innerText = "Instant DevTools";
+            document.getElementById("view-subtitle").innerText = "Offline helper utilities for format, conversion, and validation";
+
+            document.getElementById("app-iframe").src = '';
+            logConsoleAction("Switched workspace view to: Instant DevTools.", "info");
+        }
+
+        function showOptimizationsView() {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById("nav-optimizations").classList.add('active');
+
+            document.getElementById("view-home").classList.remove("active");
+            document.getElementById("view-remover").classList.remove("active");
+            document.getElementById("view-app-viewer").classList.remove("active");
+            document.getElementById("view-bookmarks").classList.remove("active");
+            document.getElementById("view-devtools").classList.remove("active");
+            document.getElementById("view-optimizations").classList.add("active");
+
+            document.getElementById("view-title").innerText = "Chrome Optimizations";
+            document.getElementById("view-subtitle").innerText = "Developer flags, hidden settings, and key shortcuts";
+
+            document.getElementById("app-iframe").src = '';
+            logConsoleAction("Switched workspace view to: Chrome Optimizations.", "info");
+        }
+
+        // Embed the 100+ bookmarks data direct inside the page for offline capabilities
+        const bookmarks = {
+            "Official Documentation": [
+                {"name": "MDN Web Docs", "url": "https://developer.mozilla.org/"},
+                {"name": "HTML Living Standard", "url": "https://html.spec.whatwg.org/"},
+                {"name": "ECMAScript Spec", "url": "https://tc39.es/ecma262/"},
+                {"name": "W3C Standards", "url": "https://www.w3.org/TR/"},
+                {"name": "TypeScript Docs", "url": "https://www.typescriptlang.org/docs/"},
+                {"name": "React Documentation", "url": "https://react.dev/"},
+                {"name": "Next.js Docs", "url": "https://nextjs.org/docs"},
+                {"name": "Vue.js Guide", "url": "https://vuejs.org/guide/introduction.html"},
+                {"name": "Svelte Docs", "url": "https://svelte.dev/docs"},
+                {"name": "Tailwind CSS Docs", "url": "https://tailwindcss.com/docs"},
+                {"name": "Node.js API Reference", "url": "https://nodejs.org/api/"},
+                {"name": "Express.js Guide", "url": "https://expressjs.com/"},
+                {"name": "Vite.js Guide", "url": "https://vite.dev/guide/"},
+                {"name": "Chrome DevTools Docs", "url": "https://developer.chrome.com/docs/devtools/"},
+                {"name": "Web.dev (Google)", "url": "https://web.dev/"}
+            ],
+            "Frontend Frameworks & Libs": [
+                {"name": "React Router", "url": "https://reactrouter.com/"},
+                {"name": "Redux Toolkit", "url": "https://redux-toolkit.js.org/"},
+                {"name": "Zustand (State)", "url": "https://zustand-demo.pmnd.rs/"},
+                {"name": "TanStack Query", "url": "https://tanstack.com/query/latest"},
+                {"name": "Framer Motion", "url": "https://www.framer.com/motion/"},
+                {"name": "Three.js (3D)", "url": "https://threejs.org/"},
+                {"name": "Chart.js", "url": "https://www.chartjs.org/"},
+                {"name": "D3.js", "url": "https://d3js.org/"},
+                {"name": "Bootstrap Docs", "url": "https://getbootstrap.com/docs/"},
+                {"name": "Shadcn UI", "url": "https://ui.shadcn.com/"},
+                {"name": "Chakra UI", "url": "https://chakra-ui.com/"},
+                {"name": "MUI (Material UI)", "url": "https://mui.com/"},
+                {"name": "Radix UI Primities", "url": "https://www.radix-ui.com/"},
+                {"name": "Alpine.js Docs", "url": "https://alpinejs.dev/"},
+                {"name": "Astro Framework", "url": "https://astro.build/"}
+            ],
+            "Web APIs & Standards": [
+                {"name": "Fetch API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API"},
+                {"name": "WebSockets API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API"},
+                {"name": "Service Workers", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API"},
+                {"name": "Canvas API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API"},
+                {"name": "Web Audio API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API"},
+                {"name": "Web Storage API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API"},
+                {"name": "IndexedDB API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API"},
+                {"name": "Web Workers API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"},
+                {"name": "WebAssembly", "url": "https://webassembly.org/"},
+                {"name": "WebRTC API", "url": "https://webrtc.org/"},
+                {"name": "Geolocation API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API"},
+                {"name": "Intersection Observer", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API"},
+                {"name": "Web Animations API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API"},
+                {"name": "Resize Observer", "url": "https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver"},
+                {"name": "Device Orientation", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Detecting_device_orientation"}
+            ],
+            "Developer Tools & Utilities": [
+                {"name": "Can I Use?", "url": "https://caniuse.com/"},
+                {"name": "Regex101", "url": "https://regex101.com/"},
+                {"name": "Bundlephobia", "url": "https://bundlephobia.com/"},
+                {"name": "JSON Formatter", "url": "https://jsonformatter.curiousconcept.com/"},
+                {"name": "JWT.io Debugger", "url": "https://jwt.io/"},
+                {"name": "Diffchecker", "url": "https://www.diffchecker.com/"},
+                {"name": "TinyPNG (Compressor)", "url": "https://tinypng.com/"},
+                {"name": "Transform (Code Converter)", "url": "https://transform.tools/"},
+                {"name": "HTTP Status Codes", "url": "https://httpstatuses.com/"},
+                {"name": "CSS Triggers (Performance)", "url": "https://csstriggers.com/"},
+                {"name": "HTML Head Cheat Sheet", "url": "https://htmlhead.dev/"},
+                {"name": "Carbon (Code Images)", "url": "https://carbon.now.sh/"},
+                {"name": "Git Cheat Sheet", "url": "https://education.github.com/git-cheat-sheet-education.pdf"},
+                {"name": "Devhints (Cheat sheets)", "url": "https://devhints.io/"},
+                {"name": "DNS Checker", "url": "https://dnschecker.org/"}
+            ],
+            "Design & UI Assets": [
+                {"name": "Figma", "url": "https://www.figma.com/"},
+                {"name": "Google Fonts", "url": "https://fonts.google.com/"},
+                {"name": "Lucide Icons", "url": "https://lucide.dev/icons"},
+                {"name": "Font Awesome", "url": "https://fontawesome.com/"},
+                {"name": "Heroicons", "url": "https://heroicons.com/"},
+                {"name": "Coolors (Palettes)", "url": "https://coolors.co/"},
+                {"name": "Unsplash (Images)", "url": "https://unsplash.com/"},
+                {"name": "SVG Repo", "url": "https://www.svgrepo.com/"},
+                {"name": "CSS Gradient Generator", "url": "https://cssgradient.io/"},
+                {"name": "Undraw (Illustrations)", "url": "https://undraw.co/"},
+                {"name": "Uiverse.io (CSS elements)", "url": "https://uiverse.io/"},
+                {"name": "Google Material Design", "url": "https://m3.material.io/"},
+                {"name": "Awwwards (Inspiration)", "url": "https://www.awwwards.com/"},
+                {"name": "LottieFiles (Animations)", "url": "https://lottiefiles.com/"},
+                {"name": "Dribbble", "url": "https://dribbble.com/"}
+            ],
+            "Backend & Hosting": [
+                {"name": "GitHub", "url": "https://github.com/"},
+                {"name": "Vercel", "url": "https://vercel.com/"},
+                {"name": "Netlify", "url": "https://www.netlify.com/"},
+                {"name": "Supabase", "url": "https://supabase.com/"},
+                {"name": "Firebase Console", "url": "https://console.firebase.google.com/"},
+                {"name": "Postgres Tutorial", "url": "https://www.postgresqltutorial.com/"},
+                {"name": "MongoDB Atlas", "url": "https://www.mongodb.com/cloud/atlas"},
+                {"name": "SQLite Documentation", "url": "https://www.sqlite.org/docs.html"},
+                {"name": "Render Hosting", "url": "https://render.com/"},
+                {"name": "Railway Hosting", "url": "https://railway.app/"},
+                {"name": "Postman Web", "url": "https://www.postman.com/"},
+                {"name": "Docker Hub", "url": "https://hub.docker.com/"},
+                {"name": "Cloudflare Dashboard", "url": "https://dash.cloudflare.com/"},
+                {"name": "Sentry (Error tracking)", "url": "https://sentry.io/"},
+                {"name": "Heroku Dashboard", "url": "https://dashboard.heroku.com/"}
+            ],
+            "Testing & Performance": [
+                {"name": "Jest Testing", "url": "https://jestjs.io/"},
+                {"name": "Playwright Testing", "url": "https://playwright.dev/"},
+                {"name": "Cypress Testing", "url": "https://www.cypress.io/"},
+                {"name": "Vitest Testing", "url": "https://vitest.dev/"},
+                {"name": "Lighthouse CI", "url": "https://github.com/GoogleChrome/lighthouse-ci"},
+                {"name": "PageSpeed Insights", "url": "https://pagespeed.web.dev/"},
+                {"name": "WebPageTest", "url": "https://www.webpagetest.org/"},
+                {"name": "Lighthouse Extension Docs", "url": "https://developer.chrome.com/docs/lighthouse/"},
+                {"name": "Testing Library Docs", "url": "https://testing-library.com/"},
+                {"name": "Artillery (Load Testing)", "url": "https://www.artillery.io/"}
+            ],
+            "Learning & Resources": [
+                {"name": "freeCodeCamp", "url": "https://www.freecodecamp.org/"},
+                {"name": "Frontend Mentor", "url": "https://www.frontendmentor.io/"},
+                {"name": "The Odin Project", "url": "https://www.theodinproject.com/"},
+                {"name": "JavaScript.info", "url": "https://javascript.info/"},
+                {"name": "CSS-Tricks", "url": "https://css-tricks.com/"},
+                {"name": "Dev.to Community", "url": "https://dev.to/"},
+                {"name": "Stack Overflow", "url": "https://stackoverflow.com/"},
+                {"name": "Roadmap.sh", "url": "https://roadmap.sh/"},
+                {"name": "GeeksforGeeks", "url": "https://www.geeksforgeeks.org/"},
+                {"name": "W3Schools", "url": "https://www.w3schools.com/"}
+            ],
+            "AI & Future Tech": [
+                {"name": "Google AI Studio", "url": "https://aistudio.google.com/"},
+                {"name": "Gemini API Docs", "url": "https://ai.google.dev/gemini-api/docs"},
+                {"name": "Hugging Face", "url": "https://huggingface.co/"},
+                {"name": "OpenAI Platform", "url": "https://platform.openai.com/"},
+                {"name": "Replicate", "url": "https://replicate.com/"},
+                {"name": "LangChain Docs", "url": "https://python.langchain.com/"},
+                {"name": "Pinecone Vector DB", "url": "https://www.pinecone.io/"},
+                {"name": "Phind (AI Search)", "url": "https://www.phind.com/"},
+                {"name": "Perplexity AI", "url": "https://www.perplexity.ai/"},
+                {"name": "Vercel AI SDK", "url": "https://sdk.vercel.ai/docs"}
+            ]
+        };
+
+        const categoryIcons = {
+            "Official Documentation": "📚",
+            "Frontend Frameworks & Libs": "⚛️",
+            "Web APIs & Standards": "🌐",
+            "Developer Tools & Utilities": "🛠️",
+            "Design & UI Assets": "🎨",
+            "Backend & Hosting": "💾",
+            "Testing & Performance": "🧪",
+            "Learning & Resources": "🏫",
+            "AI & Future Tech": "🤖"
+        };
+
+        function initBookmarks() {
+            const grid = document.getElementById("bookmark-grid");
+            if (!grid) return;
+            grid.innerHTML = "";
+
+            Object.entries(bookmarks).forEach(([category, items]) => {
+                const card = document.createElement("div");
+                card.className = "category-card";
+                card.setAttribute("data-category", category);
+
+                const icon = categoryIcons[category] || "📁";
+                
+                let bookmarksHTML = items.map(item => `
+                    <li class="bookmark-item">
+                        <a href="${item.url}" target="_blank" title="${item.url}">
+                            <span>${item.name}</span>
+                        </a>
+                    </li>
+                `).join("");
+
+                card.innerHTML = `
+                    <div class="category-header">
+                        <span class="category-icon">${icon}</span>
+                        <span>${category}</span>
+                    </div>
+                    <ul class="bookmark-list">
+                        ${bookmarksHTML}
+                    </ul>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterBookmarks(query) {
+            const lowerQuery = query.toLowerCase();
+            const cards = document.querySelectorAll(".category-card");
+
+            cards.forEach(card => {
+                const items = card.querySelectorAll(".bookmark-item");
+                let hasVisibleItem = false;
+
+                items.forEach(item => {
+                    const text = item.innerText.toLowerCase();
+                    const url = item.querySelector("a").href.toLowerCase();
+                    if (text.includes(lowerQuery) || url.includes(lowerQuery)) {
+                        item.style.display = "block";
+                        hasVisibleItem = true;
+                    } else {
+                        item.style.display = "none";
+                    }
+                });
+
+                if (hasVisibleItem) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        function switchTool(toolId) {
+            document.querySelectorAll(".tool-nav-btn").forEach(btn => btn.classList.remove("active"));
+            document.querySelectorAll(".tool-panel").forEach(panel => panel.classList.remove("active"));
+
+            const activeBtn = document.getElementById("btn-tool-" + toolId);
+            if (activeBtn) activeBtn.classList.add("active");
+            
+            const activePanel = document.getElementById("tool-" + toolId);
+            if (activePanel) activePanel.classList.add("active");
+            
+            logConsoleAction(`Switched offline DevTool to: ${toolId}`, 'info');
+        }
+
+        function clearTool(inputValId, outputTextId) {
+            document.getElementById(inputValId).value = "";
+            document.getElementById(outputTextId).innerHTML = "// Results cleared";
+        }
+
+        /* Tool Functions */
+        function formatJSON(spaces) {
+            const input = document.getElementById("json-input").value;
+            const output = document.getElementById("json-output");
+            try {
+                const parsed = JSON.parse(input);
+                output.innerText = JSON.stringify(parsed, null, spaces);
+                output.style.color = "var(--success-color)";
+                logConsoleAction("Formatted raw JSON input.", "success");
+            } catch (e) {
+                output.innerText = "Error: " + e.message;
+                output.style.color = "var(--error-color)";
+                logConsoleAction("JSON formatting error: " + e.message, "error");
+            }
+        }
+
+        function minifyJSON() {
+            const input = document.getElementById("json-input").value;
+            const output = document.getElementById("json-output");
+            try {
+                const parsed = JSON.parse(input);
+                output.innerText = JSON.stringify(parsed);
+                output.style.color = "var(--success-color)";
+                logConsoleAction("Minified JSON input.", "success");
+            } catch (e) {
+                output.innerText = "Error: " + e.message;
+                output.style.color = "var(--error-color)";
+                logConsoleAction("JSON minification error: " + e.message, "error");
+            }
+        }
+
+        function runRegex() {
+            const pattern = document.getElementById("regex-pattern").value;
+            const text = document.getElementById("regex-text").value;
+            const output = document.getElementById("regex-output");
+
+            if (!pattern) {
+                output.innerText = "Please specify a pattern.";
+                return;
+            }
+
+            try {
+                const regex = new RegExp(pattern, 'g');
+                let match;
+                let results = [];
+                
+                // Perform highlight replacement
+                const safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                const safeRegex = new RegExp("(" + pattern + ")", 'g');
+                const matchedMarkup = safeText.replace(safeRegex, '<span class="regex-match">$1</span>');
+
+                let count = 0;
+                while ((match = regex.exec(text)) !== null) {
+                    count++;
+                    results.push(`Match ${count}: "${match[0]}" at Index ${match.index}`);
+                    if (regex.lastIndex === match.index) regex.lastIndex++; // Avoid infinite loops
+                }
+
+                if (count === 0) {
+                    output.innerHTML = "No matches found.";
+                    logConsoleAction("Regex tested: 0 matches found.", "warn");
+                } else {
+                    output.innerHTML = `<strong>Total Matches: ${count}</strong>\n\n` + 
+                                     `<strong>Highlighted String:</strong>\n${matchedMarkup}\n\n` +
+                                     `<strong>Indices:</strong>\n${results.join('\n')}`;
+                    logConsoleAction(`Regex tested: ${count} matches found.`, "success");
+                }
+            } catch (e) {
+                output.innerText = "Regex Error: " + e.message;
+                logConsoleAction("Regex pattern error: " + e.message, "error");
+            }
+        }
+
+        function convertColor() {
+            const val = document.getElementById("color-input").value.trim();
+            const output = document.getElementById("color-output");
+
+            if (!val) {
+                output.innerText = "Please specify a color value.";
+                return;
+            }
+
+            let hex = "", rgb = "", hsl = "";
+            
+            if (val.startsWith("#")) {
+                hex = val;
+                let cleanHex = hex.replace('#', '');
+                if (cleanHex.length === 3) {
+                    cleanHex = cleanHex.split('').map(c => c+c).join('');
+                }
+                const r = parseInt(cleanHex.substring(0, 2), 16);
+                const g = parseInt(cleanHex.substring(2, 4), 16);
+                const b = parseInt(cleanHex.substring(4, 6), 16);
+                
+                if (isNaN(r) || isNaN(g) || isNaN(b)) {
+                    output.innerText = "Invalid HEX code.";
+                    logConsoleAction("Color conversion failed: invalid HEX.", "error");
+                    return;
+                }
+                rgb = `rgb(${r}, ${g}, ${b})`;
+                hsl = rgbToHsl(r, g, b);
+            } 
+            else if (val.startsWith("rgb")) {
+                rgb = val;
+                const match = val.match(/\d+/g);
+                if (!match || match.length < 3) {
+                    output.innerText = "Invalid RGB format.";
+                    logConsoleAction("Color conversion failed: invalid RGB.", "error");
+                    return;
+                }
+                const r = parseInt(match[0]);
+                const g = parseInt(match[1]);
+                const b = parseInt(match[2]);
+                hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+                hsl = rgbToHsl(r, g, b);
+            } else {
+                output.innerText = "Supported formats: HEX (#06b6d4) or RGB (rgb(6, 182, 212))";
+                logConsoleAction("Color conversion failed: unsupported format input.", "warn");
+                return;
+            }
+
+            output.innerHTML = `<strong>HEX:</strong> ${hex}\n<strong>RGB:</strong> ${rgb}\n<strong>HSL:</strong> ${hsl}`;
+            logConsoleAction(`Converted color input: ${val} to spaces.`, "success");
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0; // achromatic
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+        }
+
+        function textStats() {
+            const text = document.getElementById("text-input").value;
+            const output = document.getElementById("text-output");
+            
+            const charCount = text.length;
+            const wordCount = text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
+            const lineCount = text.split(/\r\n|\r|\n/).length;
+            
+            output.innerHTML = `<strong>Characters:</strong> ${charCount}\n` +
+                               `<strong>Words:</strong> ${wordCount}\n` +
+                               `<strong>Lines:</strong> ${lineCount}`;
+            logConsoleAction(`Analyzed text stats: chars=${charCount}, words=${wordCount}, lines=${lineCount}`, "success");
+        }
+
+        function base64Encode() {
+            const text = document.getElementById("text-input").value;
+            const output = document.getElementById("text-output");
+            try {
+                output.innerText = btoa(unescape(encodeURIComponent(text)));
+                logConsoleAction("Executed Base64 encoding.", "success");
+            } catch (e) {
+                output.innerText = "Encode Error: " + e.message;
+                logConsoleAction("Base64 encode error: " + e.message, "error");
+            }
+        }
+
+        function base64Decode() {
+            const text = document.getElementById("text-input").value;
+            const output = document.getElementById("text-output");
+            try {
+                output.innerText = decodeURIComponent(escape(atob(text)));
+                logConsoleAction("Executed Base64 decoding.", "success");
+            } catch (e) {
+                output.innerText = "Decode Error: " + e.message;
+                logConsoleAction("Base64 decode error: " + e.message, "error");
+            }
+        }
+
+        // 1. Notepad Enhancements
+        function clearNotepad() {
+            document.getElementById("notepad").value = "";
+            saveNote("");
+            logConsoleAction("Notepad cleared successfully.", "info");
+        }
+
+        function exportNotepad() {
+            const text = document.getElementById("notepad").value;
+            const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "dev_notes.txt";
+            a.click();
+            URL.revokeObjectURL(url);
+            logConsoleAction("Developer notepad exported as dev_notes.txt.", "success");
+        }
+
+        // 2. Custom Launch Shortcuts
+        function initCustomLaunchLinks() {
+            const container = document.getElementById("quick-launch-custom-container");
+            if (!container) return;
+            container.innerHTML = "";
+            const links = JSON.parse(localStorage.getItem("custom-launch-links") || "[]");
+            
+            links.forEach((link, idx) => {
+                const btn = document.createElement("div");
+                btn.style.display = "flex";
+                btn.style.width = "100%";
+                btn.style.gap = "0.25rem";
+                
+                const mainBtn = document.createElement("button");
+                mainBtn.className = "quick-btn";
+                mainBtn.style.flex = "1";
+                mainBtn.innerText = link.name;
+                mainBtn.onclick = () => {
+                    logConsoleAction(`Launching custom shortcut: ${link.name} (${link.url})`, 'info');
+                    window.open(link.url, '_blank');
+                };
+
+                const delBtn = document.createElement("button");
+                delBtn.className = "quick-btn";
+                delBtn.style.width = "32px";
+                delBtn.style.borderColor = "rgba(239, 68, 68, 0.4)";
+                delBtn.style.color = "#fca5a5";
+                delBtn.innerText = "×";
+                delBtn.onclick = () => removeCustomLaunchLink(idx);
+
+                btn.appendChild(mainBtn);
+                btn.appendChild(delBtn);
+                container.appendChild(btn);
+            });
+        }
+
+        function toggleCustomLinkForm() {
+            const form = document.getElementById("custom-link-form");
+            form.classList.toggle("active");
+        }
+
+        function addCustomLaunchLink() {
+            const nameInput = document.getElementById("custom-link-name");
+            const urlInput = document.getElementById("custom-link-url");
+            let name = nameInput.value.trim();
+            let url = urlInput.value.trim();
+
+            if (!name || !url) {
+                alert("Please specify a shortcut name and URL.");
+                return;
+            }
+            if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                url = "https://" + url;
+            }
+
+            const links = JSON.parse(localStorage.getItem("custom-launch-links") || "[]");
+            links.push({ name, url });
+            localStorage.setItem("custom-launch-links", JSON.stringify(links));
+            
+            nameInput.value = "";
+            urlInput.value = "";
+            toggleCustomLinkForm();
+            initCustomLaunchLinks();
+            logConsoleAction(`Added custom shortcut: ${name} -> ${url}`, "success");
+        }
+
+        function removeCustomLaunchLink(index) {
+            const links = JSON.parse(localStorage.getItem("custom-launch-links") || "[]");
+            const removed = links.splice(index, 1)[0];
+            localStorage.setItem("custom-launch-links", JSON.stringify(links));
+            initCustomLaunchLinks();
+            logConsoleAction(`Removed custom shortcut: ${removed.name}`, "info");
+        }
+
+        // 3. Status & System Metrics
+        function initSystemInfo() {
+            const details = document.getElementById("user-agent-details");
+            if (!details) return;
+            const ua = navigator.userAgent;
+            let os = "Unknown OS";
+            if (ua.indexOf("Win") !== -1) os = "Windows";
+            if (ua.indexOf("Mac") !== -1) os = "macOS";
+            if (ua.indexOf("Linux") !== -1) os = "Linux";
+            if (ua.indexOf("Android") !== -1) os = "Android";
+            if (ua.indexOf("like Mac") !== -1) os = "iOS";
+
+            let browser = "Unknown Browser";
+            if (ua.indexOf("Chrome") !== -1) browser = "Google Chrome";
+            else if (ua.indexOf("Safari") !== -1) browser = "Apple Safari";
+            else if (ua.indexOf("Firefox") !== -1) browser = "Mozilla Firefox";
+            else if (ua.indexOf("Edge") !== -1) browser = "Microsoft Edge";
+
+            details.innerHTML = `
+                <div><strong>OS Platform:</strong> ${os}</div>
+                <div><strong>Browser:</strong> ${browser}</div>
+                <div><strong>Screen Resolution:</strong> ${window.screen.width} × ${window.screen.height}</div>
+                <div><strong>Device Pixel Ratio:</strong> ${window.devicePixelRatio}</div>
+                <div style="margin-top:0.25rem; font-size:0.7rem; font-family:var(--font-mono); opacity:0.6; word-break:break-all;">${ua}</div>
+            `;
+        }
+
+        function updateNetworkStatus() {
+            const dot = document.getElementById("network-dot");
+            const text = document.getElementById("network-text");
+            if (!dot || !text) return;
+            
+            if (navigator.onLine) {
+                dot.style.backgroundColor = "var(--success-color)";
+                dot.style.boxShadow = "0 0 8px var(--success-color)";
+                text.innerText = "Status: Online";
+            } else {
+                dot.style.backgroundColor = "var(--error-color)";
+                dot.style.boxShadow = "0 0 8px var(--error-color)";
+                text.innerText = "Status: Offline";
+            }
+        }
+
+        function updateViewportDimensions() {
+            const dims = document.getElementById("viewport-dims");
+            if (dims) {
+                dims.innerText = `${window.innerWidth} × ${window.innerHeight}`;
+            }
+        }
+
+        function updateLiveEpoch() {
+            const epochEl = document.getElementById("live-epoch");
+            if (epochEl) {
+                epochEl.innerText = Math.floor(Date.now() / 1000);
+            }
+        }
+
+        // 4. JSON Suite (JSON to CSV)
+        function convertJSONToCSV() {
+            const input = document.getElementById("json-input").value;
+            const output = document.getElementById("json-output");
+            try {
+                const parsed = JSON.parse(input);
+                const array = typeof parsed !== 'object' ? JSON.parse(parsed) : parsed;
+                if (!Array.isArray(array)) {
+                    throw new Error("Input JSON must be an array of objects to generate CSV rows.");
+                }
+                if (array.length === 0) {
+                    output.innerText = "Empty array, no CSV data generated.";
+                    return;
+                }
+                const headers = Object.keys(array[0]);
+                const csvRows = [headers.join(",")];
+                
+                for (const row of array) {
+                    const values = headers.map(header => {
+                        const val = row[header];
+                        return typeof val === 'string' ? `"${val.replace(/"/g, '""')}"` : val;
+                    });
+                    csvRows.push(values.join(","));
+                }
+                
+                output.innerText = csvRows.join("\n");
+                output.style.color = "var(--success-color)";
+                logConsoleAction("Converted JSON array to CSV rows.", "success");
+            } catch (err) {
+                output.innerText = "Conversion Error: " + err.message;
+                output.style.color = "var(--error-color)";
+                logConsoleAction("JSON-to-CSV failed: " + err.message, "error");
+            }
+        }
+
+        // 5. Color Palette & Contrast Checker
+        function checkContrast() {
+            const bg = document.getElementById("contrast-bg").value.trim();
+            const fg = document.getElementById("contrast-fg").value.trim();
+            const box = document.getElementById("contrast-box");
+            const badgeBox = document.getElementById("contrast-badges");
+            
+            box.style.backgroundColor = bg;
+            box.style.color = fg;
+            
+            // Calculate contrast ratio
+            function getLuminance(hex) {
+                let clean = hex.replace('#', '');
+                if (clean.length === 3) clean = clean.split('').map(c => c+c).join('');
+                const r = parseInt(clean.substring(0, 2), 16) / 255;
+                const g = parseInt(clean.substring(2, 4), 16) / 255;
+                const b = parseInt(clean.substring(4, 6), 16) / 255;
+                
+                const a = [r, g, b].map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+                return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+            }
+            
+            try {
+                const lum1 = getLuminance(bg);
+                const lum2 = getLuminance(fg);
+                const ratio = (Math.max(lum1, lum2) + 0.05) / (Math.min(lum1, lum2) + 0.05);
+                const roundRatio = Math.round(ratio * 100) / 100;
+                
+                const normalAA = ratio >= 4.5;
+                const normalAAA = ratio >= 7.0;
+                const largeAA = ratio >= 3.0;
+                const largeAAA = ratio >= 4.5;
+                
+                badgeBox.innerHTML = `
+                    <div style="font-size:0.95rem; margin-bottom: 0.25rem;">Contrast Ratio: <strong>${roundRatio} : 1</strong></div>
+                    <span class="contrast-badge ${normalAA ? 'badge-pass' : 'badge-fail'}">Normal AA: ${normalAA ? 'PASS' : 'FAIL'}</span>
+                    <span class="contrast-badge ${normalAAA ? 'badge-pass' : 'badge-fail'}">Normal AAA: ${normalAAA ? 'PASS' : 'FAIL'}</span>
+                    <span class="contrast-badge ${largeAA ? 'badge-pass' : 'badge-fail'}">Large AA: ${largeAA ? 'PASS' : 'FAIL'}</span>
+                    <span class="contrast-badge ${largeAAA ? 'badge-pass' : 'badge-fail'}">Large AAA: ${largeAAA ? 'PASS' : 'FAIL'}</span>
+                `;
+                logConsoleAction(`Calculated accessibility contrast ratio: ${roundRatio}:1`, "success");
+            } catch (e) {
+                badgeBox.innerHTML = `<span style="color:var(--error-color);">Error computing color contrast. Check HEX codes.</span>`;
+            }
+        }
+
+        function generatePalette() {
+            const container = document.getElementById("palette-container");
+            if (!container) return;
+            container.innerHTML = "";
+            
+            const baseHue = Math.floor(Math.random() * 360);
+            
+            for (let i = 0; i < 5; i++) {
+                const h = (baseHue + (i * 45)) % 360;
+                const s = 65 + Math.floor(Math.random() * 20);
+                const l = 40 + Math.floor(Math.random() * 20);
+                
+                // Hsl to Hex
+                const lFraction = l / 100;
+                const a = (s * Math.min(lFraction, 1 - lFraction)) / 100;
+                const f = n => {
+                    const k = (n + h / 30) % 12;
+                    const color = lFraction - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                    return Math.round(255 * color).toString(16).padStart(2, '0');
+                };
+                const hex = `#${f(0)}${f(8)}${f(4)}`;
+                
+                const col = document.createElement("div");
+                col.className = "palette-color";
+                col.style.backgroundColor = hex;
+                col.innerText = hex.toUpperCase();
+                col.onclick = () => copyPaletteColor(hex);
+                container.appendChild(col);
+            }
+            logConsoleAction("Generated new 5-color accessibility matching palette.", "success");
+        }
+
+        function copyPaletteColor(hex) {
+            navigator.clipboard.writeText(hex);
+            logConsoleAction(`Copied palette HEX code to clipboard: ${hex}`, "info");
+        }
+
+        // 6. URI & HTML Entities
+        function urlEncode() {
+            const input = document.getElementById("text-input").value;
+            const output = document.getElementById("text-output");
+            output.innerText = encodeURIComponent(input);
+            logConsoleAction("Executed URL encoding.", "success");
+        }
+
+        function urlDecode() {
+            const input = document.getElementById("text-input").value;
+            const output = document.getElementById("text-output");
+            try {
+                output.innerText = decodeURIComponent(input);
+                logConsoleAction("Executed URL decoding.", "success");
+            } catch (e) {
+                output.innerText = "Decode Error: " + e.message;
+            }
+        }
+
+        function htmlEntityEncode() {
+            const input = document.getElementById("text-input").value;
+            const output = document.getElementById("text-output");
+            const temp = document.createElement("div");
+            temp.innerText = input;
+            output.innerText = temp.innerHTML;
+            logConsoleAction("Encoded HTML entities.", "success");
+        }
+
+        function htmlEntityDecode() {
+            const input = document.getElementById("text-input").value;
+            const output = document.getElementById("text-output");
+            const temp = document.createElement("div");
+            temp.innerHTML = input;
+            output.innerText = temp.innerText;
+            logConsoleAction("Decoded HTML entities.", "success");
+        }
+
+        // 7. Cryptographic SHA Hash
+        async function generateHashSHA256() {
+            const input = document.getElementById("text-input").value;
+            const output = document.getElementById("text-output");
+            try {
+                const msgBuffer = new TextEncoder().encode(input);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                output.innerText = hashHex;
+                logConsoleAction("Generated SHA-256 digest hash.", "success");
+            } catch (e) {
+                output.innerText = "Cryptographic Error: " + e.message;
+            }
+        }
+
+        // 8. Lorem Ipsum Dummy text
+        function generateLoremIpsum() {
+            const pCount = parseInt(document.getElementById("lorem-paragraphs").value) || 1;
+            const output = document.getElementById("text-output");
+            const source = [
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+                "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                "Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit."
+            ];
+            
+            let paragraphs = [];
+            for (let i = 0; i < pCount; i++) {
+                paragraphs.push(source.join(" "));
+            }
+            output.innerText = paragraphs.join("\n\n");
+            logConsoleAction(`Generated ${pCount} paragraphs of Lorem Ipsum text.`, "success");
+        }
+
+        // 9. UUID v4 Generator
+        function generateUUIDv4() {
+            const count = parseInt(document.getElementById("uuid-count").value) || 1;
+            const output = document.getElementById("text-output");
+            
+            function uuidv4() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                });
+            }
+            
+            let list = [];
+            for (let i = 0; i < count; i++) {
+                list.push(uuidv4());
+            }
+            output.innerText = list.join("\n");
+            logConsoleAction(`Generated ${count} UUID v4 strings.`, "success");
+        }
+
+        // 10. Markdown Previewer
+        function renderMarkdownPreview() {
+            const input = document.getElementById("markdown-input").value;
+            const preview = document.getElementById("markdown-preview");
+            
+            // Basic regex compiler
+            let html = input
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                .replace(/^#\s+(.*$)/gim, '<h1>$1</h1>')
+                .replace(/^##\s+(.*$)/gim, '<h2>$1</h2>')
+                .replace(/^###\s+(.*$)/gim, '<h3>$1</h3>')
+                .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+                .replace(/\*(.*)\*/gim, '<em>$1</em>')
+                .replace(/\[(.*?)\]\((.*?)\)/gim, "<a href='$2' target='_blank'>$1</a>")
+                .replace(/^\-\s+(.*$)/gim, '<li>$1</li>')
+                .replace(/\n$/gim, '<br>');
+                
+            preview.innerHTML = html;
+        }
+
+        // 11. Box Shadow & Flexbox Playroom
+        function updateBoxShadow() {
+            const x = document.getElementById("shadow-x").value;
+            const y = document.getElementById("shadow-y").value;
+            const blur = document.getElementById("shadow-blur").value;
+            const spread = document.getElementById("shadow-spread").value;
+            const opacity = document.getElementById("shadow-opacity").value / 100;
+            
+            document.getElementById("val-shadow-x").innerText = `${x}px`;
+            document.getElementById("val-shadow-y").innerText = `${y}px`;
+            document.getElementById("val-shadow-blur").innerText = `${blur}px`;
+            document.getElementById("val-shadow-spread").innerText = `${spread}px`;
+            document.getElementById("val-shadow-opacity").innerText = opacity;
+            
+            const shadowVal = `${x}px ${y}px ${blur}px ${spread}px rgba(0, 0, 0, ${opacity})`;
+            document.getElementById("shadow-preview-box").style.boxShadow = shadowVal;
+            document.getElementById("styling-output").innerText = `box-shadow: ${shadowVal};`;
+        }
+
+        function updateFlexbox() {
+            const dir = document.getElementById("flex-dir").value;
+            const justify = document.getElementById("flex-justify").value;
+            const align = document.getElementById("flex-align").value;
+            
+            const playroom = document.getElementById("flexbox-playground");
+            playroom.style.flexDirection = dir;
+            playroom.style.justifyContent = justify;
+            playroom.style.alignItems = align;
+            
+            document.getElementById("styling-output").innerText = 
+                `display: flex;\nflex-direction: ${dir};\njustify-content: ${justify};\nalign-items: ${align};`;
+        }
+
+        // 12. Epoch Timestamps
+        function convertEpochToDate() {
+            const val = document.getElementById("epoch-input-val").value.trim();
+            const output = document.getElementById("epoch-output");
+            if (!val) return;
+            try {
+                const date = new Date(parseInt(val) * 1000);
+                output.innerHTML = `<strong>Local Date:</strong> ${date.toString()}\n<strong>ISO GMT Date:</strong> ${date.toISOString()}`;
+                logConsoleAction(`Converted Epoch ${val} to dates.`, "success");
+            } catch (e) {
+                output.innerText = "Error: " + e.message;
+            }
+        }
+
+        function convertDateToEpoch() {
+            const val = document.getElementById("epoch-input-date").value.trim();
+            const output = document.getElementById("epoch-output");
+            if (!val) return;
+            try {
+                const epoch = Math.floor(new Date(val).getTime() / 1000);
+                if (isNaN(epoch)) throw new Error("Invalid date input string format.");
+                output.innerHTML = `<strong>Epoch Timestamp:</strong> ${epoch}`;
+                logConsoleAction(`Converted date ${val} to Epoch ${epoch}.`, "success");
+            } catch (e) {
+                output.innerText = "Error: " + e.message;
+            }
+        }
+
+        // 13. JWT Decoding
+        function decodeJWT() {
+            const val = document.getElementById("jwt-input").value.trim();
+            const output = document.getElementById("jwt-output");
+            if (!val) return;
+            try {
+                const parts = val.split('.');
+                if (parts.length < 2) throw new Error("JWT structure lacks a header or payload component.");
+                
+                const header = JSON.parse(atob(parts[0]));
+                const payload = JSON.parse(atob(parts[1]));
+                
+                output.innerHTML = `<strong>Header:</strong>\n${JSON.stringify(header, null, 2)}\n\n<strong>Payload:</strong>\n${JSON.stringify(payload, null, 2)}`;
+                logConsoleAction("Decoded JWT payload structure locally.", "success");
+            } catch (e) {
+                output.innerText = "Decoding Error: " + e.message;
+                logConsoleAction("JWT decoding failed: " + e.message, "error");
             }
         }
     </script>
