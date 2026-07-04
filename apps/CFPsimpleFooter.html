@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Footer</title>
+    
+    <!-- Google Fonts for crisp clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- FIXED: FontAwesome updated to 6.5.1 to support the X/Twitter icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b0f19; /* High-tech deep dark background */
+            color: #94a3b8;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+        }
+
+        .footer-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .social-icons-row {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .social-link {
+            font-size: 1.8rem;
+            text-decoration: none;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            display: inline-block;
+        }
+
+        /* Hover effect: Subtle lift and slight brightening */
+        .social-link:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.2);
+        }
+
+        /* Platform-specific brand colors */
+        .youtube-color { color: #ff0000; }
+        .instagram-color { color: #e1306c; }
+        .tiktok-color { color: #00f2fe; text-shadow: 2px 2px 0px #fe0979; } /* Recreates TikTok neon split */
+        .linkedin-color { color: #0077b5; }
+        .x-color { color: #ffffff; } /* Sleek white for X */
+        .facebook-color { color: #1877f2; }
+
+        .copyright-text {
+            font-size: 0.85rem;
+            color: #64748b;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="footer-container">
+        <!-- Colorful Social Media Platform Icons Row -->
+        <div class="social-icons-row">
+            <a href="https://www.youtube.com" target="_blank" class="social-link youtube-color" title="YouTube">
+                <i class="fa-brands fa-youtube"></i>
+            </a>
+            <a href="https://www.instagram.com" target="_blank" class="social-link instagram-color" title="Instagram">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://www.tiktok.com" target="_blank" class="social-link tiktok-color" title="TikTok">
+                <i class="fa-brands fa-tiktok"></i>
+            </a>
+            <a href="https://www.linkedin.com" target="_blank" class="social-link linkedin-color" title="LinkedIn">
+                <i class="fa-brands fa-linkedin-in"></i>
+            </a>
+            <a href="https://www.x.com" target="_blank" class="social-link x-color" title="X (Twitter)">
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+            <a href="https://www.facebook.com" target="_blank" class="social-link facebook-color" title="Facebook">
+                <i class="fa-brands fa-facebook-f"></i>
+            </a>
+        </div>
+
+        <!-- Clean Copyright Anchor Bar -->
+        <p class="copyright-text">&copy; <span id="year"></span> Clark Family Projects LLC. All rights reserved.</p>
+    </div>
+
+    <!-- Automatically updates the year so your site never looks outdated -->
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+
+</body>
+</html>

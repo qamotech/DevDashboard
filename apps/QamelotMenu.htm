@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qamelot Logistics Dashboard</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+
+    /* =======================================================
+      DYNAMIC GLOWING CURSORS (INLINE SVGS)
+      =======================================================
+    */
+    :root {
+        --cursor-default: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><polygon points='16,2 28,24 16,19 4,24' fill='%23060a14' stroke='%2300f0ff' stroke-width='2' stroke-linejoin='round'/><polygon points='16,6 24,20 16,17 8,20' fill='%23153c6e'/></svg>") 16 2, auto;
+        --cursor-hover: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><polygon points='16,2 28,24 16,19 4,24' fill='%2300f0ff' stroke='%23ffffff' stroke-width='2' stroke-linejoin='round'/><polygon points='16,6 24,20 16,17 8,20' fill='%23ffffff'/></svg>") 16 2, pointer;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #050814;
+        background-image: 
+            radial-gradient(circle at 50% 50%, #111830 0%, #050814 80%),
+            linear-gradient(rgba(126, 16, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(126, 16, 255, 0.05) 1px, transparent 1px);
+        background-size: 100% 100%, 20px 20px, 20px 20px;
+        font-family: 'Orbitron', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        box-sizing: border-box;
+        padding: 40px 20px 100px 20px; /* Extra bottom padding to clear the frozen footer */
+        color: white;
+        cursor: var(--cursor-default);
+    }
+
+    /* ====== HEADER & LOGO STYLE ====== */
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 40px;
+        z-index: 2;
+    }
+
+    .brand-logo {
+        width: 100%;
+        max-width: 280px;
+        height: auto;
+        filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.3));
+        margin-bottom: 15px;
+        transition: filter 0.3s ease;
+    }
+
+    .brand-logo:hover {
+        filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.6));
+    }
+
+    .brand-title {
+        font-size: 28px;
+        font-weight: 900;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #ffffff;
+        text-shadow: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.2);
+        margin: 0;
+    }
+
+    /* ====== SECTION WRAPPERS ====== */
+    .dashboard-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        width: 100%;
+        max-width: 680px; /* Widened to support a side-by-side or balanced look */
+    }
+
+    .section-title {
+        font-size: 13px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: #5b738b;
+        margin-bottom: 12px;
+        border-left: 3px solid #00f0ff;
+        padding-left: 8px;
+        text-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
+    }
+
+    .menu-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+        width: 100%;
+    }
+
+    /* ====== BUTTONS & MECHANICAL ENGAGEMENT ====== */
+    .btn-wrapper {
+        width: 100%;
+        filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.8)) drop-shadow(0px 8px 10px rgba(0, 0, 0, 0.6));
+        transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
+        cursor: var(--cursor-default);
+    }
+
+    .btn-wrapper:hover {
+        transform: translateY(-2px) scale(1.02); 
+        filter: drop-shadow(0 0 12px rgba(0, 210, 255, 0.5)) drop-shadow(0px 8px 10px rgba(0, 0, 0, 0.8));
+        cursor: var(--cursor-hover);
+    }
+
+    .btn-wrapper:hover .cyber-btn {
+        background: linear-gradient(to bottom, #7a94ad 0%, #29384d 25%, #182436 75%, #4e6a87 100%);
+    }
+
+    .btn-wrapper:active {
+        transform: translateY(2px) scale(0.99); 
+    }
+
+    .btn-wrapper:active .cyber-btn-inner {
+        background: linear-gradient(90deg, #00d2ff 0%, #004d66 50%, #00d2ff 100%);
+        transition: background 0.1s;
+    }
+
+    .btn-wrapper:active .btn-text {
+        color: #ffffff;
+        text-shadow: 0 0 10px #ffffff, 0 0 20px #00f0ff;
+    }
+
+    /* Outer Metallic Frame */
+    .cyber-btn {
+        height: 55px;
+        padding: 3px; 
+        background: linear-gradient(to bottom, #5b738b 0%, #1e2a3b 25%, #101826 75%, #3a4b61 100%);
+        clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px), 0 15px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    /* Inner Dark Panel */
+    .cyber-btn-inner {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, #060a14 0%, #0f1f38 50%, #060a14 100%);
+        clip-path: polygon(13px 0, calc(100% - 13px) 0, 100% 13px, 100% calc(100% - 13px), calc(100% - 13px) 100%, 13px 100%, 0 calc(100% - 13px), 0 13px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cyber-btn-inner::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        box-shadow: inset 0px 4px 8px rgba(0, 240, 255, 0.2), inset 0px -4px 8px rgba(0, 240, 255, 0.05);
+        z-index: 1;
+    }
+
+    /* Text Styling */
+    .btn-text {
+        position: relative;
+        z-index: 2;
+        color: #b0e5ff;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        text-shadow: 0 0 5px rgba(0, 240, 255, 0.8), 0 0 10px rgba(0, 240, 255, 0.4);
+    }
+
+    /* ====== FROZEN SOCIAL FOOTER ====== */
+    .frozen-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        background: linear-gradient(to top, #03060f 80%, rgba(6, 10, 20, 0.9) 100%);
+        border-top: 1px solid rgba(0, 240, 255, 0.15);
+        box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        backdrop-filter: blur(4px);
+    }
+
+    .social-links-container {
+        display: flex;
+        gap: 25px;
+    }
+
+    .social-link {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #5b738b;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: var(--cursor-hover);
+    }
+
+    .social-link:hover {
+        color: #00f0ff;
+        text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+    }
+</style>
+</head>
+<body>
+
+    <header class="dashboard-header">
+        <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUCGCuu-5JOE4Qe5lz-xPlXBakRzEQ6Co9YbxdXkqbOXfVT2mYhwYxmUQZhOMOzj4UTjhJKZ6gdprRPXx6t2zU9RxtonjCOkXY7WdJSxMhzR7rO0U6nBKGPLGvA_Knb3pjh6cCIx4-HOacsuksONVivgrKUgzYAq-C9tzZFc13_7FKbYj3dH99dbrsLiazyzLy4832-e7IwwTcTyc2dr8FSOiNYhZLyWGbsdog=w1280" alt="qamelot001.png Logo" class="brand-logo">
+        <h1 class="brand-title">Qamelot Logistics</h1>
+    </header>
+    
+    <main class="dashboard-grid">
+        
+        <section>
+            <div class="section-title">Operational Utilities</div>
+            <div class="menu-container">
+                <a href="https://www.odoo.com" target="_blank" style="text-decoration: none;">
+                    <div class="btn-wrapper">
+                        <div class="cyber-btn">
+                            <div class="cyber-btn-inner">
+                                <span class="btn-text">Odoo Core ERP</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://script.google.com" target="_blank" style="text-decoration: none;">
+                    <div class="btn-wrapper">
+                        <div class="cyber-btn">
+                            <div class="cyber-btn-inner">
+                                <span class="btn-text">Automation Engine</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://github.com" target="_blank" style="text-decoration: none;">
+                    <div class="btn-wrapper">
+                        <div class="cyber-btn">
+                            <div class="cyber-btn-inner">
+                                <span class="btn-text">Deployment Repository</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-title">System Links</div>
+            <div class="menu-container">
+        <a href="wildpack-v3.html" style="text-decoration: none; display: block;">
+            <div class="btn-wrapper">
+                <div class="cyber-btn">
+                    <div class="cyber-btn-inner">
+                        <span class="btn-text">WildPack-V3</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        
+        <a href="c4n8.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--CONNECT4--</span></div></div></div>
+        </a>
+        
+        
+        <a href="QGM.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--TIC.X.TAC.X.TOE--</span></div></div></div>
+        </a>
+        
+        
+        <a href="qamelot_menu.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--MENU--</span></div></div></div>
+        </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="frozen-footer">
+        
+        
+        <div>
+            
+        </div>
+    
+        <div class="social-links-container">
+            <a href="https://facebook.com" target="_blank" class="social-link">Facebook</a>
+            <a href="https://linkedin.com" target="_blank" class="social-link">LinkedIn</a>
+            <a href="https://instagram.com" target="_blank" class="social-link">Instagram</a>
+            <a href="https://youtube.com" target="_blank" class="social-link">YouTube</a>
+        </div>
+        
+        <div>
+            
+        </div>
+        
+        
+    </footer>
+
+</body>
+</html>

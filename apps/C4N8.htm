@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Blood & Gold: Panther Arena</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+
+        :root {
+            --neon-cyan: #00f0ff;
+            --vibranium-purple: #a842ff;
+            --panel-dark: #060a14;
+        }
+
+        body { 
+            margin: 0; 
+            background: #050814; 
+            background-image: 
+                radial-gradient(circle at 50% 50%, #111830 0%, #050814 80%),
+                linear-gradient(rgba(126, 16, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(126, 16, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 20px 20px, 20px 20px;
+            color: #fff; 
+            font-family: 'Orbitron', sans-serif; 
+            text-align: center; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            padding: 10px;
+            overflow: hidden;
+        }
+        
+        /* Premium Cyber Header */
+        #header { 
+            width: 100%;
+            max-width: 360px;
+            padding: 15px 10px; 
+            background: rgba(6, 10, 20, 0.85); 
+            border: 1px solid rgba(168, 66, 255, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            margin-bottom: 10px;
+            z-index: 10;
+        }
+
+        h1 { 
+            margin: 0 0 12px 0; 
+            color: #fff; 
+            text-transform: uppercase; 
+            letter-spacing: 4px; 
+            font-size: 1.4rem; 
+            font-weight: 900;
+            text-shadow: 0 0 10px var(--vibranium-purple), 0 0 20px rgba(126, 16, 255, 0.5);
+        }
+
+        /* Feature 4: Session Score Ledger */
+        #score-ledger {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            color: #8da2bb;
+        }
+        .score-box { font-weight: 900; }
+        #score-p1 { color: var(--vibranium-purple); text-shadow: 0 0 5px rgba(168,66,255,0.4); }
+        #score-p2 { color: var(--neon-cyan); text-shadow: 0 0 5px rgba(0,240,255,0.4); }
+        
+        /* Mechanical Grid Buttons */
+        .controls { display: flex; justify-content: center; gap: 8px; }
+        
+        button { 
+            background: linear-gradient(to bottom, #252f44 0%, #0c1220 100%); 
+            border: 1px solid rgba(168, 66, 255, 0.3); 
+            color: #e2bfff; 
+            padding: 10px 14px; 
+            border-radius: 6px; 
+            font-size: 0.75rem; 
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 2px 4px rgba(250,250,250,0.1);
+        }
+        
+        button:hover {
+            border-color: var(--neon-cyan);
+            color: #fff;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(1px);
+            background: #0c1220;
+        }
+
+        button.active-mode {
+            border-color: #ffcc00;
+            color: #ffcc00;
+            box-shadow: 0 0 8px rgba(255, 204, 0, 0.4);
+        }
+        
+        /* Vibranium Lattice Board Configuration */
+        #arena { 
+            width: 100%;
+            max-width: 340px; 
+            background: linear-gradient(135deg, #120e26 0%, #070714 100%); 
+            border: 3px solid #241e3b;
+            border-top-color: #513e80;
+            border-radius: 16px; 
+            padding: 12px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.9), 0 0 20px rgba(126, 16, 255, 0.15);
+            box-sizing: border-box;
+            z-index: 5;
+        }
+
+        /* Extinction Level Screen Shake Class */
+        .ele-shake {
+            animation: tremor 0.15s infinite;
+        }
+
+        @keyframes tremor {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            100% { transform: translate(-1px, -2px) rotate(1deg); }
+        }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 6px; background: transparent; }
+        
+        td { 
+            width: 42px; 
+            height: 42px; 
+            background: #030208;
+            border: 1px solid rgba(168, 66, 255, 0.2);
+            border-radius: 50%;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.9);
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s ease;
+        }
+
+        td:hover {
+            background: #140922;
+            border-color: rgba(168, 66, 255, 0.5);
+        }
+        
+        /* Feature 3: Win-Line Highlight Engine */
+        td.winner-glow {
+            animation: hyper-cycle 0.4s infinite alternate;
+            border-color: #ffffff !important;
+            z-index: 20;
+        }
+        @keyframes hyper-cycle {
+            0% { box-shadow: 0 0 5px #fff, inset 0 0 10px var(--neon-cyan); }
+            100% { box-shadow: 0 0 25px var(--neon-cyan), inset 0 0 20px #fff; }
+        }
+
+        /* Game Tokens */
+        .piece { 
+            width: 86%; 
+            height: 86%; 
+            border-radius: 50%; 
+            position: absolute;
+            top: 7%;
+            left: 7%;
+            animation: dropEffect 0.25s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes dropEffect {
+            0% { transform: translateY(-120px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Vibranium Purple Faction Core */
+        .purple { 
+            background: radial-gradient(circle at 35% 35%, #d199ff 0%, #7210ff 70%, #300080 100%); 
+            box-shadow: 0 0 12px var(--vibranium-purple), inset 0 -4px 6px rgba(0,0,0,0.4); 
+        }
+
+        /* Cyan Faction Core */
+        .blue { 
+            background: radial-gradient(circle at 35% 35%, #66e3ff 0%, #0088cc 70%, #003366 100%); 
+            box-shadow: 0 0 12px var(--neon-cyan), inset 0 -4px 6px rgba(0,0,0,0.4); 
+        }
+        
+        #status { 
+            margin-top: 15px; 
+            color: var(--vibranium-purple); 
+            font-weight: 900; 
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px rgba(168,66,255,0.3);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        /* Feature 1: ELE Detonation Visual Layer */
+        #ele-blast-shield {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            background: transparent;
+        }
+
+        .ele-active {
+            animation: radiation-blast 1.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes radiation-blast {
+            0% { background: #ffffff; opacity: 1; }
+            15% { background: #ff5100; opacity: 1; }
+            35% { background: #ffaa00; opacity: 0.9; }
+            100% { background: transparent; opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="ele-blast-shield"></div>
+
+<div id="header">
+    <h1>PANTHER ARENA</h1>
+    <div id="score-ledger">
+        <div class="score-box">PURPLE: <span id="score-p1">0</span></div>
+        <div class="score-box">BLUE: <span id="score-p2">0</span></div>
+    </div>
+    <div class="controls">
+        <button id="modeBtn" onclick="window.toggle2P()">SOLO VS AI</button>
+        <button onclick="window.resetMatch()">RESET</button>
+        <button onclick="window.undoTurn()">UNDO</button>
+    </div>
+</div>
+
+<div id="arena">
+    <table id="board"></table>
+</div>
+
+<div id="status">PURPLE'S TURN</div>
+
+<script>
+    const ROWS = 6;
+    const COLS = 7;
+
+    window.twoP = false; 
+    window.turn = 1; // 1 = Purple, 2 = Blue
+    window.gameState = []; 
+    window.moveHistory = []; 
+    window.gameOver = false;
+    
+    // Memory Matrices for Score Tracking
+    let p1Wins = 0;
+    let p2Wins = 0;
+
+    function initMatrix() {
+        window.gameState = [];
+        for (let r = 0; r < ROWS; r++) {
+            window.gameState.push(new Array(COLS).fill(0));
+        }
+    }
+
+    window.toggle2P = function() {
+        if(window.moveHistory.length > 0) {
+            if(!confirm("Changing modes will clear current deployment. Proceed?")) return;
+        }
+        window.twoP = !window.twoP;
+        const btn = document.getElementById('modeBtn');
+        if(window.twoP) {
+            btn.innerHTML = "2 PLAYER";
+            btn.classList.add('active-mode');
+        } else {
+            btn.innerHTML = "SOLO VS AI";
+            btn.classList.remove('active-mode');
+        }
+        window.resetMatch();
+    };
+
+    window.resetMatch = function() {
+        window.turn = 1;
+        window.gameOver = false;
+        window.moveHistory = [];
+        initMatrix();
+        
+        // Clean out custom animations & classes
+        document.getElementById('arena').classList.remove('ele-shake');
+        document.getElementById('ele-blast-shield').classList.remove('ele-active');
+        
+        const statusEl = document.getElementById('status');
+        statusEl.innerHTML = "PURPLE'S TURN";
+        statusEl.style.color = "var(--vibranium-purple)";
+        statusEl.style.textShadow = "0 0 5px rgba(168,66,255,0.3)";
+
+        const cells = document.getElementsByTagName('td');
+        for(let i=0; i<cells.length; i++) {
+            cells[i].classList.remove('winner-glow');
+        }
+
+        const pieces = document.getElementsByClassName('piece');
+        while(pieces.length > 0) {
+            pieces[0].parentNode.removeChild(pieces[0]);
+        }
+    };
+
+    window.undoTurn = function() {
+        if (window.gameOver) return;
+        if (window.moveHistory.length === 0) return;
+        performUndo();
+        if (!window.twoP && window.turn === 2 && window.moveHistory.length > 0) {
+            performUndo();
+        }
+        updateStatusDisplay();
+    };
+
+    function performUndo() {
+        const lastCol = window.moveHistory.pop();
+        for (let r = 0; r < ROWS; r++) {
+            if (window.gameState[r][lastCol] !== 0) {
+                window.gameState[r][lastCol] = 0;
+                const cell = document.getElementById(`cell-${lastCol}-${r}`);
+                if (cell.firstChild) cell.removeChild(cell.firstChild);
+                break;
+            }
+        }
+        window.turn = (window.turn === 1 ? 2 : 1);
+    }
+
+    // Grid System Assembly
+    const table = document.getElementById('board');
+    for (let r = 0; r < ROWS; r++) {
+        const tr = document.createElement('tr');
+        for (let c = 0; c < COLS; c++) {
+            const td = document.createElement('td');
+            td.id = `cell-${c}-${r}`;
+            ((col) => {
+                td.onclick = () => {
+                    if (!window.gameOver && (window.twoP || window.turn === 1)) {
+                        window.dropPiece(col);
+                    }
+                };
+            })(c);
+            tr.appendChild(td);
+        }
+        table.appendChild(tr);
+    }
+
+    window.dropPiece = function(col) {
+        if (window.gameOver) return;
+
+        let row = -1;
+        for (let i = ROWS - 1; i >= 0; i--) {
+            if (window.gameState[i][col] === 0) {
+                row = i;
+                break;
+            }
+        }
+        
+        if (row !== -1) {
+            window.gameState[row][col] = window.turn;
+            window.moveHistory.push(col);
+
+            // Feature 2: Subtle Kinetic Click Haptic Feedback
+            if (navigator.vibrate) navigator.vibrate(40);
+
+            const cell = document.getElementById(`cell-${col}-${row}`);
+            const p = document.createElement('div');
+            p.className = 'piece ' + (window.turn === 1 ? 'purple' : 'blue');
+            cell.appendChild(p);
+            
+            // Win Vectors Diagnostic Check
+            const winCoords = checkVictory(row, col);
+            if (winCoords) {
+                executeELESequence(winCoords);
+                return;
+            }
+
+            window.turn = (window.turn === 1 ? 2 : 1);
+            updateStatusDisplay();
+
+            if (!window.twoP && window.turn === 2) {
+                setTimeout(executeAIMove, 350); 
+            }
+        }
+    };
+
+    function updateStatusDisplay() {
+        const statusEl = document.getElementById('status');
+        if (window.turn === 1) {
+            statusEl.innerHTML = "PURPLE'S TURN";
+            statusEl.style.color = "var(--vibranium-purple)";
+            statusEl.style.textShadow = "0 0 5px rgba(168,66,255,0.3)";
+        } else {
+            statusEl.innerHTML = "BLUE'S TURN";
+            statusEl.style.color = "var(--neon-cyan)";
+            statusEl.style.textShadow = "0 0 5px rgba(0,240,255,0.3)";
+        }
+    }
+
+    // Modified CheckVictory function returning structural coordinates array
+    function checkVictory(r, c) {
+        const target = window.gameState[r][c];
+        const directions = [
+            [[0, 1], [0, -1]],  
+            [[1, 0], [-1, 0]],  
+            [[1, 1], [-1, -1]], 
+            [[1, -1], [-1, 1]]  
+        ];
+
+        for (let d = 0; d < directions.length; d++) {
+            let matches = [[r, c]];
+            for (let i = 0; i < 2; i++) {
+                let dr = directions[d][i][0];
+                let dc = directions[d][i][1];
+                let currR = r + dr;
+                let currC = c + dc;
+                
+                while (currR >= 0 && currR < ROWS && currC >= 0 && currC < COLS && window.gameState[currR][currC] === target) {
+                    matches.push([currR, currC]);
+                    currR += dr;
+                    currC += dc;
+                }
+            }
+            if (matches.length >= 4) return matches;
+        }
+        return null;
+    }
+
+    // Feature 1: Extinction Level Event Function Architecture
+    function executeELESequence(winningCoordinates) {
+        window.gameOver = true;
+        
+        // 1. Core Visual Blast (White & Orange Flash Overlay)
+        const shield = document.getElementById('ele-blast-shield');
+        shield.classList.add('ele-active');
+        
+        // 2. Physical Shake Application to the Arena Cage
+        document.getElementById('arena').classList.add('ele-shake');
+
+        // 3. Heavy Pulse Haptic Engine Engagement
+        if (navigator.vibrate) {
+            navigator.vibrate([100, 50, 100, 50, 400]);
+        }
+
+        // 4. Native Camera Flash / Torch Deployment Request
+        flashHardwareTorch(500);
+
+        // 5. Highlight winning vectors
+        winningCoordinates.forEach(coord => {
+            const cell = document.getElementById(`cell-${coord[1]}-${coord[0]}`);
+            if (cell) cell.classList.add('winner-glow');
+        });
+
+        // Score Allocation Calculations
+        if (window.turn === 1) {
+            p1Wins++;
+            document.getElementById('score-p1').innerHTML = p1Wins;
+        } else {
+            p2Wins++;
+            document.getElementById('score-p2').innerHTML = p2Wins;
+        }
+
+        // Finalize Status Banner Printout
+        const statusEl = document.getElementById('status');
+        statusEl.innerHTML = (window.turn === 1 ? "PURPLE CLAN WINS" : "BLUE FACTOR WINS");
+        statusEl.style.color = (window.turn === 1 ? "var(--vibranium-purple)" : "var(--neon-cyan)");
+        statusEl.style.textShadow = window.turn === 1 ? "0 0 12px #a842ff" : "0 0 12px #00f0ff";
+    }
+
+    // Hardware Flash Interceptors
+    async function flashHardwareTorch(durationMs) {
+        try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            const track = stream.getVideoTracks()[0];
+            const capabilities = track.getCapabilities();
+            if (capabilities.torch) {
+                await track.applyConstraints({ advanced: [{ torch: true }] });
+                setTimeout(async () => {
+                    await track.applyConstraints({ advanced: [{ torch: false }] });
+                    track.stop();
+                }, durationMs);
+            } else {
+                track.stop();
+            }
+        } catch (e) {
+            // Fails silently if hardware permissions are unavailable or inside regular WebViews
+        }
+    }
+
+    // Machine Brain Engine
+    function executeAIMove() {
+        if (window.gameOver) return;
+
+        for (let c = 0; c < COLS; c++) {
+            let r = getTargetRow(c);
+            if (r !== -1) {
+                window.gameState[r][c] = 2;
+                if (checkVictory(r, c)) {
+                    window.gameState[r][c] = 0; 
+                    window.dropPiece(c);
+                    return;
+                }
+                window.gameState[r][c] = 0;
+            }
+        }
+
+        for (let c = 0; c < COLS; c++) {
+            let r = getTargetRow(c);
+            if (r !== -1) {
+                window.gameState[r][c] = 1;
+                if (checkVictory(r, c)) {
+                    window.gameState[r][c] = 0;
+                    window.dropPiece(c);
+                    return;
+                }
+                window.gameState[r][c] = 0;
+            }
+        }
+
+        const preferedOrder = [3, 4, 2, 5, 1, 6, 0];
+        for (let i = 0; i < preferedOrder.length; i++) {
+            let c = preferedOrder[i];
+            if (getTargetRow(c) !== -1) {
+                window.dropPiece(c);
+                return;
+            }
+        }
+    }
+
+    function getTargetRow(col) {
+        for (let i = ROWS - 1; i >= 0; i--) {
+            if (window.gameState[i][col] === 0) return i;
+        }
+        return -1;
+    }
+
+    initMatrix();
+</script>
+
+
+    <footer class="cyber-footer">
+        <div class="footer-title">System Navigation</div>
+        <div class="menu-container">
+            
+        <a href="wildpack-v3.html" style="text-decoration: none; display: block;">
+            <div class="btn-wrapper">
+                <div class="cyber-btn">
+                    <div class="cyber-btn-inner">
+                        <span class="btn-text">WildPack-V3</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        
+        <a href="c4n8.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--C4N8--</span></div></div></div>
+        </a>
+        
+        
+        <a href="QGM.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--QGM--</span></div></div></div>
+        </a>
+        
+        
+        <a href="qamelot_menu.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--MENU--</span></div></div></div>
+        </a>
+        </div>
+    </footer>
+
+
+</body>
+</html>

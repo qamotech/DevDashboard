@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <style>
+      /* 1. Define your custom cyber variables here so the element can use them */
+      :root {
+        --energon-cyan: #00f3ff;
+        --kinetic-purple: #8a2be2;
+      }
+
+      /* 2. Your element styling */
+      .cyber-element {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 202px;
+        height: 119px;
+        border-radius: 46px;
+        background: linear-gradient(325deg, #292929, #000000);
+        
+        /* Fixed the --16px typo here */
+        box-shadow: -16px 11px 45px #000000, -16px -11px 45px #666666, inset 0 0 0 2px var(--energon-cyan), 0 0 20px var(--kinetic-purple), 0 0 40px rgba(138,43,226,0.5);
+
+        color: #1accd5;
+        font-size: 25px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px 1px #666666, -1px -1px 1px #000000, 0 0 10px #1accd5, 0 0 20px #1accd5;
+
+        animation: float 4s ease-in-out infinite;
+      }
+
+      /* 3. The animation keyframes */
+      @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+      }
+      
+      /* Optional: Just centering it on the screen so you can see it clearly */
+      body {
+        background-color: #0c0d14; /* Dark background so the glow pops */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  
+  <body>
+    
+    <div class="cyber-element">
+      <a style="text-align:center" href="https://script.google.com/macros/s/AKfycbzPh5Zvaa051N-BelHoXGnAeBPTsjm0mkM7M9YclTxL/dev">QAMELOT</a>
+    </div>
+
+  </body>
+</html>
