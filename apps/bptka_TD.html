@@ -9,7 +9,7 @@
         
         body, html {
             margin: 0; padding: 0;
-            background-color: #080812;
+            background-color: #060913;
             color: #d0e0ff;
             width: 100vw; height: 100vh;
             display: flex; justify-content: center; align-items: center;
@@ -21,9 +21,9 @@
             width: 96vw;
             height: 96vh;
             max-width: 1400px;
-            background-color: #0b0b1a;
+            background-color: rgba(13, 20, 35, 0.85);
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 0 2px #33aaff;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 0 2px #00d2ff;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -32,9 +32,9 @@
         /* --- TOP BAR --- */
         #top-bar {
             height: 50px; min-height: 50px;
-            background: linear-gradient(90deg, #111122, #1a1a3a, #111122);
+            background: linear-gradient(90deg, #111122, #0b0f19, #111122);
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0 15px; border-bottom: 2px solid #5533ff;
+            padding: 0 15px; border-bottom: 2px solid #00ff66;
             z-index: 10;
         }
 
@@ -44,19 +44,19 @@
         .c-red { color: #ff3366; } .c-gold { color: #ffd700; } .c-cyan { color: #00ffff; }
 
         .ctrl-btn {
-            background: rgba(85, 51, 255, 0.2); border: 1px solid #5533ff; color: #fff;
+            background: rgba(0, 210, 255, 0.2); border: 1px solid #00d2ff; color: #fff;
             padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer;
         }
-        .ctrl-btn:hover { background: #5533ff; }
-        .ctrl-btn.active { background: #ff3366; border-color: #ff3366; }
+        .ctrl-btn:hover { background: #00d2ff; }
+        .ctrl-btn.active { background: #00ff66; border-color: #00ff66; color: #060913; }
 
         /* --- GAME CANVAS AREA --- */
         #canvas-wrapper {
             flex-grow: 1;
             display: flex; justify-content: center; align-items: center;
-            background: radial-gradient(circle at center, #15152a 0%, #05050a 100%);
+            background: radial-gradient(circle at center, #0a162b 0%, #05050a 100%);
             position: relative; overflow: hidden;
-            border-bottom: 2px solid #5533ff;
+            border-bottom: 2px solid #00ff66;
         }
 
         #game-canvas {

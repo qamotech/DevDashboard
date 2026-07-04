@@ -4,25 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevDashboard Hub</title>
+    <!-- Inline Glowing Favicon (stylized Violet letter "D") -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3Cfilter id='glow'%3E%3CfeGaussianBlur stdDeviation='3' result='blur'/%3E%3CfeMerge%3E%3CfeMergeNode in='blur'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='%230b0b0f'/%3E%3Cpath d='M30 25h20c15 0 25 8 25 25s-10 25-25 25H30V25zm12 10v30h8c10 0 13-6 13-15s-3-15-13-15h-8z' fill='url(%23g)' filter='url(%23glow)'/%3E%3C/svg%3E">
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --bg-base: #060608;
-            --bg-sidebar: #0b0b0f;
-            --bg-card: rgba(18, 18, 24, 0.65);
-            --border-color: rgba(63, 63, 70, 0.25);
-            --border-active: rgba(99, 102, 241, 0.4);
-            --text-primary: #f4f4f5;
-            --text-secondary: #9ca3af;
-            --accent-purple: #8b5cf6;
-            --accent-indigo: #6366f1;
-            --accent-cyan: #06b6d4;
-            --accent-glow-purple: rgba(139, 92, 246, 0.25);
-            --accent-glow-cyan: rgba(6, 182, 212, 0.2);
-            --success-color: #10b981;
+            --bg-base: #060913;
+            --bg-sidebar: #0b0f19;
+            --bg-card: rgba(13, 20, 35, 0.7);
+            --border-color: rgba(0, 210, 255, 0.18);
+            --border-active: rgba(0, 255, 102, 0.4);
+            --text-primary: #f0f8ff;
+            --text-secondary: #8fa2b2;
+            --accent-purple: #00ff66; /* Neon Green */
+            --accent-indigo: #00d2ff; /* Cyber Blue */
+            --accent-cyan: #00f5d4; /* Neon Cyan */
+            --accent-glow-purple: rgba(0, 255, 102, 0.2);
+            --accent-glow-cyan: rgba(0, 210, 255, 0.15);
+            --success-color: #00ff66;
             --warning-color: #f59e0b;
             --error-color: #ef4444;
             
@@ -32,6 +36,45 @@
             --radius-md: 10px;
             --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Matrix Terminal Theme overrides */
+        body.theme-terminal {
+            --bg-base: #010402;
+            --bg-sidebar: #020a04;
+            --bg-card: rgba(3, 15, 6, 0.85);
+            --border-color: rgba(0, 255, 102, 0.2);
+            --border-active: rgba(0, 255, 102, 0.6);
+            --text-primary: #39ff14; /* Neon Green */
+            --text-secondary: #008f11;
+            --accent-purple: #39ff14;
+            --accent-indigo: #00ff66;
+            --accent-cyan: #00ff66;
+            --accent-glow-purple: rgba(0, 255, 102, 0.25);
+            --accent-glow-cyan: rgba(0, 255, 102, 0.2);
+            --success-color: #39ff14;
+            --warning-color: #eab308;
+            --error-color: #f43f5e;
+            --font-main: 'JetBrains Mono', monospace;
+        }
+
+        /* Midnight Glass Theme overrides */
+        body.theme-glass {
+            --bg-base: #0b132b;
+            --bg-sidebar: #1c2541;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(0, 180, 216, 0.15);
+            --border-active: rgba(0, 180, 216, 0.4);
+            --text-primary: #edf2f4;
+            --text-secondary: #8d99ae;
+            --accent-purple: #00b4d8;
+            --accent-indigo: #0077b6;
+            --accent-cyan: #90e0ef;
+            --accent-glow-purple: rgba(0, 180, 216, 0.2);
+            --accent-glow-cyan: rgba(144, 224, 239, 0.15);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
         }
 
         * {
@@ -48,6 +91,7 @@
             display: grid;
             grid-template-columns: 290px 1fr;
             overflow: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
             background-image: 
                 radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.06) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.05) 0px, transparent 50%);
@@ -62,15 +106,16 @@
             padding: 1.5rem;
             z-index: 10;
             overflow-y: auto;
+            transition: var(--transition-smooth);
         }
 
         .brand {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding-bottom: 1.5rem;
+            padding-bottom: 1rem;
             border-bottom: 1px solid rgba(63, 63, 70, 0.2);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             flex-shrink: 0;
         }
 
@@ -96,11 +141,46 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* Search input */
+        .search-wrapper {
+            margin-bottom: 1.25rem;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .sidebar-search {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.55rem 0.75rem 0.55rem 2rem;
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            font-size: 0.8rem;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .sidebar-search:focus {
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.65rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
         .nav-section {
             display: flex;
             flex-direction: column;
             gap: 0.35rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .nav-section-title {
@@ -117,7 +197,7 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.65rem 0.85rem;
+            padding: 0.6rem 0.8rem;
             border-radius: var(--radius-md);
             color: var(--text-secondary);
             font-size: 0.85rem;
@@ -125,6 +205,7 @@
             text-decoration: none;
             cursor: pointer;
             border: 1px solid transparent;
+            position: relative;
             transition: var(--transition-smooth);
         }
 
@@ -154,14 +235,75 @@
             opacity: 1;
         }
 
+        /* Tooltips */
+        .nav-item[data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 105%;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #09090b;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.4rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: all 0.2s ease;
+            z-index: 100;
+        }
+
+        .nav-item[data-tooltip]:hover::after {
+            opacity: 1;
+            visibility: visible;
+            left: 108%;
+        }
+
         .sidebar-footer {
             margin-top: auto;
             border-top: 1px solid rgba(63, 63, 70, 0.2);
             padding-top: 1rem;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.75rem;
             flex-shrink: 0;
+        }
+
+        /* Theme Selector */
+        .theme-select-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+        }
+
+        .theme-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .theme-select {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            font-size: 0.75rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .theme-select option {
+            background: #09090b;
+            color: #f4f4f5;
         }
 
         .status-badge {
@@ -223,6 +365,7 @@
         .view-content.active {
             display: flex;
             flex-direction: column;
+            gap: 1.5rem;
         }
 
         @keyframes viewFadeIn {
@@ -240,11 +383,175 @@
             flex-direction: column;
             gap: 1.5rem;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
             width: 100%;
         }
 
+        /* Home Dashboard Layout (Widgets Grid) */
+        .home-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        @media (max-width: 900px) {
+            .home-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .widget-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            backdrop-filter: blur(15px);
+            transition: var(--transition-bounce);
+        }
+
+        .widget-card:hover {
+            border-color: var(--border-active);
+            transform: translateY(-2px);
+        }
+
+        .widget-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Clock Widget */
+        .clock-widget {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .clock-time {
+            font-family: var(--font-mono);
+            font-size: 3rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-indigo) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(99,102,241,0.25);
+        }
+
+        .clock-date {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Notepad Widget */
+        .notepad-textarea {
+            width: 100%;
+            height: 140px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            font-size: 0.85rem;
+            resize: none;
+            outline: none;
+            line-height: 1.5;
+            transition: var(--transition-smooth);
+        }
+
+        .notepad-textarea:focus {
+            border-color: var(--accent-indigo);
+        }
+
+        /* High Scores Widget */
+        .score-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.2);
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        .score-val {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        /* Quick Launch Grid */
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .quick-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            padding: 0.6rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition-smooth);
+        }
+
+        .quick-btn:hover {
+            background: rgba(99,102,241,0.1);
+            border-color: var(--accent-indigo);
+            transform: translateY(-1px);
+        }
+
+        /* Guide Widget */
+        .guide-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        .guide-steps code {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
+            padding: 0.1rem 0.3rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            color: var(--accent-purple);
+        }
+
+        /* Steps */
         .panel-heading {
             font-size: 1.2rem;
             font-weight: 600;
@@ -278,6 +585,7 @@
             color: var(--text-primary);
         }
 
+        /* General buttons */
         .btn-primary {
             width: 100%;
             background: linear-gradient(135deg, var(--accent-indigo) 0%, var(--accent-purple) 100%);
@@ -370,11 +678,48 @@
             border-color: var(--text-secondary);
         }
 
+        /* Iframe loading spinner */
         .iframe-wrapper {
             flex: 1;
             width: 100%;
             background: #ffffff;
             position: relative;
+            height: 70vh;
+        }
+
+        .iframe-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0b0b0f;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            z-index: 50;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .iframe-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(99, 102, 241, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--accent-indigo);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .app-iframe {
@@ -384,82 +729,168 @@
             outline: none;
             display: block;
         }
+
+        /* System Developer Logs Panel (collapsible drawer at the bottom) */
+        .dev-console {
+            background: #040406;
+            border: 1px solid var(--border-color);
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .dev-console-header {
+            padding: 0.65rem 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            user-select: none;
+        }
+
+        .dev-console-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-primary);
+        }
+
+        .console-indicator {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: var(--accent-cyan);
+            box-shadow: 0 0 6px var(--accent-cyan);
+            display: inline-block;
+        }
+
+        .dev-console-body {
+            height: 100px;
+            overflow-y: auto;
+            padding: 0.75rem 1.25rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            transition: var(--transition-smooth);
+        }
+
+        .dev-console.collapsed .dev-console-body {
+            height: 0px;
+            padding: 0px;
+            overflow: hidden;
+            border: none;
+        }
+
+        .console-log-line {
+            line-height: 1.4;
+            color: var(--accent-cyan);
+        }
+
+        .console-log-line.info { color: var(--text-secondary); }
+        .console-log-line.warn { color: var(--warning-color); }
+        .console-log-line.error { color: var(--error-color); }
+        .console-log-line.success { color: var(--success-color); }
     </style>
 </head>
 <body>
 
     <!-- Sidebar Navigation -->
     <aside>
-        <div class="brand">
+        <div class="brand" onclick="showHomeView()" style="cursor: pointer;">
             <div class="brand-icon">D</div>
             <div class="brand-name">DevDashboard Hub</div>
         </div>
 
+        <!-- Search Input -->
+        <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="sidebar-search" class="sidebar-search" placeholder="Search apps & games..." oninput="filterSidebar(this.value)">
+        </div>
+
         <!-- Utilities Section -->
-        <div class="nav-section">
+        <div class="nav-section" data-group="utilities">
             <div class="nav-section-title">Utilities</div>
-            <a class="nav-item active" id="nav-remover" onclick="showRemoverView()">
+            <a class="nav-item" id="nav-remover" onclick="showRemoverView()" data-tooltip="Open official Adobe Express background isolator">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 18V6"/><path d="M6 12h12"/></svg>
                 Background Remover
             </a>
         </div>
 
         <!-- Applications Section -->
-        <div class="nav-section">
+        <div class="nav-section" data-group="applications">
             <div class="nav-section-title">Applications</div>
-            <a class="nav-item" id="nav-app-calc" onclick="launchApp('CalcuN8r', 'apps/CalcuN8r.html', 'nav-app-calc')">
+            <a class="nav-item" id="nav-app-calc" onclick="launchApp('CalcuN8r', 'apps/CalcuN8r.html', 'nav-app-calc')" data-tooltip="Launch interactive responsive math calculator">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
                 CalcuN8r
             </a>
-            <a class="nav-item" id="nav-app-math" onclick="launchApp('QamoMATH', 'apps/QamoMATH/QamoMATH.html', 'nav-app-math')">
+            <a class="nav-item" id="nav-app-math" onclick="launchApp('QamoMATH', 'apps/QamoMATH/QamoMATH.html', 'nav-app-math')" data-tooltip="Interactive mental arithmetic training utility">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
                 QamoMATH
             </a>
         </div>
 
         <!-- Games Section -->
-        <div class="nav-section">
+        <div class="nav-section" data-group="games">
             <div class="nav-section-title">Games</div>
-            <a class="nav-item" id="nav-game-c4" onclick="launchApp('Connect 4 (C4N8)', 'apps/C4N8.htm', 'nav-game-c4')">
+            <a class="nav-item" id="nav-game-c4" onclick="launchApp('Connect 4 (C4N8)', 'apps/C4N8.htm', 'nav-game-c4')" data-tooltip="Play traditional Connect 4 puzzle game">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg>
                 Connect 4 (C4N8)
             </a>
-            <a class="nav-item" id="nav-game-td1" onclick="launchApp('Qamelot Tactical Defense', 'apps/QamelotTacticalDefensev1.htm', 'nav-game-td1')">
+            <a class="nav-item" id="nav-game-td1" onclick="launchApp('Qamelot Tactical Defense', 'apps/QamelotTacticalDefensev1.htm', 'nav-game-td1')" data-tooltip="Play tower tactical grid defense game">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg>
                 Qamelot Tactical Defense
             </a>
-            <a class="nav-item" id="nav-game-tn" onclick="launchApp('Qamelot TriNexus', 'apps/QamelotTriNexusV1.htm', 'nav-game-tn')">
+            <a class="nav-item" id="nav-game-tn" onclick="launchApp('Qamelot TriNexus', 'apps/QamelotTriNexusV1.htm', 'nav-game-tn')" data-tooltip="Play grid alignment logic puzzle game">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg>
                 Qamelot TriNexus
             </a>
-            <a class="nav-item" id="nav-game-ss" onclick="launchApp('Stix Stax Stonz v1', 'apps/StixStaxStonzV1.htm', 'nav-game-ss')">
+            <a class="nav-item" id="nav-game-ss" onclick="launchApp('Stix Stax Stonz v1', 'apps/StixStaxStonzV1.htm', 'nav-game-ss')" data-tooltip="Play physics block balancing stacking game">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg>
                 Stix Stax Stonz v1
             </a>
-            <a class="nav-item" id="nav-game-td2" onclick="launchApp('BPTKA Tactical Defense', 'apps/bptka_TD.html', 'nav-game-td2')">
+            <a class="nav-item" id="nav-game-td2" onclick="launchApp('BPTKA Tactical Defense', 'apps/bptka_TD.html', 'nav-game-td2')" data-tooltip="Play customized BPTKA grid tower game">
                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg>
                 BPTKA Tactical Defense
             </a>
         </div>
 
         <!-- Miscellaneous Section -->
-        <div class="nav-section">
+        <div class="nav-section" data-group="miscellaneous">
             <div class="nav-section-title">Miscellaneous</div>
-            <a class="nav-item" id="nav-misc-menu" onclick="launchApp('Qamelot Menu', 'apps/QamelotMenu.htm', 'nav-misc-menu')">
+            <a class="nav-item" id="nav-misc-menu" onclick="launchApp('Qamelot Menu', 'apps/QamelotMenu.htm', 'nav-misc-menu')" data-tooltip="Open original outline collection directory menu">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
                 Qamelot Menu
             </a>
-            <a class="nav-item" id="nav-misc-home" onclick="launchApp('Qamelot Home', 'apps/Home.html', 'nav-misc-home')">
+            <a class="nav-item" id="nav-misc-home" onclick="launchApp('Qamelot Home', 'apps/Home.html', 'nav-misc-home')" data-tooltip="Open static developer outline template home">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 Home Outline
             </a>
-            <a class="nav-item" id="nav-misc-code" onclick="launchApp('Gemini Utility', 'apps/gemini-code-1782079525974.html', 'nav-misc-code')">
+            <a class="nav-item" id="nav-misc-code" onclick="launchApp('Gemini Utility', 'apps/gemini-code-1782079525974.html', 'nav-misc-code')" data-tooltip="Launch AI sandbox reference utilities file">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
                 Gemini Utility
             </a>
         </div>
 
+        <!-- Footer widgets -->
         <div class="sidebar-footer">
+            <div class="theme-select-container">
+                <span class="theme-label">Aesthetic:</span>
+                <select id="theme-selector" class="theme-select" onchange="changeTheme(this.value)">
+                    <option value="cyberpunk">Cyberpunk</option>
+                    <option value="terminal">Terminal</option>
+                    <option value="glass">Glassmorphic</option>
+                </select>
+            </div>
             <div class="status-badge">
                 <span class="status-dot"></span>
                 <span>Environment: Static/Web</span>
@@ -471,13 +902,90 @@
     <main>
         <div class="workspace-title-row">
             <div>
-                <h1 class="workspace-title" id="view-title">AI Background Remover</h1>
-                <p class="workspace-subtitle" id="view-subtitle">Remove backgrounds instantly using Adobe Express AI</p>
+                <h1 class="workspace-title" id="view-title">DevDashboard Hub</h1>
+                <p class="workspace-subtitle" id="view-subtitle">Unified environment control and custom sandbox applications</p>
             </div>
         </div>
 
-        <!-- VIEW 1: Background Remover Landing -->
-        <div class="view-content active" id="view-remover">
+        <!-- VIEW 1: Dashboard Home (Default View) -->
+        <div class="view-content active" id="view-home">
+            <div class="home-grid">
+                
+                <!-- Clock Widget -->
+                <div class="widget-card clock-widget">
+                    <div class="clock-time" id="clock-time">00:00:00</div>
+                    <div class="clock-date" id="clock-date">LOADING SYSTEM DATE...</div>
+                </div>
+
+                <!-- Notepad Widget -->
+                <div class="widget-card">
+                    <div class="widget-title">
+                        📓 Developer Notebook (Autosaves)
+                    </div>
+                    <textarea class="notepad-textarea" id="notepad" placeholder="Write temporary developer notes, CNAME configs, or session details here... (Saves automatically to browser)" oninput="saveNote(this.value)"></textarea>
+                </div>
+
+                <!-- High Scores / Metrics Widget -->
+                <div class="widget-card">
+                    <div class="widget-title">
+                        🏆 Score records & Session Metrics
+                    </div>
+                    <div class="score-list" id="score-list">
+                        <div class="score-item">
+                            <span>CalcuN8r calculations executed</span>
+                            <span class="score-val" id="score-calc-count">0</span>
+                        </div>
+                        <div class="score-item">
+                            <span>QamoMATH highest session streak</span>
+                            <span class="score-val" id="score-math-streak">0</span>
+                        </div>
+                        <div class="score-item">
+                            <span>Connect 4 total moves made</span>
+                            <span class="score-val" id="score-c4-moves">0</span>
+                        </div>
+                        <div class="score-item">
+                            <span>Stix Stax Stonz highest stack</span>
+                            <span class="score-val" id="score-stix-stack">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Launch Widget -->
+                <div class="widget-card">
+                    <div class="widget-title">
+                        🚀 Quick Launch Deck
+                    </div>
+                    <div class="quick-grid">
+                        <button class="quick-btn" onclick="launchApp('CalcuN8r', 'apps/CalcuN8r.html', 'nav-app-calc')">CalcuN8r</button>
+                        <button class="quick-btn" onclick="launchApp('QamoMATH', 'apps/QamoMATH/QamoMATH.html', 'nav-app-math')">QamoMATH</button>
+                        <button class="quick-btn" onclick="launchApp('Connect 4', 'apps/C4N8.htm', 'nav-game-c4')">Connect 4</button>
+                        <button class="quick-btn" onclick="launchApp('Stix Stax Stonz', 'apps/StixStaxStonzV1.htm', 'nav-game-ss')">Stix Stax</button>
+                        <button class="quick-btn" onclick="launchApp('Qamelot TD', 'apps/QamelotTacticalDefensev1.htm', 'nav-game-td1')">Qamelot TD</button>
+                        <button class="quick-btn" onclick="showRemoverView()">AI Remover</button>
+                    </div>
+                </div>
+
+                <!-- Domain Customization Guide Widget -->
+                <div class="widget-card" style="grid-column: 1 / -1;">
+                    <div class="widget-title">
+                        🌐 Hosting & Custom Domain CNAME Configuration
+                    </div>
+                    <div class="guide-steps">
+                        <div>To run this dashboard online, push `index.html` and the `apps/` folder to a GitHub repository, then enable **GitHub Pages** under repository settings.</div>
+                        <div>To bind a custom domain (e.g. `dashboard.qamelot.com`):</div>
+                        <div class="step-list">
+                            <div class="step-item">1. Create a file named <code>CNAME</code> (no file extension) in the root of your GitHub repository.</div>
+                            <div class="step-item">2. Type your domain in it (e.g. <code>dashboard.qamelot.com</code>) and save.</div>
+                            <div class="step-item">3. Configure your domain registrar's DNS records: point a <strong>CNAME record</strong> to <code>yourusername.github.io</code>.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- VIEW 2: Background Remover Landing -->
+        <div class="view-content" id="view-remover">
             <div class="panel">
                 <div class="panel-heading">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-purple)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 18V6"/><path d="M6 12h12"/></svg>
@@ -498,14 +1006,14 @@
                     </ol>
                 </div>
 
-                <a href="https://www.adobe.com/express/feature/image/remove-background" target="_blank" class="btn-primary" style="margin-top: 1rem;">
+                <a href="https://www.adobe.com/express/feature/image/remove-background" target="_blank" class="btn-primary" style="margin-top: 1rem;" onclick="logConsoleAction('Redirected user to Adobe Express Background Remover.')">
                     Open Adobe Background Remover
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                 </a>
             </div>
         </div>
 
-        <!-- VIEW 2: Embedded App Deck Viewer -->
+        <!-- VIEW 3: Embedded App Deck Viewer -->
         <div class="view-content" id="view-app-viewer">
             <div class="app-viewer-container">
                 <div class="app-viewer-bar">
@@ -518,67 +1026,277 @@
                             🔄 Reload
                         </button>
                         <button class="app-control-btn" onclick="toggleIframeFullscreen()">
-                            🎵 Fullscreen
+                            🎵 Fullscreen [Alt+F]
                         </button>
-                        <button class="app-control-btn" onclick="showRemoverView()" style="border-color: rgba(239, 68, 68, 0.3); color: #fca5a5;">
-                            🚪 Close App
+                        <button class="app-control-btn" onclick="showHomeView()" style="border-color: rgba(239, 68, 68, 0.3); color: #fca5a5;">
+                            🚪 Close App [Esc]
                         </button>
                     </div>
                 </div>
                 <div class="iframe-wrapper">
-                    <iframe src="" class="app-iframe" id="app-iframe"></iframe>
+                    <!-- Loading Spinner Overlay -->
+                    <div id="iframe-loader" class="iframe-loader">
+                        <div class="spinner"></div>
+                        <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Launching Application Sandbox...</span>
+                    </div>
+                    <iframe src="" class="app-iframe" id="app-iframe" onload="hideIframeLoader()"></iframe>
                 </div>
+            </div>
+        </div>
+
+        <!-- collapsible logs drawer -->
+        <div class="dev-console collapsed" id="dev-console">
+            <div class="dev-console-header" onclick="toggleDevConsole()">
+                <span style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span class="console-indicator"></span>
+                    Developer Console Logs
+                </span>
+                <span id="dev-console-toggle-icon">▲</span>
+            </div>
+            <div class="dev-console-body" id="dev-console-body">
+                <div class="console-log-line info">> DevConsole initialized. Listening to dashboard events.</div>
             </div>
         </div>
     </main>
 
     <script>
-        // Switch view to Background Remover Panel
-        function showRemoverView() {
-            // Unactivate nav items
+        let selectedFile = null;
+        let uploadTab = 'local';
+        let currentActiveNavId = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Clock Initialization
+            setInterval(updateClock, 1000);
+            updateClock();
+
+            // Load theme & notepad from localStorage
+            const savedTheme = localStorage.getItem("dev-theme") || "cyberpunk";
+            changeTheme(savedTheme);
+            document.getElementById("theme-selector").value = savedTheme;
+
+            const savedNote = localStorage.getItem("dev-note") || "";
+            document.getElementById("notepad").value = savedNote;
+
+            // Load metrics from localStorage
+            loadMetrics();
+
+            // Setup iframe console message listener (Feature 5 & 10)
+            window.addEventListener("message", (event) => {
+                // Listen to metrics & logs dispatched from iframes
+                if (event.data && typeof event.data === 'object') {
+                    if (event.data.type === 'log') {
+                        logConsoleAction(`[Iframe ${event.data.app || 'App'}] ${event.data.message}`, event.data.level || 'info');
+                    }
+                    if (event.data.type === 'metric') {
+                        incrementMetric(event.data.key, event.data.value);
+                    }
+                }
+            });
+
+            // Global Keyboard Shortcuts (Feature 7)
+            document.addEventListener("keydown", (e) => {
+                // Esc key to close apps and go home
+                if (e.key === "Escape") {
+                    showHomeView();
+                    logConsoleAction("Keyboard shortcut triggered: return home (Esc).", "info");
+                }
+                // Alt+R to reload the active iframe
+                if (e.altKey && (e.key === "r" || e.key === "R")) {
+                    e.preventDefault();
+                    reloadActiveApp();
+                    logConsoleAction("Keyboard shortcut triggered: reload application (Alt+R).", "info");
+                }
+                // Alt+F to toggle fullscreen
+                if (e.altKey && (e.key === "f" || e.key === "F")) {
+                    e.preventDefault();
+                    toggleIframeFullscreen();
+                    logConsoleAction("Keyboard shortcut triggered: toggle fullscreen (Alt+F).", "info");
+                }
+            });
+
+            // Check if iframe has load failure (Feature 3)
+            const iframe = document.getElementById("app-iframe");
+            iframe.addEventListener("error", () => {
+                logConsoleAction("Iframe failed to load asset directory. Verify files exist in apps/ folder.", "error");
+                hideIframeLoader();
+            });
+            
+            logConsoleAction("DevDashboard fully loaded in static mode.", "success");
+        });
+
+        // 1. Digital Clock & Calendar Widget (Feature 1)
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toTimeString().split(' ')[0];
+            document.getElementById("clock-time").innerText = timeStr;
+
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateStr = now.toLocaleDateString('en-US', options).toUpperCase();
+            document.getElementById("clock-date").innerText = dateStr;
+        }
+
+        // 2. Developer Notepad Widget (Feature 1)
+        function saveNote(value) {
+            localStorage.setItem("dev-note", value);
+        }
+
+        // 3. Search & Filter Bar (Feature 2)
+        function filterSidebar(query) {
+            const lowerQuery = query.toLowerCase();
+            const items = document.querySelectorAll(".nav-section[data-group] .nav-item");
+            
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                const tooltip = (item.getAttribute("data-tooltip") || "").toLowerCase();
+                
+                if (text.includes(lowerQuery) || tooltip.includes(lowerQuery)) {
+                    item.style.display = "flex";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+
+            // Hide/Show section titles depending on active elements
+            const sections = document.querySelectorAll(".nav-section[data-group]");
+            sections.forEach(sec => {
+                const visibleItems = sec.querySelectorAll(".nav-item[style='display: flex;'], .nav-item:not([style])");
+                if (visibleItems.length === 0) {
+                    sec.style.display = "none";
+                } else {
+                    sec.style.display = "flex";
+                }
+            });
+        }
+
+        // 4. Custom Theme Switcher (Feature 4)
+        function changeTheme(theme) {
+            document.body.className = '';
+            if (theme !== 'cyberpunk') {
+                document.body.classList.add(`theme-${theme}`);
+            }
+            localStorage.setItem("dev-theme", theme);
+            logConsoleAction(`Active style template changed to: ${theme}.`, "info");
+        }
+
+        // 5. Iframe Load Spinner (Feature 3)
+        function hideIframeLoader() {
+            document.getElementById("iframe-loader").classList.add("hidden");
+        }
+
+        // 6. Metrics & LocalStorage Score Recorder (Feature 5)
+        function loadMetrics() {
+            document.getElementById("score-calc-count").innerText = localStorage.getItem("metric-calc-count") || 0;
+            document.getElementById("score-math-streak").innerText = localStorage.getItem("metric-math-streak") || 0;
+            document.getElementById("score-c4-moves").innerText = localStorage.getItem("metric-c4-moves") || 0;
+            document.getElementById("score-stix-stack").innerText = localStorage.getItem("metric-stix-stack") || 0;
+        }
+
+        function incrementMetric(key, value) {
+            // For count metrics, add. For streak/high scores, save if max.
+            if (key === 'calc-count' || key === 'c4-moves') {
+                let current = parseInt(localStorage.getItem(`metric-${key}`) || 0);
+                localStorage.setItem(`metric-${key}`, current + (value || 1));
+            } else if (key === 'math-streak' || key === 'stix-stack') {
+                let current = parseInt(localStorage.getItem(`metric-${key}`) || 0);
+                if (value > current) {
+                    localStorage.setItem(`metric-${key}`, value);
+                }
+            }
+            loadMetrics();
+            logConsoleAction(`Metric update recorded: [${key}] = ${value}`, "success");
+        }
+
+        // 7. Developer Log Panel Drawer (Feature 10)
+        function toggleDevConsole() {
+            const consoleBox = document.getElementById("dev-console");
+            const icon = document.getElementById("dev-console-toggle-icon");
+            if (consoleBox.classList.contains("collapsed")) {
+                consoleBox.classList.remove("collapsed");
+                icon.innerText = "▼";
+            } else {
+                consoleBox.classList.add("collapsed");
+                icon.innerText = "▲";
+            }
+        }
+
+        function logConsoleAction(message, level = 'success') {
+            const body = document.getElementById("dev-console-body");
+            const line = document.createElement("div");
+            line.className = `console-log-line ${level}`;
+            
+            const now = new Date();
+            const stamp = now.toTimeString().split(' ')[0];
+            line.innerText = `[${stamp}] > ${message}`;
+            
+            body.appendChild(line);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        // Navigation Views Controller
+        function showHomeView() {
+            // Clean sidebar state
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            // Activate remover button
+
+            // Toggle panels
+            document.getElementById("view-app-viewer").classList.remove("active");
+            document.getElementById("view-remover").classList.remove("active");
+            document.getElementById("view-home").classList.add("active");
+
+            // Titles reset
+            document.getElementById("view-title").innerText = "DevDashboard Hub";
+            document.getElementById("view-subtitle").innerText = "Unified environment control and custom sandbox applications";
+
+            document.getElementById("app-iframe").src = '';
+            logConsoleAction("Switched workspace view to: Dashboard Home.", "info");
+        }
+
+        function showRemoverView() {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             document.getElementById("nav-remover").classList.add('active');
 
-            // Toggle view panels
+            document.getElementById("view-home").classList.remove("active");
             document.getElementById("view-app-viewer").classList.remove("active");
             document.getElementById("view-remover").classList.add("active");
 
-            // Reset Titles
             document.getElementById("view-title").innerText = "AI Background Remover";
             document.getElementById("view-subtitle").innerText = "Remove backgrounds instantly using Adobe Express AI";
-            
-            // Clear iframe
+
             document.getElementById("app-iframe").src = '';
+            logConsoleAction("Switched workspace view to: AI Background Remover.", "info");
         }
 
-        // Launch selected app inside Iframe Deck
         function launchApp(title, path, navId) {
-            // Unactivate all items
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             
-            // Activate selected item
             const activeItem = document.getElementById(navId);
             if (activeItem) activeItem.classList.add('active');
 
-            // Hide remover view, show app viewer
+            // Hide normal panels, show app frame
+            document.getElementById("view-home").classList.remove("active");
             document.getElementById("view-remover").classList.remove("active");
             document.getElementById("view-app-viewer").classList.add("active");
 
-            // Update title row
-            document.getElementById("view-title").innerText = title;
-            document.getElementById("view-subtitle").innerText = `Local Application Deck: ${path}`;
+            // Setup loading loader overlay
+            document.getElementById("iframe-loader").classList.remove("hidden");
 
-            // Load in iframe
+            // Titles updates
+            document.getElementById("view-title").innerText = title;
+            document.getElementById("view-subtitle").innerText = `Sandbox Path: ${path}`;
+
+            // Load iframe
             document.getElementById("active-app-title").innerText = title;
             const iframe = document.getElementById("app-iframe");
             iframe.src = path;
+            
+            logConsoleAction(`Launching app: ${title} (${path}).`, "info");
         }
 
         function reloadActiveApp() {
             const iframe = document.getElementById("app-iframe");
             if (iframe.src) {
+                document.getElementById("iframe-loader").classList.remove("hidden");
                 iframe.src = iframe.src;
+                logConsoleAction("Application sandbox reload triggered.", "info");
             }
         }
 
@@ -586,7 +1304,7 @@
             const wrapper = document.querySelector('.iframe-wrapper');
             if (!document.fullscreenElement) {
                 wrapper.requestFullscreen().catch(err => {
-                    alert(`Error attempting to enable full-screen mode: ${err.message}`);
+                    logConsoleAction(`Error entering Fullscreen mode: ${err.message}`, "error");
                 });
             } else {
                 document.exitFullscreen();

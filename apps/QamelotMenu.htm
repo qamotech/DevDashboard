@@ -12,18 +12,18 @@
       =======================================================
     */
     :root {
-        --cursor-default: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><polygon points='16,2 28,24 16,19 4,24' fill='%23060a14' stroke='%2300f0ff' stroke-width='2' stroke-linejoin='round'/><polygon points='16,6 24,20 16,17 8,20' fill='%23153c6e'/></svg>") 16 2, auto;
-        --cursor-hover: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><polygon points='16,2 28,24 16,19 4,24' fill='%2300f0ff' stroke='%23ffffff' stroke-width='2' stroke-linejoin='round'/><polygon points='16,6 24,20 16,17 8,20' fill='%23ffffff'/></svg>") 16 2, pointer;
+        --cursor-default: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><polygon points='16,2 28,24 16,19 4,24' fill='%23060913' stroke='%2300ff66' stroke-width='2' stroke-linejoin='round'/><polygon points='16,6 24,20 16,17 8,20' fill='%2300d2ff'/></svg>") 16 2, auto;
+        --cursor-hover: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><polygon points='16,2 28,24 16,19 4,24' fill='%2300ff66' stroke='%23ffffff' stroke-width='2' stroke-linejoin='round'/><polygon points='16,6 24,20 16,17 8,20' fill='%23ffffff'/></svg>") 16 2, pointer;
     }
 
     body {
         margin: 0;
         padding: 0;
-        background-color: #050814;
+        background-color: #060913;
         background-image: 
-            radial-gradient(circle at 50% 50%, #111830 0%, #050814 80%),
-            linear-gradient(rgba(126, 16, 255, 0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(126, 16, 255, 0.05) 1px, transparent 1px);
+            radial-gradient(circle at 50% 50%, #0a162b 0%, #060913 80%),
+            linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
         background-size: 100% 100%, 20px 20px, 20px 20px;
         font-family: 'Orbitron', sans-serif;
         display: flex;
@@ -213,7 +213,17 @@
 <body>
 
     <header class="dashboard-header">
-        <img src="https://lh3.googleusercontent.com/sitesv/AA5AbUCGCuu-5JOE4Qe5lz-xPlXBakRzEQ6Co9YbxdXkqbOXfVT2mYhwYxmUQZhOMOzj4UTjhJKZ6gdprRPXx6t2zU9RxtonjCOkXY7WdJSxMhzR7rO0U6nBKGPLGvA_Knb3pjh6cCIx4-HOacsuksONVivgrKUgzYAq-C9tzZFc13_7FKbYj3dH99dbrsLiazyzLy4832-e7IwwTcTyc2dr8FSOiNYhZLyWGbsdog=w1280" alt="qamelot001.png Logo" class="brand-logo">
+        <svg class="brand-logo" width="48" height="48" viewBox="0 0 100 100" style="filter: drop-shadow(0 0 8px #00ff66); margin-right: 15px;">
+            <defs>
+                <linearGradient id="g-logo" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00d2ff" />
+                    <stop offset="100%" stop-color="#00ff66" />
+                </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="url(#g-logo)" stroke-width="6" />
+            <path d="M35 32 L65 32 L65 48 L50 68 L35 48 Z" fill="none" stroke="url(#g-logo)" stroke-width="6" stroke-linejoin="round" />
+            <circle cx="50" cy="44" r="5" fill="#00ff66" />
+        </svg>
         <h1 class="brand-title">Qamelot Logistics</h1>
     </header>
     
