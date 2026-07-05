@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio & Project Hub</title>
+    
+    <!-- Google Fonts for a crisp, high-tech aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for modern icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- Global Reset & Base Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #0b0f19; /* Deep, high-tech dark background */
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* --- Header / Introduction Section --- */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: #ffffff;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 25px auto;
+        }
+
+        /* --- Electric Blue Neon Button --- */
+        .portfolio-button {
+            display: inline-block;
+            background: #00d2ff; 
+            color: #0b0f19;
+            text-decoration: none;
+            padding: 12px 28px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0px rgba(0, 210, 255, 0);
+            border: none;
+        }
+
+        .portfolio-button:hover {
+            transform: translateY(-2px);
+            color: #fff;
+            background: #00b4db;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.6); /* Vibrant laser glow */
+        }
+
+        /* --- Project Responsive Grid --- */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        /* --- Glassmorphic Neon Card Style --- */
+        .project-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 30px;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            color: #00d2ff;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .card-text {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .card-link {
+            color: #00d2ff;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s ease;
+        }
+
+        /* --- Card Hover Interactivity --- */
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 210, 255, 0.5); 
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.15);
+        }
+
+        .project-card:hover .card-link {
+            color: #ffffff;
+        }
+
+        /* --- CTA Banner / Connect Section --- */
+        .connect-section {
+            background: rgba(0, 210, 255, 0.03);
+            border: 1px solid rgba(0, 210, 255, 0.15);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .connect-section h2 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Header -->
+        <header>
+            <h1>PROJECT HUB</h1>
+            <p class="subtitle">Explore recent layouts, precision projects, and custom tech builds. Let's collaborate on your next design.</p>
+            <a href="#connect" class="portfolio-button">Get Started</a>
+        </header>
+
+        <!-- Sample Cards Grid -->
+        <main class="project-grid">
+            
+            <!-- Card 1 -->
+            <div class="project-card">
+                <div>
+                    <div class="card-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <h3 class="card-title">Custom Layouts</h3>
+                    <p class="card-text">Tailored blueprint designs, digital modeling, and structural layouts configured with pinpoint accuracy for modern spaces.</p>
+                </div>
+                <a href="#" class="card-link">View Scope <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="project-card">
+                <div>
+                    <div class="card-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <h3 class="card-title">Automation & Tools</h3>
+                    <p class="card-text">Developing smart calculation sheets, automated estimates, and quick-input tools optimized for fast deployment in the field.</p>
+                </div>
+                <a href="#" class="card-link">View Scope <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="project-card">
+                <div>
+                    <div class="card-icon"><i class="fa-solid fa-cubes"></i></div>
+                    <h3 class="card-title">Modern Portfolios</h3>
+                    <p class="card-text">Clean, high-performance web pages designed to clearly showcase accurate data, premium finishes, and clean lines to prospective clients.</p>
+                </div>
+                <a href="#" class="card-link">View Scope <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+        </main>
+
+        <!-- Connect Footer Banner -->
+        <section class="connect-section" id="connect">
+            <h2>Ready to start your project?</h2>
+            <p class="subtitle">Let's map out the specifications and get an accurate estimate rolling.</p>
+            <a href="mailto:your-email@example.com" class="portfolio-button"><i class="fa-solid fa-envelope"></i> Message Me</a>
+        </section>
+
+    </div>
+
+</body>
+</html>
