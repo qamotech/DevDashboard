@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>New Perspective Painting LLC</title>
+  <link rel="icon" type="image/svg+xml" href="assets/perspective-placeholder-logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -92,13 +93,12 @@ img {
   font-weight: 800;
 }
 
-.brand-mark {
-  width: 28px;
-  height: 28px;
-  border: 3px solid currentColor;
-  border-right-color: var(--coral);
-  filter: drop-shadow(0 0 10px rgba(201, 99, 74, 0.54));
-  transform: skewX(-12deg);
+.brand-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(201, 99, 74, 0.42));
 }
 
 .nav-links {
@@ -962,11 +962,8 @@ footer {
 <body>
   <header class="site-header">
     <div style="display: flex; align-items: center; gap: 10px;">
-      <a href="../../index.html" class="home-favicon-link" title="Return to Hub Home" style="display: flex; align-items: center; transition: transform 0.2s ease;">
-        <img src="https://i.imgur.com/p7JzFKA.png" alt="Qamelot Favicon" style="width: 28px; height: 28px; object-fit: contain;">
-      </a>
       <a class="brand" href="#top" aria-label="New Perspective Painting LLC home">
-        <span class="brand-mark"></span>
+        <img src="assets/perspective-placeholder-logo.svg" alt="" class="brand-logo">
         New Perspective Painting
       </a>
     </div>

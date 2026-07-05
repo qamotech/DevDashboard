@@ -711,6 +711,13 @@
     const splats = [];
     const afterImages = [];
     const texts = [];
+    const specialBursts = [];
+    const specialImages = [
+      { id: "cyber", src: "assets/explosion-cyber-glass.png", img: new Image() },
+      { id: "cartoon", src: "assets/explosion-cartoon.png", img: new Image() },
+      { id: "realistic", src: "assets/explosion-realistic.png", img: new Image() }
+    ];
+    specialImages.forEach(asset => { asset.img.src = asset.src; });
     const camera = { x: 0, y: 0, zoom: 1 };
     let boardIndex = 0;
     const boards = [
@@ -787,7 +794,7 @@
         name, x, y, vx: 0, vy: 0, r: 42, color, cpu,
         face: cpu ? -1 : 1, ground: false, jumps: 2, damage: 0, stocks: 3,
         shield: 100, shieldHeld: false, justShield: 0, counter: 0, hurt: 0, stun: 0, attack: null, charge: null, slam: null,
-        weaponLevel: 1, combo: 0, comboTimer: 0, dashTrail: 0, grab: 0, invuln: 60, squash: 0, aiTimer: 0, input: {}
+        weaponLevel: 1, combo: 0, comboTimer: 0, dashTrail: 0, damageDealt: 0, specialCount: 0, grab: 0, invuln: 60, squash: 0, aiTimer: 0, input: {}
       };
     }
 
@@ -850,6 +857,9 @@
       f.slam = null;
       f.weaponLevel = 1;
       f.combo = 0;
+      f.comboTimer = 0;
+      f.damageDealt = 0;
+      f.specialCount = 0;
       f.invuln = 100;
       f.prev = {};
     }
@@ -1081,6 +1091,7 @@
         target.vx = -attacker.attack.dx * 5;
         target.vy = -9;
         attacker.damage += 8;
+        addDealtDamage(target, 8);
         attacker.vx = -attacker.attack.dx * 20;
         attacker.vy = -13;
         attacker.hurt = 24;
@@ -1106,6 +1117,7 @@
       const power = attacker.color;
       const dmg = attacker.attack.damage * power.punch;
       target.damage += dmg;
+      addDealtDamage(attacker, dmg);
       const kb = attacker.attack.kb * (1 + target.damage / 145);
       target.vx = attacker.attack.dx * kb;
       target.vy = (attacker.attack.dy * kb * .48) - kb * .52 - (power.gravity ? 4 : 0);
@@ -1117,6 +1129,30 @@
       target.squash = .34;
       shake = Math.max(shake, attacker.attack.type === "smash" ? 13 : 7);
       pop(target.x, target.y, power.hex, attacker.attack.type === "smash" ? 44 : 26, attacker.attack.type === "smash" ? 11 : 7);
+    }
+
+    function addDealtDamage(f, amount) {
+      if (!amount || amount <= 0) return;
+      f.damageDealt += amount;
+      if (f.damageDealt >= 150) {
+        f.damageDealt -= 150;
+        triggerSpecial(f);
+      }
+    }
+
+    function triggerSpecial(f) {
+      const asset = specialImages[f.specialCount % specialImages.length];
+      f.specialCount++;
+      specialBursts.push({
+        img: asset.img,
+        color: f.color.hex,
+        name: `${f.color.name} special`,
+        life: 115,
+        max: 115
+      });
+      shake = Math.max(shake, 24);
+      floatText(f.x, f.y - 105, "SPECIAL!", f.color.hex);
+      pop(f.x, f.y - 20, f.color.hex, 110, 16);
     }
 
     function startSlam(attacker, target) {
@@ -1162,7 +1198,9 @@
         victim.y = attacker.y - 110 + p * 150;
       } else {
         victim.slam = null;
-        victim.damage += 16 + attacker.weaponLevel * 2;
+        const slamDamage = 16 + attacker.weaponLevel * 2;
+        victim.damage += slamDamage;
+        addDealtDamage(attacker, slamDamage);
         victim.vx = s.dir * (15 + attacker.weaponLevel * 2);
         victim.vy = -17;
         victim.hurt = 24;
@@ -1210,6 +1248,8 @@
       f.vx = 0;
       f.vy = 0;
       f.damage = Math.max(0, f.damage * .15);
+      f.damageDealt = 0;
+      f.specialCount = 0;
       f.shield = 100;
       f.invuln = 120;
       f.stun = 0;
@@ -1374,6 +1414,10 @@
     }
 
     function updateParticles() {
+      for (const burst of specialBursts) burst.life--;
+      for (let i = specialBursts.length - 1; i >= 0; i--) {
+        if (specialBursts[i].life <= 0) specialBursts.splice(i, 1);
+      }
       for (const img of afterImages) {
         img.life *= .88;
         img.y += .2;
@@ -1722,7 +1766,33 @@
       drawFighter(p2);
       ctx.restore();
       if (paused) drawPauseOverlay(view);
+      drawSpecialBursts(view);
       if (shake > 0) shake *= .86;
+    }
+
+    function drawSpecialBursts(view) {
+      specialBursts.forEach(burst => {
+        const p = 1 - burst.life / burst.max;
+        const alpha = p < .15 ? p / .15 : Math.max(0, 1 - Math.max(0, p - .72) / .28);
+        const scale = .38 + Math.sin(Math.min(1, p) * Math.PI) * .72 + p * .42;
+        const size = Math.min(view.rect.width, view.rect.height) * 1.45 * scale;
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = `rgba(255,255,255,${0.10 * alpha})`;
+        ctx.fillRect(0, 0, view.rect.width, view.rect.height);
+        ctx.shadowColor = burst.color;
+        ctx.shadowBlur = 48;
+        if (burst.img.complete && burst.img.naturalWidth) {
+          ctx.drawImage(burst.img, view.rect.width / 2 - size / 2, view.rect.height / 2 - size / 2, size, size);
+        }
+        ctx.globalAlpha = alpha * .9;
+        ctx.strokeStyle = burst.color;
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(view.rect.width / 2, view.rect.height / 2, size * .34, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      });
     }
 
     function drawPauseOverlay(view) {
@@ -1748,8 +1818,8 @@
       document.querySelector("#p2Damage").style.setProperty("--c", p2.color.hex);
       document.querySelector("#p1Name").textContent = `P1 ${p1.color.name}`;
       document.querySelector("#p2Name").textContent = `CPU ${p2.color.name}`;
-      document.querySelector("#p1Stats").textContent = `${Math.round(p1.damage)}% damage | ${p1.stocks} stocks`;
-      document.querySelector("#p2Stats").textContent = `${Math.round(p2.damage)}% damage | ${p2.stocks} stocks`;
+      document.querySelector("#p1Stats").textContent = `${Math.round(p1.damage)}% damage | ${p1.stocks} stocks | special ${Math.floor(p1.damageDealt)}/150`;
+      document.querySelector("#p2Stats").textContent = `${Math.round(p2.damage)}% damage | ${p2.stocks} stocks | special ${Math.floor(p2.damageDealt)}/150`;
       const padText = gamepadName ? gamepadName.slice(0, 34) : "Press a controller button";
       document.querySelector("#padStatus").textContent = `${padText} | ${boards[boardIndex].name}`;
     }
