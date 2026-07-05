@@ -1,0 +1,17 @@
+{
+  "name": "devdashboard-static-build",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:locmein": "./build-esbuild.sh",
+    "build": "npm run build:locmein",
+    "lhci": "lhci autorun --upload.target=temporary-public-storage"
+  },
+  "devDependencies": {
+    "esbuild": "^0.18.0",
+    "postcss": "^8.4.24",
+    "postcss-cli": "^10.1.0",
+    "cssnano": "^5.1.14",
+    "lighthouse-ci": "^0.11.0"
+  }
+}
