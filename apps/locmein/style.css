@@ -89,15 +89,15 @@ body {
 
 /* Custom Dreadlock Border-Image (Champagne gold twist, plum core) */
 .dreadlock-border {
-    border: 12px solid transparent;
-    border-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'><path d='M0 18 C6 6, 12 6, 18 18 C24 30, 30 30, 36 18 M0 18 C6 30, 12 30, 18 18 C24 6, 30 6, 36 18' fill='none' stroke='%23cfb997' stroke-width='4' stroke-linecap='round'/><path d='M0 18 C6 12, 12 12, 18 18 C24 24, 30 24, 36 18' fill='none' stroke='%234b1b6d' stroke-width='1.5' stroke-linecap='round'/></svg>") 12 repeat;
+    border: 16px solid transparent;
+    border-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='locGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%233b2219'/%3E%3Cstop offset='40%25' stop-color='%23543224'/%3E%3Cstop offset='70%25' stop-color='%23845a3d'/%3E%3Cstop offset='90%25' stop-color='%23bfa15f'/%3E%3Cstop offset='100%25' stop-color='%232b1811'/%3E%3C/linearGradient%3E%3ClinearGradient id='goldCuff' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%23aa8532'/%3E%3Cstop offset='50%25' stop-color='%23ffd700'/%3E%3Cstop offset='100%25' stop-color='%23ffd700'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0,24 Q6,12 12,24 T24,24 T36,24 T48,24' fill='none' stroke='%231b0f0b' stroke-width='14' stroke-linecap='round' opacity='0.7'/%3E%3Cpath d='M0,20 C8,6 16,36 24,20 C32,4 40,34 48,20' fill='none' stroke='url(%23locGrad)' stroke-width='9' stroke-linecap='round'/%3E%3Cpath d='M0,28 C8,42 16,12 24,28 C32,44 40,14 48,28' fill='none' stroke='url(%23locGrad)' stroke-width='8' stroke-linecap='round' opacity='0.95'/%3E%3Cpath d='M2,18 C6,22 10,14 14,22' fill='none' stroke='%23aa8532' stroke-width='1' opacity='0.6'/%3E%3Cpath d='M12,26 C16,30 20,22 24,30' fill='none' stroke='%23bfa15f' stroke-width='1' opacity='0.7'/%3E%3Cpath d='M26,16 C30,22 34,14 38,22' fill='none' stroke='%23e5c583' stroke-width='0.8' opacity='0.8'/%3E%3Cpath d='M36,28 C40,32 44,24 48,32' fill='none' stroke='%23543224' stroke-width='1.2' opacity='0.5'/%3E%3Cpath d='M6,10 Q8,14 6,18 M18,34 Q15,38 18,40 M32,8 Q34,12 31,15 M42,36 Q45,39 42,42' fill='none' stroke='%23845a3d' stroke-width='0.6' opacity='0.8'/%3E%3Crect x='22' y='8' width='4' height='32' rx='1' fill='url(%23goldCuff)' stroke='%238a6d25' stroke-width='0.5'/%3E%3Cline x1='22' y1='14' x2='26' y2='14' stroke='%23fff' stroke-width='0.5' opacity='0.6'/%3E%3Cline x1='22' y1='26' x2='26' y2='26' stroke='%23fff' stroke-width='0.5' opacity='0.6'/%3E%3C/svg%3E") 16 repeat;
 }
 
 /* Glassmorphism utility */
 .glass {
     background: var(--bg-card);
-    backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
     border: 1px solid var(--border-color);
     border-radius: 16px;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
@@ -125,6 +125,23 @@ header {
     gap: 0.75rem;
 }
 
+.home-favicon-link {
+    display: flex;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.home-favicon-link:hover {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 8px var(--accent-purple));
+}
+
+.home-favicon-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
 .logo-img {
     width: 45px;
     height: 45px;
@@ -141,6 +158,7 @@ header {
     letter-spacing: 2px;
     background: linear-gradient(to right, var(--accent-gold), var(--accent-purple));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 20px rgba(138, 79, 207, 0.2);
 }
@@ -291,6 +309,7 @@ nav a:hover::after, nav a.active::after {
     letter-spacing: 2px;
     background: linear-gradient(to right, #fff, var(--text-secondary));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     position: relative;
 }
@@ -879,17 +898,15 @@ footer {
 .swatch-aqua { background-color: #00f2fe; }
 .swatch-pink { background-color: #ff007f; }
 
-/* Dynamic Color Overlay */
-.preview-color-overlay {
+/* Accessories Overlay */
+.preview-accessories-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: transparent;
-    mix-blend-mode: color;
     pointer-events: none;
-    transition: background-color 0.4s ease-in-out;
+    z-index: 5;
 }
 
 /* Routine Planner Styling */
@@ -972,3 +989,124 @@ footer {
     font-size: 0.8rem;
     color: var(--text-secondary);
 }
+
+/* Contact Console Styles */
+.full-width-control {
+    grid-column: 1 / -1;
+}
+
+.tips-section {
+    padding-top: 1rem;
+}
+
+.contact-box {
+    position: relative;
+    overflow: hidden;
+    padding: 2.5rem;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+}
+
+.lock-container {
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.lock-icon {
+    color: var(--accent-gold);
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: drop-shadow(0 0 8px rgba(207, 185, 151, 0.4));
+}
+
+.lock-shackle {
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: 17px 11px;
+}
+
+.contact-subtitle {
+    font-family: var(--font-display);
+    color: #fff;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+}
+
+.contact-desc {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    margin-bottom: 2rem;
+}
+
+.contact-details-panel {
+    display: none;
+    transform: scale(0.95);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.contact-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px dashed rgba(207, 185, 151, 0.2);
+    padding-bottom: 0.75rem;
+}
+
+.contact-icon {
+    font-size: 2.2rem;
+}
+
+.contact-name {
+    margin: 0;
+    color: #fff;
+    font-size: 1.2rem;
+    font-family: var(--font-display);
+}
+
+.contact-org {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--accent-gold);
+}
+
+.contact-item {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+}
+
+.contact-link {
+    color: var(--accent-gold);
+    text-decoration: underline;
+}
+
+.contact-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-cyber-contact {
+    min-width: 200px;
+}
+
+.btn-download-vcf {
+    display: none;
+    min-width: 200px;
+    text-decoration: none;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+}
+
