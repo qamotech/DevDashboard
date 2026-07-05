@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/p7JzFKA.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qamelot Logistics Dashboard</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap');
+
+    /* =======================================================
+      DYNAMIC GLOWING CURSORS (INLINE SVGS)
+      =======================================================
+    */
+    :root {
+        --cursor-default: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><polygon points='16,2 28,24 16,19 4,24' fill='%230a060d' stroke='%238a4fcf' stroke-width='2' stroke-linejoin='round'/><polygon points='16,6 24,20 16,17 8,20' fill='%23cfb997'/></svg>") 16 2, auto;
+        --cursor-hover: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><polygon points='16,2 28,24 16,19 4,24' fill='%238a4fcf' stroke='%23ffffff' stroke-width='2' stroke-linejoin='round'/><polygon points='16,6 24,20 16,17 8,20' fill='%23ffffff'/></svg>") 16 2, pointer;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #0a060d;
+        background-image: 
+            radial-gradient(circle at 50% 50%, #160e25 0%, #0a060d 80%),
+            linear-gradient(rgba(138, 79, 207, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(138, 79, 207, 0.05) 1px, transparent 1px);
+        background-size: 100% 100%, 20px 20px, 20px 20px;
+        font-family: 'Orbitron', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        box-sizing: border-box;
+        padding: 40px 20px 100px 20px; /* Extra bottom padding to clear the frozen footer */
+        color: white;
+        cursor: var(--cursor-default);
+    }
+
+    /* ====== HEADER & LOGO STYLE ====== */
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 40px;
+        z-index: 2;
+    }
+
+    .brand-logo {
+        width: 100%;
+        max-width: 280px;
+        height: auto;
+        filter: drop-shadow(0 0 15px rgba(138, 79, 207, 0.4));
+        margin-bottom: 15px;
+        transition: filter 0.3s ease;
+    }
+
+    .brand-logo:hover {
+        filter: drop-shadow(0 0 25px rgba(138, 79, 207, 0.7));
+    }
+
+    .brand-title {
+        font-size: 28px;
+        font-weight: 900;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #ffffff;
+        text-shadow: 0 0 10px rgba(138, 79, 207, 0.7), 0 0 20px rgba(207, 185, 151, 0.3);
+        margin: 0;
+    }
+
+    /* ====== SECTION WRAPPERS ====== */
+    .dashboard-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        width: 100%;
+        max-width: 680px; /* Widened to support a side-by-side or balanced look */
+    }
+
+    .section-title {
+        font-size: 13px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: #cfb997;
+        margin-bottom: 12px;
+        border-left: 3px solid #8a4fcf;
+        padding-left: 8px;
+        text-shadow: 0 0 5px rgba(138, 79, 207, 0.3);
+    }
+
+    .menu-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+        width: 100%;
+    }
+
+    /* ====== BUTTONS & MECHANICAL ENGAGEMENT ====== */
+    .btn-wrapper {
+        width: 100%;
+        filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.8)) drop-shadow(0px 8px 10px rgba(0, 0, 0, 0.6));
+        transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
+        cursor: var(--cursor-default);
+    }
+
+    .btn-wrapper:hover {
+        transform: translateY(-2px) scale(1.02); 
+        filter: drop-shadow(0 0 12px rgba(138, 79, 207, 0.5)) drop-shadow(0px 8px 10px rgba(0, 0, 0, 0.8));
+        cursor: var(--cursor-hover);
+    }
+
+    .btn-wrapper:hover .cyber-btn {
+        background: linear-gradient(to bottom, #8a4fcf 0%, #4b1b6d 25%, #160e25 75%, #cfb997 100%);
+    }
+
+    .btn-wrapper:active {
+        transform: translateY(2px) scale(0.99); 
+    }
+
+    .btn-wrapper:active .cyber-btn-inner {
+        background: linear-gradient(90deg, #8a4fcf 0%, #4b1b6d 50%, #8a4fcf 100%);
+        transition: background 0.1s;
+    }
+
+    .btn-wrapper:active .btn-text {
+        color: #ffffff;
+        text-shadow: 0 0 10px #ffffff, 0 0 20px #8a4fcf;
+    }
+
+    /* Outer Metallic Frame */
+    .cyber-btn {
+        height: 55px;
+        padding: 3px; 
+        background: linear-gradient(to bottom, #8a4fcf 0%, #4b1b6d 25%, #160e25 75%, #cfb997 100%);
+        clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px), 0 15px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    /* Inner Dark Panel */
+    .cyber-btn-inner {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, #0a060d 0%, #1c0e2b 50%, #0a060d 100%);
+        clip-path: polygon(13px 0, calc(100% - 13px) 0, 100% 13px, 100% calc(100% - 13px), calc(100% - 13px) 100%, 13px 100%, 0 calc(100% - 13px), 0 13px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cyber-btn-inner::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        box-shadow: inset 0px 4px 8px rgba(138, 79, 207, 0.2), inset 0px -4px 8px rgba(138, 79, 207, 0.05);
+        z-index: 1;
+    }
+
+    /* Text Styling */
+    .btn-text {
+        position: relative;
+        z-index: 2;
+        color: #e5dcf5;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        text-shadow: 0 0 5px rgba(138, 79, 207, 0.8), 0 0 10px rgba(138, 79, 207, 0.4);
+    }
+
+    /* ====== FROZEN SOCIAL FOOTER ====== */
+    .frozen-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        background: linear-gradient(to top, #03060f 80%, rgba(6, 10, 20, 0.9) 100%);
+        border-top: 1px solid rgba(0, 240, 255, 0.15);
+        box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(4px);
+    }
+
+    .social-links-container {
+        display: flex;
+        gap: 25px;
+    }
+
+    .social-link {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #5b738b;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: var(--cursor-hover);
+    }
+
+    .social-link:hover {
+        color: #00f0ff;
+        text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+    }
+    .menu-link {
+        text-decoration: none;
+        display: block;
+    }
+</style>
+</head>
+<body>
+
+    <header class="dashboard-header">
+        <a href="../index.html" class="home-favicon-link" title="Return to Hub Home" style="display: inline-block;">
+            <svg class="brand-logo" width="48" height="48" viewBox="0 0 100 100" style="margin-right: 15px;">
+                <defs>
+                    <linearGradient id="g-logo" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#cfb997" />
+                        <stop offset="100%" stop-color="#8a4fcf" />
+                    </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="url(#g-logo)" stroke-width="6" />
+                <path d="M35 32 L65 32 L65 48 L50 68 L35 48 Z" fill="none" stroke="url(#g-logo)" stroke-width="6" stroke-linejoin="round" />
+                <circle cx="50" cy="44" r="5" fill="#8a4fcf" />
+            </svg>
+        </a>
+        <h1 class="brand-title">Qamelot Logistics</h1>
+    </header>
+    
+    <main class="dashboard-grid">
+        
+        <section>
+            <div class="section-title">Operational Utilities</div>
+            <div class="menu-container">
+                <a href="https://www.odoo.com" target="_blank" rel="noopener" style="text-decoration: none;">
+                    <div class="btn-wrapper">
+                        <div class="cyber-btn">
+                            <div class="cyber-btn-inner">
+                                <span class="btn-text">Odoo Core ERP</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://script.google.com" target="_blank" rel="noopener" style="text-decoration: none;">
+                    <div class="btn-wrapper">
+                        <div class="cyber-btn">
+                            <div class="cyber-btn-inner">
+                                <span class="btn-text">Automation Engine</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://github.com" target="_blank" rel="noopener" style="text-decoration: none;">
+                    <div class="btn-wrapper">
+                        <div class="cyber-btn">
+                            <div class="cyber-btn-inner">
+                                <span class="btn-text">Deployment Repository</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-title">System Links</div>
+            <div class="menu-container">
+        <a href="locmein/index.html" class="menu-link">
+            <div class="btn-wrapper">
+                <div class="cyber-btn">
+                    <div class="cyber-btn-inner">
+                        <span class="btn-text">--LOC-ME-IN--</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+
+        <a href="StixStaxStonzV1.htm" style="text-decoration: none; display: block;">
+            <div class="btn-wrapper">
+                <div class="cyber-btn">
+                    <div class="cyber-btn-inner">
+                        <span class="btn-text">Stix Stax Stonz</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        
+        <a href="C4N8.htm" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--CONNECT4--</span></div></div></div>
+        </a>
+        
+        
+        <a href="QamelotTriNexusV1.htm" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--TRINEXUS--</span></div></div></div>
+        </a>
+        
+        
+        <a href="QamelotConquest.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--CONQUEST--</span></div></div></div>
+        </a>
+        
+        
+        <a href="QamelotMenu.htm" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--MENU--</span></div></div></div>
+        </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="frozen-footer">
+        
+        
+        <div>
+            
+        </div>
+    
+        <div class="social-links-container">
+            <a href="https://facebook.com" target="_blank" rel="noopener" class="social-link">Facebook</a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-link">LinkedIn</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener" class="social-link">Instagram</a>
+            <a href="https://youtube.com" target="_blank" rel="noopener" class="social-link">YouTube</a>
+        </div>
+        
+        <div>
+            
+        </div>
+        
+        
+    </footer>
+
+</body>
+</html>

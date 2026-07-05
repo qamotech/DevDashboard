@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Web App Dev Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #030712;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-rose: #f43f5e;
+            --accent-blue: #3b82f6;
+            --glass-blur: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 40%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-area h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #22d3ee, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-area p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Top Search & Filter Bar */
+        .controls-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-wrapper {
+            flex-grow: 1;
+            position: relative;
+            min-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.9rem 1rem 0.9rem 2.8rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(var(--glass-blur));
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(17, 24, 39, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 0.3rem;
+            border-radius: 12px;
+            backdrop-filter: blur(var(--glass-blur));
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .tab-btn.active {
+            color: white;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+        }
+
+        /* Dashboard Grid Layouts */
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        /* Bookmarks Directory */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(var(--glass-blur));
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(6, 182, 212, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(6, 182, 212, 0.05);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.75rem;
+        }
+
+        .category-icon {
+            font-size: 1.4rem;
+        }
+
+        .bookmark-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .bookmark-item a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid transparent;
+        }
+
+        .bookmark-item a:hover {
+            color: white;
+            background: rgba(6, 182, 212, 0.08);
+            border-color: rgba(6, 182, 212, 0.15);
+            padding-left: 1rem;
+        }
+
+        .bookmark-item a::after {
+            content: "→";
+            opacity: 0;
+            transition: transform 0.2s, opacity 0.2s;
+            transform: translateX(-4px);
+            font-weight: bold;
+            color: var(--accent-cyan);
+        }
+
+        .bookmark-item a:hover::after {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Dev Tools Section */
+        .tools-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+
+        .tools-sidebar {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.25rem;
+            backdrop-filter: blur(var(--glass-blur));
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            height: fit-content;
+        }
+
+        .tool-nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .tool-nav-btn:hover, .tool-nav-btn.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .tool-nav-btn.active {
+            background: rgba(6, 182, 212, 0.1);
+            border-left: 3px solid var(--accent-cyan);
+            border-radius: 4px 8px 8px 4px;
+        }
+
+        .tool-content-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(var(--glass-blur));
+        }
+
+        .tool-panel {
+            display: none;
+        }
+
+        .tool-panel.active {
+            display: block;
+        }
+
+        .tool-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tool-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Form elements */
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            background: rgba(3, 7, 18, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            padding: 0.8rem;
+            font-size: 0.95rem;
+            font-family: 'JetBrains Mono', monospace;
+            transition: border-color 0.2s;
+            margin-bottom: 1.25rem;
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        button.action-btn {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button.action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);
+        }
+
+        button.secondary-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button.secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .tool-output {
+            background: rgba(3, 7, 18, 0.9);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            min-height: 120px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            white-space: pre-wrap;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        /* Optimization Guide Card */
+        .guide-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .guide-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .guide-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.75rem;
+            backdrop-filter: blur(var(--glass-blur));
+        }
+
+        .guide-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.75rem;
+        }
+
+        .guide-card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .guide-item h4 {
+            font-size: 1rem;
+            color: var(--accent-cyan);
+            margin-bottom: 0.25rem;
+        }
+
+        .guide-item p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .guide-item code {
+            background: rgba(255, 255, 255, 0.05);
+            color: #f43f5e;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        /* Highlight classes */
+        .regex-match {
+            background-color: rgba(245, 158, 11, 0.3);
+            border-bottom: 2px solid var(--accent-yellow);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-area">
+                <h1>⚡ WEB APP DEV DASHBOARD</h1>
+                <p>Curated bookmark collection, instant tools, and optimizations for maximum productivity</p>
+            </div>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchSection('bookmarks')">Bookmarks Directory</button>
+                <button class="tab-btn" onclick="switchSection('tools')">Instant DevTools</button>
+                <button class="tab-btn" onclick="switchSection('optimizations')">Chrome Optimizations</button>
+            </div>
+        </header>
+
+        <div class="controls-row" id="search-container">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="bookmark-search" placeholder="Search 100+ developer links..." onkeyup="filterBookmarks()">
+            </div>
+        </div>
+
+        <!-- Section: Bookmarks -->
+        <div id="section-bookmarks" class="section-content active">
+            <div class="category-grid" id="bookmark-grid">
+                <!-- Bookmarks loaded dynamically via script below -->
+            </div>
+        </div>
+
+        <!-- Section: Offline Instant Tools -->
+        <div id="section-tools" class="section-content">
+            <div class="tools-layout">
+                <div class="tools-sidebar">
+                    <button class="tool-nav-btn active" onclick="switchTool('json')">🔧 JSON Formatter</button>
+                    <button class="tool-nav-btn" onclick="switchTool('regex')">🔬 Regex Tester</button>
+                    <button class="tool-nav-btn" onclick="switchTool('color')">🎨 Color Converter</button>
+                    <button class="tool-nav-btn" onclick="switchTool('text')">📝 Text Utilities</button>
+                </div>
+                <div class="tool-content-card">
+                    <!-- Tool: JSON Formatter -->
+                    <div id="tool-json" class="tool-panel active">
+                        <h2 class="tool-title">JSON Formatter & Validator</h2>
+                        <p class="tool-desc">Paste raw JSON to format, clean, and validate instantly.</p>
+                        <textarea id="json-input" placeholder='{"name":"dev","active":true}' rows="10"></textarea>
+                        <div class="btn-row">
+                            <button class="action-btn" onclick="formatJSON(2)">Format (2 Spaces)</button>
+                            <button class="action-btn" onclick="formatJSON(4)">Format (4 Spaces)</button>
+                            <button class="secondary-btn" onclick="minifyJSON()">Minify</button>
+                            <button class="secondary-btn" onclick="clearTool('json-input', 'json-output')">Clear</button>
+                        </div>
+                        <div class="tool-output" id="json-output">// Formatted output will appear here</div>
+                    </div>
+
+                    <!-- Tool: Regex Tester -->
+                    <div id="tool-regex" class="tool-panel">
+                        <h2 class="tool-title">Regex Tester</h2>
+                        <p class="tool-desc">Test regular expressions against target strings in real-time.</p>
+                        <label>Regular Expression (without slashes)</label>
+                        <input type="text" id="regex-pattern" placeholder="[a-zA-Z0-9]+@[a-z]+\.[a-z]+">
+                        <label>Target String</label>
+                        <textarea id="regex-text" placeholder="Enter test string here... example@test.com" rows="5"></textarea>
+                        <div class="btn-row">
+                            <button class="action-btn" onclick="runRegex()">Test Matches</button>
+                            <button class="secondary-btn" onclick="clearTool('regex-pattern', 'regex-output'); document.getElementById('regex-text').value=''">Clear</button>
+                        </div>
+                        <div class="tool-output" id="regex-output">// Results will appear here</div>
+                    </div>
+
+                    <!-- Tool: Color Converter -->
+                    <div id="tool-color" class="tool-panel">
+                        <h2 class="tool-title">Color Space Converter</h2>
+                        <p class="tool-desc">Convert colors between HEX, RGB, and HSL spaces instantly.</p>
+                        <label>Enter Color (HEX, RGB, or HSL)</label>
+                        <input type="text" id="color-input" placeholder="#06b6d4 or rgb(6, 182, 212) or hsl(190, 95%, 43%)">
+                        <div class="btn-row">
+                            <button class="action-btn" onclick="convertColor()">Convert Color</button>
+                            <button class="secondary-btn" onclick="clearTool('color-input', 'color-output')">Clear</button>
+                        </div>
+                        <div class="tool-output" id="color-output">// Conversion results will appear here</div>
+                    </div>
+
+                    <!-- Tool: Text Utilities -->
+                    <div id="tool-text" class="tool-panel">
+                        <h2 class="tool-title">Text & Base64 Utilities</h2>
+                        <p class="tool-desc">Perform basic operations on text strings offline.</p>
+                        <textarea id="text-input" placeholder="Type or paste string here..." rows="8"></textarea>
+                        <div class="btn-row">
+                            <button class="action-btn" onclick="textStats()">Analyze Stats</button>
+                            <button class="action-btn" onclick="base64Encode()">Base64 Encode</button>
+                            <button class="action-btn" onclick="base64Decode()">Base64 Decode</button>
+                            <button class="secondary-btn" onclick="clearTool('text-input', 'text-output')">Clear</button>
+                        </div>
+                        <div class="tool-output" id="text-output">// Results will appear here</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Chrome Optimizations -->
+        <div id="section-optimizations" class="section-content">
+            <div class="guide-grid">
+                <div class="guide-card">
+                    <h3>⚙️ Chrome Flags & Hidden Settings</h3>
+                    <ul>
+                        <li class="guide-item">
+                            <h4>JavaScript Harmony</h4>
+                            <p>Enable experimental JavaScript features: Go to <code>chrome://flags/#enable-javascript-harmony</code> and set to Enabled.</p>
+                        </li>
+                        <li class="guide-item">
+                            <h4>Experimental WebAssembly</h4>
+                            <p>Test cutting-edge WebAssembly features: Go to <code>chrome://flags/#enable-experimental-web-assembly-features</code>.</p>
+                        </li>
+                        <li class="guide-item">
+                            <h4>Developer Tools Experiments</h4>
+                            <p>Access hidden features in DevTools: Open DevTools, click Settings Gear -> Experiments, and check experimental options.</p>
+                        </li>
+                        <li class="guide-item">
+                            <h4>Local Overrides (Extremely Powerful)</h4>
+                            <p>Save local modifications of assets to serve instead of remote ones. Go to DevTools -> Sources -> Overrides and select a local directory.</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="guide-card">
+                    <h3>⌨️ Key DevTools Keyboard Shortcuts</h3>
+                    <ul>
+                        <li class="guide-item">
+                            <h4>Command Menu</h4>
+                            <p>Open settings, run code snippets, or run commands: <code>Ctrl + Shift + P</code> (Windows) / <code>Cmd + Shift + P</code> (Mac).</p>
+                        </li>
+                        <li class="guide-item">
+                            <h4>Console Clear & Toggle</h4>
+                            <p>Toggle DevTools: <code>F12</code> or <code>Ctrl + Shift + I</code>. Clear Console: <code>Ctrl + L</code>.</p>
+                        </li>
+                        <li class="guide-item">
+                            <h4>Inspect Mode</h4>
+                            <p>Select an element on the page to inspect: <code>Ctrl + Shift + C</code>.</p>
+                        </li>
+                        <li class="guide-item">
+                            <h4>Device Mode</h4>
+                            <p>Toggle mobile/responsive layout simulation: <code>Ctrl + Shift + M</code>.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Embed the 100+ bookmarks data direct inside the page for offline capabilities
+        const bookmarks = {
+            "Official Documentation": [
+                {"name": "MDN Web Docs", "url": "https://developer.mozilla.org/"},
+                {"name": "HTML Living Standard", "url": "https://html.spec.whatwg.org/"},
+                {"name": "ECMAScript Spec", "url": "https://tc39.es/ecma262/"},
+                {"name": "W3C Standards", "url": "https://www.w3.org/TR/"},
+                {"name": "TypeScript Docs", "url": "https://www.typescriptlang.org/docs/"},
+                {"name": "React Documentation", "url": "https://react.dev/"},
+                {"name": "Next.js Docs", "url": "https://nextjs.org/docs"},
+                {"name": "Vue.js Guide", "url": "https://vuejs.org/guide/introduction.html"},
+                {"name": "Svelte Docs", "url": "https://svelte.dev/docs"},
+                {"name": "Tailwind CSS Docs", "url": "https://tailwindcss.com/docs"},
+                {"name": "Node.js API Reference", "url": "https://nodejs.org/api/"},
+                {"name": "Express.js Guide", "url": "https://expressjs.com/"},
+                {"name": "Vite.js Guide", "url": "https://vite.dev/guide/"},
+                {"name": "Chrome DevTools Docs", "url": "https://developer.chrome.com/docs/devtools/"},
+                {"name": "Web.dev (Google)", "url": "https://web.dev/"}
+            ],
+            "Frontend Frameworks & Libs": [
+                {"name": "React Router", "url": "https://reactrouter.com/"},
+                {"name": "Redux Toolkit", "url": "https://redux-toolkit.js.org/"},
+                {"name": "Zustand (State)", "url": "https://zustand-demo.pmnd.rs/"},
+                {"name": "TanStack Query", "url": "https://tanstack.com/query/latest"},
+                {"name": "Framer Motion", "url": "https://www.framer.com/motion/"},
+                {"name": "Three.js (3D)", "url": "https://threejs.org/"},
+                {"name": "Chart.js", "url": "https://www.chartjs.org/"},
+                {"name": "D3.js", "url": "https://d3js.org/"},
+                {"name": "Bootstrap Docs", "url": "https://getbootstrap.com/docs/"},
+                {"name": "Shadcn UI", "url": "https://ui.shadcn.com/"},
+                {"name": "Chakra UI", "url": "https://chakra-ui.com/"},
+                {"name": "MUI (Material UI)", "url": "https://mui.com/"},
+                {"name": "Radix UI Primities", "url": "https://www.radix-ui.com/"},
+                {"name": "Alpine.js Docs", "url": "https://alpinejs.dev/"},
+                {"name": "Astro Framework", "url": "https://astro.build/"}
+            ],
+            "Web APIs & Standards": [
+                {"name": "Fetch API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API"},
+                {"name": "WebSockets API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API"},
+                {"name": "Service Workers", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API"},
+                {"name": "Canvas API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API"},
+                {"name": "Web Audio API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API"},
+                {"name": "Web Storage API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API"},
+                {"name": "IndexedDB API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API"},
+                {"name": "Web Workers API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"},
+                {"name": "WebAssembly", "url": "https://webassembly.org/"},
+                {"name": "WebRTC API", "url": "https://webrtc.org/"},
+                {"name": "Geolocation API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API"},
+                {"name": "Intersection Observer", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API"},
+                {"name": "Web Animations API", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API"},
+                {"name": "Resize Observer", "url": "https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver"},
+                {"name": "Device Orientation", "url": "https://developer.mozilla.org/en-US/docs/Web/API/Detecting_device_orientation"}
+            ],
+            "Developer Tools & Utilities": [
+                {"name": "Can I Use?", "url": "https://caniuse.com/"},
+                {"name": "Regex101", "url": "https://regex101.com/"},
+                {"name": "Bundlephobia", "url": "https://bundlephobia.com/"},
+                {"name": "JSON Formatter", "url": "https://jsonformatter.curiousconcept.com/"},
+                {"name": "JWT.io Debugger", "url": "https://jwt.io/"},
+                {"name": "Diffchecker", "url": "https://www.diffchecker.com/"},
+                {"name": "TinyPNG (Compressor)", "url": "https://tinypng.com/"},
+                {"name": "Transform (Code Converter)", "url": "https://transform.tools/"},
+                {"name": "HTTP Status Codes", "url": "https://httpstatuses.com/"},
+                {"name": "CSS Triggers (Performance)", "url": "https://csstriggers.com/"},
+                {"name": "HTML Head Cheat Sheet", "url": "https://htmlhead.dev/"},
+                {"name": "Carbon (Code Images)", "url": "https://carbon.now.sh/"},
+                {"name": "Git Cheat Sheet", "url": "https://education.github.com/git-cheat-sheet-education.pdf"},
+                {"name": "Devhints (Cheat sheets)", "url": "https://devhints.io/"},
+                {"name": "DNS Checker", "url": "https://dnschecker.org/"}
+            ],
+            "Design & UI Assets": [
+                {"name": "Figma", "url": "https://www.figma.com/"},
+                {"name": "Google Fonts", "url": "https://fonts.google.com/"},
+                {"name": "Lucide Icons", "url": "https://lucide.dev/icons"},
+                {"name": "Font Awesome", "url": "https://fontawesome.com/"},
+                {"name": "Heroicons", "url": "https://heroicons.com/"},
+                {"name": "Coolors (Palettes)", "url": "https://coolors.co/"},
+                {"name": "Unsplash (Images)", "url": "https://unsplash.com/"},
+                {"name": "SVG Repo", "url": "https://www.svgrepo.com/"},
+                {"name": "CSS Gradient Generator", "url": "https://cssgradient.io/"},
+                {"name": "Undraw (Illustrations)", "url": "https://undraw.co/"},
+                {"name": "Uiverse.io (CSS elements)", "url": "https://uiverse.io/"},
+                {"name": "Google Material Design", "url": "https://m3.material.io/"},
+                {"name": "Awwwards (Inspiration)", "url": "https://www.awwwards.com/"},
+                {"name": "LottieFiles (Animations)", "url": "https://lottiefiles.com/"},
+                {"name": "Dribbble", "url": "https://dribbble.com/"}
+            ],
+            "Backend & Hosting": [
+                {"name": "GitHub", "url": "https://github.com/"},
+                {"name": "Vercel", "url": "https://vercel.com/"},
+                {"name": "Netlify", "url": "https://www.netlify.com/"},
+                {"name": "Supabase", "url": "https://supabase.com/"},
+                {"name": "Firebase Console", "url": "https://console.firebase.google.com/"},
+                {"name": "Postgres Tutorial", "url": "https://www.postgresqltutorial.com/"},
+                {"name": "MongoDB Atlas", "url": "https://www.mongodb.com/cloud/atlas"},
+                {"name": "SQLite Documentation", "url": "https://www.sqlite.org/docs.html"},
+                {"name": "Render Hosting", "url": "https://render.com/"},
+                {"name": "Railway Hosting", "url": "https://railway.app/"},
+                {"name": "Postman Web", "url": "https://www.postman.com/"},
+                {"name": "Docker Hub", "url": "https://hub.docker.com/"},
+                {"name": "Cloudflare Dashboard", "url": "https://dash.cloudflare.com/"},
+                {"name": "Sentry (Error tracking)", "url": "https://sentry.io/"},
+                {"name": "Heroku Dashboard", "url": "https://dashboard.heroku.com/"}
+            ],
+            "Testing & Performance": [
+                {"name": "Jest Testing", "url": "https://jestjs.io/"},
+                {"name": "Playwright Testing", "url": "https://playwright.dev/"},
+                {"name": "Cypress Testing", "url": "https://www.cypress.io/"},
+                {"name": "Vitest Testing", "url": "https://vitest.dev/"},
+                {"name": "Lighthouse CI", "url": "https://github.com/GoogleChrome/lighthouse-ci"},
+                {"name": "PageSpeed Insights", "url": "https://pagespeed.web.dev/"},
+                {"name": "WebPageTest", "url": "https://www.webpagetest.org/"},
+                {"name": "Lighthouse Extension Docs", "url": "https://developer.chrome.com/docs/lighthouse/"},
+                {"name": "Testing Library Docs", "url": "https://testing-library.com/"},
+                {"name": "Artillery (Load Testing)", "url": "https://www.artillery.io/"}
+            ],
+            "Learning & Resources": [
+                {"name": "freeCodeCamp", "url": "https://www.freecodecamp.org/"},
+                {"name": "Frontend Mentor", "url": "https://www.frontendmentor.io/"},
+                {"name": "The Odin Project", "url": "https://www.theodinproject.com/"},
+                {"name": "JavaScript.info", "url": "https://javascript.info/"},
+                {"name": "CSS-Tricks", "url": "https://css-tricks.com/"},
+                {"name": "Dev.to Community", "url": "https://dev.to/"},
+                {"name": "Stack Overflow", "url": "https://stackoverflow.com/"},
+                {"name": "Roadmap.sh", "url": "https://roadmap.sh/"},
+                {"name": "GeeksforGeeks", "url": "https://www.geeksforgeeks.org/"},
+                {"name": "W3Schools", "url": "https://www.w3schools.com/"}
+            ],
+            "AI & Future Tech": [
+                {"name": "Google AI Studio", "url": "https://aistudio.google.com/"},
+                {"name": "Gemini API Docs", "url": "https://ai.google.dev/gemini-api/docs"},
+                {"name": "Hugging Face", "url": "https://huggingface.co/"},
+                {"name": "OpenAI Platform", "url": "https://platform.openai.com/"},
+                {"name": "Replicate", "url": "https://replicate.com/"},
+                {"name": "LangChain Docs", "url": "https://python.langchain.com/"},
+                {"name": "Pinecone Vector DB", "url": "https://www.pinecone.io/"},
+                {"name": "Phind (AI Search)", "url": "https://www.phind.com/"},
+                {"name": "Perplexity AI", "url": "https://www.perplexity.ai/"},
+                {"name": "Vercel AI SDK", "url": "https://sdk.vercel.ai/docs"}
+            ]
+        };
+
+        const categoryIcons = {
+            "Official Documentation": "📚",
+            "Frontend Frameworks & Libs": "⚛️",
+            "Web APIs & Standards": "🌐",
+            "Developer Tools & Utilities": "🛠️",
+            "Design & UI Assets": "🎨",
+            "Backend & Hosting": "💾",
+            "Testing & Performance": "🧪",
+            "Learning & Resources": "🏫",
+            "AI & Future Tech": "🤖"
+        };
+
+        function initBookmarks() {
+            const grid = document.getElementById("bookmark-grid");
+            grid.innerHTML = "";
+
+            Object.entries(bookmarks).forEach(([category, items]) => {
+                const card = document.createElement("div");
+                card.className = "category-card";
+                card.setAttribute("data-category", category);
+
+                const icon = categoryIcons[category] || "📁";
+                
+                let bookmarksHTML = items.map(item => `
+                    <li class="bookmark-item">
+                        <a href="${item.url}" target="_blank" title="${item.url}">
+                            <span>${item.name}</span>
+                        </a>
+                    </li>
+                `).join("");
+
+                card.innerHTML = `
+                    <div class="category-header">
+                        <span class="category-icon">${icon}</span>
+                        <span>${category}</span>
+                    </div>
+                    <ul class="bookmark-list">
+                        ${bookmarksHTML}
+                    </ul>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterBookmarks() {
+            const query = document.getElementById("bookmark-search").value.toLowerCase();
+            const cards = document.querySelectorAll(".category-card");
+
+            cards.forEach(card => {
+                const items = card.querySelectorAll(".bookmark-item");
+                let hasVisibleItem = false;
+
+                items.forEach(item => {
+                    const text = item.innerText.toLowerCase();
+                    const url = item.querySelector("a").href.toLowerCase();
+                    if (text.includes(query) || url.includes(query)) {
+                        item.style.display = "block";
+                        hasVisibleItem = true;
+                    } else {
+                        item.style.display = "none";
+                    }
+                });
+
+                if (hasVisibleItem) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        function switchSection(secId) {
+            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+            document.querySelectorAll(".section-content").forEach(sec => sec.classList.remove("active"));
+
+            event.target.classList.add("active");
+            document.getElementById("section-" + secId).classList.add("active");
+
+            const searchBar = document.getElementById("search-container");
+            if (secId === 'bookmarks') {
+                searchBar.style.display = "flex";
+            } else {
+                searchBar.style.display = "none";
+            }
+        }
+
+        function switchTool(toolId) {
+            document.querySelectorAll(".tool-nav-btn").forEach(btn => btn.classList.remove("active"));
+            document.querySelectorAll(".tool-panel").forEach(panel => panel.classList.remove("active"));
+
+            event.target.classList.add("active");
+            document.getElementById("tool-" + toolId).classList.add("active");
+        }
+
+        function clearTool(inputValId, outputTextId) {
+            document.getElementById(inputValId).value = "";
+            document.getElementById(outputTextId).innerHTML = "// Results cleared";
+        }
+
+        /* Tool Functions */
+        function formatJSON(spaces) {
+            const input = document.getElementById("json-input").value;
+            const output = document.getElementById("json-output");
+            try {
+                const parsed = JSON.parse(input);
+                output.innerText = JSON.stringify(parsed, null, spaces);
+                output.style.color = "#10b981"; // green
+            } catch (e) {
+                output.innerText = "Error: " + e.message;
+                output.style.color = "#f43f5e"; // red
+            }
+        }
+
+        function minifyJSON() {
+            const input = document.getElementById("json-input").value;
+            const output = document.getElementById("json-output");
+            try {
+                const parsed = JSON.parse(input);
+                output.innerText = JSON.stringify(parsed);
+                output.style.color = "#10b981";
+            } catch (e) {
+                output.innerText = "Error: " + e.message;
+                output.style.color = "#f43f5e";
+            }
+        }
+
+        function runRegex() {
+            const pattern = document.getElementById("regex-pattern").value;
+            const text = document.getElementById("regex-text").value;
+            const output = document.getElementById("regex-output");
+
+            if (!pattern) {
+                output.innerText = "Please specify a pattern.";
+                return;
+            }
+
+            try {
+                const regex = new RegExp(pattern, 'g');
+                let match;
+                let results = [];
+                let highlighted = text;
+                
+                // Perform highlight replacement
+                const safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                const safeRegex = new RegExp("(" + pattern + ")", 'g');
+                const matchedMarkup = safeText.replace(safeRegex, '<span class="regex-match">$1</span>');
+
+                let count = 0;
+                while ((match = regex.exec(text)) !== null) {
+                    count++;
+                    results.push(`Match ${count}: "${match[0]}" at Index ${match.index}`);
+                    if (regex.lastIndex === match.index) regex.lastIndex++; // Avoid infinite loops
+                }
+
+                if (count === 0) {
+                    output.innerHTML = "No matches found.";
+                } else {
+                    output.innerHTML = `<strong>Total Matches: ${count}</strong>\n\n` + 
+                                     `<strong>Highlighted String:</strong>\n${matchedMarkup}\n\n` +
+                                     `<strong>Indices:</strong>\n${results.join('\n')}`;
+                }
+            } catch (e) {
+                output.innerText = "Regex Error: " + e.message;
+            }
+        }
+
+        function convertColor() {
+            const val = document.getElementById("color-input").value.trim();
+            const output = document.getElementById("color-output");
+
+            if (!val) {
+                output.innerText = "Please specify a color value.";
+                return;
+            }
+
+            // Simple parse logic
+            let hex = "", rgb = "", hsl = "";
+            
+            // Hex
+            if (val.startsWith("#")) {
+                hex = val;
+                // Parse hex to RGB
+                let cleanHex = hex.replace('#', '');
+                if (cleanHex.length === 3) {
+                    cleanHex = cleanHex.split('').map(c => c+c).join('');
+                }
+                const r = parseInt(cleanHex.substring(0, 2), 16);
+                const g = parseInt(cleanHex.substring(2, 4), 16);
+                const b = parseInt(cleanHex.substring(4, 6), 16);
+                
+                if (isNaN(r) || isNaN(g) || isNaN(b)) {
+                    output.innerText = "Invalid HEX code.";
+                    return;
+                }
+                rgb = `rgb(${r}, ${g}, ${b})`;
+                hsl = rgbToHsl(r, g, b);
+            } 
+            // RGB
+            else if (val.startsWith("rgb")) {
+                rgb = val;
+                const match = val.match(/\d+/g);
+                if (!match || match.length < 3) {
+                    output.innerText = "Invalid RGB format.";
+                    return;
+                }
+                const r = parseInt(match[0]);
+                const g = parseInt(match[1]);
+                const b = parseInt(match[2]);
+                hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+                hsl = rgbToHsl(r, g, b);
+            } else {
+                output.innerText = "Supported formats: HEX (#06b6d4) or RGB (rgb(6, 182, 212))";
+                return;
+            }
+
+            output.innerHTML = `<strong>HEX:</strong> ${hex}\n<strong>RGB:</strong> ${rgb}\n<strong>HSL:</strong> ${hsl}`;
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0; // achromatic
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+        }
+
+        function textStats() {
+            const text = document.getElementById("text-input").value;
+            const output = document.getElementById("text-output");
+            
+            const charCount = text.length;
+            const wordCount = text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
+            const lineCount = text.split(/\r\n|\r|\n/).length;
+            
+            output.innerHTML = `<strong>Characters:</strong> ${charCount}\n` +
+                               `<strong>Words:</strong> ${wordCount}\n` +
+                               `<strong>Lines:</strong> ${lineCount}`;
+        }
+
+        function base64Encode() {
+            const text = document.getElementById("text-input").value;
+            const output = document.getElementById("text-output");
+            try {
+                output.innerText = btoa(unescape(encodeURIComponent(text)));
+            } catch (e) {
+                output.innerText = "Encode Error: " + e.message;
+            }
+        }
+
+        function base64Decode() {
+            const text = document.getElementById("text-input").value;
+            const output = document.getElementById("text-output");
+            try {
+                output.innerText = decodeURIComponent(escape(atob(text)));
+            } catch (e) {
+                output.innerText = "Decode Error: " + e.message;
+            }
+        }
+
+        // Run on load
+        initBookmarks();
+    </script>
+</body>
+</html>

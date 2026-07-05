@@ -1,0 +1,67 @@
+function doGet(e) {
+  // Defensive check: If 'e' or 'e.parameter' is undefined (like when running from the editor), default to an empty object.
+  var event = e || { parameter: {} };
+  var action = event.parameter.action;
+  
+  // If no specific action is called via URL parameters, serve the UI.
+  if (!action) {
+    const iconUrl = "https://i.imgur.com/p7JzFKA.png"; 
+    
+    return HtmlService.createHtmlOutputFromFile('Index')
+      .setTitle('QamoMATH // SCI-FI_NEXUS')
+      .addMetaTag('viewport', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+      .setFaviconUrl(iconUrl); // Added your custom favicon here
+  }
+
+  var boardId = event.parameter.boardId || "qamomath_mainframe";
+  var scriptProperties = PropertiesService.getScriptProperties();
+
+  // Handle the polling radar for the walkie-talkie and board sync
+  if (action === "getCommsPayload") {
+    var boardData = scriptProperties.getProperty(boardId) || "{}";
+    var parsedBoard = JSON.parse(boardData);
+    
+    // Grab the latest audio file, if any exists, then drop it so it plays only once
+    var audioData = scriptProperties.getProperty(boardId + "_audio") || "";
+    if(audioData !== "") {
+      scriptProperties.deleteProperty(boardId + "_audio");
+    }
+    
+    var response = {
+      pages: parsedBoard.pages || null,
+      totalPages: parsedBoard.totalPages || 1,
+      timestamp: parsedBoard.timestamp || 0,
+      audioTransmission: audioData
+    };
+    return ContentService.createTextOutput(JSON.stringify(response))
+                         .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doPost(e) {
+  // Defensive check for POST requests
+  if (!e || !e.postData) return ContentService.createTextOutput("ERROR: No Payload").setMimeType(ContentService.MimeType.TEXT);
+  
+  var postData = JSON.parse(e.postData.contents);
+  var scriptProperties = PropertiesService.getScriptProperties();
+  var boardId = postData.boardId || "qamomath_mainframe";
+
+  if (postData.action === "voiceTransmit") {
+    // Stage the walkie talkie voice burst audio payload directly to RAM cache strings
+    scriptProperties.setProperty(boardId + "_audio", postData.audio);
+    return ContentService.createTextOutput(JSON.stringify({status: "TRANSMISSION_STAGED"}))
+                         .setMimeType(ContentService.MimeType.JSON);
+  }
+  
+  if (postData.action === "saveBoard") {
+    var boardState = {
+      pages: postData.pages,
+      totalPages: postData.totalPages,
+      timestamp: postData.timestamp
+    };
+    scriptProperties.setProperty(boardId, JSON.stringify(boardState));
+    return ContentService.createTextOutput(JSON.stringify({status: "BOARD_SAVED"}))
+                         .setMimeType(ContentService.MimeType.JSON);
+  }
+}
