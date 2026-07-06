@@ -474,7 +474,7 @@
       inset: .85rem;
       z-index: 8;
       display: grid;
-      grid-template-rows: auto auto 1fr auto;
+      grid-template-rows: auto auto auto 1fr auto;
       gap: .75rem;
       padding: 1rem;
       border-radius: 8px;
@@ -520,6 +520,74 @@
     .mode-switch button.active {
       background: #ffd84d;
       box-shadow: 0 0 22px rgba(255,216,77,.56);
+    }
+
+    .match-options {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: .55rem;
+      align-items: stretch;
+    }
+
+    .option-box {
+      min-width: 0;
+      display: grid;
+      gap: .35rem;
+      padding: .55rem;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px;
+      background: rgba(255,255,255,.12);
+    }
+
+    .option-box > span {
+      font-size: .74rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+      opacity: .76;
+    }
+
+    .option-row {
+      display: grid;
+      grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+      gap: .28rem;
+    }
+
+    .option-row button, .board-card {
+      border: 0;
+      border-radius: 6px;
+      min-height: 2rem;
+      padding: 0 .44rem;
+      color: #172038;
+      background: rgba(255,255,255,.76);
+      font-weight: 1000;
+      cursor: pointer;
+    }
+
+    .option-row button.active {
+      background: #78f7ff;
+      box-shadow: 0 0 18px rgba(120,247,255,.42);
+    }
+
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: .4rem;
+    }
+
+    .board-card {
+      min-height: 3.35rem;
+      color: #fff;
+      text-align: left;
+      background:
+        linear-gradient(135deg, var(--a), var(--b) 54%, var(--c)),
+        rgba(15,18,40,.86);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.2), 0 8px 18px rgba(0,0,0,.18);
+      text-shadow: 0 1px 5px rgba(0,0,0,.45);
+    }
+
+    .board-card.active {
+      outline: 3px solid #fff;
+      box-shadow: 0 0 22px var(--b), inset 0 0 0 1px rgba(255,255,255,.3);
     }
 
     .pick-panels {
@@ -618,6 +686,8 @@
       .touch button { min-height: 2.65rem; }
       .select-screen { position: fixed; overflow: auto; }
       .select-top, .select-help { align-items: stretch; flex-direction: column; }
+      .match-options { grid-template-columns: 1fr; }
+      .board-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .pick-panels { grid-template-columns: 1fr; }
       .character-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
@@ -669,6 +739,28 @@
           <div class="select-help">
             <span id="selectSummary">P1 Crimson Knight vs CPU Violet Warlock</span>
             <button class="start-call" id="startGame" type="button">Start Game</button>
+          </div>
+          <div class="match-options" aria-label="Match options">
+            <div class="option-box">
+              <span>Stocks</span>
+              <div class="option-row" id="stockOptions" style="--cols:4"></div>
+            </div>
+            <div class="option-box">
+              <span>CPU</span>
+              <div class="option-row" id="cpuOptions" style="--cols:3"></div>
+            </div>
+            <div class="option-box">
+              <span>Pickups</span>
+              <div class="option-row" id="pickupOptions" style="--cols:3"></div>
+            </div>
+            <div class="option-box">
+              <span>Hazards</span>
+              <div class="option-row" id="hazardOptions" style="--cols:2"></div>
+            </div>
+          </div>
+          <div class="option-box">
+            <span>Board / Location</span>
+            <div class="board-grid" id="boardOptions"></div>
           </div>
           <div class="pick-panels">
             <div class="pick-panel">
@@ -822,6 +914,43 @@
           { x: 1150, y: 380, w: 240, h: 24 },
           { x: 675, y: 260, w: 250, h: 22 }
         ]
+      },
+      {
+        name: "Crystal Caves",
+        vibe: ["#31f4ff", "#6b5cff", "#ff62d6"],
+        platforms: [
+          { x: 145, y: 605, w: 1310, h: 42, main: true },
+          { x: 230, y: 470, w: 230, h: 24 },
+          { x: 570, y: 390, w: 215, h: 24 },
+          { x: 815, y: 390, w: 215, h: 24 },
+          { x: 1140, y: 470, w: 230, h: 24 },
+          { x: 690, y: 245, w: 220, h: 22 }
+        ]
+      },
+      {
+        name: "Junkyard Moon",
+        vibe: ["#222a38", "#ff8a2a", "#78f7ff"],
+        platforms: [
+          { x: 90, y: 615, w: 540, h: 42, main: true },
+          { x: 970, y: 615, w: 540, h: 42, main: true },
+          { x: 375, y: 495, w: 255, h: 24 },
+          { x: 690, y: 390, w: 220, h: 24 },
+          { x: 970, y: 495, w: 255, h: 24 },
+          { x: 235, y: 315, w: 210, h: 22 },
+          { x: 1155, y: 315, w: 210, h: 22 }
+        ]
+      },
+      {
+        name: "Lava Lunchroom",
+        vibe: ["#ff4f4f", "#ffd84d", "#4a1731"],
+        platforms: [
+          { x: 135, y: 585, w: 1330, h: 42, main: true },
+          { x: 235, y: 425, w: 245, h: 24 },
+          { x: 560, y: 500, w: 200, h: 24 },
+          { x: 840, y: 500, w: 200, h: 24 },
+          { x: 1120, y: 425, w: 245, h: 24 },
+          { x: 660, y: 285, w: 280, h: 22 }
+        ]
       }
     ];
     let platforms = boards[boardIndex].platforms;
@@ -833,7 +962,26 @@
       { id: "purple", name: "Violet Warlock", weapon: "Gravity Scythe", hex: "#9a5cff", punch: 1, speed: .95, shield: 1, stun: 0, gravity: 1, range: 1.18, trail: "#dec8ff" }
     ];
     const pickupKinds = ["med", "weapon", "jump", "shield", "bomb", "med", "weapon", "jump", "shield", "class"];
-    let pickups = Array.from({ length: 7 }, makePickup);
+    const stockChoices = [1, 2, 3, 5];
+    const cpuChoices = [
+      { id: "easy", label: "Easy", speed: .7, attack: .72, shield: .7 },
+      { id: "normal", label: "Normal", speed: .86, attack: 1, shield: 1 },
+      { id: "spicy", label: "Spicy", speed: 1, attack: 1.34, shield: 1.28 }
+    ];
+    const pickupChoices = [
+      { id: "low", label: "Low", count: 4 },
+      { id: "normal", label: "Normal", count: 7 },
+      { id: "wild", label: "Wild", count: 11 }
+    ];
+    const hazardChoices = [
+      { id: "off", label: "Off" },
+      { id: "on", label: "On" }
+    ];
+    let selectedStocks = 3;
+    let selectedCpu = "normal";
+    let selectedPickups = "normal";
+    let hazardsEnabled = true;
+    let pickups = Array.from({ length: pickupCount() }, makePickup);
     let last = performance.now();
     let shake = 0;
     let gamepadName = "";
@@ -850,7 +998,7 @@
     function makeFighter(name, x, y, color, cpu) {
       return {
         name, x, y, vx: 0, vy: 0, r: 42, color, cpu,
-        face: cpu ? -1 : 1, ground: false, jumps: 2, damage: 0, stocks: 3,
+        face: cpu ? -1 : 1, ground: false, jumps: 2, damage: 0, stocks: selectedStocks,
         shield: 100, shieldHeld: false, justShield: 0, counter: 0, hurt: 0, stun: 0, attack: null, charge: null, slam: null,
         weaponLevel: 1, combo: 0, comboTimer: 0, dashTrail: 0, damageDealt: 0, specialCount: 0, grab: 0, invuln: 60, squash: 0, aiTimer: 0, input: {}
       };
@@ -859,10 +1007,49 @@
     function renderSelect() {
       renderChoices("p1Choices", p1Choice, i => { p1Choice = i; renderSelect(); }, "p1");
       renderChoices("p2Choices", p2Choice, i => { p2Choice = i; renderSelect(); }, "p2");
+      renderOptions();
       document.querySelector("#modeCpu").classList.toggle("active", gameMode === "cpu");
       document.querySelector("#modeTwo").classList.toggle("active", gameMode === "two");
       document.querySelector("#p2PickTitle").textContent = gameMode === "cpu" ? "CPU" : "Player 2";
-      document.querySelector("#selectSummary").textContent = `P1 ${colors[p1Choice].name} vs ${gameMode === "cpu" ? "CPU" : "P2"} ${colors[p2Choice].name}`;
+      document.querySelector("#selectSummary").textContent = `${selectedStocks} stock | ${boards[boardIndex].name} | ${pickupChoices.find(choice => choice.id === selectedPickups).label} pickups | P1 ${colors[p1Choice].name} vs ${gameMode === "cpu" ? "CPU" : "P2"} ${colors[p2Choice].name}`;
+    }
+
+    function renderOptions() {
+      renderOptionButtons("stockOptions", stockChoices, selectedStocks, value => { selectedStocks = value; renderSelect(); }, value => `${value}`);
+      renderOptionButtons("cpuOptions", cpuChoices, selectedCpu, value => { selectedCpu = value; renderSelect(); }, value => cpuChoices.find(choice => choice.id === value).label);
+      renderOptionButtons("pickupOptions", pickupChoices, selectedPickups, value => { selectedPickups = value; renderSelect(); }, value => pickupChoices.find(choice => choice.id === value).label);
+      renderOptionButtons("hazardOptions", hazardChoices, hazardsEnabled ? "on" : "off", value => { hazardsEnabled = value === "on"; renderSelect(); }, value => hazardChoices.find(choice => choice.id === value).label);
+      const boardRoot = document.querySelector("#boardOptions");
+      boardRoot.innerHTML = "";
+      boards.forEach((board, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `board-card${i === boardIndex ? " active" : ""}`;
+        btn.style.setProperty("--a", board.vibe[0]);
+        btn.style.setProperty("--b", board.vibe[1]);
+        btn.style.setProperty("--c", board.vibe[2]);
+        btn.textContent = board.name;
+        btn.addEventListener("click", () => {
+          boardIndex = i;
+          applyBoard();
+          renderSelect();
+        });
+        boardRoot.appendChild(btn);
+      });
+    }
+
+    function renderOptionButtons(id, choices, selected, onPick, labelFor) {
+      const root = document.querySelector(`#${id}`);
+      root.innerHTML = "";
+      choices.forEach(choice => {
+        const value = typeof choice === "object" ? choice.id : choice;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = value === selected ? "active" : "";
+        btn.textContent = labelFor(value);
+        btn.addEventListener("click", () => onPick(value));
+        root.appendChild(btn);
+      });
     }
 
     function renderChoices(id, selected, onPick, player) {
@@ -886,7 +1073,7 @@
       document.querySelector("#selectScreen").classList.add("hidden");
       resetFighter(p1, 470, colors[p1Choice], false);
       resetFighter(p2, 1130, colors[p2Choice], gameMode === "cpu");
-      pickups = Array.from({ length: 7 }, makePickup);
+      pickups = Array.from({ length: pickupCount() }, makePickup);
       camera.x = 0;
       camera.zoom = 1;
       pop(stage.w / 2, 330, "#ffffff", 90, 12);
@@ -903,7 +1090,7 @@
       f.ground = false;
       f.jumps = 2;
       f.damage = 0;
-      f.stocks = 3;
+      f.stocks = selectedStocks;
       f.shield = 100;
       f.shieldHeld = false;
       f.justShield = 0;
@@ -923,9 +1110,14 @@
     }
 
     function makePickup() {
-      const kind = pickupKinds[Math.floor(Math.random() * pickupKinds.length)];
+      const availableKinds = hazardsEnabled ? pickupKinds : pickupKinds.filter(kind => kind !== "bomb");
+      const kind = availableKinds[Math.floor(Math.random() * availableKinds.length)];
       const color = colors[Math.floor(Math.random() * colors.length)];
       return { x: 180 + Math.random() * 1240, y: 90 + Math.random() * 330, vy: 0, kind, color, pulse: Math.random() * 9, scale: kind === "class" ? .68 : 1 };
+    }
+
+    function pickupCount() {
+      return pickupChoices.find(choice => choice.id === selectedPickups).count;
     }
 
     function resize() {
@@ -999,18 +1191,19 @@
     }
 
     function cpuInput(self, other) {
+      const cpu = cpuChoices.find(choice => choice.id === selectedCpu);
       const dx = other.x - self.x;
       const close = Math.abs(dx) < 145 && Math.abs(other.y - self.y) < 95;
       const far = Math.abs(dx) > 185;
       return {
-        x: Math.sign(dx) * (far ? .86 : .28),
+        x: Math.sign(dx) * (far ? cpu.speed : .28),
         y: self.y > other.y + 90 ? -1 : 0,
         jump: other.y < self.y - 105 && self.ground,
-        punch: close && Math.random() < .035,
-        melee: close && Math.random() < .03,
-        smash: close && self.damage < 160 && Math.random() < .016,
-        shield: close && other.attack && Math.random() < .32,
-        grab: close && Math.random() < .014
+        punch: close && Math.random() < .035 * cpu.attack,
+        melee: close && Math.random() < .03 * cpu.attack,
+        smash: close && self.damage < 160 && Math.random() < .016 * cpu.attack,
+        shield: close && other.attack && Math.random() < .32 * cpu.shield,
+        grab: close && Math.random() < .014 * cpu.attack
       };
     }
 
@@ -1313,7 +1506,7 @@
       f.stun = 0;
       f.hurt = 0;
       if (f.stocks < 0) {
-        f.stocks = 3;
+        f.stocks = selectedStocks;
         f.damage = 0;
         f.color = f.cpu ? colors[4] : colors[0];
       }
@@ -1375,8 +1568,12 @@
 
     function switchBoard() {
       boardIndex = (boardIndex + 1) % boards.length;
+      applyBoard();
+    }
+
+    function applyBoard() {
       platforms = boards[boardIndex].platforms;
-      pickups = Array.from({ length: 7 }, makePickup);
+      pickups = Array.from({ length: pickupCount() }, makePickup);
       p1.x = 470; p1.y = 500; p1.vx = 0; p1.vy = 0; p1.invuln = 80;
       p2.x = 1130; p2.y = 500; p2.vx = 0; p2.vy = 0; p2.invuln = 80;
       camera.x = 0; camera.zoom = 1;
@@ -1520,6 +1717,25 @@
       ctx.font = "900 44px Baloo 2";
       ctx.textAlign = "center";
       ctx.fillText(boards[boardIndex].name, stage.w / 2, 120);
+      if (hazardsEnabled) drawHazards();
+    }
+
+    function drawHazards() {
+      const t = performance.now() * .003;
+      ctx.save();
+      ctx.globalAlpha = .2;
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 5;
+      for (let i = 0; i < 3; i++) {
+        const x = 280 + i * 510 + Math.sin(t + i) * 54;
+        ctx.beginPath();
+        ctx.moveTo(x, 168);
+        ctx.lineTo(x + 32, 220);
+        ctx.lineTo(x - 14, 268);
+        ctx.lineTo(x + 24, 318);
+        ctx.stroke();
+      }
+      ctx.restore();
     }
 
     function drawSun() {
