@@ -7,6 +7,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+        "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+      }
+    }
+  </script>
   <style>
     :root {
       --sky-a: #7fe7ff;
@@ -63,6 +71,47 @@
       pointer-events: none;
     }
 
+    #crt-frame {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 2.4s cubic-bezier(.25, .1, .25, 1) .4s;
+    }
+
+    #crt-frame.visible { opacity: .82; }
+
+    body.dark #crt-frame.visible { opacity: .95; }
+
+    #crt-frame canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+      pointer-events: none;
+    }
+
+    .gemma-fade {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(255,255,255,.48), transparent 22rem),
+        radial-gradient(circle at 82% 16%, rgba(48,255,197,.24), transparent 18rem),
+        linear-gradient(135deg, rgba(127,231,255,.58), rgba(255,240,111,.48) 48%, rgba(255,122,200,.54));
+      mix-blend-mode: screen;
+    }
+
+    body.dark .gemma-fade {
+      background:
+        radial-gradient(circle at 24% 10%, rgba(72,107,255,.22), transparent 22rem),
+        radial-gradient(circle at 78% 18%, rgba(255,47,115,.18), transparent 20rem),
+        linear-gradient(135deg, rgba(16,23,51,.76), rgba(37,59,119,.58) 48%, rgba(101,35,112,.66));
+      mix-blend-mode: normal;
+    }
+
     .intro h1 {
       margin: 0;
       padding: .48em .74em;
@@ -98,7 +147,7 @@
     .clouds {
       position: fixed;
       inset: 0;
-      z-index: 0;
+      z-index: 1;
       overflow: hidden;
       pointer-events: none;
     }
@@ -127,7 +176,7 @@
 
     .app {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       height: 100%;
       display: grid;
       grid-template-rows: auto 1fr;
@@ -575,6 +624,8 @@
   </style>
 </head>
 <body>
+  <div id="crt-frame" aria-hidden="true"></div>
+  <div class="gemma-fade" aria-hidden="true"></div>
   <div class="intro" aria-hidden="true"><h1>Qamelot</h1></div>
   <div class="clouds" aria-hidden="true">
     <i class="cloud" style="--w: 18rem; --top: 8%; --d: 54s; --delay: -14s; --o: .55"></i>
@@ -701,7 +752,14 @@
     </main>
   </div>
 
+  <script type="module" src="../../snippets/hf-gemma-background-animation.js"></script>
   <script>
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.getElementById("crt-frame")?.classList.add("visible");
+      });
+    });
+
     const canvas = document.querySelector("#game");
     const ctx = canvas.getContext("2d");
     const stage = { w: 1600, h: 720 };
