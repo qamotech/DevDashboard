@@ -11,7 +11,9 @@ for path in html_files:
     with open(path, 'r', encoding='utf-8', errors='ignore') as fh:
         text = fh.read()
     for href in re.findall(r'href=["\']([^"\']+)["\']', text):
-        if href.startswith(('http://', 'https://', 'mailto:', 'javascript:', '#')):
+        if href.startswith(('http://', 'https://', 'mailto:', 'tel:', 'data:', 'javascript:', '#')):
+            continue
+        if '${' in href or '{{' in href:
             continue
         target = href.split('#', 1)[0].split('?', 1)[0]
         if not target:

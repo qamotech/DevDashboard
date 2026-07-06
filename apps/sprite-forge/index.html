@@ -19,7 +19,7 @@
             </div>
             <p class="sidebar-label">Tools</p>
             <ul id="menuList"></ul>
-            <p class="sidebar-note">More tools ship soon — these are stubs for now.</p>
+            <p class="sidebar-note">All tools are enabled. Use Download All for SVG plus JSON output.</p>
         </nav>
 
         <main id="app">
@@ -39,7 +39,7 @@
                     <p id="emptyState">No sprite yet. Type a prompt and hit forge.</p>
                     <div id="loadingState" class="hidden">
                         <span class="pixel-spinner" aria-hidden="true"></span>
-                        <span>Forging…</span>
+                        <span>Forging...</span>
                     </div>
                 </div>
             </section>
@@ -55,6 +55,7 @@
                 <button type="button" class="chip" data-prompt="retro spaceship, top-down">spaceship</button>
                 <button type="button" class="chip" data-prompt="8-bit forest slime enemy">slime enemy</button>
             </div>
+            <p id="toolOutput" class="tool-output" aria-live="polite">Output ready: local preview, SVG export, and JSON export.</p>
         </main>
     </div>
 

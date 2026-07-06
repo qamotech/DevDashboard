@@ -319,6 +319,13 @@ body {
   margin: 10px 0 0 0;
 }
 
+.tool-output {
+  color: var(--cyan);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 14px 0 0 0;
+}
+
 /* ---- Suggestions ---- */
 #suggestions {
   margin-top: 16px;

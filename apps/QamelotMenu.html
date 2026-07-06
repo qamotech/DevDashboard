@@ -229,6 +229,21 @@
     }
     .page-link-list {
         display: grid;
+        gap: 16px;
+    }
+    .page-group {
+        display: grid;
+        gap: 10px;
+    }
+    .page-group-title {
+        margin: 0;
+        color: #cfb997;
+        font-size: 0.82rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+    }
+    .page-group-links {
+        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 10px;
     }
@@ -354,56 +369,155 @@
         <section>
             <div class="section-title">All HTML Pages</div>
             <div class="page-link-list">
-                <a href="../index.html" class="page-link">Hub Home</a>
-                <a href="../Pages/index.html" class="page-link">Pages Landing</a>
-                <a href="bptka_TD.html" class="page-link">Bptka Td</a>
-                <a href="C4N8.htm" class="page-link">C4N8</a>
-                <a href="CalcuN8r.html" class="page-link">CalcuN8r</a>
-                <a href="CFPsimpleFooter.html" class="page-link">Cfp Simple Footer</a>
-                <a href="gemini-code-1782079525974.html" class="page-link">Gemini Code</a>
-                <a href="Home.html" class="page-link">Home</a>
-                <a href="QamelotConquest.html" class="page-link">Qamelot Conquest</a>
-                <a href="QamelotTacticalDefensev1.htm" class="page-link">Qamelot Tactical Defense</a>
-                <a href="QamelotTriNexusV1.htm" class="page-link">Qamelot Tri Nexus</a>
-                <a href="StixStaxStonzV1.htm" class="page-link">Stix Stax Stonz</a>
-                <a href="WebToolsResources.html" class="page-link">Web Tools Resources</a>
-                <a href="QamoMATH/Index.html" class="page-link">Qamo Math Index</a>
-                <a href="QamoMATH/QamoMATH.html" class="page-link">Qamo Math</a>
-                <a href="locmein/index.html" class="page-link">Loc Me In</a>
-                <a href="perspective-painting/index.html" class="page-link">Perspective Painting</a>
-                <a href="DevDash/index.html" class="page-link">DevDash Hub</a>
-                <a href="DevDash/Home.html" class="page-link">DevDash Home</a>
-                <a href="DevDash/DevDashV1.html" class="page-link">DevDash V1</a>
-                <a href="DevDash/ContractorToolBelt.html" class="page-link">DevDash Contractor Toolbelt</a>
-                <a href="DevDash/blob-fighter.html" class="page-link">Blob Fighter</a>
-                <a href="DevDash/push-complete.html" class="page-link">Push Complete</a>
-                <a href="DevDash/bptka_TD.html" class="page-link">DevDash Bptka Td</a>
-                <a href="DevDash/C4N8.htm" class="page-link">DevDash C4N8</a>
-                <a href="DevDash/CalcuN8r.html" class="page-link">DevDash CalcuN8r</a>
-                <a href="DevDash/CFPsimpleFooter.html" class="page-link">DevDash Cfp Simple Footer</a>
-                <a href="DevDash/gemini-code-1782079525974.html" class="page-link">DevDash Gemini Code</a>
-                <a href="DevDash/QamelotConquest.html" class="page-link">DevDash Qamelot Conquest</a>
-                <a href="DevDash/QamelotTacticalDefensev1.htm" class="page-link">DevDash Tactical Defense</a>
-                <a href="DevDash/QamelotTriNexusV1.htm" class="page-link">DevDash Tri Nexus</a>
-                <a href="DevDash/StixStaxStonzV1.htm" class="page-link">DevDash Stix Stax Stonz</a>
-                <a href="DevDash/WebToolsResources.html" class="page-link">DevDash Web Tools Resources</a>
-                <a href="DevDash/QamoMATH/Index.html" class="page-link">DevDash Qamo Math Index</a>
-                <a href="DevDash/QamoMATH/QamoMATH.html" class="page-link">DevDash Qamo Math</a>
-                <a href="DevDash/Pages/index.html" class="page-link">DevDash Pages</a>
-                <a href="bptka_TD.html" class="page-link">Main Apps Bptka Td</a>
-                <a href="C4N8.htm" class="page-link">Main Apps C4N8</a>
-                <a href="CalcuN8r.html" class="page-link">Main Apps CalcuN8r</a>
-                <a href="CFPsimpleFooter.html" class="page-link">Main Apps Cfp Simple Footer</a>
-                <a href="Home.html" class="page-link">Main Apps Home</a>
-                <a href="QamelotConquest.html" class="page-link">Main Apps Conquest</a>
-                <a href="QamelotTacticalDefensev1.htm" class="page-link">Main Apps Tactical Defense</a>
-                <a href="QamelotTriNexusV1.htm" class="page-link">Main Apps Tri Nexus</a>
-                <a href="StixStaxStonzV1.htm" class="page-link">Main Apps Stix Stax Stonz</a>
-                <a href="WebToolsResources.html" class="page-link">Main Apps Web Tools Resources</a>
-                <a href="QamoMATH/Index.html" class="page-link">Main Apps Qamo Math Index</a>
-                <a href="QamoMATH/QamoMATH.html" class="page-link">Main Apps Qamo Math</a>
-                <a href="ContractorToolBelt.html" class="page-link">Main Apps Contractor Toolbelt</a>
-                <a href="gemini-code-1782079525974.html" class="page-link">Main Apps Gemini Code</a>
+                <div class="page-group">
+                    <h3 class="page-group-title">Root</h3>
+                    <div class="page-group-links">
+                        <a href="../index.html" class="page-link">Hub Index <small>index.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps</h3>
+                    <div class="page-group-links">
+                        <a href="bptka_TD.html" class="page-link">Bptka TD <small>apps/bptka_TD.html</small></a>
+                        <a href="C4N8.htm" class="page-link">C4N8 <small>apps/C4N8.htm</small></a>
+                        <a href="CalcuN8r.html" class="page-link">CalcuN8r <small>apps/CalcuN8r.html</small></a>
+                        <a href="CFPsimpleFooter.html" class="page-link">CFPsimpleFooter <small>apps/CFPsimpleFooter.html</small></a>
+                        <a href="ContractorToolBelt.html" class="page-link">ContractorToolBelt <small>apps/ContractorToolBelt.html</small></a>
+                        <a href="gemini-code-1782079525974.html" class="page-link">Gemini Code 1782079525974 <small>apps/gemini-code-1782079525974.html</small></a>
+                        <a href="Home.html" class="page-link">Home <small>apps/Home.html</small></a>
+                        <a href="index.html" class="page-link">Apps Index <small>apps/index.html</small></a>
+                        <a href="MechaStrike.html" class="page-link">MechaStrike <small>apps/MechaStrike.html</small></a>
+                        <a href="MechaStrike_v3.html" class="page-link">MechaStrike V3 <small>apps/MechaStrike_v3.html</small></a>
+                        <a href="QamelotConquest.html" class="page-link">QamelotConquest <small>apps/QamelotConquest.html</small></a>
+                        <a href="QamelotMenu.htm" class="page-link">QamelotMenu <small>apps/QamelotMenu.htm</small></a>
+                        <a href="QamelotMenu.html" class="page-link">QamelotMenu <small>apps/QamelotMenu.html</small></a>
+                        <a href="QamelotTacticalDefensev1.htm" class="page-link">QamelotTacticalDefensev1 <small>apps/QamelotTacticalDefensev1.htm</small></a>
+                        <a href="QamelotTriNexusV1.htm" class="page-link">QamelotTriNexusV1 <small>apps/QamelotTriNexusV1.htm</small></a>
+                        <a href="QamoMATH.html" class="page-link">QamoMATH <small>apps/QamoMATH.html</small></a>
+                        <a href="qmathcore.html" class="page-link">Qmathcore <small>apps/qmathcore.html</small></a>
+                        <a href="StixStaxStonzV1.htm" class="page-link">StixStaxStonzV1 <small>apps/StixStaxStonzV1.htm</small></a>
+                        <a href="WebToolsResources.html" class="page-link">WebToolsResources <small>apps/WebToolsResources.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / BruceLeeStyle</h3>
+                    <div class="page-group-links">
+                        <a href="BruceLeeStyle/Index.html" class="page-link">BruceLeeStyle Index <small>apps/BruceLeeStyle/Index.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / contractor-toolbelt</h3>
+                    <div class="page-group-links">
+                        <a href="contractor-toolbelt/index.html" class="page-link">Contractor Toolbelt Index <small>apps/contractor-toolbelt/index.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / contractor-toolbelt / dist</h3>
+                    <div class="page-group-links">
+                        <a href="contractor-toolbelt/dist/index.html" class="page-link">Dist Index <small>apps/contractor-toolbelt/dist/index.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / courage-td</h3>
+                    <div class="page-group-links">
+                        <a href="courage-td/index.html" class="page-link">Courage Td Index <small>apps/courage-td/index.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / DevDash</h3>
+                    <div class="page-group-links">
+                        <a href="DevDash/blob-fighter.html" class="page-link">Blob Fighter <small>apps/DevDash/blob-fighter.html</small></a>
+                        <a href="DevDash/bptka_TD.html" class="page-link">Bptka TD <small>apps/DevDash/bptka_TD.html</small></a>
+                        <a href="DevDash/C4N8.htm" class="page-link">C4N8 <small>apps/DevDash/C4N8.htm</small></a>
+                        <a href="DevDash/CalcuN8r.html" class="page-link">CalcuN8r <small>apps/DevDash/CalcuN8r.html</small></a>
+                        <a href="DevDash/CFPsimpleFooter.html" class="page-link">CFPsimpleFooter <small>apps/DevDash/CFPsimpleFooter.html</small></a>
+                        <a href="DevDash/ContractorToolBelt.html" class="page-link">ContractorToolBelt <small>apps/DevDash/ContractorToolBelt.html</small></a>
+                        <a href="DevDash/DevDashV1.html" class="page-link">DevDashV1 <small>apps/DevDash/DevDashV1.html</small></a>
+                        <a href="DevDash/gemini-code-1782079525974.html" class="page-link">Gemini Code 1782079525974 <small>apps/DevDash/gemini-code-1782079525974.html</small></a>
+                        <a href="DevDash/Home.html" class="page-link">Home <small>apps/DevDash/Home.html</small></a>
+                        <a href="DevDash/index.html" class="page-link">DevDash Index <small>apps/DevDash/index.html</small></a>
+                        <a href="DevDash/push-complete.html" class="page-link">Push Complete <small>apps/DevDash/push-complete.html</small></a>
+                        <a href="DevDash/QamelotConquest.html" class="page-link">QamelotConquest <small>apps/DevDash/QamelotConquest.html</small></a>
+                        <a href="DevDash/QamelotMenu.htm" class="page-link">QamelotMenu <small>apps/DevDash/QamelotMenu.htm</small></a>
+                        <a href="DevDash/QamelotMenu.html" class="page-link">QamelotMenu <small>apps/DevDash/QamelotMenu.html</small></a>
+                        <a href="DevDash/QamelotTacticalDefensev1.htm" class="page-link">QamelotTacticalDefensev1 <small>apps/DevDash/QamelotTacticalDefensev1.htm</small></a>
+                        <a href="DevDash/QamelotTacticalDefensev1.html" class="page-link">QamelotTacticalDefensev1 <small>apps/DevDash/QamelotTacticalDefensev1.html</small></a>
+                        <a href="DevDash/QamelotTriNexusV1.htm" class="page-link">QamelotTriNexusV1 <small>apps/DevDash/QamelotTriNexusV1.htm</small></a>
+                        <a href="DevDash/StixStaxStonzV1.htm" class="page-link">StixStaxStonzV1 <small>apps/DevDash/StixStaxStonzV1.htm</small></a>
+                        <a href="DevDash/svg-studio.html" class="page-link">SVG Studio <small>apps/DevDash/svg-studio.html</small></a>
+                        <a href="DevDash/WebToolsResources.html" class="page-link">WebToolsResources <small>apps/DevDash/WebToolsResources.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / DevDash / Pages</h3>
+                    <div class="page-group-links">
+                        <a href="DevDash/Pages/index.html" class="page-link">Pages Index <small>apps/DevDash/Pages/index.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / DevDash / QamoMATH</h3>
+                    <div class="page-group-links">
+                        <a href="DevDash/QamoMATH/Index.html" class="page-link">QamoMATH Index <small>apps/DevDash/QamoMATH/Index.html</small></a>
+                        <a href="DevDash/QamoMATH/QamoMATH.html" class="page-link">QamoMATH <small>apps/DevDash/QamoMATH/QamoMATH.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / DevDash / SVGStudio</h3>
+                    <div class="page-group-links">
+                        <a href="DevDash/SVGStudio/sandbox.html" class="page-link">Sandbox <small>apps/DevDash/SVGStudio/sandbox.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / EcoTechComm</h3>
+                    <div class="page-group-links">
+                        <a href="EcoTechComm/index.html" class="page-link">EcoTechComm Index <small>apps/EcoTechComm/index.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / locmein</h3>
+                    <div class="page-group-links">
+                        <a href="locmein/index.html" class="page-link">LocMeIn Index <small>apps/locmein/index.html</small></a>
+                        <a href="locmein/index02.html" class="page-link">Index02 <small>apps/locmein/index02.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / perspective-painting</h3>
+                    <div class="page-group-links">
+                        <a href="perspective-painting/index.html" class="page-link">Perspective Painting Index <small>apps/perspective-painting/index.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / pulse-productivity-studio</h3>
+                    <div class="page-group-links">
+                        <a href="pulse-productivity-studio/index.html" class="page-link">Pulse Productivity Studio Index <small>apps/pulse-productivity-studio/index.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / QamoMATH</h3>
+                    <div class="page-group-links">
+                        <a href="QamoMATH/Index.html" class="page-link">QamoMATH Index <small>apps/QamoMATH/Index.html</small></a>
+                        <a href="QamoMATH/QamoMATH.html" class="page-link">QamoMATH <small>apps/QamoMATH/QamoMATH.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">apps / sprite-forge</h3>
+                    <div class="page-group-links">
+                        <a href="sprite-forge/index.html" class="page-link">Sprite Forge Index <small>apps/sprite-forge/index.html</small></a>
+                        <a href="sprite-forge/SpriteForge.html" class="page-link">SpriteForge <small>apps/sprite-forge/SpriteForge.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">Pages</h3>
+                    <div class="page-group-links">
+                        <a href="../Pages/index.html" class="page-link">Pages Index <small>Pages/index.html</small></a>
+                    </div>
+                </div>
+                <div class="page-group">
+                    <h3 class="page-group-title">snippets</h3>
+                    <div class="page-group-links">
+                        <a href="../snippets/hf-gemma-background-animation-usage.html" class="page-link">Hf Gemma Background Animation Usage <small>snippets/hf-gemma-background-animation-usage.html</small></a>
+                    </div>
+                </div>
             </div>
         </section>
 
