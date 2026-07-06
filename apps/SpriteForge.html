@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpriteForge | Character Sheet Generator</title>
+    <style>
+        :body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            background-color: #2d3436;
+            color: white;
+            padding: 1rem 2rem;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 900px;
+            width: 90%;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .preview-area {
+            width: 100%;
+            height: 400px;
+            background: #eee;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        .preview-area img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        input[type="text"] {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #0984e3;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #74b9ff;
+        }
+        .suggestions {
+            background: #f1f2f6;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #0984e3;
+        }
+        .suggestions h3 {
+            margin-top: 0;
+            font-size: 1rem;
+            color: #2d3436;
+        }
+        .suggestion-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .suggestion-chip {
+            background: white;
+            border: 1px solid #0984e3;
+            color: #0984e3;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .suggestion-chip:hover {
+            background: #0984e3;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>SpriteForge</h1>
+</header>
+
+<div class="container">
+    <div class="preview-area" id="preview">
+        <p>Enter a description to generate your sprite sheet...</p>
+    </div>
+
+    <div class="controls">
+        <div class="input-group">
+            <label for="prompt">Character Description</label>
+            <input type="text" id="prompt" placeholder="e.g., A whimsical gremlin with scrap armor...">
+            <button onclick="generate()">Generate Sprite Sheet</button>
+        </div>
+
+        <div class="suggestions" id="suggestionBox" style="display:none;">
+            <h3>Forge Suggestions:</h3>
+            <div class="suggestion-list">
+                <span class="suggestion-chip">Heavier Battle Damage?</span>
+                <span class="suggestion-chip">Glowing Runes on Armor?</span>
+                <span class="suggestion-chip">Change to Winter Theme?</span>
+                <span class="suggestion-chip">Add a Potion Satchel?</span>
+                <span class="suggestion-chip">Make the ears larger?</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function generate() {
+        const preview = document.getElementById('preview');
+        const suggestionBox = document.getElementById('suggestionBox');
+        
+        preview.innerHTML = '<p>Forging your character...</p>';
+        
+        // Simulating an API call
+        setTimeout(() => {
+            preview.innerHTML = '<img src="https://via.placeholder.com/800x400.png?text=Sprite+Sheet+Preview" alt="Sprite Sheet">';
+            suggestionBox.style.display = 'block';
+        }, 1500);
+    }
+</script>
+
+</body>
+</html>
