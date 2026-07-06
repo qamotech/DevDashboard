@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpriteForge | Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="scanlines" aria-hidden="true"></div>
+
+    <div id="layout">
+        <nav id="sidebar">
+            <div class="brand">
+                <span class="brand-mark">◆</span>
+                <h1>SpriteForge</h1>
+            </div>
+            <p class="sidebar-label">Tools</p>
+            <ul id="menuList"></ul>
+            <p class="sidebar-note">More tools ship soon — these are stubs for now.</p>
+        </nav>
+
+        <main id="app">
+            <header class="app-header">
+                <p class="eyebrow">Pixel Sprite Generator</p>
+                <h2>Describe it. Forge it. Export it.</h2>
+            </header>
+
+            <section id="canvas-area">
+                <div class="viewport-frame">
+                    <span class="corner tl"></span>
+                    <span class="corner tr"></span>
+                    <span class="corner bl"></span>
+                    <span class="corner br"></span>
+                    <div class="checker-bg"></div>
+                    <img id="spriteDisplay" src="" alt="" >
+                    <p id="emptyState">No sprite yet. Type a prompt and hit forge.</p>
+                    <div id="loadingState" class="hidden">
+                        <span class="pixel-spinner" aria-hidden="true"></span>
+                        <span>Forging…</span>
+                    </div>
+                </div>
+            </section>
+
+            <form id="promptForm" novalidate>
+                <input type="text" id="promptInput" placeholder="e.g. armored knight, 32x32, side view" autocomplete="off">
+                <button type="submit" id="generateBtn">Forge Sprite</button>
+            </form>
+            <p id="errorState" class="error hidden" role="alert"></p>
+
+            <div id="suggestions">
+                <button type="button" class="chip" data-prompt="pixel wizard with blue robe">pixel wizard</button>
+                <button type="button" class="chip" data-prompt="retro spaceship, top-down">spaceship</button>
+                <button type="button" class="chip" data-prompt="8-bit forest slime enemy">slime enemy</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
