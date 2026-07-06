@@ -1,60 +1,54 @@
 @echo off
-setlocal
-cd /d "%~dp0"
-
+cd %~dp0
 echo ===================================================
-echo   DevDashboard Apps Push Tool
+echo   DevDashboard Hub GitHub Deployment Tool
 echo ===================================================
 echo.
-
-echo Checking repository status...
-git status --short
-
+echo Step 1: Initializing local Git repository...
+git init
 echo.
-echo Staging the full apps tree, root redirect, deploy script, and tracked moves...
-git add -A apps/
-if exist index.html git add index.html
-git add deploy_github.bat
-git add -u
-
+echo Step 2: Staging files (index.html and apps/)...
+git add index.html apps/
 echo.
-echo Staged changes:
-git diff --cached --name-status
-
-git diff --cached --quiet
-if %ERRORLEVEL%==0 (
-    echo.
-    echo No changes staged. Nothing to commit or push.
+echo Step 3: Creating initial commit...
+git commit -m "Initial commit of static DevDashboard Hub"
+echo.
+echo Step 4: Setting primary branch to main...
+git branch -M main
+echo.
+echo ===================================================
+echo Please create a new public repository on GitHub:
+echo 1. Open https://github.com/new in your browser
+echo 2. Repository name: DevDashboard
+echo 3. Choose "Public"
+echo 4. Leave "Add a README file" UNCHECKED
+echo 5. Click "Create repository"
+echo ===================================================
+echo.
+set /p REPO_URL="Enter the GitHub Repository URL (e.g., https://github.com/Qamelot/DevDashboard.git): "
+if "%REPO_URL%"=="" (
+    echo Error: No repository URL provided. Exiting.
     pause
-    exit /b 0
+    exit /b
 )
-
 echo.
-set /p COMMIT_MSG="Commit message (leave blank for default): "
-if "%COMMIT_MSG%"=="" set COMMIT_MSG=Update DevDashboard apps
-
+echo Step 5: Connecting remote origin...
+git remote remove origin >nul 2>&1
+git remote add origin %REPO_URL%
 echo.
-echo Creating commit...
-git commit -m "%COMMIT_MSG%"
-if errorlevel 1 (
-    echo Commit failed. Resolve any Git messages above and retry.
-    pause
-    exit /b 1
-)
-
+echo Step 6: Pushing codebase to GitHub...
+echo (You may be prompted by Git to sign in/authorize in a browser popup)
 echo.
-echo Pushing to origin main...
-git push origin main
-if errorlevel 1 (
-    echo Push failed. Check authentication, remote URL, or pull/rebase requirements.
-    pause
-    exit /b 1
-)
-
+git push -u origin main
 echo.
 echo ===================================================
-echo   Apps changes pushed successfully.
+echo   Deployment Push Completed!
 echo ===================================================
-echo Launching celebration...
-start "" "%~dp0apps\DevDash\push-complete.html"
+echo Next Steps:
+echo 1. Go to your repository on github.com
+echo 2. Go to Settings > Pages
+echo 3. Under Build and deployment, set Source to "Deploy from a branch"
+echo 4. Under Branch, choose "main" and "/(root)", then click Save.
+echo 5. In 1-2 minutes, your DevDashboard will be live!
+echo ===================================================
 pause
