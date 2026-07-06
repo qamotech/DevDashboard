@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contractor Tool Belt - Tactical Utility Engine</title>
     <style>
-
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Share+Tech+Mono&display=swap');
         /**
          * Contractor Tool Belt - Premium CSS Theme & Animations
          * Sleek industrial dark mode utilizing HSL safety neon accents and glassmorphism.
          */
+
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Share+Tech+Mono&display=swap');
+
         :root {
             --bg-dark: #090c10;
             --panel-bg: rgba(17, 22, 31, 0.85);
@@ -33,6 +34,7 @@
             --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             --shadow-neon: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 102, 0, 0.1);
         }
+
         * {
             margin: 0;
             padding: 0;
@@ -40,6 +42,7 @@
             scrollbar-width: thin;
             scrollbar-color: var(--accent-orange) var(--bg-dark);
         }
+
         body {
             background-color: var(--bg-dark);
             color: var(--text-primary);
@@ -49,6 +52,7 @@
             flex-direction: column;
             overflow-x: hidden;
         }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
@@ -61,6 +65,7 @@
             background: var(--accent-orange);
             border-radius: 3px;
         }
+
         /* --- Header & Title --- */
         header {
             background: linear-gradient(180deg, #101520 0%, #090c10 100%);
@@ -73,15 +78,18 @@
             top: 0;
             z-index: 100;
         }
+
         .branding {
             display: flex;
             align-items: center;
             gap: 12px;
         }
+
         .branding-logo {
             font-size: 28px;
             filter: drop-shadow(0 0 6px var(--accent-orange));
         }
+
         .branding h1 {
             font-size: 20px;
             font-weight: 800;
@@ -91,6 +99,7 @@
             -webkit-text-fill-color: transparent;
             text-transform: uppercase;
         }
+
         .branding p {
             font-size: 10px;
             font-family: var(--font-mono);
@@ -98,11 +107,13 @@
             letter-spacing: 1.5px;
             margin-top: -2px;
         }
+
         .header-controls {
             display: flex;
             align-items: center;
             gap: 20px;
         }
+
         .header-budget {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-color);
@@ -112,18 +123,21 @@
             flex-direction: column;
             align-items: flex-end;
         }
+
         .header-budget span {
             font-size: 10px;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+
         .header-budget strong {
             font-family: var(--font-mono);
             font-size: 18px;
             color: var(--accent-yellow);
             text-shadow: 0 0 4px rgba(255, 204, 0, 0.2);
         }
+
         .btn-utility {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
@@ -137,11 +151,13 @@
             color: var(--text-primary);
             transition: var(--transition-smooth);
         }
+
         .btn-utility:hover {
             background: rgba(255, 102, 0, 0.15);
             border-color: var(--accent-orange);
             box-shadow: 0 0 8px rgba(255, 102, 0, 0.3);
         }
+
         /* Toast alert for budget addition */
         .toast-alert {
             position: fixed;
@@ -163,21 +179,26 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             backdrop-filter: blur(8px);
         }
+
         .toast-alert.active {
             transform: translateX(0);
         }
+
         .toast-alert-icon {
             color: var(--accent-green);
             font-size: 20px;
         }
+
         .toast-alert-text h4 {
             font-size: 13px;
             font-weight: 600;
         }
+
         .toast-alert-text p {
             font-size: 11px;
             color: var(--text-secondary);
         }
+
         /* --- Main Layout Viewport --- */
         main {
             flex: 1;
@@ -188,15 +209,18 @@
             justify-content: center;
             align-items: flex-start;
         }
+
         .toolbelt-panel {
             width: 100%;
             max-width: 1200px;
             display: none;
             animation: slideUpFade 0.4s ease-out forwards;
         }
+
         .toolbelt-panel.active {
             display: block;
         }
+
         /* --- Glassmorphic Container Cards --- */
         .card-gadget {
             background: var(--panel-bg);
@@ -208,6 +232,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .card-gadget::before {
             content: '';
             position: absolute;
@@ -217,6 +242,7 @@
             height: 3px;
             background: linear-gradient(90deg, var(--accent-orange), var(--accent-yellow), var(--accent-cyan));
         }
+
         .card-header-row {
             display: flex;
             justify-content: space-between;
@@ -225,6 +251,7 @@
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 12px;
         }
+
         .card-title {
             font-size: 18px;
             font-weight: 800;
@@ -235,13 +262,16 @@
             align-items: center;
             gap: 8px;
         }
+
         .card-title-icon {
             color: var(--accent-orange);
         }
+
         .card-subtitle {
             font-size: 12px;
             color: var(--text-secondary);
         }
+
         /* --- Grid Forms & Inputs --- */
         .form-grid {
             display: grid;
@@ -249,11 +279,13 @@
             gap: 16px;
             margin-bottom: 20px;
         }
+
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
+
         .form-group label {
             font-size: 11px;
             font-weight: 600;
@@ -261,6 +293,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+
         .input-custom {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-color);
@@ -271,19 +304,23 @@
             font-size: 14px;
             transition: var(--transition-smooth);
         }
+
         .input-custom:focus {
             outline: none;
             background: rgba(255, 255, 255, 0.06);
             border-color: var(--accent-orange);
             box-shadow: 0 0 8px rgba(255, 102, 0, 0.2);
         }
+
         .input-custom[type="number"] {
             font-family: var(--font-mono);
         }
+
         .select-custom {
             background: #111620;
             cursor: pointer;
         }
+
         /* --- Buttons --- */
         .btn-custom {
             background: linear-gradient(135deg, var(--accent-orange) 0%, #d34500 100%);
@@ -302,41 +339,50 @@
             gap: 8px;
             font-size: 13px;
         }
+
         .btn-custom:hover {
             transform: translateY(-2px);
             box-shadow: 0 0 15px rgba(255, 102, 0, 0.4);
         }
+
         .btn-custom:active {
             transform: translateY(0);
         }
+
         .btn-secondary {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
         }
+
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.1);
             border-color: var(--text-secondary);
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
+
         .btn-cyan {
             background: linear-gradient(135deg, var(--accent-cyan) 0%, #00a8b5 100%);
             color: #000;
         }
+
         .btn-cyan:hover {
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
         }
+
         .btn-disabled {
             opacity: 0.5;
             cursor: not-allowed;
             pointer-events: none;
         }
+
         /* --- 1. Blueprint View Layout --- */
         .blueprint-workspace {
             display: grid;
             grid-template-columns: 280px 1fr;
             gap: 20px;
         }
+
         .blueprint-toolbar {
             display: flex;
             flex-direction: column;
@@ -345,22 +391,26 @@
             border-right: 1px solid var(--border-color);
             padding-right: 20px;
         }
+
         .bp-tool-section {
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
+
         .bp-tool-section h3 {
             font-size: 11px;
             text-transform: uppercase;
             color: var(--text-muted);
             letter-spacing: 1px;
         }
+
         .bp-tool-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 8px;
         }
+
         .bp-tool-btn {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border-color);
@@ -375,19 +425,23 @@
             gap: 6px;
             font-size: 11px;
         }
+
         .bp-tool-btn span.icon {
             font-size: 20px;
         }
+
         .bp-tool-btn:hover {
             background: rgba(255, 255, 255, 0.06);
             color: var(--text-primary);
         }
+
         .bp-tool-btn.active {
             background: rgba(255, 102, 0, 0.12);
             border-color: var(--accent-orange);
             color: var(--accent-orange);
             box-shadow: inset 0 0 6px rgba(255, 102, 0, 0.2);
         }
+
         .bp-meta-readouts {
             margin-top: auto;
             background: rgba(255,255,255,0.02);
@@ -398,18 +452,22 @@
             flex-direction: column;
             gap: 8px;
         }
+
         .bp-readout-item {
             display: flex;
             justify-content: space-between;
             font-size: 12px;
         }
+
         .bp-readout-item span {
             color: var(--text-secondary);
         }
+
         .bp-readout-item strong {
             font-family: var(--font-mono);
             color: var(--accent-cyan);
         }
+
         .canvas-container {
             position: relative;
             border-radius: 12px;
@@ -417,10 +475,12 @@
             overflow: hidden;
             background: #111625;
         }
+
         #blueprint-canvas {
             display: block;
             cursor: crosshair;
         }
+
         .canvas-scale-indicator {
             position: absolute;
             bottom: 12px;
@@ -434,6 +494,7 @@
             color: #fff;
             pointer-events: none;
         }
+
         .export-indicator {
             position: absolute;
             top: 12px;
@@ -448,12 +509,14 @@
             transition: opacity 0.3s ease;
             pointer-events: none;
         }
+
         /* --- 2. Estimator Tabs Layout --- */
         .estimator-layout {
             display: grid;
             grid-template-columns: 240px 1fr;
             gap: 24px;
         }
+
         .estimator-nav {
             display: flex;
             flex-direction: column;
@@ -461,6 +524,7 @@
             border-right: 1px solid var(--border-color);
             padding-right: 20px;
         }
+
         .est-nav-btn {
             background: none;
             border: 1px solid transparent;
@@ -477,30 +541,37 @@
             align-items: center;
             gap: 10px;
         }
+
         .est-nav-btn:hover {
             background: rgba(255, 255, 255, 0.03);
             color: var(--text-primary);
         }
+
         .est-nav-btn.active {
             background: rgba(0, 242, 254, 0.08);
             border-color: rgba(0, 242, 254, 0.2);
             color: var(--accent-cyan);
         }
+
         .estimator-viewport {
             min-height: 380px;
         }
+
         .estimator-sub-panel {
             display: none;
             animation: fadeIn 0.3s ease;
         }
+
         .estimator-sub-panel.active {
             display: block;
         }
+
         .est-panel-split {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 24px;
         }
+
         .est-results-box {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border-color);
@@ -510,6 +581,7 @@
             flex-direction: column;
             justify-content: space-between;
         }
+
         .est-results-box h3 {
             font-size: 13px;
             text-transform: uppercase;
@@ -518,55 +590,66 @@
             border-bottom: 1px solid rgba(255,255,255,0.05);
             padding-bottom: 6px;
         }
+
         .result-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
+
         .result-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 13px;
         }
+
         .result-row span {
             color: var(--text-secondary);
         }
+
         .result-row strong {
             font-family: var(--font-mono);
             font-size: 15px;
             color: var(--text-primary);
         }
+
         .result-row.total {
             border-top: 1px solid var(--border-color);
             padding-top: 10px;
             margin-top: 5px;
         }
+
         .result-row.total strong {
             font-size: 20px;
             color: var(--accent-yellow);
         }
+
         .est-actions {
             margin-top: 16px;
         }
+
         /* --- 3. Roof Pitch Visuals --- */
         .roof-visualizer-container {
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
+
         .roof-pitch-svg {
             border: 1px solid var(--border-color);
             background: #0b0f17;
             border-radius: 8px;
             max-height: 200px;
         }
+
         /* --- 4. Plumb & Level Panel --- */
         .level-container-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
         }
+
         .level-instrument-panel {
             display: flex;
             flex-direction: column;
@@ -579,11 +662,13 @@
             border: 1px solid var(--border-color);
             transition: var(--transition-smooth);
         }
+
         .level-instrument-panel.perfectly-level {
             border-color: var(--accent-green);
             background: rgba(20, 255, 120, 0.03);
             box-shadow: 0 0 15px rgba(20, 255, 120, 0.15);
         }
+
         /* Bullseye circular level */
         .level-bullseye {
             width: 150px;
@@ -594,6 +679,7 @@
             position: relative;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
         }
+
         .level-bullseye-ring {
             position: absolute;
             top: 50%;
@@ -603,16 +689,19 @@
             border: 1.5px dashed rgba(255, 255, 255, 0.15);
             pointer-events: none;
         }
+
         .level-bullseye-ring.target {
             width: 35px;
             height: 35px;
             border: 2px solid var(--accent-green);
             background: rgba(20, 255, 120, 0.05);
         }
+
         .level-bullseye-ring.mid {
             width: 80px;
             height: 80px;
         }
+
         .level-bullseye-crosshair-h {
             position: absolute;
             top: 50%;
@@ -622,6 +711,7 @@
             background: rgba(255, 255, 255, 0.1);
             pointer-events: none;
         }
+
         .level-bullseye-crosshair-v {
             position: absolute;
             left: 50%;
@@ -631,6 +721,7 @@
             background: rgba(255, 255, 255, 0.1);
             pointer-events: none;
         }
+
         .level-bubble {
             position: absolute;
             width: 24px;
@@ -642,10 +733,12 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.5), inset -2px -2px 6px rgba(0,0,0,0.4);
             filter: drop-shadow(0 0 2px var(--accent-yellow));
         }
+
         .level-instrument-panel.perfectly-level .level-bubble {
             background: radial-gradient(circle, #fff 0%, #e2e8f0 40%, var(--accent-green) 90%);
             filter: drop-shadow(0 0 6px var(--accent-green));
         }
+
         /* Horizontal & Vertical vials */
         .vial-horizontal {
             width: 180px;
@@ -656,6 +749,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .vial-horizontal-lines {
             position: absolute;
             left: 50%;
@@ -668,6 +762,7 @@
             background: rgba(20, 255, 120, 0.03);
             pointer-events: none;
         }
+
         .vial-horizontal-bubble {
             position: absolute;
             top: 50%;
@@ -679,9 +774,11 @@
             transition: left 0.1s ease-out;
             box-shadow: 0 2px 5px rgba(0,0,0,0.4);
         }
+
         .level-instrument-panel.perfectly-level .vial-horizontal-bubble {
             background: radial-gradient(circle, #fff 0%, var(--accent-green) 90%);
         }
+
         .vial-vertical {
             width: 30px;
             height: 180px;
@@ -691,6 +788,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .vial-vertical-lines {
             position: absolute;
             top: 50%;
@@ -703,6 +801,7 @@
             background: rgba(20, 255, 120, 0.03);
             pointer-events: none;
         }
+
         .vial-vertical-bubble {
             position: absolute;
             left: 50%;
@@ -714,14 +813,17 @@
             transition: top 0.1s ease-out;
             box-shadow: 0 2px 5px rgba(0,0,0,0.4);
         }
+
         .level-instrument-panel.perfectly-level .vial-vertical-bubble {
             background: radial-gradient(circle, #fff 0%, var(--accent-green) 90%);
         }
+
         .level-feedback {
             font-family: var(--font-mono);
             font-size: 13px;
             color: var(--accent-cyan);
         }
+
         /* Plumb Bob Visual */
         .plumb-bob-wrapper {
             display: flex;
@@ -730,15 +832,18 @@
             gap: 16px;
             width: 100%;
         }
+
         .plumb-bob-svg {
             border: 1px solid var(--border-color);
             background: #0a0d14;
             border-radius: 8px;
         }
+
         .nudge-controls {
             display: flex;
             gap: 12px;
         }
+
         /* Desktop Simulator Controls */
         .level-simulator-controls {
             margin-top: 16px;
@@ -749,21 +854,25 @@
             flex-direction: column;
             gap: 12px;
         }
+
         .level-simulator-controls h4 {
             font-size: 10px;
             text-transform: uppercase;
             color: var(--text-muted);
             letter-spacing: 0.5px;
         }
+
         .range-slider-group {
             display: flex;
             flex-direction: column;
             gap: 4px;
         }
+
         .range-slider-group label {
             font-size: 11px;
             color: var(--text-secondary);
         }
+
         .range-slider {
             -webkit-appearance: none;
             background: rgba(255,255,255,0.05);
@@ -772,6 +881,7 @@
             border-radius: 3px;
             outline: none;
         }
+
         .range-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 16px;
@@ -781,6 +891,7 @@
             cursor: pointer;
             box-shadow: 0 0 5px rgba(255, 102, 0, 0.4);
         }
+
         /* Flashlight Section */
         .flashlight-widget {
             grid-column: 1 / -1;
@@ -793,15 +904,18 @@
             border-radius: 12px;
             margin-top: 12px;
         }
+
         .flashlight-info h3 {
             font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+
         .flashlight-info p {
             font-size: 12px;
             color: var(--text-secondary);
         }
+
         .btn-flashlight {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
@@ -812,12 +926,14 @@
             cursor: pointer;
             transition: var(--transition-smooth);
         }
+
         .btn-flashlight.active {
             background: var(--accent-yellow);
             color: #000;
             box-shadow: 0 0 20px var(--accent-yellow);
             border-color: var(--accent-yellow);
         }
+
         .flashlight-overlay {
             display: none;
             position: fixed;
@@ -828,6 +944,7 @@
             background: #fff;
             z-index: 9999;
         }
+
         /* --- 5. Checklist / Project Budget Panel --- */
         .checklist-summary-row {
             display: flex;
@@ -835,22 +952,26 @@
             align-items: center;
             margin-bottom: 20px;
         }
+
         .checklist-total-card {
             background: rgba(255,255,255,0.02);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 12px 24px;
         }
+
         .checklist-total-card span {
             font-size: 10px;
             color: var(--text-secondary);
             text-transform: uppercase;
         }
+
         .checklist-total-card h2 {
             font-family: var(--font-mono);
             color: var(--accent-yellow);
             font-size: 26px;
         }
+
         /* Checklist Table */
         .checklist-table-wrapper {
             overflow-x: auto;
@@ -858,12 +979,14 @@
             border-radius: 8px;
             margin-bottom: 24px;
         }
+
         .checklist-table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
             font-size: 13px;
         }
+
         .checklist-table th {
             background: rgba(255, 255, 255, 0.03);
             border-bottom: 1px solid var(--border-color);
@@ -874,35 +997,43 @@
             font-size: 11px;
             letter-spacing: 0.5px;
         }
+
         .checklist-table td {
             padding: 14px 16px;
             border-bottom: 1px solid var(--border-color);
         }
+
         .checklist-table tr:last-child td {
             border-bottom: none;
         }
+
         .checklist-table tr.checked-item {
             background: rgba(255,255,255,0.01);
         }
+
         .checklist-table tr.checked-item .item-name-cell {
             text-decoration: line-through;
             color: var(--text-muted);
         }
+
         .checklist-empty {
             text-align: center;
             padding: 40px !important;
         }
+
         .pouch-empty-icon {
             font-size: 40px;
             display: block;
             margin-bottom: 10px;
             filter: grayscale(0.5);
         }
+
         .checklist-empty p {
             color: var(--text-secondary);
             max-width: 400px;
             margin: 0 auto;
         }
+
         /* Checkbox Styling */
         .checkbox-custom {
             cursor: pointer;
@@ -910,6 +1041,7 @@
             height: 18px;
             accent-color: var(--accent-orange);
         }
+
         /* Category Badges */
         .category-badge {
             font-size: 10px;
@@ -919,6 +1051,7 @@
             border-radius: 4px;
             letter-spacing: 0.5px;
         }
+
         .cat-concrete { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148,163,184,0.3); }
         .cat-drywall { background: rgba(255, 193, 7, 0.15); color: var(--accent-yellow); border: 1px solid rgba(255,193,7,0.3); }
         .cat-paint { background: rgba(0, 242, 254, 0.15); color: var(--accent-cyan); border: 1px solid rgba(0,242,254,0.3); }
@@ -926,11 +1059,13 @@
         .cat-flooring { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
         .cat-roofing { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border: 1px solid rgba(239,68,68,0.3); }
         .cat-general { background: rgba(255,255,255,0.08); color: var(--text-primary); border: 1px solid rgba(255,255,255,0.15); }
+
         .total-col {
             font-family: var(--font-mono);
             font-weight: 600;
             color: var(--accent-yellow);
         }
+
         /* Action button icons */
         .btn-icon {
             background: none;
@@ -940,9 +1075,11 @@
             opacity: 0.6;
             transition: opacity 0.2s ease;
         }
+
         .btn-icon:hover {
             opacity: 1;
         }
+
         /* --- Persistent Bottom Pouch Navigation (Batman's Belt) --- */
         .toolbelt-nav-container {
             position: fixed;
@@ -955,6 +1092,7 @@
             padding: 0 16px 16px 16px;
             pointer-events: none; /* Let clicks pass through margins */
         }
+
         .toolbelt-nav {
             display: flex;
             justify-content: space-around;
@@ -967,6 +1105,7 @@
             pointer-events: auto; /* Active clicking */
             position: relative;
         }
+
         /* Mechanical belt visual hooks */
         .toolbelt-nav::before, .toolbelt-nav::after {
             content: '';
@@ -982,6 +1121,7 @@
         }
         .toolbelt-nav::before { left: -20px; }
         .toolbelt-nav::after { right: -20px; }
+
         .toolbelt-pouch {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255,255,255,0.04);
@@ -997,22 +1137,26 @@
             position: relative;
             min-width: 80px;
         }
+
         .pouch-icon {
             font-size: 22px;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
+
         .pouch-label {
             font-size: 10px;
             font-weight: 800;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
+
         .toolbelt-pouch:hover {
             color: var(--text-primary);
             transform: translateY(-4px);
             background: rgba(255, 255, 255, 0.05);
             border-color: rgba(255, 255, 255, 0.1);
         }
+
         .toolbelt-pouch.active {
             color: var(--accent-orange);
             border-color: var(--accent-orange);
@@ -1020,9 +1164,11 @@
             box-shadow: 0 0 15px rgba(255, 102, 0, 0.2), inset 0 0 4px rgba(255, 102, 0, 0.15);
             transform: translateY(-8px);
         }
+
         .toolbelt-pouch.active .pouch-icon {
             animation: bounce 0.5s ease infinite alternate;
         }
+
         /* --- Animations --- */
         @keyframes slideUpFade {
             from {
@@ -1034,14 +1180,17 @@
                 transform: translateY(0);
             }
         }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
         @keyframes bounce {
             from { transform: translateY(0); }
             to { transform: translateY(-3px); }
         }
+
         /* --- Media Queries --- */
         @media (max-width: 900px) {
             .blueprint-workspace {
@@ -1074,6 +1223,7 @@
                 grid-template-columns: 1fr;
             }
         }
+
         @media (max-width: 600px) {
             header {
                 flex-direction: column;

@@ -1,0 +1,22 @@
+{
+  "name": "contractor-toolbelt",
+  "version": "1.0.0",
+  "description": "Tactical Contractor Tool Belt - Interactive Suite for General Contracting",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "contractor",
+    "toolbelt",
+    "calculator",
+    "blueprint",
+    "construction"
+  ],
+  "author": "Antigravity Pair",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}
