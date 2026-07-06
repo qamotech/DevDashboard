@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Sandbox Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12151A;
+    --panel:#181C22;
+    --panel-2:#1F252D;
+    --panel-3:#242B34;
+    --line:#2B323C;
+    --paper:#EDEAE2;
+    --muted:#8A93A1;
+    --muted-dim:#5C6572;
+    --signal:#5EEAD4;
+    --signal-dim:#2E6F68;
+    --warn:#FF7A52;
+    --danger:#FF6262;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--font-body);
+    display:flex;
+    flex-direction:column;
+  }
+  ::selection{ background:var(--signal); color:var(--ink); }
+  ::-webkit-scrollbar{ width:10px; height:10px; }
+  ::-webkit-scrollbar-track{ background:var(--panel); }
+  ::-webkit-scrollbar-thumb{ background:var(--line); border-radius:6px; }
+  ::-webkit-scrollbar-thumb:hover{ background:var(--muted-dim); }
+
+  button, input, select{ font-family:inherit; }
+  button{ cursor:pointer; }
+  :focus-visible{ outline:2px solid var(--signal); outline-offset:2px; }
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 22px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, var(--panel), var(--ink));
+    flex-shrink:0;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand-mark{
+    width:34px; height:34px; flex-shrink:0;
+  }
+  .brand-text h1{
+    font-family:var(--font-display);
+    font-size:17px;
+    font-weight:600;
+    margin:0;
+    letter-spacing:0.2px;
+  }
+  .brand-text p{
+    margin:1px 0 0;
+    font-size:11.5px;
+    color:var(--muted);
+    letter-spacing:0.3px;
+  }
+  .brand-text p span{ color:var(--signal); }
+
+  .header-actions{ display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .btn{
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--paper);
+    font-size:12.5px;
+    font-weight:500;
+    padding:8px 12px;
+    border-radius:7px;
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .btn:hover{ border-color:var(--signal-dim); background:var(--panel-3); }
+  .btn:active{ transform:translateY(1px); }
+  .btn.primary{ background:var(--signal); color:var(--ink); border-color:var(--signal); font-weight:600; }
+  .btn.primary:hover{ background:#7EF3E1; }
+  .btn.ghost{ background:transparent; }
+  .btn svg{ width:14px; height:14px; flex-shrink:0; }
+  select.btn{ appearance:none; -webkit-appearance:none; padding-right:26px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238A93A1'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 10px center;
+  }
+
+  /* ---------- Layout ---------- */
+  main{
+    flex:1;
+    display:grid;
+    grid-template-columns:min(420px, 42vw) 1fr;
+    min-height:0;
+  }
+  @media (max-width:880px){
+    main{ grid-template-columns:1fr; grid-template-rows:auto auto; }
+  }
+
+  /* ---------- Left panel ---------- */
+  .panel-left{
+    border-right:1px solid var(--line);
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+    background:var(--panel);
+  }
+  @media (max-width:880px){ .panel-left{ border-right:none; border-bottom:1px solid var(--line); height:56vh; } }
+
+  .tabs{
+    display:flex;
+    padding:10px 12px 0;
+    gap:4px;
+    border-bottom:1px solid var(--line);
+    flex-shrink:0;
+  }
+  .tab{
+    background:transparent;
+    border:none;
+    color:var(--muted);
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:0.3px;
+    padding:10px 14px;
+    border-radius:8px 8px 0 0;
+    position:relative;
+    display:flex; align-items:center; gap:6px;
+  }
+  .tab .num{
+    font-family:var(--font-mono);
+    font-size:10px;
+    color:var(--muted-dim);
+  }
+  .tab[aria-selected="true"]{
+    color:var(--paper);
+    background:var(--panel-2);
+  }
+  .tab[aria-selected="true"]::after{
+    content:"";
+    position:absolute; left:10px; right:10px; bottom:-1px; height:2px;
+    background:var(--signal);
+  }
+  .tab-badge{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:16px; height:16px; padding:0 4px;
+    background:var(--panel-3); border:1px solid var(--line);
+    border-radius:5px; font-size:9.5px; color:var(--signal); font-family:var(--font-mono);
+  }
+
+  .tab-panels{ flex:1; min-height:0; display:flex; flex-direction:column; }
+  .tab-panel{ display:none; flex:1; min-height:0; flex-direction:column; }
+  .tab-panel.active{ display:flex; }
+
+  /* ---- Code tab ---- */
+  .editor-toolbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 14px; gap:8px; flex-wrap:wrap;
+    border-bottom:1px solid var(--line);
+  }
+  .editor-toolbar .left-group{ display:flex; gap:6px; flex-wrap:wrap; }
+  .file-size-pill{
+    font-family:var(--font-mono); font-size:11px; color:var(--muted);
+    background:var(--panel-2); border:1px solid var(--line);
+    padding:5px 9px; border-radius:6px;
+  }
+  .editor-wrap{
+    flex:1; display:flex; min-height:0; position:relative;
+    background:var(--ink);
+  }
+  .gutter{
+    flex-shrink:0;
+    width:44px;
+    padding:14px 0;
+    text-align:right;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    line-height:20px;
+    color:var(--muted-dim);
+    background:var(--panel);
+    border-right:1px solid var(--line);
+    overflow:hidden;
+    user-select:none;
+  }
+  .gutter div{ padding-right:10px; }
+  #codeArea{
+    flex:1;
+    resize:none;
+    border:none;
+    background:transparent;
+    color:#E5E9EF;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    line-height:20px;
+    padding:14px 16px;
+    white-space:pre;
+    overflow:auto;
+    tab-size:2;
+  }
+  #codeArea:focus{ outline:none; }
+  .error-banner{
+    display:none;
+    margin:0 14px 12px;
+    padding:9px 12px;
+    background:rgba(255,98,98,0.1);
+    border:1px solid rgba(255,98,98,0.35);
+    color:#FFB0B0;
+    font-size:12px;
+    border-radius:7px;
+    font-family:var(--font-mono);
+  }
+  .error-banner.show{ display:block; }
+
+  /* ---- Colors tab ---- */
+  .panel-scroll{ flex:1; overflow:auto; padding:16px; }
+  .section-label{
+    font-size:11px; text-transform:uppercase; letter-spacing:1px;
+    color:var(--muted-dim); font-weight:600; margin:0 0 10px;
+  }
+  .empty-state{
+    color:var(--muted); font-size:12.5px; padding:18px 4px; line-height:1.6;
+  }
+  .swatch-list{ display:flex; flex-direction:column; gap:8px; margin-bottom:18px; }
+  .swatch-row{
+    display:flex; align-items:center; gap:10px;
+    background:var(--panel-2); border:1px solid var(--line);
+    border-radius:9px; padding:9px 10px;
+  }
+  .swatch-box-wrap{ position:relative; width:32px; height:32px; flex-shrink:0; }
+  .swatch-box-wrap input[type=color]{
+    position:absolute; inset:0; width:100%; height:100%;
+    border:none; padding:0; background:none; cursor:pointer;
+    border-radius:9px; overflow:hidden;
+  }
+  .swatch-box-wrap::before{
+    content:""; position:absolute; inset:0;
+    background-image: linear-gradient(45deg, #333 25%, transparent 25%), linear-gradient(-45deg, #333 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #333 75%), linear-gradient(-45deg, transparent 75%, #333 75%);
+    background-size:8px 8px; background-position:0 0, 0 4px, 4px -4px, -4px 0px;
+    border-radius:9px; z-index:-1;
+  }
+  .swatch-meta{ flex:1; min-width:0; }
+  .swatch-hex{
+    font-family:var(--font-mono); font-size:12.5px; color:var(--paper);
+    display:block; text-transform:uppercase;
+  }
+  .swatch-count{ font-size:11px; color:var(--muted); }
+  .swatch-node{
+    width:7px; height:7px; border:1.5px solid var(--signal); background:var(--ink);
+    transform:rotate(45deg); flex-shrink:0;
+  }
+
+  /* ---- Optimize tab ---- */
+  .opt-options{ display:flex; flex-direction:column; gap:10px; margin-bottom:16px;}
+  .opt-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    font-size:12.5px; color:var(--paper);
+  }
+  .opt-row .opt-label{ display:flex; flex-direction:column; gap:2px; }
+  .opt-row .opt-hint{ font-size:10.5px; color:var(--muted-dim); font-weight:400; }
+  .switch{ position:relative; width:36px; height:20px; flex-shrink:0; }
+  .switch input{ opacity:0; width:0; height:0; }
+  .switch .track{
+    position:absolute; inset:0; background:var(--panel-3); border:1px solid var(--line);
+    border-radius:20px; transition:.15s;
+  }
+  .switch .thumb{
+    position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%;
+    background:var(--muted); transition:.15s;
+  }
+  .switch input:checked + .track{ background:var(--signal-dim); border-color:var(--signal); }
+  .switch input:checked + .track .thumb{ transform:translateX(16px); background:var(--signal); }
+
+  .precision-row select{ width:64px; text-align:center; }
+
+  .stat-cards{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .stat-card{
+    background:var(--panel-2); border:1px solid var(--line); border-radius:9px; padding:10px 12px;
+  }
+  .stat-card .stat-label{ font-size:10.5px; color:var(--muted-dim); text-transform:uppercase; letter-spacing:0.5px; }
+  .stat-card .stat-value{ font-family:var(--font-mono); font-size:17px; margin-top:3px; }
+  .stat-card.savings .stat-value{ color:var(--signal); }
+  .stat-card.savings{ grid-column:1 / -1; display:flex; align-items:center; justify-content:space-between; }
+  .savings-bar{
+    height:6px; border-radius:3px; background:var(--panel-3); overflow:hidden; margin-top:8px;
+  }
+  .savings-bar-fill{ height:100%; background:var(--signal); width:0%; transition:width .3s ease; }
+
+  .opt-actions{ display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+  .opt-output{
+    font-family:var(--font-mono); font-size:11.5px; line-height:1.6;
+    background:var(--ink); border:1px solid var(--line); border-radius:9px;
+    padding:12px; color:#B9C2CE; white-space:pre-wrap; word-break:break-all;
+    max-height:280px; overflow:auto;
+  }
+
+  /* ---------- Right panel (preview) ---------- */
+  .panel-right{ display:flex; flex-direction:column; min-height:0; }
+  .preview-toolbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 16px; border-bottom:1px solid var(--line); gap:10px; flex-wrap:wrap;
+  }
+  .zoom-group{ display:flex; align-items:center; gap:4px; }
+  .zoom-group .btn{ padding:7px 9px; }
+  .zoom-label{
+    font-family:var(--font-mono); font-size:12px; color:var(--muted); min-width:44px; text-align:center;
+  }
+  .stage{
+    flex:1; position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--ink);
+  }
+  .stage.bg-checker{
+    background-image: linear-gradient(45deg, #23262d 25%, transparent 25%), linear-gradient(-45deg, #23262d 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #23262d 75%), linear-gradient(-45deg, transparent 75%, #23262d 75%);
+    background-size:22px 22px; background-position:0 0, 0 11px, 11px -11px, -11px 0px;
+    background-color:#14161a;
+  }
+  .stage.bg-light{ background:var(--paper); }
+  .stage.bg-dark{ background:#0A0C0F; }
+
+  .stage-grid{
+    position:absolute; inset:0; pointer-events:none; opacity:0.5;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:28px 28px;
+    -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
+  }
+  .stage.bg-light .stage-grid, .stage.bg-dark .stage-grid{ opacity:0.12; }
+
+  .reg-mark{ position:absolute; width:22px; height:22px; opacity:0.55; }
+  .reg-mark svg{ width:100%; height:100%; }
+  .reg-tl{ top:14px; left:14px; }
+  .reg-tr{ top:14px; right:14px; transform:scaleX(-1); }
+  .reg-bl{ bottom:14px; left:14px; transform:scaleY(-1); }
+  .reg-br{ bottom:14px; right:14px; transform:scale(-1,-1); }
+
+  .svg-stage-inner{
+    position:relative;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .12s ease;
+  }
+  .svg-stage-inner svg{ display:block; max-width:none; }
+
+  .preview-error{
+    max-width:420px; text-align:center; color:#FFB0B0; font-size:13px; line-height:1.7;
+    padding:20px; background:rgba(255,98,98,0.08); border:1px solid rgba(255,98,98,0.3); border-radius:10px;
+  }
+  .preview-error strong{ display:block; margin-bottom:6px; color:#FF9C9C; font-family:var(--font-display); font-size:14px;}
+
+  .drop-hint{
+    position:absolute; inset:10px; border:1.5px dashed transparent; border-radius:14px;
+    display:flex; align-items:center; justify-content:center; pointer-events:none;
+    transition:.15s; z-index:5;
+  }
+  .drop-hint.active{ border-color:var(--signal); background:rgba(94,234,212,0.06); }
+  .drop-hint span{ font-size:13px; color:var(--signal); font-weight:600; background:var(--ink); padding:8px 14px; border-radius:8px; opacity:0; transition:.15s; }
+  .drop-hint.active span{ opacity:1; }
+
+  .toast{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--panel-3); border:1px solid var(--signal); color:var(--paper);
+    padding:10px 16px; border-radius:8px; font-size:12.5px; opacity:0; pointer-events:none;
+    transition:.2s; z-index:50; font-weight:500;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  input[type=file]{ display:none; }
+
+  .visually-hidden{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 40 40" fill="none">
+      <circle cx="20" cy="20" r="17.5" stroke="#5EEAD4" stroke-width="2"/>
+      <path d="M20 8 L25 17 L35 18.5 L27.5 25.5 L29.5 35 L20 30 L10.5 35 L12.5 25.5 L5 18.5 L15 17 Z" fill="#FF7A52"/>
+      <circle cx="20" cy="20" r="3" fill="#EDEAE2"/>
+    </svg>
+    <div class="brand-text">
+      <h1>SVG Sandbox Studio</h1>
+      <p>edit <span>&middot;</span> recolor <span>&middot;</span> optimize</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <select id="presetSelect" class="btn" title="Load a sample SVG"></select>
+    <button class="btn" id="uploadBtn" title="Upload an .svg file">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 3v9M6 8l4-4 4 4M4 14v2h12v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Upload
+    </button>
+    <input type="file" id="fileInput" accept=".svg,image/svg+xml">
+    <button class="btn" id="downloadSvgBtn" title="Download current SVG">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 3v9M6 9l4 4 4-4M4 15v2h12v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      SVG
+    </button>
+    <button class="btn" id="downloadPngBtn" title="Download as PNG">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 3v9M6 9l4 4 4-4M4 15v2h12v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      PNG
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="panel-left">
+    <div class="tabs" role="tablist">
+      <button class="tab" data-tab="code" role="tab" aria-selected="true">Editor</button>
+      <button class="tab" data-tab="colors" role="tab" aria-selected="false">Colors <span class="tab-badge" id="colorCountBadge">0</span></button>
+      <button class="tab" data-tab="optimize" role="tab" aria-selected="false">Optimize</button>
+    </div>
+
+    <div class="tab-panels">
+
+      <!-- CODE TAB -->
+      <div class="tab-panel active" data-panel="code">
+        <div class="editor-toolbar">
+          <div class="left-group">
+            <span class="file-size-pill" id="liveSizePill">0 B</span>
+            <span class="file-size-pill" id="liveLinesPill">0 lines</span>
+          </div>
+          <button class="btn ghost" id="formatBtn" title="Tidy indentation">Format</button>
+        </div>
+        <div class="error-banner" id="errorBanner"></div>
+        <div class="editor-wrap">
+          <div class="gutter" id="gutter"></div>
+          <textarea id="codeArea" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+        </div>
+      </div>
+
+      <!-- COLORS TAB -->
+      <div class="tab-panel" data-panel="colors">
+        <div class="panel-scroll">
+          <p class="section-label">Detected colors</p>
+          <div id="swatchList" class="swatch-list"></div>
+          <div id="colorEmptyState" class="empty-state">No hex or rgb() colors found yet. Colors defined as keywords (like <code>red</code>) or inherited from CSS aren't picked up — try switching a fill to a hex value in the editor.</div>
+        </div>
+      </div>
+
+      <!-- OPTIMIZE TAB -->
+      <div class="tab-panel" data-panel="optimize">
+        <div class="panel-scroll">
+          <p class="section-label">Options</p>
+          <div class="opt-options">
+            <div class="opt-row">
+              <div class="opt-label">Strip comments<span class="opt-hint">Removes &lt;!-- --&gt; blocks</span></div>
+              <label class="switch"><input type="checkbox" id="optComments" checked><span class="track"><span class="thumb"></span></span></label>
+            </div>
+            <div class="opt-row">
+              <div class="opt-label">Strip title / desc / metadata<span class="opt-hint">Smaller file, less screen-reader context</span></div>
+              <label class="switch"><input type="checkbox" id="optMeta"><span class="track"><span class="thumb"></span></span></label>
+            </div>
+            <div class="opt-row">
+              <div class="opt-label">Strip editor cruft<span class="opt-hint">inkscape:, sodipodi:, data-name attrs</span></div>
+              <label class="switch"><input type="checkbox" id="optEditorData" checked><span class="track"><span class="thumb"></span></span></label>
+            </div>
+            <div class="opt-row">
+              <div class="opt-label">Remove empty groups<span class="opt-hint">Drops childless &lt;g&gt; wrappers</span></div>
+              <label class="switch"><input type="checkbox" id="optEmptyGroups" checked><span class="track"><span class="thumb"></span></span></label>
+            </div>
+            <div class="opt-row">
+              <div class="opt-label">Remove empty attributes<span class="opt-hint">Attributes left blank, e.g. class=""</span></div>
+              <label class="switch"><input type="checkbox" id="optEmptyAttrs" checked><span class="track"><span class="thumb"></span></span></label>
+            </div>
+            <div class="opt-row">
+              <div class="opt-label">Drop unused xlink namespace<span class="opt-hint">If no xlink:href is present</span></div>
+              <label class="switch"><input type="checkbox" id="optXlink" checked><span class="track"><span class="thumb"></span></span></label>
+            </div>
+            <div class="opt-row">
+              <div class="opt-label">Minify whitespace<span class="opt-hint">Collapses newlines & indentation</span></div>
+              <label class="switch"><input type="checkbox" id="optMinify" checked><span class="track"><span class="thumb"></span></span></label>
+            </div>
+            <div class="opt-row precision-row">
+              <div class="opt-label">Coordinate precision<span class="opt-hint">Decimal places kept in path & point data</span></div>
+              <select id="optPrecision" class="btn">
+                <option value="0">0</option>
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </div>
+          </div>
+
+          <p class="section-label">Result</p>
+          <div class="stat-cards">
+            <div class="stat-card"><div class="stat-label">Original</div><div class="stat-value" id="statOriginal">0 B</div></div>
+            <div class="stat-card"><div class="stat-label">Optimized</div><div class="stat-value" id="statOptimized">&mdash;</div></div>
+            <div class="stat-card savings">
+              <div>
+                <div class="stat-label">Size saved</div>
+                <div class="stat-value" id="statSavings">&mdash;</div>
+              </div>
+            </div>
+          </div>
+          <div class="savings-bar"><div class="savings-bar-fill" id="savingsBarFill"></div></div>
+
+          <div class="opt-actions" style="margin-top:16px;">
+            <button class="btn primary" id="runOptimizeBtn">Run optimizer</button>
+            <button class="btn" id="applyOptimizeBtn" disabled>Apply to editor</button>
+            <button class="btn" id="copyOptimizeBtn" disabled>Copy</button>
+          </div>
+          <pre class="opt-output" id="optOutput">Run the optimizer to see the cleaned-up markup here.</pre>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="panel-right">
+    <div class="preview-toolbar">
+      <div class="zoom-group">
+        <button class="btn" id="zoomOutBtn" title="Zoom out">&minus;</button>
+        <span class="zoom-label" id="zoomLabel">100%</span>
+        <button class="btn" id="zoomInBtn" title="Zoom in">+</button>
+        <button class="btn ghost" id="zoomFitBtn" title="Fit to view">Fit</button>
+      </div>
+      <button class="btn ghost" id="bgToggleBtn" title="Cycle preview background">Background: Checker</button>
+    </div>
+    <div class="stage bg-checker" id="stage">
+      <div class="stage-grid"></div>
+      <div class="reg-mark reg-tl"><svg viewBox="0 0 22 22"><path d="M11 0v22M0 11h22" stroke="#5EEAD4" stroke-width="1"/><circle cx="11" cy="11" r="3" fill="none" stroke="#5EEAD4" stroke-width="1"/></svg></div>
+      <div class="reg-mark reg-tr"><svg viewBox="0 0 22 22"><path d="M11 0v22M0 11h22" stroke="#5EEAD4" stroke-width="1"/><circle cx="11" cy="11" r="3" fill="none" stroke="#5EEAD4" stroke-width="1"/></svg></div>
+      <div class="reg-mark reg-bl"><svg viewBox="0 0 22 22"><path d="M11 0v22M0 11h22" stroke="#5EEAD4" stroke-width="1"/><circle cx="11" cy="11" r="3" fill="none" stroke="#5EEAD4" stroke-width="1"/></svg></div>
+      <div class="reg-mark reg-br"><svg viewBox="0 0 22 22"><path d="M11 0v22M0 11h22" stroke="#5EEAD4" stroke-width="1"/><circle cx="11" cy="11" r="3" fill="none" stroke="#5EEAD4" stroke-width="1"/></svg></div>
+      <div class="svg-stage-inner" id="svgStageInner"></div>
+      <div class="drop-hint" id="dropHint"><span>Drop an .svg file to load it</span></div>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------------------------------------------------------- */
+  /* Presets                                                           */
+  /* ---------------------------------------------------------------- */
+  const PRESETS = [
+    {
+      name: "Vector Badge (cruft demo)",
+      code:
+`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="240" height="240" viewBox="0 0 240 240">
+  <!-- Badge base -->
+  <g id="badge" inkscape:label="Badge">
+    <circle cx="120.000000" cy="120.000000" r="108.500000" fill="#1F252D" stroke="#5EEAD4" stroke-width="4.000000"/>
+    <circle cx="120" cy="120" r="86" fill="none" stroke="#5EEAD4" stroke-width="1.5" stroke-dasharray="2 6" opacity="0.6"/>
+    <g></g>
+    <path d="M120.000000,54.000000 L146.500000,104.000000 L202.000000,112.000000 L162.000000,150.500000 L172.000000,206.000000 L120.000000,178.500000 L68.000000,206.000000 L78.000000,150.500000 L38.000000,112.000000 L93.500000,104.000000 Z" fill="#FF7A52"/>
+    <circle cx="120" cy="120" r="10" fill="#EDEAE2"/>
+  </g>
+  <title>Vector Badge</title>
+</svg>`
+    },
+    {
+      name: "Simple Heart",
+      code:
+`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 29.6">
+  <path d="M16 29.6 2.4 16.6C-2.4 11.9 -0.3 3.3 6.6 1.4 10.7 0.3 14.5 2 16 5.4 17.5 2 21.3 0.3 25.4 1.4c6.9 1.9 9 10.5 4.2 15.2Z" fill="#5EEAD4"/>
+</svg>`
+    },
+    {
+      name: "Gradient Blob",
+      code:
+`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5EEAD4"/>
+      <stop offset="100%" stop-color="#FF7A52"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#g1)" d="M45,-56C56,-45,60,-27,62,-9C64,9,64,27,55,40C46,53,29,62,10,65C-9,68,-31,65,-46,53C-61,41,-69,20,-69,-1C-68,-22,-59,-43,-43,-56C-27,-69,-6,-74,13,-72C32,-70,34,-67,45,-56Z" transform="translate(100 100)"/>
+</svg>`
+    },
+    {
+      name: "Traffic Cone Icon",
+      code:
+`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect x="8" y="52" width="48" height="8" rx="2" fill="#1F252D"/>
+  <rect x="14" y="44" width="36" height="8" fill="#8A93A1"/>
+  <path d="M28 8h8l14 36H14Z" fill="#FF7A52"/>
+  <path d="M23.5 22h17l3 8h-23Z" fill="#EDEAE2"/>
+  <path d="M20 34h24l3 8h-30Z" fill="#EDEAE2"/>
+</svg>`
+    }
+  ];
+
+  /* ---------------------------------------------------------------- */
+  /* State                                                             */
+  /* ---------------------------------------------------------------- */
+  const state = {
+    code: "",
+    zoom: 1,
+    bgMode: "checker",
+    optimizedCode: null
+  };
+
+  /* ---------------------------------------------------------------- */
+  /* DOM refs                                                          */
+  /* ---------------------------------------------------------------- */
+  const $ = (id) => document.getElementById(id);
+  const codeArea = $("codeArea");
+  const gutter = $("gutter");
+  const errorBanner = $("errorBanner");
+  const liveSizePill = $("liveSizePill");
+  const liveLinesPill = $("liveLinesPill");
+  const stage = $("stage");
+  const svgStageInner = $("svgStageInner");
+  const zoomLabel = $("zoomLabel");
+  const bgToggleBtn = $("bgToggleBtn");
+  const presetSelect = $("presetSelect");
+  const fileInput = $("fileInput");
+  const toast = $("toast");
+  const dropHint = $("dropHint");
+  const swatchList = $("swatchList");
+  const colorEmptyState = $("colorEmptyState");
+  const colorCountBadge = $("colorCountBadge");
+
+  const optOutput = $("optOutput");
+  const statOriginal = $("statOriginal");
+  const statOptimized = $("statOptimized");
+  const statSavings = $("statSavings");
+  const savingsBarFill = $("savingsBarFill");
+  const applyOptimizeBtn = $("applyOptimizeBtn");
+  const copyOptimizeBtn = $("copyOptimizeBtn");
+
+  /* ---------------------------------------------------------------- */
+  /* Utilities                                                         */
+  /* ---------------------------------------------------------------- */
+  function byteLength(str){ return new Blob([str]).size; }
+  function formatBytes(n){
+    if(n < 1024) return n + " B";
+    return (n/1024).toFixed(1) + " KB";
+  }
+  function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=> toast.classList.remove("show"), 1800);
+  }
+
+  let debounceTimer = null;
+  function debounce(fn, ms){
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(fn, ms);
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Gutter / line numbers                                             */
+  /* ---------------------------------------------------------------- */
+  function updateGutter(){
+    const lines = codeArea.value.split("\n").length;
+    let html = "";
+    for(let i=1;i<=lines;i++) html += "<div>"+i+"</div>";
+    gutter.innerHTML = html;
+    liveLinesPill.textContent = lines + (lines===1 ? " line" : " lines");
+  }
+  codeArea.addEventListener("scroll", ()=>{ gutter.scrollTop = codeArea.scrollTop; });
+
+  /* ---------------------------------------------------------------- */
+  /* Core: set / get code, render preview                              */
+  /* ---------------------------------------------------------------- */
+  function setCode(newCode, opts){
+    opts = opts || {};
+    state.code = newCode;
+    if(codeArea.value !== newCode) codeArea.value = newCode;
+    updateGutter();
+    liveSizePill.textContent = formatBytes(byteLength(newCode));
+    renderPreview(newCode);
+    refreshColors(newCode);
+    if(!opts.skipOptReset){
+      state.optimizedCode = null;
+      applyOptimizeBtn.disabled = true;
+      copyOptimizeBtn.disabled = true;
+      optOutput.textContent = "Run the optimizer to see the cleaned-up markup here.";
+      statOptimized.textContent = "\u2014";
+      statSavings.textContent = "\u2014";
+      savingsBarFill.style.width = "0%";
+    }
+    statOriginal.textContent = formatBytes(byteLength(newCode));
+  }
+
+  function renderPreview(code){
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(code, "image/svg+xml");
+    const errNode = doc.querySelector("parsererror");
+    if(errNode || doc.documentElement.nodeName !== "svg"){
+      errorBanner.textContent = "Syntax error \u2014 preview paused until the markup is valid SVG.";
+      errorBanner.classList.add("show");
+      return;
+    }
+    errorBanner.classList.remove("show");
+    svgStageInner.innerHTML = "";
+    const imported = document.importNode(doc.documentElement, true);
+    if(!imported.getAttribute("width") && !imported.style.width){
+      imported.style.maxWidth = "80vw";
+      imported.style.maxHeight = "70vh";
+    }
+    svgStageInner.appendChild(imported);
+    applyZoom();
+  }
+
+  function applyZoom(){
+    svgStageInner.style.transform = "scale(" + state.zoom + ")";
+    zoomLabel.textContent = Math.round(state.zoom*100) + "%";
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Colors tab                                                        */
+  /* ---------------------------------------------------------------- */
+  const COLOR_REGEX = /#(?:[0-9a-fA-F]{3,4}){1,2}\b|rgba?\(\s*[\d.]+%?\s*,\s*[\d.]+%?\s*,\s*[\d.]+%?\s*(?:,\s*[\d.]+\s*)?\)/g;
+
+  function parseColorParts(str){
+    if(str[0] === "#"){
+      let h = str.slice(1);
+      let r,g,b,a=1,fmt="hex";
+      if(h.length===3){ r=h[0]+h[0]; g=h[1]+h[1]; b=h[2]+h[2]; }
+      else if(h.length===4){ r=h[0]+h[0]; g=h[1]+h[1]; b=h[2]+h[2]; a=parseInt(h[3]+h[3],16)/255; fmt="hex-alpha"; }
+      else if(h.length===6){ r=h.slice(0,2); g=h.slice(2,4); b=h.slice(4,6); }
+      else if(h.length===8){ r=h.slice(0,2); g=h.slice(2,4); b=h.slice(4,6); a=parseInt(h.slice(6,8),16)/255; fmt="hex-alpha"; }
+      else return null;
+      return { hex6: "#"+r+g+b, alpha:a, format:fmt };
+    } else {
+      const m = str.match(/rgba?\(\s*([\d.]+)%?\s*,\s*([\d.]+)%?\s*,\s*([\d.]+)%?\s*(?:,\s*([\d.]+)\s*)?\)/);
+      if(!m) return null;
+      const r = Math.round(parseFloat(m[1])), g = Math.round(parseFloat(m[2])), b = Math.round(parseFloat(m[3]));
+      const a = m[4] !== undefined ? parseFloat(m[4]) : 1;
+      const hex6 = "#" + [r,g,b].map(v => v.toString(16).padStart(2,"0")).join("");
+      return { hex6, alpha:a, format: m[4] !== undefined ? "rgba" : "rgb" };
+    }
+  }
+
+  function buildReplacement(parts, newHex6){
+    const nr = parseInt(newHex6.slice(1,3),16), ng = parseInt(newHex6.slice(3,5),16), nb = parseInt(newHex6.slice(5,7),16);
+    switch(parts.format){
+      case "hex": return newHex6;
+      case "hex-alpha": {
+        const a = Math.round(parts.alpha*255).toString(16).padStart(2,"0");
+        return newHex6 + a;
+      }
+      case "rgb": return "rgb(" + nr + ", " + ng + ", " + nb + ")";
+      case "rgba": return "rgba(" + nr + ", " + ng + ", " + nb + ", " + parts.alpha + ")";
+    }
+  }
+
+  function refreshColors(code){
+    const matches = code.match(COLOR_REGEX) || [];
+    const counts = new Map();
+    matches.forEach(m => counts.set(m, (counts.get(m)||0) + 1));
+    const uniqueColors = [...counts.keys()];
+
+    colorCountBadge.textContent = uniqueColors.length;
+    swatchList.innerHTML = "";
+    colorEmptyState.style.display = uniqueColors.length ? "none" : "block";
+
+    uniqueColors.forEach(colorStr => {
+      const parts = parseColorParts(colorStr);
+      if(!parts) return;
+      const row = document.createElement("div");
+      row.className = "swatch-row";
+
+      const wrap = document.createElement("div");
+      wrap.className = "swatch-box-wrap";
+      const input = document.createElement("input");
+      input.type = "color";
+      input.value = parts.hex6;
+      input.addEventListener("input", () => {
+        const replacement = buildReplacement(parts, input.value);
+        const re = new RegExp(escapeRegExp(colorStr), "g");
+        const updated = state.code.replace(re, replacement);
+        setCode(updated, { skipOptReset:true });
+      });
+      wrap.appendChild(input);
+
+      const node = document.createElement("div");
+      node.className = "swatch-node";
+
+      const meta = document.createElement("div");
+      meta.className = "swatch-meta";
+      const hexLabel = document.createElement("span");
+      hexLabel.className = "swatch-hex";
+      hexLabel.textContent = colorStr;
+      const countLabel = document.createElement("span");
+      countLabel.className = "swatch-count";
+      const n = counts.get(colorStr);
+      countLabel.textContent = n + (n===1 ? " use" : " uses");
+      meta.appendChild(hexLabel);
+      meta.appendChild(countLabel);
+
+      row.appendChild(wrap);
+      row.appendChild(node);
+      row.appendChild(meta);
+      swatchList.appendChild(row);
+    });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Optimizer                                                         */
+  /* ---------------------------------------------------------------- */
+  function roundNum(v, p){
+    const f = parseFloat(v.toFixed(p));
+    return String(f);
+  }
+  function roundNumbersInString(str, p){
+    return str.replace(/-?\d+\.\d+/g, m => roundNum(parseFloat(m), p));
+  }
+
+  function optimizeSVG(source, opts){
+    const doc = new DOMParser().parseFromString(source, "image/svg+xml");
+    if(doc.querySelector("parsererror")) throw new Error("Can't optimize: the current markup has a syntax error.");
+    const root = doc.documentElement;
+
+    if(opts.removeComments){
+      const walker = doc.createTreeWalker(root, NodeFilter.SHOW_COMMENT);
+      const toRemove = [];
+      let n;
+      while((n = walker.nextNode())) toRemove.push(n);
+      toRemove.forEach(c => c.remove());
+    }
+
+    if(opts.removeMeta){
+      root.querySelectorAll("title, desc, metadata").forEach(n => n.remove());
+    }
+
+    if(opts.removeEditorData){
+      [root, ...root.querySelectorAll("*")].forEach(el => {
+        [...el.attributes].forEach(attr => {
+          if(/^(inkscape:|sodipodi:|xmlns:inkscape|xmlns:sodipodi)/.test(attr.name) || attr.name === "data-name"){
+            el.removeAttribute(attr.name);
+          }
+        });
+      });
+    }
+
+    if(opts.removeEmptyAttrs){
+      root.querySelectorAll("*").forEach(el => {
+        [...el.attributes].forEach(attr => {
+          if(attr.value.trim() === "") el.removeAttribute(attr.name);
+        });
+      });
+    }
+
+    if(opts.removeEmptyGroups){
+      for(let pass=0; pass<3; pass++){
+        root.querySelectorAll("g").forEach(g => {
+          if(!g.hasChildNodes() && g.attributes.length === 0) g.remove();
+        });
+      }
+    }
+
+    if(opts.precision !== null && opts.precision !== undefined){
+      const numAttrs = ["cx","cy","r","rx","ry","x","y","x1","y1","x2","y2","width","height","stroke-width"];
+      root.querySelectorAll("*").forEach(el => {
+        numAttrs.forEach(a => {
+          if(el.hasAttribute(a)){
+            const v = parseFloat(el.getAttribute(a));
+            if(!isNaN(v)) el.setAttribute(a, roundNum(v, opts.precision));
+          }
+        });
+        ["d","points","transform"].forEach(a => {
+          if(el.hasAttribute(a)) el.setAttribute(a, roundNumbersInString(el.getAttribute(a), opts.precision));
+        });
+      });
+      if(root.hasAttribute("viewBox")){
+        root.setAttribute("viewBox", roundNumbersInString(root.getAttribute("viewBox"), opts.precision));
+      }
+    }
+
+    if(opts.removeUnusedXlink && root.hasAttribute("xmlns:xlink")){
+      let used = false;
+      root.querySelectorAll("*").forEach(el => {
+        [...el.attributes].forEach(attr => { if(attr.name.startsWith("xlink:")) used = true; });
+      });
+      if(!used) root.removeAttribute("xmlns:xlink");
+    }
+
+    let serialized = new XMLSerializer().serializeToString(root);
+
+    if(opts.minifyWhitespace){
+      serialized = serialized.replace(/>\s+</g, "><").replace(/\s{2,}/g, " ").trim();
+    }
+
+    return serialized;
+  }
+
+  function readOptOptions(){
+    return {
+      removeComments: $("optComments").checked,
+      removeMeta: $("optMeta").checked,
+      removeEditorData: $("optEditorData").checked,
+      removeEmptyGroups: $("optEmptyGroups").checked,
+      removeEmptyAttrs: $("optEmptyAttrs").checked,
+      removeUnusedXlink: $("optXlink").checked,
+      minifyWhitespace: $("optMinify").checked,
+      precision: parseInt($("optPrecision").value, 10)
+    };
+  }
+
+  function runOptimize(){
+    try {
+      const result = optimizeSVG(state.code, readOptOptions());
+      state.optimizedCode = result;
+      const origBytes = byteLength(state.code);
+      const newBytes = byteLength(result);
+      const savedPct = origBytes > 0 ? Math.max(0, Math.round((1 - newBytes/origBytes) * 100)) : 0;
+
+      optOutput.textContent = result;
+      statOriginal.textContent = formatBytes(origBytes);
+      statOptimized.textContent = formatBytes(newBytes);
+      statSavings.textContent = savedPct + "%";
+      savingsBarFill.style.width = savedPct + "%";
+      applyOptimizeBtn.disabled = false;
+      copyOptimizeBtn.disabled = false;
+    } catch(e){
+      optOutput.textContent = e.message;
+      statOptimized.textContent = "\u2014";
+      statSavings.textContent = "\u2014";
+      savingsBarFill.style.width = "0%";
+      applyOptimizeBtn.disabled = true;
+      copyOptimizeBtn.disabled = true;
+    }
+  }
+
+  $("runOptimizeBtn").addEventListener("click", runOptimize);
+  applyOptimizeBtn.addEventListener("click", () => {
+    if(state.optimizedCode){
+      setCode(state.optimizedCode);
+      showToast("Optimized markup applied to editor");
+    }
+  });
+  copyOptimizeBtn.addEventListener("click", () => {
+    if(state.optimizedCode){
+      navigator.clipboard.writeText(state.optimizedCode).then(()=> showToast("Optimized SVG copied"));
+    }
+  });
+
+  /* ---------------------------------------------------------------- */
+  /* Tabs                                                              */
+  /* ---------------------------------------------------------------- */
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected","false"));
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      tab.setAttribute("aria-selected","true");
+      document.querySelector('.tab-panel[data-panel="'+tab.dataset.tab+'"]').classList.add("active");
+    });
+  });
+
+  /* ---------------------------------------------------------------- */
+  /* Editor input                                                      */
+  /* ---------------------------------------------------------------- */
+  codeArea.addEventListener("input", () => {
+    updateGutter();
+    debounce(() => setCode(codeArea.value), 180);
+  });
+
+  $("formatBtn").addEventListener("click", () => {
+    try {
+      const doc = new DOMParser().parseFromString(state.code, "image/svg+xml");
+      if(doc.querySelector("parsererror")) throw new Error("bad markup");
+      let str = new XMLSerializer().serializeToString(doc.documentElement);
+      str = str.replace(/></g, ">\n<");
+      const lines = str.split("\n");
+      let depth = 0;
+      const formatted = lines.map(line => {
+        const trimmed = line.trim();
+        if(/^<\//.test(trimmed)) depth = Math.max(0, depth-1);
+        const out = "  ".repeat(depth) + trimmed;
+        if(/^<[^!?/][^>]*[^/]>$/.test(trimmed) && !/^<[^>]+\/>$/.test(trimmed)) depth++;
+        return out;
+      }).join("\n");
+      setCode(formatted);
+      showToast("Formatted");
+    } catch(e){
+      showToast("Can't format \u2014 fix syntax errors first");
+    }
+  });
+
+  /* ---------------------------------------------------------------- */
+  /* Zoom / background                                                 */
+  /* ---------------------------------------------------------------- */
+  $("zoomInBtn").addEventListener("click", () => { state.zoom = Math.min(8, state.zoom*1.2); applyZoom(); });
+  $("zoomOutBtn").addEventListener("click", () => { state.zoom = Math.max(0.1, state.zoom/1.2); applyZoom(); });
+  $("zoomFitBtn").addEventListener("click", () => { state.zoom = 1; applyZoom(); });
+
+  const BG_MODES = ["checker","light","dark"];
+  bgToggleBtn.addEventListener("click", () => {
+    let idx = BG_MODES.indexOf(state.bgMode);
+    idx = (idx+1) % BG_MODES.length;
+    state.bgMode = BG_MODES[idx];
+    BG_MODES.forEach(m => stage.classList.remove("bg-"+m));
+    stage.classList.add("bg-"+state.bgMode);
+    bgToggleBtn.textContent = "Background: " + state.bgMode[0].toUpperCase() + state.bgMode.slice(1);
+  });
+
+  /* ---------------------------------------------------------------- */
+  /* Presets / upload / drag-drop                                      */
+  /* ---------------------------------------------------------------- */
+  PRESETS.forEach((p, i) => {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = p.name;
+    presetSelect.appendChild(opt);
+  });
+  presetSelect.addEventListener("change", () => {
+    setCode(PRESETS[parseInt(presetSelect.value,10)].code);
+  });
+
+  $("uploadBtn").addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { setCode(reader.result); showToast("Loaded " + file.name); };
+    reader.readAsText(file);
+  });
+
+  ["dragenter","dragover"].forEach(evt => {
+    stage.addEventListener(evt, (e) => { e.preventDefault(); dropHint.classList.add("active"); });
+  });
+  ["dragleave","drop"].forEach(evt => {
+    stage.addEventListener(evt, (e) => { e.preventDefault(); dropHint.classList.remove("active"); });
+  });
+  stage.addEventListener("drop", (e) => {
+    const file = e.dataTransfer.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { setCode(reader.result); showToast("Loaded " + file.name); };
+    reader.readAsText(file);
+  });
+
+  /* ---------------------------------------------------------------- */
+  /* Downloads                                                         */
+  /* ---------------------------------------------------------------- */
+  function downloadBlob(blob, filename){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  $("downloadSvgBtn").addEventListener("click", () => {
+    downloadBlob(new Blob([state.code], {type:"image/svg+xml"}), "sandbox.svg");
+  });
+
+  $("downloadPngBtn").addEventListener("click", () => {
+    const doc = new DOMParser().parseFromString(state.code, "image/svg+xml");
+    if(doc.querySelector("parsererror")){ showToast("Fix the syntax error before exporting"); return; }
+    const svgEl = doc.documentElement;
+    let w = parseFloat(svgEl.getAttribute("width"));
+    let h = parseFloat(svgEl.getAttribute("height"));
+    if(!w || !h){
+      const vb = (svgEl.getAttribute("viewBox")||"").split(/\s+/).map(parseFloat);
+      if(vb.length===4){ w = vb[2]; h = vb[3]; }
+    }
+    w = w || 400; h = h || 400;
+    const scale = 2;
+    const svgStr = new XMLSerializer().serializeToString(svgEl);
+    const svgBlob = new Blob([svgStr], {type:"image/svg+xml;charset=utf-8"});
+    const url = URL.createObjectURL(svgBlob);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = w*scale; canvas.height = h*scale;
+      const ctx = canvas.getContext("2d");
+      if(state.bgMode === "light"){ ctx.fillStyle = "#EDEAE2"; ctx.fillRect(0,0,canvas.width,canvas.height); }
+      else if(state.bgMode === "dark"){ ctx.fillStyle = "#0A0C0F"; ctx.fillRect(0,0,canvas.width,canvas.height); }
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(blob => { downloadBlob(blob, "sandbox.png"); URL.revokeObjectURL(url); }, "image/png");
+    };
+    img.onerror = () => { showToast("Couldn't rasterize this SVG"); URL.revokeObjectURL(url); };
+    img.src = url;
+  });
+
+  /* ---------------------------------------------------------------- */
+  /* Init                                                              */
+  /* ---------------------------------------------------------------- */
+  presetSelect.value = 0;
+  setCode(PRESETS[0].code);
+})();
+</script>
+</body>
+</html>

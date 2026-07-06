@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>QAMELOT // MATH_CORE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#050505" />
+  
+  <!-- Fonts for Cyberpunk Aesthetic -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Augmented-UI for Armored Element Shapes -->
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/augmented-ui@2/augmented-ui.min.css">
+
+  <style>
+    :root {
+      /* Cyberpunk Neon Palette */
+      --neon-cyan: #00f3ff;
+      --neon-pink: #ff0055;
+      --neon-yellow: #fcee0a;
+      --neon-green: #00ffaa;
+      --bg-dark: #050505;
+      --panel-bg: rgba(10, 10, 12, 0.85);
+      --grid-color: rgba(0, 243, 255, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--neon-cyan);
+      font-family: 'Share Tech Mono', monospace;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      touch-action: none; /* Prevents mobile scroll while drawing */
+      user-select: none;
+    }
+
+    /* CRT Scanline Overlay */
+    body::after {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 999;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+    }
+
+    /* --- LAYOUT --- */
+    #sys-header {
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--neon-cyan);
+      background: var(--panel-bg);
+      text-shadow: 0 0 5px var(--neon-cyan);
+      z-index: 10;
+    }
+    
+    #sys-header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      margin: 0;
+    }
+
+    #main-deck {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 45px);
+      position: relative;
+    }
+
+    /* --- TOOLBARS (ARMORED) --- */
+    .cyber-panel {
+      background: var(--panel-bg);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 15px;
+      z-index: 10;
+      --aug-border: 1px;
+      --aug-border-bg: var(--neon-cyan);
+    }
+
+    .left-panel { width: 80px; align-items: center; }
+    .right-panel { width: 220px; }
+
+    /* Cyber Buttons */
+    .cyber-btn {
+      width: 100%;
+      background: transparent;
+      color: var(--neon-cyan);
+      border: none;
+      padding: 10px 5px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      --aug-border: 1px;
+      --aug-border-bg: var(--neon-cyan);
+    }
+
+    .cyber-btn:hover {
+      background: rgba(0, 243, 255, 0.1);
+      box-shadow: 0 0 10px var(--neon-cyan);
+    }
+
+    .cyber-btn.active {
+      background: var(--neon-cyan);
+      color: var(--bg-dark);
+      text-shadow: none;
+      box-shadow: 0 0 15px var(--neon-cyan);
+    }
+
+    .cyber-btn.danger { --aug-border-bg: var(--neon-pink); color: var(--neon-pink); }
+    .cyber-btn.danger:hover { background: rgba(255, 0, 85, 0.1); box-shadow: 0 0 10px var(--neon-pink); }
+
+    /* --- CANVAS AREA --- */
+    #canvas-container {
+      flex: 1;
+      position: relative;
+      margin: 10px;
+      background: #111;
+      --aug-border: 2px;
+      --aug-border-bg: var(--neon-cyan);
+    }
+
+    #math-canvas {
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+      touch-action: none; /* Required for native pointer events */
+    }
+
+    /* Grids */
+    .grid-radar {
+      background-image: 
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: center center;
+    }
+
+    /* --- RIGHT PANEL CONTROLS --- */
+    .control-label {
+      font-size: 0.75rem;
+      color: #888;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .swatch-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+    .swatch {
+      width: 30px; height: 30px;
+      cursor: pointer;
+      border: 1px solid #444;
+      --aug-border: 1px;
+    }
+    .swatch.active { border-color: #fff; box-shadow: 0 0 10px currentColor; transform: scale(1.1); }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--neon-cyan);
+      cursor: pointer;
+    }
+
+    /* Terminal Readout */
+    #terminal-log {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #333;
+      padding: 10px;
+      font-size: 0.7rem;
+      color: var(--neon-green);
+      overflow-y: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .log-entry { margin-bottom: 4px; animation: glitch-anim 0.2s ease-out; }
+
+    @keyframes glitch-anim {
+      0% { transform: translate(0) }
+      20% { transform: translate(-2px, 1px) }
+      40% { transform: translate(-1px, -1px) }
+      60% { transform: translate(2px, 1px) }
+      80% { transform: translate(1px, -1px) }
+      100% { transform: translate(0) }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HUD -->
+  <header id="sys-header">
+    <h1>QAMELOT // MATH_CORE</h1>
+    <div id="status-indicator" style="color: var(--neon-yellow);">[WAITING FOR UPLINK]</div>
+  </header>
+
+  <div id="main-deck">
+    
+    <!-- LEFT PANEL (TOOLS) -->
+    <aside class="cyber-panel left-panel" data-augmented-ui="br-clip r-clip-y exe">
+      <button class="cyber-btn active" data-tool="pen" data-augmented-ui="tl-clip br-clip exe">PEN</button>
+      <button class="cyber-btn" data-tool="highlighter" data-augmented-ui="tl-clip br-clip exe">HLT</button>
+      <button class="cyber-btn" data-tool="laser" data-augmented-ui="tl-clip br-clip exe">LSR</button>
+      <button class="cyber-btn" data-tool="eraser" data-augmented-ui="tl-clip br-clip exe">ERS</button>
+      <div style="height: 10px;"></div>
+      <button class="cyber-btn" data-tool="line" data-augmented-ui="tl-clip br-clip exe">LIN</button>
+      <button class="cyber-btn" data-tool="rect" data-augmented-ui="tl-clip br-clip exe">BOX</button>
+      <div style="flex:1;"></div>
+      <button id="btn-undo" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">UNDO</button>
+      <button id="btn-redo" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">REDO</button>
+    </aside>
+
+    <!-- CENTER (CANVAS) -->
+    <main id="canvas-container" class="grid-radar" data-augmented-ui="tl-clip tr-clip br-clip bl-clip exe">
+      <canvas id="math-canvas"></canvas>
+    </main>
+
+    <!-- RIGHT PANEL (PROPS & TERMINAL) -->
+    <aside class="cyber-panel right-panel" data-augmented-ui="bl-clip l-clip-y exe">
+      
+      <div>
+        <div class="control-label">INK_COLOR</div>
+        <div class="swatch-grid">
+          <div class="swatch active" style="background:#00f3ff; color:#00f3ff;" data-color="#00f3ff" data-augmented-ui="tl-clip br-clip exe"></div>
+          <div class="swatch" style="background:#ff0055; color:#ff0055;" data-color="#ff0055" data-augmented-ui="tl-clip br-clip exe"></div>
+          <div class="swatch" style="background:#fcee0a; color:#fcee0a;" data-color="#fcee0a" data-augmented-ui="tl-clip br-clip exe"></div>
+          <div class="swatch" style="background:#00ffaa; color:#00ffaa;" data-color="#00ffaa" data-augmented-ui="tl-clip br-clip exe"></div>
+          <div class="swatch" style="background:#ffffff; color:#ffffff;" data-color="#ffffff" data-augmented-ui="tl-clip br-clip exe"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="control-label">OUTPUT_THICKNESS</div>
+        <input type="range" id="brush-size" min="1" max="40" value="4">
+      </div>
+
+      <div>
+        <div class="control-label">DATA_PAGES</div>
+        <div style="display:flex; gap:5px;">
+          <button id="btn-prev" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe"><</button>
+          <button id="page-display" class="cyber-btn" style="flex:1; pointer-events:none;" data-augmented-ui="tl-clip br-clip exe">1/1</button>
+          <button id="btn-next" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">></button>
+          <button id="btn-add" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">+</button>
+        </div>
+      </div>
+
+      <button id="btn-clear" class="cyber-btn danger" data-augmented-ui="tl-clip br-clip exe">WIPE_PAGE</button>
+      <button id="btn-reset" class="cyber-btn danger" data-augmented-ui="tl-clip br-clip exe">FACTORY_RESET</button>
+
+      <!-- TERMINAL READOUT -->
+      <div id="terminal-log" data-augmented-ui="tl-clip br-clip exe">
+        <div class="log-entry">> BOOT SEQUENCE INITIATED...</div>
+      </div>
+
+    </aside>
+  </div>
+
+  <script>
+    /* ==========================================
+       QAMELOT CYBER-ENGINE (Zero-Dependency)
+       ========================================== */
+
+    // 🚨 APPS SCRIPT URL HERE
+    const DB_URL = "https://script.google.com/macros/s/YOUR_APPS_SCRIPT_ID/exec";
+    const BOARD_ID = "qamelot_cyber_1";
+
+    // App State
+    let state = {
+      tool: 'pen', color: '#00f3ff', size: 4,
+      currentPage: 1, totalPages: 1,
+      pages: { 1: [] }, undoStacks: { 1: [] },
+      isDrawing: false, currentPath: null
+    };
+
+    let lastSyncTimestamp = 0;
+    const canvas = document.getElementById('math-canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    
+    /* --- TERMINAL LOGGING --- */
+    function sysLog(msg, type="info") {
+      const term = document.getElementById('terminal-log');
+      const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerText = `[${time}] ${msg}`;
+      if(type === "error") entry.style.color = "var(--neon-pink)";
+      if(type === "warn") entry.style.color = "var(--neon-yellow)";
+      term.appendChild(entry);
+      if(term.childElementCount > 6) term.removeChild(term.firstChild);
+    }
+
+    /* --- INDEXED-DB OFFLINE STORAGE --- */
+    let db;
+    const request = indexedDB.open("QamelotCyberDB", 1);
+    request.onupgradeneeded = (e) => {
+      db = e.target.result;
+      if (!db.objectStoreNames.contains("boards")) db.createObjectStore("boards", { keyPath: 'id' });
+    };
+    request.onsuccess = (e) => {
+      db = e.target.result;
+      sysLog("LOCAL_DB_MOUNTED");
+      loadLocalData();
+    };
+
+    function saveLocalData(triggerSync = true) {
+      if(!db) return;
+      db.transaction(["boards"], "readwrite").objectStore("boards").put({
+        id: BOARD_ID, pages: state.pages, totalPages: state.totalPages,
+        needsSync: true, timestamp: Date.now()
+      });
+      if(triggerSync) debounceSync();
+    }
+
+    function loadLocalData() {
+      const req = db.transaction(["boards"], "readonly").objectStore("boards").get(BOARD_ID);
+      req.onsuccess = () => {
+        if (req.result && req.result.pages) {
+          state.pages = req.result.pages;
+          state.totalPages = req.result.totalPages || 1;
+          if (!state.pages[state.currentPage]) state.pages[state.currentPage] = [];
+          if (!state.undoStacks[state.currentPage]) state.undoStacks[state.currentPage] = [];
+          updatePageUI();
+          redrawCanvas();
+          sysLog("RESTORED_PREVIOUS_SESSION");
+        }
+      };
+    }
+
+    /* --- CLOUD SYNC ENGINE --- */
+    let syncTimeout;
+    function debounceSync() {
+      clearTimeout(syncTimeout);
+      syncTimeout = setTimeout(() => executePush(), 2000); 
+    }
+
+    async function executePush() {
+      if (!navigator.onLine || !db) return;
+      const status = document.getElementById('status-indicator');
+      status.innerText = "[UPLINKING...]"; status.style.color = "var(--neon-yellow)";
+      
+      const req = db.transaction(["boards"], "readonly").objectStore("boards").getAll();
+      req.onsuccess = async () => {
+        const items = req.result.filter(i => i.needsSync);
+        if (items.length === 0) return;
+        
+        for (let item of items) {
+          try {
+            // Uncomment to activate actual fetch
+            /* await fetch(DB_URL, {
+              method: "POST",
+              body: JSON.stringify(item),
+              headers: { "Content-Type": "text/plain" }
+            }); */
+            item.needsSync = false;
+            db.transaction(["boards"], "readwrite").objectStore("boards").put(item);
+            sysLog("DATA_SYNCED_TO_MAINFRAME");
+            status.innerText = "[SYS: SECURE]"; status.style.color = "var(--neon-green)";
+          } catch(e) {
+            sysLog("SYNC_FAILED. RETRYING...", "warn");
+            status.innerText = "[SYS: OFFLINE]"; status.style.color = "var(--neon-pink)";
+          }
+        }
+      };
+    }
+
+    /* --- CANVAS ENGINE --- */
+    function resizeCanvas() {
+      const rect = document.getElementById('canvas-container').getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      redrawCanvas();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function redrawCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const paths = state.pages[state.currentPage] || [];
+      
+      paths.forEach(path => {
+        if(path.points.length === 0) return;
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        
+        if (path.tool === 'highlighter') {
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.strokeStyle = path.color + '44'; // Hex Alpha transparency
+          ctx.lineWidth = path.size * 3;
+        } else if (path.tool === 'eraser') {
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.strokeStyle = 'rgba(0,0,0,1)';
+          ctx.lineWidth = path.size * 6;
+        } else {
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.strokeStyle = path.color;
+          ctx.lineWidth = path.size;
+          // Cyber glow for pen
+          ctx.shadowBlur = (path.tool === 'pen' || path.tool === 'laser') ? 8 : 0;
+          ctx.shadowColor = path.color;
+        }
+
+        ctx.beginPath();
+        const pts = path.points;
+        if(path.tool === 'line') {
+          ctx.moveTo(pts[0].x, pts[0].y); ctx.lineTo(pts[pts.length-1].x, pts[pts.length-1].y);
+        } else if (path.tool === 'rect') {
+          ctx.rect(pts[0].x, pts[0].y, pts[pts.length-1].x - pts[0].x, pts[pts.length-1].y - pts[0].y);
+        } else {
+          // Quadratic Smoothing
+          ctx.moveTo(pts[0].x, pts[0].y);
+          for (let i = 1; i < pts.length - 2; i++) {
+            const xc = (pts[i].x + pts[i + 1].x) / 2;
+            const yc = (pts[i].y + pts[i + 1].y) / 2;
+            ctx.quadraticCurveTo(pts[i].x, pts[i].y, xc, yc);
+          }
+          if (pts.length > 2) {
+            ctx.quadraticCurveTo(pts[pts.length - 2].x, pts[pts.length - 2].y, pts[pts.length - 1].x, pts[pts.length - 1].y);
+          } else if (pts.length > 1) {
+             ctx.lineTo(pts[1].x, pts[1].y);
+          }
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0; // Reset cyber glow for the next path
+      });
+    }
+
+    /* --- POINTER EVENTS (TOUCH/PEN/MOUSE) --- */
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      canvas.setPointerCapture(e.pointerId); // Locks pointer to prevent scrolling
+      state.isDrawing = true;
+      const pos = getPos(e);
+      state.currentPath = { tool: state.tool, color: state.color, size: state.size, points: [pos] };
+      state.pages[state.currentPage].push(state.currentPath);
+      state.undoStacks[state.currentPage] = []; 
+    });
+
+    canvas.addEventListener('pointermove', (e) => {
+      if (!state.isDrawing || !state.currentPath) return;
+      state.currentPath.points.push(getPos(e));
+      redrawCanvas();
+    });
+
+    function stopDrawing(e) {
+      if (!state.isDrawing) return;
+      state.isDrawing = false;
+      canvas.releasePointerCapture(e.pointerId);
+
+      // Laser Pointer fades after 1 second
+      if (state.tool === 'laser') {
+        const pathRef = state.currentPath;
+        setTimeout(() => {
+          state.pages[state.currentPage] = state.pages[state.currentPage].filter(p => p !== pathRef);
+          redrawCanvas();
+        }, 1000);
+      } else {
+        saveLocalData(true);
+      }
+      state.currentPath = null;
+    }
+
+    canvas.addEventListener('pointerup', stopDrawing);
+    canvas.addEventListener('pointercancel', stopDrawing);
+
+    /* --- UI CONTROLS & LISTENERS --- */
+    
+    // Tools
+    document.querySelectorAll('.cyber-btn[data-tool]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.cyber-btn[data-tool]').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        state.tool = e.target.dataset.tool;
+        sysLog(`TOOL_UPDATED: ${state.tool.toUpperCase()}`);
+      });
+    });
+
+    // Colors
+    document.querySelectorAll('.swatch').forEach(sw => {
+      sw.addEventListener('click', (e) => {
+        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+        e.target.classList.add('active');
+        state.color = e.target.dataset.color;
+        sysLog(`COLOR_UPDATED: ${state.color}`);
+      });
+    });
+
+    // Size Slider
+    document.getElementById('brush-size').addEventListener('input', (e) => {
+      state.size = Number(e.target.value);
+    });
+
+    /* --- PAGE NAVIGATION --- */
+    function updatePageUI() {
+      document.getElementById('page-display').innerText = `${state.currentPage}/${state.totalPages}`;
+    }
+
+    document.getElementById('btn-prev').addEventListener('click', () => {
+      if(state.currentPage > 1) {
+        state.currentPage--;
+        if (!state.pages[state.currentPage]) state.pages[state.currentPage] = [];
+        updatePageUI(); redrawCanvas(); sysLog(`PAGE_NAV: ${state.currentPage}`);
+      }
+    });
+
+    document.getElementById('btn-next').addEventListener('click', () => {
+      if(state.currentPage < state.totalPages) {
+        state.currentPage++;
+        if (!state.pages[state.currentPage]) state.pages[state.currentPage] = [];
+        updatePageUI(); redrawCanvas(); sysLog(`PAGE_NAV: ${state.currentPage}`);
+      }
+    });
+
+    document.getElementById('btn-add').addEventListener('click', () => {
+      state.totalPages++;
+      state.currentPage = state.totalPages;
+      state.pages[state.currentPage] = [];
+      state.undoStacks[state.currentPage] = [];
+      updatePageUI(); redrawCanvas(); saveLocalData(true);
+      sysLog("NEW_PAGE_CREATED");
+    });
+
+    /* --- UTILITIES --- */
+    document.getElementById('btn-undo').addEventListener('click', () => {
+      const paths = state.pages[state.currentPage];
+      if (paths.length === 0) return;
+      state.undoStacks[state.currentPage].push(paths.pop());
+      redrawCanvas(); saveLocalData(false); sysLog("ACTION_UNDONE");
+    });
+
+    document.getElementById('btn-redo').addEventListener('click', () => {
+      const undos = state.undoStacks[state.currentPage];
+      if (undos.length === 0) return;
+      state.pages[state.currentPage].push(undos.pop());
+      redrawCanvas(); saveLocalData(false); sysLog("ACTION_REDONE");
+    });
+
+    document.getElementById('btn-clear').addEventListener('click', () => {
+      state.undoStacks[state.currentPage] = state.undoStacks[state.currentPage].concat(state.pages[state.currentPage].reverse());
+      state.pages[state.currentPage] = [];
+      redrawCanvas(); saveLocalData(true); sysLog("PAGE_WIPED", "warn");
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if(confirm("CRITICAL WARNING: This will permanently purge all local data. Proceed?")) {
+        sysLog("INITIATING_PURGE...", "error");
+        indexedDB.deleteDatabase("QamelotCyberDB").onsuccess = () => location.reload();
+      }
+    });
+
+    // --- BOOT SEQUENCE ---
+    setTimeout(() => {
+      resizeCanvas();
+      updatePageUI();
+      sysLog("SYSTEM_READY", "info");
+    }, 250);
+
+  </script>
+</body>
+</html>

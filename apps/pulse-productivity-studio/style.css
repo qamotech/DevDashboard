@@ -126,6 +126,7 @@ body {
   display: inline-block;
   box-shadow: 0 0 12px var(--color-schedule);
   animation: pulse-glow 2s infinite;
+  will-change: transform, box-shadow;
 }
 
 .logo-area h1 {
@@ -506,6 +507,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   background: radial-gradient(circle, hsla(230, 80%, 65%, 0.1) 0%, transparent 70%);
   transform: scale(0.6);
   transition: transform 3s ease-in-out;
+  will-change: transform, background;
 }
 
 /* Breathing animation states controlled by JS classes */
@@ -644,7 +646,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
   border-color: var(--border-focus);
 }
 
-/* Modals */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -660,6 +661,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
+  will-change: opacity;
 }
 
 .modal-overlay.active {
@@ -677,6 +679,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   box-shadow: var(--shadow-premium);
   transform: scale(0.9);
   transition: transform 0.3s ease;
+  will-change: transform;
 }
 
 .modal-overlay.active .modal-card {

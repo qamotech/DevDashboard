@@ -1,0 +1,28 @@
+.cyber-card {
+    background: #121212;
+    border: 1px solid #00f3ff;
+    padding: 20px;
+    border-radius: 8px;
+    color: #00f3ff;
+}
+
+.main-layout { display: flex; gap: 20px; }
+
+textarea {
+    width: 100%;
+    height: 250px;
+    background: #000;
+    color: #00f3ff;
+    border: 1px solid #333;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.preview-pane {
+    flex: 1;
+    border: 1px solid #444;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

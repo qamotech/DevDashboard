@@ -8,6 +8,8 @@
     <link rel="icon" type="image/png" href="https://i.imgur.com/p7JzFKA.png">
     
     <!-- Fonts -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -364,6 +366,7 @@
             display: none;
             flex: 1;
             animation: viewFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity, transform;
         }
 
         .view-content.active {
@@ -1309,6 +1312,7 @@
             background: linear-gradient(90deg, transparent, var(--accent-indigo), var(--accent-cyan), var(--accent-purple), transparent);
             background-size: 200% 100%;
             animation: borderGlowFlow 4s linear infinite;
+            will-change: background-position;
         }
         @keyframes borderGlowFlow {
             0% { background-position: 0% 50%; }
@@ -1334,6 +1338,7 @@
             border-radius: 50%;
             box-shadow: 0 0 10px var(--accent-glow-purple);
             animation: logoPulse 3s ease-in-out infinite;
+            will-change: transform, filter;
         }
         @keyframes logoPulse {
             0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px var(--accent-indigo)); }
@@ -1367,6 +1372,7 @@
             border-radius: 50%;
             box-shadow: 0 0 8px var(--success-color);
             animation: pulseGlow 1.5s ease-in-out infinite;
+            will-change: opacity, box-shadow;
         }
         @keyframes pulseGlow {
             0%, 100% { opacity: 0.5; box-shadow: 0 0 4px var(--success-color); }
@@ -1461,10 +1467,6 @@
             <a class="nav-item" id="nav-app-math" onclick="launchApp('QamoMATH', 'apps/QamoMATH/QamoMATH.html', 'nav-app-math')" data-tooltip="Interactive mental arithmetic training utility">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
                 QamoMATH
-            </a>
-            <a class="nav-item" id="nav-app-toolbelt" onclick="launchApp('Contractor Tool Belt', 'apps/ContractorToolBelt.html', 'nav-app-toolbelt')" data-tooltip="Interactive suite for construction and general contracting: calculators, blueprint overrides, sensors, project budget pouch">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"/></svg>
-                Contractor Tool Belt
             </a>
         </div>
 
@@ -1609,7 +1611,6 @@
                         <button class="quick-btn" onclick="launchApp('QamoMATH', 'apps/QamoMATH/QamoMATH.html', 'nav-app-math')">QamoMATH</button>
                         <button class="quick-btn" onclick="launchApp('Connect 4', 'apps/C4N8.htm', 'nav-game-c4')">Connect 4</button>
                         <button class="quick-btn" onclick="launchApp('Stix Stax Stonz', 'apps/StixStaxStonzV1.htm', 'nav-game-ss')">Stix Stax</button>
-                        <button class="quick-btn" onclick="launchApp('Contractor Tool Belt', 'apps/ContractorToolBelt.html', 'nav-app-toolbelt')">Tool Belt</button>
                         <button class="quick-btn" onclick="showRemoverView()">AI Remover</button>
                     </div>
                     <div id="quick-launch-custom-container" class="quick-grid" style="margin-top: 0.5rem; gap: 0.5rem;">
@@ -1707,7 +1708,7 @@
                         <div class="spinner"></div>
                         <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Launching Application Sandbox...</span>
                     </div>
-                    <iframe src="" class="app-iframe" id="app-iframe" onload="hideIframeLoader()"></iframe>
+                    <iframe src="" class="app-iframe" id="app-iframe"></iframe>
                 </div>
             </div>
         </div>
@@ -2171,6 +2172,15 @@
         let selectedFile = null;
         let uploadTab = 'local';
         let currentActiveNavId = null;
+        let bookmarksRendered = false;
+
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
 
         document.addEventListener("DOMContentLoaded", () => {
             // Clock Initialization
@@ -2187,9 +2197,6 @@
 
             // Load metrics from localStorage
             loadMetrics();
-
-            // Initialize Bookmarks Directory
-            initBookmarks();
 
             // Load custom styling settings
             initSiteCustomizations();
@@ -2243,6 +2250,7 @@
 
             // Check if iframe has load failure (Feature 3)
             const iframe = document.getElementById("app-iframe");
+            iframe.addEventListener("load", hideIframeLoader);
             iframe.addEventListener("error", () => {
                 logConsoleAction("Iframe failed to load asset directory. Verify files exist in apps/ folder.", "error");
                 hideIframeLoader();
@@ -2268,7 +2276,7 @@
         }
 
         // 3. Search & Filter Bar (Feature 2)
-        function filterSidebar(query) {
+        const _debouncedFilterSidebar = debounce((query) => {
             const lowerQuery = query.toLowerCase();
             const items = document.querySelectorAll(".nav-section[data-group] .nav-item");
             
@@ -2293,6 +2301,10 @@
                     sec.style.display = "flex";
                 }
             });
+        }, 120);
+
+        function filterSidebar(query) {
+            _debouncedFilterSidebar(query);
         }
 
         // 4. Custom Theme Switcher (Feature 4)
@@ -2462,6 +2474,12 @@
             document.getElementById("view-title").innerText = "Bookmarks Directory";
             document.getElementById("view-subtitle").innerText = "Curated directory of 100+ developer links";
             document.getElementById("app-iframe").src = '';
+            
+            if (!bookmarksRendered) {
+                initBookmarks();
+                bookmarksRendered = true;
+            }
+
             logConsoleAction("Switched workspace view to: Bookmarks Directory.", "info");
         }
 
@@ -3159,7 +3177,7 @@
             });
         }
 
-        function filterBookmarks(query) {
+        const _debouncedFilterBookmarks = debounce((query) => {
             const lowerQuery = query.toLowerCase();
             const cards = document.querySelectorAll(".category-card");
 
@@ -3184,6 +3202,10 @@
                     card.style.display = "none";
                 }
             });
+        }, 120);
+
+        function filterBookmarks(query) {
+            _debouncedFilterBookmarks(query);
         }
 
         function switchTool(toolId) {

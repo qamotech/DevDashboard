@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <title>EcoTechComm | Secure Frequency</title>
+
+
+
+
+
+    <link rel="shortcut icon" type="image/png" href="https://i.imgur.com/p7JzFKA.png">
+
+
+
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #070a09;
+            --panel-mech: #131b18;
+            --leaf-neon: #00fa9a;
+            --leaf-glow: rgba(0, 250, 154, 0.4);
+            --regal-gold: #d4af37;
+            --text-main: #e0f2f1;
+            --danger: #ff3366;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none; /* Prevent text selection during rapid PTT taps */
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background-image: 
+                linear-gradient(45deg, #070a09 25%, transparent 25%, transparent 75%, #070a09 75%, #070a09), 
+                linear-gradient(45deg, #070a09 25%, transparent 25%, transparent 75%, #070a09 75%, #070a09);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+
+        /* Mechanized Container */
+        .comm-unit {
+            width: 100%;
+            max-width: 420px;
+            height: 90vh;
+            background: linear-gradient(135deg, var(--panel-mech) 0%, #0a0e0c 100%);
+            border: 2px solid #2a3a34;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(0, 250, 154, 0.05);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            /* Angled cuts for the Transformer aesthetic */
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%);
+        }
+
+        /* Regal Header */
+        header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(0,0,0,0.4);
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--regal-gold);
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--leaf-neon);
+            letter-spacing: 4px;
+            margin-top: 5px;
+        }
+
+        /* Central Console & Visualizer */
+        .tactical-display {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .visualizer-ring {
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            border: 2px dashed rgba(0, 250, 154, 0.2);
+            transition: all 0.1s ease;
+        }
+
+        .visualizer-ring.active {
+            border-color: var(--leaf-neon);
+            box-shadow: 0 0 30px var(--leaf-glow);
+            animation: pulse-ring 1.5s infinite linear;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.05) rotate(180deg); opacity: 0.8; }
+            100% { transform: scale(1) rotate(360deg); opacity: 1; }
+        }
+
+        /* Massive Push-To-Talk Button */
+        .ptt-container {
+            position: relative;
+            z-index: 10;
+        }
+
+        .ptt-button {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #2a3a34, #0a0e0c);
+            border: 4px solid var(--leaf-neon);
+            color: var(--leaf-neon);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 
+                0 10px 20px rgba(0,0,0,0.6),
+                inset 0 4px 10px rgba(255,255,255,0.1),
+                inset 0 -10px 20px rgba(0, 0, 0, 0.8),
+                0 0 20px var(--leaf-glow);
+            transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .ptt-button:active, .ptt-button.transmitting {
+            transform: translateY(8px) scale(0.96);
+            box-shadow: 
+                0 2px 5px rgba(0,0,0,0.6),
+                inset 0 6px 15px rgba(0, 0, 0, 0.9),
+                0 0 40px var(--leaf-neon);
+            background: radial-gradient(circle at 30% 30%, #1a2a24, #050807);
+            color: #fff;
+            text-shadow: 0 0 10px var(--leaf-neon);
+        }
+
+        /* Status Metrics */
+        .metrics-panel {
+            padding: 20px;
+            background: rgba(0,0,0,0.6);
+            border-top: 1px solid var(--leaf-neon);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--danger);
+            margin-right: 5px;
+            box-shadow: 0 0 8px var(--danger);
+        }
+
+        .status-indicator.online {
+            background-color: var(--leaf-neon);
+            box-shadow: 0 0 8px var(--leaf-neon);
+        }
+
+        /* Canvas for raw wave form */
+        #oscilloscope {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        #oscilloscope.active {
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="comm-unit">
+        <header>
+            <h1>EcoTechComm</h1>
+            <div class="subtitle">ENCRYPTED NODE :: WAKANDA/AVALON</div>
+        </header>
+
+        <div class="tactical-display">
+            <div class="visualizer-ring" id="ring"></div>
+            <canvas id="oscilloscope"></canvas>
+           
+            <div class="ptt-container">
+                <button id="ptt-btn" class="ptt-button">TX / RX</button>
+            </div>
+        </div>
+
+        <div class="metrics-panel">
+            <div class="metric">
+                <span class="metric-label">Network Status</span>
+                <span class="metric-value"><span class="status-indicator" id="net-status"></span><span id="status-text">OFFLINE</span></span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Active Channel</span>
+                <span class="metric-value" style="color: var(--regal-gold);">EXCALIBUR-9</span>
+            </div>
+            
+            <div class="metric">
+                <span class="metric-label">Latency</span>
+                <span class="metric-value">-- ms</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Mic Access</span>
+                <span class="metric-value" id="mic-status">PENDING</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+const pttBtn = document.getElementById('ptt-btn');
+const ring = document.getElementById('ring');
+const netStatus = document.getElementById('net-status');
+const statusText = document.getElementById('status-text');
+const micStatus = document.getElementById('mic-status');
+const activeChannel = document.querySelector('.metric-value[style*="color: var(--regal-gold)"]');
+const canvas = document.getElementById('oscilloscope');
+const ctx = canvas.getContext('2d');
+
+canvas.width = 260;
+canvas.height = 260;
+let audioContext;
+let localStream;
+let peer;
+let currentCall;
+let isTransmitting = false;
+let animationId;
+
+// 1. Initialize PeerJS
+function initPeer() {
+    // Generates a random 4-character ID for testing
+    const myId = Math.random().toString(36).substring(2, 6).toUpperCase();
+    peer = new Peer(myId);
+
+    peer.on('open', (id) => {
+        activeChannel.textContent = `NODE ID: ${id}`;
+        netStatus.classList.add('online');
+        statusText.textContent = "AWAITING LINK";
+    });
+
+    peer.on('call', (call) => {
+        // Answer incoming calls automatically
+        call.answer(localStream);
+        handleCall(call);
+    });
+}
+
+// 2. Initialize Microphone (Muted by default)
+async function initAudio() {
+    try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        
+        // Mute our track immediately (PTT logic)
+        localStream.getAudioTracks()[0].enabled = false;
+        
+        micStatus.textContent = "SECURED";
+        micStatus.style.color = "var(--leaf-neon)";
+        
+        initPeer(); // Start network after mic is secured
+    } catch (err) {
+        console.error("Mic access denied", err);
+        micStatus.textContent = "DENIED";
+        micStatus.style.color = "var(--danger)";
+    }
+}
+
+// 3. Handle the WebRTC Call connection
+function handleCall(call) {
+    currentCall = call;
+    statusText.textContent = "LINK ACTIVE";
+    
+    call.on('stream', (remoteStream) => {
+        // Play the incoming audio
+        const remoteAudio = new Audio();
+        remoteAudio.srcObject = remoteStream;
+        remoteAudio.play();
+    });
+
+    call.on('close', () => {
+        statusText.textContent = "LINK SEVERED";
+    });
+}
+
+// 4. Manual Connection Function
+// Tap the "NODE ID" text to trigger a connection prompt
+activeChannel.addEventListener('click', () => {
+    if (!peer) return alert("Initialize mic first by tapping the PTT button.");
+    const targetId = prompt("Enter the Target NODE ID to connect:");
+    if (targetId) {
+        const call = peer.call(targetId.toUpperCase(), localStream);
+        handleCall(call);
+    }
+});
+
+// 5. Visualizer & PTT Logic
+function drawWave() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.strokeStyle = '#00fa9a';
+    ctx.lineWidth = 3;
+    const radius = 100;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    
+    for (let i = 0; i <= 360; i += 5) {
+        const angle = i * Math.PI / 180;
+        const noise = isTransmitting ? (Math.random() * 30 - 15) : 0;
+        const x = centerX + (radius + noise) * Math.cos(angle);
+        const y = centerY + (radius + noise) * Math.sin(angle);
+        
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    
+    ctx.closePath();
+    ctx.stroke();
+    
+    if (isTransmitting) animationId = requestAnimationFrame(drawWave);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function startTransmission(e) {
+    if (e.type === 'touchstart') e.preventDefault();
+    if (!localStream) {
+        initAudio();
+        // First tap initializes everything
+        return;
+    }
+    
+    isTransmitting = true;
+    pttBtn.classList.add('transmitting');
+    ring.classList.add('active');
+    canvas.classList.add('active');
+    
+    if (navigator.vibrate) navigator.vibrate(50);
+    drawWave();
+    
+    // UNMUTE microphone
+    localStream.getAudioTracks()[0].enabled = true; 
+}
+
+function stopTransmission(e) {
+    if (e.type === 'touchend') e.preventDefault();
+    isTransmitting = false;
+    
+    pttBtn.classList.remove('transmitting');
+    ring.classList.remove('active');
+    canvas.classList.remove('active');
+    
+    if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+    cancelAnimationFrame(animationId);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // MUTE microphone
+    if (localStream) localStream.getAudioTracks()[0].enabled = false; 
+}
+
+pttBtn.addEventListener('mousedown', startTransmission);
+pttBtn.addEventListener('mouseup', stopTransmission);
+pttBtn.addEventListener('mouseleave', stopTransmission);
+pttBtn.addEventListener('touchstart', startTransmission, {passive: false});
+pttBtn.addEventListener('touchend', stopTransmission, {passive: false});
+pttBtn.addEventListener('touchcancel', stopTransmission, {passive: false});
+
+    </script>
+</body>
+</html>

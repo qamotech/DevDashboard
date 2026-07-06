@@ -1,0 +1,195 @@
+
+1. //Single line inside your <head> tag to pull in the library:
+<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+
+2. Replace the entire <script> block at the bottom of your HTML file
+
+* This new script assigns your device a unique "Node ID" (which we will display in the UI) and sets up a persistent, muted audio call. Pushing the PTT button simply unmutes your microphone.
+
+
+//Walkie-Talkie Script:
+const pttBtn = document.getElementById('ptt-btn');
+const ring = document.getElementById('ring');
+const netStatus = document.getElementById('net-status');
+const statusText = document.getElementById('status-text');
+const micStatus = document.getElementById('mic-status');
+const activeChannel = document.querySelector('.metric-value[style*="color: var(--regal-gold)"]');
+const canvas = document.getElementById('oscilloscope');
+const ctx = canvas.getContext('2d');
+
+canvas.width = 260;
+canvas.height = 260;
+
+let audioContext;
+let localStream;
+let peer;
+let currentCall;
+let isTransmitting = false;
+let animationId;
+
+// 1. Initialize PeerJS
+function initPeer() {
+    // Generates a random 4-character ID for testing
+    const myId = Math.random().toString(36).substring(2, 6).toUpperCase(); 
+    peer = new Peer(myId);
+
+    peer.on('open', (id) => {
+        activeChannel.textContent = `NODE ID: ${id}`;
+        netStatus.classList.add('online');
+        statusText.textContent = "AWAITING LINK";
+    });
+
+    peer.on('call', (call) => {
+        // Answer incoming calls automatically
+        call.answer(localStream);
+        handleCall(call);
+    });
+}
+
+// 2. Initialize Microphone (Muted by default)
+async function initAudio() {
+    try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        
+        // Mute our track immediately (PTT logic)
+        localStream.getAudioTracks()[0].enabled = false; 
+
+        micStatus.textContent = "SECURED";
+        micStatus.style.color = "var(--leaf-neon)";
+        
+        initPeer(); // Start network after mic is secured
+    } catch (err) {
+        console.error("Mic access denied", err);
+        micStatus.textContent = "DENIED";
+        micStatus.style.color = "var(--danger)";
+    }
+}
+
+// 3. Handle the WebRTC Call connection
+function handleCall(call) {
+    currentCall = call;
+    statusText.textContent = "LINK ACTIVE";
+    
+    call.on('stream', (remoteStream) => {
+        // Play the incoming audio
+        const remoteAudio = new Audio();
+        remoteAudio.srcObject = remoteStream;
+        remoteAudio.play();
+    });
+
+    call.on('close', () => {
+        statusText.textContent = "LINK SEVERED";
+    });
+}
+
+// 4. Manual Connection Function
+// Tap the "NODE ID" text to trigger a connection prompt
+activeChannel.addEventListener('click', () => {
+    if (!peer) return alert("Initialize mic first by tapping the PTT button.");
+    const targetId = prompt("Enter the Target NODE ID to connect:");
+    if (targetId) {
+        const call = peer.call(targetId.toUpperCase(), localStream);
+        handleCall(call);
+    }
+});
+
+// 5. Visualizer & PTT Logic
+function drawWave() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.strokeStyle = '#00fa9a';
+    ctx.lineWidth = 3;
+    const radius = 100;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    
+    for (let i = 0; i <= 360; i += 5) {
+        const angle = i * Math.PI / 180;
+        const noise = isTransmitting ? (Math.random() * 30 - 15) : 0; 
+        const x = centerX + (radius + noise) * Math.cos(angle);
+        const y = centerY + (radius + noise) * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    }
+    
+    ctx.closePath();
+    ctx.stroke();
+    if (isTransmitting) animationId = requestAnimationFrame(drawWave);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function startTransmission(e) {
+    if (e.type === 'touchstart') e.preventDefault();
+    if (!localStream) {
+        initAudio(); // First tap initializes everything
+        return; 
+    }
+    
+    isTransmitting = true;
+    pttBtn.classList.add('transmitting');
+    ring.classList.add('active');
+    canvas.classList.add('active');
+    
+    if (navigator.vibrate) navigator.vibrate(50);
+    drawWave();
+    
+    // UNMUTE microphone
+    localStream.getAudioTracks()[0].enabled = true; 
+}
+
+function stopTransmission(e) {
+    if (e.type === 'touchend') e.preventDefault();
+    isTransmitting = false;
+    
+    pttBtn.classList.remove('transmitting');
+    ring.classList.remove('active');
+    canvas.classList.remove('active');
+    
+    if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+    cancelAnimationFrame(animationId);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // MUTE microphone
+    if (localStream) localStream.getAudioTracks()[0].enabled = false; 
+}
+
+pttBtn.addEventListener('mousedown', startTransmission);
+pttBtn.addEventListener('mouseup', stopTransmission);
+pttBtn.addEventListener('mouseleave', stopTransmission);
+pttBtn.addEventListener('touchstart', startTransmission, {passive: false});
+pttBtn.addEventListener('touchend', stopTransmission, {passive: false});
+pttBtn.addEventListener('touchcancel', stopTransmission, {passive: false});
+
+// End Walkie script
+
+3. Run it  ---->
+
+Netlify:
+
+-1. Install Netlify Agent Skills
+(Note: This step is primarily for local agents that support the skills framework, but this is what the manifest requests.)
+
+Bash
+npx -y skills add netlify/context-and-tools --skill '*' --yes
+-2. Install the Netlify CLI
+If you don't already have the Netlify Command Line Interface installed globally, you will need it to deploy directly from your terminal.
+
+Bash
+npm install -g netlify-cli
+
+-3. Authorize the CLI
+This command will open a browser window for you to log into your Netlify account, granting your local terminal permission to deploy sites on your behalf.
+
+Bash
+netlify login
+
+-4. Deploy Your Code
+Once you have saved the code we write (like the EcoTechComm walkie-talkie app) into a local folder, navigate to that folder in your terminal and run:
+
+Bash
+netlify deploy
+(It will give you a live draft URL to test. When you are ready for production, just run netlify deploy --prod)
+
+
+

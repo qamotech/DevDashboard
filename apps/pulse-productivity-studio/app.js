@@ -43,6 +43,13 @@ const volBinaural = document.getElementById('volume-binaural');
 const btnRain = document.getElementById('btn-rain');
 const volRain = document.getElementById('volume-rain');
 
+const elTaskTitle = document.getElementById('task-title');
+const elTaskQuadrant = document.getElementById('task-quadrant');
+const elListDo = document.getElementById('list-do');
+const elListSchedule = document.getElementById('list-schedule');
+const elListDelegate = document.getElementById('list-delegate');
+const elListEliminate = document.getElementById('list-eliminate');
+
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
   // Load settings
@@ -259,8 +266,8 @@ function drawEnergyChart(currentHourDecimal) {
 // --- Task Manager ---
 function handleCreateTask(e) {
   e.preventDefault();
-  const title = document.getElementById('task-title').value.trim();
-  const quadrant = document.getElementById('task-quadrant').value;
+  const title = elTaskTitle.value.trim();
+  const quadrant = elTaskQuadrant.value;
   
   if (!title) return;
   
@@ -286,10 +293,10 @@ function saveTasks() {
 
 function renderTasks() {
   const lists = {
-    do: document.getElementById('list-do'),
-    schedule: document.getElementById('list-schedule'),
-    delegate: document.getElementById('list-delegate'),
-    eliminate: document.getElementById('list-eliminate')
+    do: elListDo,
+    schedule: elListSchedule,
+    delegate: elListDelegate,
+    eliminate: elListEliminate
   };
   
   // Clear lists
@@ -390,7 +397,9 @@ function initBreathingAnimation() {
   let breatheIn = true;
   setInterval(() => {
     if (!state.timer.isActive || state.timer.phase !== 'focus') {
-      breathingGuide.className = 'breathing-circle-inner';
+      if (breathingGuide.className !== 'breathing-circle-inner') {
+        breathingGuide.className = 'breathing-circle-inner';
+      }
       return;
     }
     
