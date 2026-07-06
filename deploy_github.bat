@@ -105,6 +105,14 @@ git push -u origin main
 if errorlevel 1 goto :fail
 echo.
 
+echo Launching push complete explosion...
+if exist "apps\DevDash\push-complete.html" (
+    start "" "%CD%\apps\DevDash\push-complete.html"
+) else (
+    echo Warning: push-complete.html was not found, so the explosion could not launch.
+)
+echo.
+
 echo ===================================================
 echo   Deployment Push Completed
 echo ===================================================
