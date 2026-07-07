@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Visuals Library (40)</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --accent: #38bdf8;
+            --pink: #e879f9;
+            --green: #a3e635;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 32px;
+            background:
+                radial-gradient(circle at 20% 10%, rgba(56,189,248,.18), transparent 28rem),
+                radial-gradient(circle at 85% 5%, rgba(232,121,249,.14), transparent 24rem),
+                var(--bg);
+            color: var(--text);
+            font-family: "Segoe UI", system-ui, sans-serif;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 4rem);
+            letter-spacing: 0;
+        }
+
+        .subtitle {
+            margin: 0 auto 32px;
+            max-width: 720px;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            display: grid;
+            gap: 14px;
+            padding: 18px;
+            border: 1px solid rgba(148,163,184,.22);
+            border-radius: 8px;
+            background: rgba(30,41,59,.86);
+            box-shadow: 0 18px 40px rgba(0,0,0,.24);
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .preview {
+            position: relative;
+            min-height: 140px;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            background:
+                linear-gradient(45deg, rgba(255,255,255,.04) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(255,255,255,.04) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(255,255,255,.04) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(255,255,255,.04) 75%),
+                #020617;
+            background-size: 24px 24px;
+            background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+        }
+
+        code {
+            display: block;
+            min-height: 64px;
+            padding: 12px;
+            overflow-x: auto;
+            border-radius: 6px;
+            background: #020617;
+            color: var(--green);
+            cursor: pointer;
+            font-family: "Cascadia Mono", Consolas, monospace;
+            font-size: 11px;
+            line-height: 1.45;
+            white-space: pre;
+        }
+
+        code:hover {
+            outline: 1px solid var(--accent);
+        }
+
+        .copy-note {
+            color: var(--muted);
+            font-size: .78rem;
+        }
+
+        .demo-box {
+            width: 74px;
+            height: 74px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #38bdf8, #e879f9);
+            color: #020617;
+            font-weight: 800;
+        }
+
+        .demo-text {
+            font-size: 1.4rem;
+            font-weight: 900;
+        }
+
+        .neon { box-shadow: 0 0 10px #fff, 0 0 24px #e879f9, 0 0 42px #38bdf8; }
+        .glass { width: 76%; height: 72%; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.14); backdrop-filter: blur(10px); }
+        .magnetic:hover { transform: scale(1.12) rotate(-2deg); }
+        .stroke { -webkit-text-stroke: 1px white; color: transparent; }
+        .marquee { position: absolute; white-space: nowrap; animation: scroll 4s linear infinite; }
+        .liquid { border-radius: 50% 50% 20% 80%; animation: morph 2s infinite; }
+        .float { animation: float 3s ease-in-out infinite; }
+        .skew:hover { transform: skewX(-10deg); }
+        .conic { padding: 4px; background: conic-gradient(from 0deg, #e879f9, #38bdf8, #a3e635, #e879f9); }
+        .conic::after { content: ""; width: 100%; height: 100%; border-radius: 6px; background: #0f172a; }
+        .skeleton { width: 80%; height: 28px; border-radius: 999px; background: linear-gradient(90deg, #334155 25%, #64748b 50%, #334155 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+        .typewriter { overflow: hidden; white-space: nowrap; border-right: 2px solid; width: 10ch; animation: typing 3s steps(10) infinite; }
+        .clip { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+        .tooltip { position: relative; }
+        .tooltip::after { content: "Info"; position: absolute; bottom: 115%; left: 50%; transform: translateX(-50%); padding: 4px 8px; border-radius: 4px; background: #f8fafc; color: #020617; opacity: 1; }
+        .shimmer-btn { background: linear-gradient(90deg, #6366f1, #a855f7, #38bdf8); background-size: 200% 100%; animation: shimmer 2s infinite; }
+        .accordion { width: 76%; height: 70px; overflow: hidden; transition: height .3s; }
+        .accordion:hover { height: 110px; }
+        .tilt { transform: perspective(600px) rotateY(18deg) rotateX(8deg); }
+        .wave { position: absolute; inset: 0; background: radial-gradient(circle at 20% 70%, rgba(56,189,248,.45), transparent 18%), linear-gradient(135deg, #082f49, #581c87); }
+        .wave::after { content: ""; position: absolute; inset: auto -10% -20% -10%; height: 70px; background: #38bdf8; border-radius: 50% 50% 0 0; animation: wave 3s ease-in-out infinite; }
+        .blur:hover { filter: blur(5px); }
+        .gradient-stroke { border: 5px solid transparent; border-image: linear-gradient(to right, #e879f9, #38bdf8) 1; }
+        .pulse-ring { box-shadow: 0 0 0 0 rgba(56,189,248,.7); animation: pulse 2s infinite; }
+        .gallery { display: flex; gap: 8px; }
+        .gallery i { display: block; width: 44px; height: 70px; border-radius: 4px; background: linear-gradient(160deg, #38bdf8, #e879f9); transform: rotate(-5deg); transition: .3s; }
+        .gallery i:hover { transform: rotate(0) scale(1.08); }
+        .spin { animation: spin 4s linear infinite; }
+        .slide { animation: slideIn 1.8s ease-out infinite; }
+        .fade { animation: fadeIn 1.8s infinite alternate; }
+        .bounce { border-radius: 50%; animation: bounce 1s infinite; }
+        .shadow-text { text-shadow: 2px 2px 0 #020617, 0 0 16px #38bdf8; }
+        .radius { border-radius: 20px 50px 30px 5px; }
+        .rotx { transform: perspective(400px) rotateX(45deg); }
+        .opacity:hover { opacity: .5; }
+        .glow-text { text-shadow: 0 0 5px #fff, 0 0 14px #38bdf8; }
+        .flip { transition: transform .5s; transform-style: preserve-3d; }
+        .flip:hover { transform: rotateY(180deg); }
+        .scale-down:hover { transform: scale(.9); }
+        .pointer { cursor: pointer; }
+        .overflow-hide { width: 100px; height: 52px; overflow: hidden; }
+        .flex-center { display: flex; justify-content: center; align-items: center; }
+        .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 92px; }
+        .mini-grid i { height: 38px; border-radius: 4px; background: #38bdf8; }
+        .absolute-demo { position: relative; background: #111827; }
+        .absolute-demo i { position: absolute; top: 8px; left: 8px; width: 28px; height: 28px; background: #a3e635; border-radius: 50%; }
+        .sticky-demo { align-self: stretch; width: 70%; overflow-y: auto; padding: 10px; background: #111827; }
+        .sticky-demo b { position: sticky; top: 0; display: block; padding: 5px; background: #38bdf8; color: #020617; }
+        .no-select { user-select: none; }
+        .smooth-scroll { width: 90%; display: grid; gap: 8px; }
+        .smooth-scroll a { color: #38bdf8; }
+
+        @keyframes scroll { from { transform: translateX(160%); } to { transform: translateX(-160%); } }
+        @keyframes morph { 50% { border-radius: 20% 80% 50% 50%; transform: rotate(15deg); } }
+        @keyframes float { 50% { transform: translateY(-20px); } }
+        @keyframes shimmer { to { background-position: -200% 0; } }
+        @keyframes typing { 0%, 15% { width: 0; } 60%, 100% { width: 10ch; } }
+        @keyframes wave { 50% { transform: translateY(-18px) scaleX(1.1); } }
+        @keyframes pulse { 70% { box-shadow: 0 0 0 28px rgba(56,189,248,0); } 100% { box-shadow: 0 0 0 0 rgba(56,189,248,0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideIn { from { transform: translateX(-140%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: .18; } to { opacity: 1; } }
+        @keyframes bounce { 50% { transform: translateY(-30px); } }
+    </style>
+</head>
+<body>
+    <h1>CSS Visuals Library</h1>
+    <p class="subtitle">Every card has a live visual preview. Hover the interactive ones, and click a code block to copy the snippet.</p>
+    <div class="grid" id="container"></div>
+
+    <script>
+        const visuals = [
+            ["Neon Glow", ".neon { box-shadow: 0 0 10px #fff, 0 0 20px #f0f; }", '<div class="demo-box neon">Glow</div>'],
+            ["Glassmorphism", ".glass { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); }", '<div class="glass demo-box">Glass</div>'],
+            ["Magnetic Button", ".btn { transition: transform 0.3s; } .btn:hover { transform: scale(1.1); }", '<button class="demo-box magnetic">Hover</button>'],
+            ["Text Stroke", ".stroke { -webkit-text-stroke: 1px white; color: transparent; }", '<div class="demo-text stroke">STROKE</div>'],
+            ["Infinite Marquee", "@keyframes scroll { from { left: 100%; } to { left: -100%; } }", '<div class="marquee demo-text">Moving Text</div>'],
+            ["Liquid Loader", ".loader { border-radius: 50% 50% 20% 80%; animation: morph 2s infinite; }", '<div class="demo-box liquid"></div>'],
+            ["Floating", ".float { animation: float 3s ease-in-out infinite; }", '<div class="demo-box float">Float</div>'],
+            ["Skewed Reveal", ".skew:hover { transform: skewX(-10deg); }", '<div class="demo-box skew">Hover</div>'],
+            ["Conic Border", ".conic { background: conic-gradient(from 0deg, #f0f, #00f, #f0f); }", '<div class="demo-box conic"></div>'],
+            ["Skeleton Loader", ".skel { background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%); }", '<div class="skeleton"></div>'],
+            ["Typewriter", ".type { overflow: hidden; white-space: nowrap; border-right: 2px solid; width: 10ch; }", '<div class="demo-text typewriter">TYPEWRITE</div>'],
+            ["Image Clip-Path", ".clip { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }", '<div class="demo-box clip"></div>'],
+            ["Tooltip", ".tip::after { content: 'Info'; visibility: visible; position: absolute; }", '<div class="demo-box tooltip">Tip</div>'],
+            ["Shimmer Button", ".shim { background: linear-gradient(90deg, #6366f1 0%, #a855f7 100%); }", '<button class="demo-box shimmer-btn">Shimmer</button>'],
+            ["Accordion", ".acc { height: 0; overflow: hidden; transition: height 0.3s ease; }", '<div class="demo-box accordion">Hover<br>Expands<br>Panel</div>'],
+            ["Parallax Tilt", ".tilt { transform: perspective(1000px) rotateY(10deg); }", '<div class="demo-box tilt">Tilt</div>'],
+            ["SVG Wave", ".wave { background-image: url('data:image/svg+xml,...'); }", '<div class="wave"></div>'],
+            ["CSS Blur", ".blur:hover { filter: blur(5px); }", '<div class="demo-box blur">Hover</div>'],
+            ["Gradient Stroke", ".grad-stroke { border: 5px solid transparent; border-image: linear-gradient(to right, #f0f, #0ff) 1; }", '<div class="demo-box gradient-stroke">Border</div>'],
+            ["Pulse Ring", ".pulse { box-shadow: 0 0 0 0 rgba(0, 150, 255, 0.7); animation: pulse 2s infinite; }", '<div class="demo-box pulse-ring">Pulse</div>'],
+            ["Skewed Gallery", ".item { transform: rotate(-5deg); transition: 0.3s; }", '<div class="gallery"><i></i><i></i><i></i></div>'],
+            ["Rotation 360", ".spin { animation: spin 4s linear infinite; }", '<div class="demo-box spin">Spin</div>'],
+            ["Slide In", ".slide { animation: slideIn 0.5s ease-out; }", '<div class="demo-box slide">Slide</div>'],
+            ["Fade In", ".fade { animation: fadeIn 1s; }", '<div class="demo-box fade">Fade</div>'],
+            ["Bouncing Ball", ".ball { animation: bounce 1s infinite; }", '<div class="demo-box bounce"></div>'],
+            ["Text Shadow", ".shadow { text-shadow: 2px 2px 4px #000; }", '<div class="demo-text shadow-text">Shadow</div>'],
+            ["Border Radius", ".round { border-radius: 20px 50px 30px 5px; }", '<div class="demo-box radius"></div>'],
+            ["Rotate X", ".rotx { transform: rotateX(45deg); }", '<div class="demo-box rotx">Rotate X</div>'],
+            ["Opacity Toggle", ".opac:hover { opacity: 0.5; }", '<div class="demo-box opacity">Hover</div>'],
+            ["Glow Text", ".glow { text-shadow: 0 0 5px #fff, 0 0 10px #fff; }", '<div class="demo-text glow-text">Glow</div>'],
+            ["Flip Card", ".flip:hover { transform: rotateY(180deg); }", '<div class="demo-box flip">Flip</div>'],
+            ["Scale Down", ".scale:hover { transform: scale(0.9); }", '<div class="demo-box scale-down">Hover</div>'],
+            ["Cursor Pointer", ".point { cursor: pointer; }", '<div class="demo-box pointer">Pointer</div>'],
+            ["Hidden Overflow", ".hide { overflow: hidden; }", '<div class="demo-box overflow-hide">This text is intentionally clipped by overflow.</div>'],
+            ["Flex Center", ".center { display: flex; justify-content: center; align-items: center; }", '<div class="demo-box flex-center">Center</div>'],
+            ["Grid Layout", ".grid { display: grid; grid-template-columns: 1fr 1fr; }", '<div class="mini-grid"><i></i><i></i><i></i><i></i></div>'],
+            ["Absolute Pos", ".abs { position: absolute; top: 0; left: 0; }", '<div class="demo-box absolute-demo"><i></i></div>'],
+            ["Sticky Top", ".stick { position: sticky; top: 0; }", '<div class="sticky-demo"><b>Sticky</b><p>Scroll area<br>line<br>line<br>line</p></div>'],
+            ["User Select", ".no-select { user-select: none; }", '<div class="demo-box no-select">Try Select</div>'],
+            ["Smooth Scroll", "html { scroll-behavior: smooth; }", '<div class="smooth-scroll"><a href="#container">Smooth link</a><span>scroll-behavior: smooth</span></div>']
+        ];
+
+        const container = document.getElementById("container");
+        visuals.forEach(([name, code, demo]) => {
+            const card = document.createElement("article");
+            card.className = "card";
+
+            const title = document.createElement("h3");
+            title.textContent = name;
+
+            const preview = document.createElement("div");
+            preview.className = "preview";
+            preview.innerHTML = demo;
+
+            const snippet = document.createElement("code");
+            snippet.textContent = code;
+            snippet.tabIndex = 0;
+            snippet.title = "Click to copy";
+            snippet.addEventListener("click", () => copy(code, snippet));
+            snippet.addEventListener("keydown", event => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    copy(code, snippet);
+                }
+            });
+
+            card.append(title, preview, snippet);
+            container.appendChild(card);
+        });
+
+        async function copy(text, node) {
+            await navigator.clipboard.writeText(text);
+            const original = node.textContent;
+            node.textContent = "Copied!";
+            setTimeout(() => { node.textContent = original; }, 900);
+        }
+    </script>
+</body>
+</html>
