@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Tech Motion Library</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <style>
+        body { 
+            background-color: #050b14; 
+            color: #a3e635; 
+            font-family: 'Courier New', Courier, monospace; 
+        }
+        .cyber-grid { 
+            background-image: 
+                linear-gradient(rgba(163, 230, 53, 0.05) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(163, 230, 53, 0.05) 1px, transparent 1px); 
+            background-size: 30px 30px; 
+        }
+        .metallic-border { 
+            border: 1px solid #3b82f6; 
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.3), inset 0 0 15px rgba(59, 130, 246, 0.1); 
+        }
+        .neon-text { 
+            text-shadow: 0 0 8px rgba(163, 230, 53, 0.8); 
+        }
+        .preview-box { 
+            height: 150px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: rgba(10, 20, 35, 0.9); 
+            border-radius: 8px; 
+            border: 1px dashed #1e3a8a; 
+        }
+        /* Custom Scrollbar for code blocks */
+        ::-webkit-scrollbar { height: 6px; width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 3px; }
+    </style>
+</head>
+<body class="cyber-grid min-h-screen p-8">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Critical Fix: Access Motion from the global window object
+        const { motion } = window.Motion;
+
+        const VisualCard = ({ title, code, children }) => {
+            const copyText = () => {
+                navigator.clipboard.writeText(code);
+                // Optional: You could add a quick toast notification here
+            };
+
+            return (
+                <div className="bg-slate-900/90 metallic-border p-5 rounded-xl backdrop-blur-md flex flex-col h-full">
+                    <h3 className="font-bold mb-4 text-lime-400 uppercase tracking-widest text-sm neon-text">{title}</h3>
+                    <div className="preview-box mb-4 relative overflow-hidden flex-grow">
+                        {children}
+                    </div>
+                    <pre className="text-[10px] bg-black p-3 rounded text-cyan-400 overflow-x-auto cursor-pointer border border-cyan-900 hover:border-cyan-400 transition-colors" 
+                         onClick={copyText} title="Click to copy">
+                        <code>{code}</code>
+                    </pre>
+                </div>
+            );
+        };
+
+        const App = () => {
+            // Container variants for the staggered list
+            const listContainer = {
+                hidden: { opacity: 0 },
+                show: {
+                    opacity: 1,
+                    transition: { staggerChildren: 0.2 }
+                }
+            };
+            const listItem = {
+                hidden: { opacity: 0, y: 20 },
+                show: { opacity: 1, y: 0 }
+            };
+
+            return (
+                <div className="max-w-7xl mx-auto">
+                    <header className="mb-12 border-b border-blue-900/50 pb-6">
+                        <h1 className="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-cyan-500 uppercase tracking-tighter drop-shadow-md">
+                            Motion Dynamics Library
+                        </h1>
+                        <p className="text-blue-400 text-sm tracking-wide">React + Framer Motion // Standalone Visuals</p>
+                    </header>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        
+                        <VisualCard title="Hover Reactivity" code={`<motion.div\n  whileHover={{ scale: 1.2, rotate: 90 }}\n  whileTap={{ scale: 0.8 }}\n/>`}>
+                            <motion.div 
+                                className="w-16 h-16 bg-lime-400 rounded shadow-[0_0_15px_#a3e635]"
+                                whileHover={{ scale: 1.2, rotate: 90 }}
+                                whileTap={{ scale: 0.8, borderRadius: "50%" }}
+                            />
+                        </VisualCard>
+
+                        <VisualCard title="Eco-Pulse" code={`<motion.div\n  animate={{ scale: [1, 1.2, 1] }}\n  transition={{ \n    repeat: Infinity, \n    duration: 1.5 \n  }}\n/>`}>
+                            <motion.div 
+                                className="w-12 h-12 bg-transparent border-4 border-lime-400 rounded-full"
+                                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                            />
+                        </VisualCard>
+
+                        <VisualCard title="Spring Drop" code={`<motion.div\n  initial={{ y: -60 }}\n  animate={{ y: 0 }}\n  transition={{ \n    type: "spring", \n    bounce: 0.7 \n  }}\n/>`}>
+                            <motion.div 
+                                className="w-16 h-16 bg-cyan-500 rounded"
+                                initial={{ y: -60 }}
+                                animate={{ y: 0 }}
+                                transition={{ type: "spring", bounce: 0.7, repeat: Infinity, repeatDelay: 1 }}
+                            />
+                        </VisualCard>
+
+                        <VisualCard title="Draggable Node" code={`<motion.div\n  drag\n  dragConstraints={{\n    left: -50, right: 50,\n    top: -50, bottom: 50\n  }}\n/>`}>
+                            <motion.div 
+                                className="w-16 h-16 bg-blue-600 rounded-full cursor-grab active:cursor-grabbing flex items-center justify-center text-xs font-bold text-white shadow-[0_0_15px_#3b82f6]"
+                                drag
+                                dragConstraints={{ left: -50, right: 50, top: -50, bottom: 50 }}
+                                whileDrag={{ scale: 1.1 }}
+                            >
+                                DRAG
+                            </motion.div>
+                        </VisualCard>
+
+                        <VisualCard title="Holo-Float" code={`<motion.div\n  animate={{ y: [0, -15, 0] }}\n  transition={{ \n    repeat: Infinity, \n    duration: 3 \n  }}\n/>`}>
+                            <motion.div 
+                                className="w-20 h-10 bg-cyan-900/50 border border-cyan-400 rounded-lg flex items-center justify-center text-cyan-400 text-xs shadow-[0_0_10px_#22d3ee]"
+                                animate={{ y: [0, -15, 0] }}
+                                transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                            >
+                                SYS_ACTIVE
+                            </motion.div>
+                        </VisualCard>
+
+                        <VisualCard title="Data Spin" code={`<motion.div\n  animate={{ rotate: 360 }}\n  transition={{ \n    repeat: Infinity, \n    duration: 4, \n    ease: "linear" \n  }}\n/>`}>
+                            <motion.div 
+                                className="w-16 h-16 border-t-4 border-r-4 border-lime-400 rounded-full"
+                                animate={{ rotate: 360 }}
+                                transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+                            />
+                        </VisualCard>
+
+                        <VisualCard title="Staggered Array" code={`<motion.div variants={container}>\n  <motion.div variants={item} />\n  <motion.div variants={item} />\n</motion.div>`}>
+                            <motion.div 
+                                className="flex gap-2"
+                                variants={listContainer}
+                                initial="hidden"
+                                animate="show"
+                                key={Math.random()} // Forces re-render on save to show animation
+                            >
+                                {[1, 2, 3].map(i => (
+                                    <motion.div 
+                                        key={i} 
+                                        variants={listItem} 
+                                        className="w-8 h-8 bg-blue-500 rounded-sm"
+                                        transition={{ repeat: Infinity, repeatType: "mirror", duration: 2 }}
+                                    />
+                                ))}
+                            </motion.div>
+                        </VisualCard>
+
+                        <VisualCard title="Glitch Skew" code={`<motion.div\n  animate={{ skewX: [0, -20, 20, 0] }}\n  transition={{ \n    repeat: Infinity, \n    repeatDelay: 2 \n  }}\n/>`}>
+                            <motion.div 
+                                className="px-4 py-2 bg-red-600 text-white font-black tracking-widest"
+                                animate={{ skewX: [0, -20, 20, 0], x: [0, -5, 5, 0] }}
+                                transition={{ repeat: Infinity, duration: 0.2, repeatDelay: 2 }}
+                            >
+                                ERROR
+                            </motion.div>
+                        </VisualCard>
+
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
