@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --neon-blue: #00f2ff;
+            --dark-metal: #1a1a1a;
+            --border-glow: 0 0 10px var(--neon-blue);
+        }
+
+        body {
+            background: #000;
+            color: var(--neon-blue);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Space Background */
+        .stars {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            z-index: -1;
+        }
+
+        /* Electricity Border */
+        .container {
+            padding: 20px;
+            border: 3px solid var(--neon-blue);
+            box-shadow: var(--border-glow), inset var(--border-glow);
+            background: var(--dark-metal);
+            animation: flicker 3s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { border-color: var(--neon-blue); }
+            20%, 22%, 24%, 55% { border-color: #fff; }
+        }
+
+        button {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            box-shadow: 0 0 20px var(--neon-blue);
+            text-shadow: 0 0 5px #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="container">
+        <h1>N8 CYBER-CORE</h1>
+        <textarea id="input" placeholder="Enter data..."></textarea>
+        <br>
+        <button id="promptBtn">GENERATE (Prompt API)</button>
+        <button id="summaryBtn">ANALYZE (Summarizer API)</button>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        // Check for Chrome AI support
+        async function initAI() {
+            // Prompt API Check
+            if ('LanguageModel' in self) {
+                const session = await LanguageModel.create();
+                document.getElementById('promptBtn').onclick = async () => {
+                    const res = await session.prompt(document.getElementById('input').value);
+                    document.getElementById('output').innerText = res;
+                };
+            }
+
+            // Summarizer API Check
+            if ('Summarizer' in self) {
+                const summarizer = await Summarizer.create({type: 'tl;dr'});
+                document.getElementById('summaryBtn').onclick = async () => {
+                    const sum = await summarizer.summarize(document.getElementById('input').value);
+                    document.getElementById('output').innerText = sum;
+                };
+            }
+        }
+        initAI();
+    </script>
+</body>
+</html>
