@@ -1,43 +1,32 @@
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
+const CACHE_NAME = "bruce-lee-studio-v6";
+const APP_SHELL = [
+  "Index.html",
+  "manifest.json",
+  "studio-mark.svg",
+  "martial-movement-atlas.png"
+];
 
-const CACHE = "pwa-offline-cache";
-const offlineFallbackPage = "index.html"; // We fallback to index.html since it contains everything
-
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
-});
-
-self.addEventListener('install', async (event) => {
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.add(offlineFallbackPage))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
   );
+  self.skipWaiting();
 });
 
-if (workbox.navigationPreload.isSupported()) {
-  workbox.navigationPreload.enable();
-}
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
+    )
+  );
+  self.clients.claim();
+});
 
-workbox.routing.registerRoute(
-  new RegExp('/*'),
-  new workbox.strategies.StaleWhileRevalidate({
-    cacheName: CACHE
-  })
-);
-
-self.addEventListener('fetch', (event) => {
-  if (event.request.mode === 'navigate') {
-    event.respondWith((async () => {
-      try {
-        const preloadResp = await event.preloadResponse;
-        if (preloadResp) return preloadResp;
-
-        return await fetch(event.request);
-      } catch (error) {
-        const cache = await caches.open(CACHE);
-        return await cache.match(offlineFallbackPage);
-      }
-    })());
-  }
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+  event.respondWith(
+    caches.match(event.request).then((cached) =>
+      cached || fetch(event.request).catch(() => caches.match("Index.html"))
+    )
+  );
 });

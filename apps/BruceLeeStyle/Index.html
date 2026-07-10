@@ -1,572 +1,1583 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>QAMELOT // MATH_CORE</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#050505" />
-  
-  <!-- Fonts for Cyberpunk Aesthetic -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  
-  <!-- Augmented-UI for Armored Element Shapes -->
-  <link rel="stylesheet" type="text/css" href="https://unpkg.com/augmented-ui@2/augmented-ui.min.css">
 
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#03060a">
+  <meta name="description"
+    content="Interactive Bruce Lee studio exploring Wing Chun, boxing, fencing, grappling, and other martial arts influences through moves, form, and training tools.">
+  <title>Bruce Lee Interactive Studio</title>
+  <link rel="manifest" href="manifest.json">
   <style>
     :root {
-      /* Cyberpunk Neon Palette */
-      --neon-cyan: #00f3ff;
-      --neon-pink: #ff0055;
-      --neon-yellow: #fcee0a;
-      --neon-green: #00ffaa;
-      --bg-dark: #050505;
-      --panel-bg: rgba(10, 10, 12, 0.85);
-      --grid-color: rgba(0, 243, 255, 0.15);
+      --ink: #effcff;
+      --muted: #91a8b5;
+      --bg: #03060a;
+      --panel: #071119;
+      --panel-2: #0a1620;
+      --line: rgba(42, 226, 255, 0.24);
+      --gold: #2ae2ff;
+      --ember: #ff334f;
+      --blue: #168cff;
+      --green: #55ffb0;
+      --shadow: 0 22px 70px rgba(0, 0, 0, 0.42);
+      --radius: 8px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
-      background-color: var(--bg-dark);
-      color: var(--neon-cyan);
-      font-family: 'Share Tech Mono', monospace;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      touch-action: none; /* Prevents mobile scroll while drawing */
-      user-select: none;
-    }
-
-    /* CRT Scanline Overlay */
-    body::after {
-      content: " ";
-      display: block;
-      position: absolute;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-      z-index: 999;
-      background-size: 100% 2px, 3px 100%;
-      pointer-events: none;
-    }
-
-    /* --- LAYOUT --- */
-    #sys-header {
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--neon-cyan);
-      background: var(--panel-bg);
-      text-shadow: 0 0 5px var(--neon-cyan);
-      z-index: 10;
-    }
-    
-    #sys-header h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.2rem;
-      letter-spacing: 2px;
       margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(120deg, rgba(22, 140, 255, 0.12), transparent 34%),
+        linear-gradient(300deg, rgba(255, 51, 79, 0.08), transparent 28%),
+        linear-gradient(180deg, #050b11, #020406);
+      font-family: Arial, Helvetica, sans-serif;
     }
 
-    #main-deck {
-      display: flex;
-      flex: 1;
-      height: calc(100vh - 45px);
-      position: relative;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(42, 226, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(42, 226, 255, 0.04) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, black, transparent 72%);
     }
 
-    /* --- TOOLBARS (ARMORED) --- */
-    .cyber-panel {
-      background: var(--panel-bg);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      padding: 15px;
-      z-index: 10;
-      --aug-border: 1px;
-      --aug-border-bg: var(--neon-cyan);
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    .left-panel { width: 80px; align-items: center; }
-    .right-panel { width: 220px; }
+    button,
+    select {
+      font: inherit;
+    }
 
-    /* Cyber Buttons */
-    .cyber-btn {
-      width: 100%;
-      background: transparent;
-      color: var(--neon-cyan);
-      border: none;
-      padding: 10px 5px;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.75rem;
-      font-weight: bold;
+    button {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 11px 14px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.05);
       cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-      --aug-border: 1px;
-      --aug-border-bg: var(--neon-cyan);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
     }
 
-    .cyber-btn:hover {
-      background: rgba(0, 243, 255, 0.1);
-      box-shadow: 0 0 10px var(--neon-cyan);
+    button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(42, 226, 255, 0.72);
+      background: rgba(42, 226, 255, 0.1);
     }
 
-    .cyber-btn.active {
-      background: var(--neon-cyan);
-      color: var(--bg-dark);
-      text-shadow: none;
-      box-shadow: 0 0 15px var(--neon-cyan);
+    button.active,
+    .primary {
+      color: #111;
+      border-color: var(--gold);
+      background: var(--gold);
+      font-weight: 800;
     }
 
-    .cyber-btn.danger { --aug-border-bg: var(--neon-pink); color: var(--neon-pink); }
-    .cyber-btn.danger:hover { background: rgba(255, 0, 85, 0.1); box-shadow: 0 0 10px var(--neon-pink); }
-
-    /* --- CANVAS AREA --- */
-    #canvas-container {
-      flex: 1;
+    .app-shell {
       position: relative;
-      margin: 10px;
-      background: #111;
-      --aug-border: 2px;
-      --aug-border-bg: var(--neon-cyan);
+      width: min(1480px, 100%);
+      margin: 0 auto;
     }
 
-    #math-canvas {
-      width: 100%;
-      height: 100%;
-      cursor: crosshair;
-      touch-action: none; /* Required for native pointer events */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 16px clamp(16px, 4vw, 42px);
+      background: rgba(3, 6, 10, 0.9);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+      transition: transform .3s ease, background .3s ease, opacity .3s ease;
     }
+    .site-header.scrolled { background:rgba(3,6,10,.97); box-shadow:0 12px 40px rgba(0,0,0,.35); }
+    .system-status { display:flex; align-items:center; gap:7px; color:var(--muted); font-size:.72rem; font-weight:800; text-transform:uppercase; }
+    .system-status::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 12px var(--green); animation:status-pulse 2s ease-in-out infinite; }
+    @keyframes status-pulse { 50% { opacity:.35; transform:scale(.75); } }
 
-    /* Grids */
-    .grid-radar {
-      background-image: 
-        linear-gradient(var(--grid-color) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-      background-size: 40px 40px;
-      background-position: center center;
-    }
-
-    /* --- RIGHT PANEL CONTROLS --- */
-    .control-label {
-      font-size: 0.75rem;
-      color: #888;
-      margin-bottom: 5px;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      font-weight: 900;
+      letter-spacing: 0;
       text-transform: uppercase;
     }
 
-    .swatch-grid { display: flex; gap: 8px; flex-wrap: wrap; }
-    .swatch {
-      width: 30px; height: 30px;
-      cursor: pointer;
-      border: 1px solid #444;
-      --aug-border: 1px;
-    }
-    .swatch.active { border-color: #fff; box-shadow: 0 0 10px currentColor; transform: scale(1.1); }
-
-    input[type="range"] {
-      width: 100%;
-      accent-color: var(--neon-cyan);
-      cursor: pointer;
+    .brand img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 14px rgba(42, 226, 255, 0.52));
     }
 
-    /* Terminal Readout */
-    #terminal-log {
-      flex: 1;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid #333;
-      padding: 10px;
-      font-size: 0.7rem;
-      color: var(--neon-green);
-      overflow-y: hidden;
+    .nav {
       display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
     }
-    .log-entry { margin-bottom: 4px; animation: glitch-anim 0.2s ease-out; }
 
-    @keyframes glitch-anim {
-      0% { transform: translate(0) }
-      20% { transform: translate(-2px, 1px) }
-      40% { transform: translate(-1px, -1px) }
-      60% { transform: translate(2px, 1px) }
-      80% { transform: translate(1px, -1px) }
-      100% { transform: translate(0) }
+    .nav a {
+      padding: 9px 10px;
+      border-radius: var(--radius);
     }
+
+    .nav a:hover {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 44px;
+      padding: 0;
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
+      gap: clamp(24px, 5vw, 64px);
+      align-items: center;
+      min-height: calc(100vh - 72px);
+      padding: clamp(40px, 7vw, 88px) clamp(16px, 4vw, 42px) 36px;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 18px;
+      font-size: clamp(3rem, 7vw, 6.7rem);
+      line-height: 0.92;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 16px;
+      font-size: clamp(2rem, 4vw, 3.8rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .hero-copy {
+      max-width: 680px;
+      font-size: clamp(1.05rem, 2vw, 1.28rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .hero-actions a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 11px 14px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.05);
+      font-weight: 700;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .hero-actions a:hover {
+      transform: translateY(-1px);
+      border-color: rgba(42, 226, 255, 0.72);
+      background: rgba(42, 226, 255, 0.1);
+    }
+
+    .hero-actions a.primary {
+      color: #111;
+      border-color: var(--gold);
+      background: var(--gold);
+      font-weight: 900;
+    }
+
+    .hero-visual {
+      position: relative;
+      overflow: hidden;
+      min-height: 420px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 50% 40%, rgba(42, 226, 255, 0.2), transparent 42%),
+        #050505;
+      box-shadow: var(--shadow);
+    }
+
+    .sprite-stage {
+      position: absolute;
+      inset: 18px;
+      border-radius: var(--radius);
+      background-image: url("martial-movement-atlas.png");
+      background-repeat: no-repeat;
+      background-size: 100% auto;
+      background-position: left top;
+      filter: saturate(1.08) contrast(1.08);
+      transform:scale(1.015);
+      animation:hero-breathe 8s ease-in-out infinite alternate;
+    }
+    @keyframes hero-breathe { to { transform:scale(1.045); filter:saturate(1.18) contrast(1.1); } }
+
+    .stage-overlay {
+      position: absolute;
+      inset: auto 18px 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, 0.66);
+    }
+
+    .stat strong,
+    .stat span {
+      display: block;
+    }
+
+    .stat strong {
+      color: var(--gold);
+      font-size: 1.3rem;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .section {
+      padding: clamp(58px, 8vw, 96px) clamp(16px, 4vw, 42px);
+    }
+
+    .studio-grid {
+      display: grid;
+      grid-template-columns: minmax(250px, 0.7fr) minmax(0, 1.3fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(7, 17, 25, 0.88);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-pad {
+      padding: clamp(18px, 3vw, 26px);
+    }
+
+    .discipline-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .discipline-list button {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      text-align: left;
+      font-weight: 800;
+    }
+
+    .discipline-list span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .lab {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr);
+      gap: 16px;
+    }
+
+    .move-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 370px;
+      border-radius: var(--radius);
+      background: #050505;
+    }
+
+    .move-card::before,
+    .move-card::after {
+      content: "";
+      position: absolute;
+      inset: 20px;
+      pointer-events: none;
+      border-radius: 50%;
+      border: 1px solid rgba(42, 226, 255, 0.24);
+      transform: scale(0.72);
+      animation: pulse-ring 2400ms ease-in-out infinite;
+    }
+
+    .move-card::after {
+      border-color: rgba(45, 129, 255, 0.28);
+      animation-delay: 700ms;
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% { opacity: 0.2; transform: scale(0.72); }
+      50% { opacity: 0.8; transform: scale(1); }
+    }
+
+    .move-art {
+      position: relative;
+      z-index: 1;
+      min-height: 310px;
+      background-image: url("martial-movement-atlas.png");
+      background-repeat: no-repeat;
+      background-size: 300% 200%;
+      background-position: var(--sprite-x) var(--sprite-y);
+      transition: background-position 220ms ease, filter 220ms ease, transform 220ms ease;
+      background-color:#050505;
+    }
+
+    .move-art.strike {
+      animation: strike-snap 520ms ease;
+    }
+
+    @keyframes strike-snap {
+      0% { transform: translateX(0) scale(1); filter: brightness(1); }
+      38% { transform: translateX(10px) scale(1.025); filter: brightness(1.32); }
+      100% { transform: translateX(0) scale(1); filter: brightness(1); }
+    }
+
+    .hotspots {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .hotspot {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 18px rgba(42, 226, 255, 0.88);
+      animation: hotspot 1500ms ease-in-out infinite;
+    }
+
+    .hotspot:nth-child(1) { left: 30%; top: 35%; }
+    .hotspot:nth-child(2) { left: 54%; top: 48%; animation-delay: 220ms; }
+    .hotspot:nth-child(3) { left: 69%; top: 35%; animation-delay: 440ms; }
+
+    @keyframes hotspot {
+      0%, 100% { opacity: 0.36; transform: scale(0.84); }
+      50% { opacity: 1; transform: scale(1.25); }
+    }
+
+    .move-caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.62);
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .move-caption strong {
+      color: var(--gold);
+    }
+
+    .technique-copy {
+      display: grid;
+      align-content: start;
+      gap: 16px;
+    }
+
+    .principle-box {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .principle-box b {
+      color: var(--green);
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .score {
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .score span,
+    .score b {
+      display: block;
+    }
+
+    .score span {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .score b {
+      color: var(--gold);
+      font-size: 1.45rem;
+    }
+
+    .move-controls,
+    .mode-tabs,
+    .feature-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .mode-tabs button {
+      flex: 1 1 130px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .feature-card {
+      min-height: 210px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+
+    .feature-card b {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--gold);
+    }
+
+    .feature-card p {
+      margin-bottom: 0;
+      font-size: 0.95rem;
+    }
+
+    .mixer {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .mixer-controls {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mixer label {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    select {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      color: var(--ink);
+      background: #0f0d0b;
+    }
+
+    .mixer-output {
+      min-height: 206px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(42, 226, 255, 0.12), transparent 44%),
+        rgba(255, 255, 255, 0.04);
+    }
+
+    .mixer-output strong {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--gold);
+      font-size: 1.28rem;
+    }
+
+    .forms {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.78fr);
+      gap: 16px;
+    }
+
+    .sequence {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .sequence-step {
+      min-height: 88px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .sequence-step.active {
+      color: #111;
+      background: var(--gold);
+    }
+
+    .timer-face {
+      display: grid;
+      place-items: center;
+      min-height: 200px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle, rgba(42, 226, 255, 0.17), transparent 58%),
+        rgba(0, 0, 0, 0.3);
+      color: var(--gold);
+      font-size: clamp(3rem, 8vw, 5.8rem);
+      font-weight: 900;
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .cyber-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+      gap: 16px;
+    }
+
+    .reaction-arena {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      min-height: 360px;
+      padding: 18px;
+      background: linear-gradient(145deg, rgba(22, 140, 255, 0.12), transparent 48%), #03080d;
+    }
+
+    .reaction-pad {
+      min-height: 96px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.025);
+      border-color: rgba(42, 226, 255, 0.18);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .reaction-pad.live {
+      color: #02080b;
+      background: var(--gold);
+      border-color: white;
+      box-shadow: 0 0 30px rgba(42, 226, 255, 0.7);
+    }
+
+    .reaction-pad.hit {
+      color: white;
+      background: var(--ember);
+      border-color: var(--ember);
+    }
+
+    .data-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .data-cell {
+      padding: 12px;
+      border: 1px solid var(--line);
+      background: rgba(42, 226, 255, 0.04);
+    }
+
+    .data-cell span,
+    .data-cell b { display: block; }
+    .data-cell span { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; }
+    .data-cell b { margin-top: 4px; color: var(--gold); font-size: 1.25rem; }
+
+    .protocol-list {
+      display: grid;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .protocol-step {
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-left: 3px solid var(--blue);
+      background: rgba(22, 140, 255, 0.07);
+    }
+
+    .protocol-step strong { color: var(--gold); }
+    .protocol-step span { color: var(--muted); font-size: 0.84rem; }
+
+    .status-line {
+      min-height: 28px;
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .note-card {
+      min-height: 190px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-2);
+    }
+
+    .note-card b {
+      color: var(--green);
+    }
+
+    .footer {
+      padding: 28px clamp(16px, 4vw, 42px);
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 1080px) {
+      .hero,
+      .studio-grid,
+      .lab,
+      .forms,
+      .mixer,
+      .cyber-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .features,
+      .notes-grid,
+      .score-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .site-header {
+        align-items: flex-start;
+      }
+
+      .brand {
+        font-size: 0.9rem;
+      }
+
+      .menu-toggle { display: block; }
+
+      .nav {
+        position: absolute;
+        top: 70px;
+        left: 12px;
+        right: 12px;
+        display: none;
+        flex-direction: column;
+        padding: 10px;
+        border: 1px solid var(--line);
+        background: #050c12;
+        box-shadow: var(--shadow);
+      }
+
+      .nav.open { display: flex; }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-visual {
+        min-height: 330px;
+      }
+
+      .stage-overlay,
+      .features,
+      .notes-grid,
+      .sequence,
+      .score-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .reaction-arena { grid-template-columns: repeat(2, 1fr); }
+      .data-row { grid-template-columns: 1fr; }
+
+      .move-art {
+        min-height: 260px;
+        background-size: 300% 200%;
+      }
+    }
+    .command-deck { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:0 clamp(16px,4vw,42px) 24px; }
+    .command-card { padding:18px; border:1px solid var(--line); border-radius:var(--radius); background:linear-gradient(145deg,rgba(42,226,255,.08),rgba(7,17,25,.88)); }
+    .command-card,.feature-card,.note-card,.panel { transform-style:preserve-3d; transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease; }
+    .command-card:hover,.feature-card:hover,.note-card:hover { transform:translateY(-5px); border-color:rgba(42,226,255,.55); box-shadow:0 18px 45px rgba(0,0,0,.32); }
+    .command-card span,.command-card small { display:block; color:var(--muted); }
+    .command-card strong { display:block; margin:5px 0; color:var(--gold); font-size:clamp(1.35rem,3vw,2rem); }
+    .progress-track { height:7px; overflow:hidden; margin-top:10px; border-radius:20px; background:rgba(255,255,255,.08); }
+    .progress-fill { width:0; height:100%; background:linear-gradient(90deg,var(--gold),var(--green)); transition:width .35s ease; }
+    .quick-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .toast { position:fixed; right:18px; bottom:18px; z-index:30; max-width:320px; padding:14px 18px; border:1px solid var(--line); border-radius:var(--radius); background:#071119; box-shadow:var(--shadow); transform:translateY(30px); opacity:0; pointer-events:none; transition:.25s ease; }
+    .toast.show { transform:none; opacity:1; }
+    .skip-link { position:fixed; left:12px; top:-60px; z-index:50; padding:10px 14px; color:#111; background:var(--gold); font-weight:900; }
+    .skip-link:focus { top:12px; }
+    @media (max-width:900px) { .command-deck { grid-template-columns:repeat(2,1fr); } }
+    @media (max-width:520px) { .command-deck { grid-template-columns:1fr; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; } }
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity .65s ease,transform .65s cubic-bezier(.2,.8,.2,1); }
+    .reveal.visible { opacity:1; transform:none; }
+    .footer { display:grid; grid-template-columns:1.2fr repeat(2,.7fr); gap:28px; align-items:start; }
+    .footer-brand { display:flex; gap:12px; align-items:center; color:var(--ink); font-weight:900; }
+    .footer-brand img { width:42px; height:42px; }
+    .footer nav { display:grid; gap:8px; }
+    .footer b { color:var(--gold); text-transform:uppercase; font-size:.75rem; }
+    .footer a:hover { color:var(--gold); }
+    .footer-legal { grid-column:1/-1; padding-top:18px; border-top:1px solid var(--line); }
+    @media (max-width:700px) { .system-status { display:none; } .footer { grid-template-columns:1fr; } .footer-legal { grid-column:auto; } }
   </style>
 </head>
+
 <body>
+  <a class="skip-link" href="#studio">Skip to studio</a>
+  <div class="app-shell">
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Bruce Lee Interactive Studio home">
+        <img src="studio-mark.svg" alt="" width="38" height="38">
+        <span>Bruce Lee Interactive Studio</span>
+      </a>
+      <span class="system-status">Studio online</span>
+      <nav class="nav" aria-label="Studio navigation">
+        <a href="#studio">Studio</a>
+        <a href="#features">Features</a>
+        <a href="#forms">Forms</a>
+        <a href="#reaction">Reaction Lab</a>
+        <a href="#protocol">Protocol</a>
+        <a href="#principles">Principles</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false">&#9776;</button>
+    </header>
 
-  <!-- TOP HUD -->
-  <header id="sys-header">
-    <h1>QAMELOT // MATH_CORE</h1>
-    <div id="status-indicator" style="color: var(--neon-yellow);">[WAITING FOR UPLINK]</div>
-  </header>
+    <main id="top">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Cybernetic movement archive // JKD-01</p>
+          <h1>Intercept. Adapt. Evolve.</h1>
+          <p class="hero-copy">Explore Bruce Lee's major martial influences through an interactive studio of moves,
+            form sequences, timing drills, and concept notes built around economy, interception, rhythm, and flow.</p>
+          <div class="hero-actions">
+            <a class="primary" href="#studio">Enter Studio</a>
+            <a href="#forms">Build a Form</a>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Wing Chun training matrix artwork">
+          <div class="sprite-stage"></div>
+          <div class="stage-overlay">
+            <div class="stat"><strong>9</strong><span>training influences mapped</span></div>
+            <div class="stat"><strong>6</strong><span>visual move panels active</span></div>
+            <div class="stat"><strong>6</strong><span>interactive training systems</span></div>
+          </div>
+        </div>
+      </section>
 
-  <div id="main-deck">
-    
-    <!-- LEFT PANEL (TOOLS) -->
-    <aside class="cyber-panel left-panel" data-augmented-ui="br-clip r-clip-y exe">
-      <button class="cyber-btn active" data-tool="pen" data-augmented-ui="tl-clip br-clip exe">PEN</button>
-      <button class="cyber-btn" data-tool="highlighter" data-augmented-ui="tl-clip br-clip exe">HLT</button>
-      <button class="cyber-btn" data-tool="laser" data-augmented-ui="tl-clip br-clip exe">LSR</button>
-      <button class="cyber-btn" data-tool="eraser" data-augmented-ui="tl-clip br-clip exe">ERS</button>
-      <div style="height: 10px;"></div>
-      <button class="cyber-btn" data-tool="line" data-augmented-ui="tl-clip br-clip exe">LIN</button>
-      <button class="cyber-btn" data-tool="rect" data-augmented-ui="tl-clip br-clip exe">BOX</button>
-      <div style="flex:1;"></div>
-      <button id="btn-undo" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">UNDO</button>
-      <button id="btn-redo" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">REDO</button>
-    </aside>
+      <section class="command-deck" aria-label="Training dashboard">
+        <article class="command-card"><span>Studio level</span><strong id="levelValue">01</strong><small id="xpLabel">0 / 100 XP</small><div class="progress-track"><div class="progress-fill" id="xpFill"></div></div></article>
+        <article class="command-card"><span>Sessions completed</span><strong id="sessionCount">0</strong><small>Protocols finished on this device</small></article>
+        <article class="command-card"><span>Reaction record</span><strong id="recordValue">--</strong><small>Fastest verified response</small></article>
+        <article class="command-card"><span>Quick controls</span><div class="quick-actions"><button id="focusMode" type="button">Focus Mode</button><button id="resetProgress" type="button">Reset</button></div><small>Progress saves automatically</small></article>
+      </section>
 
-    <!-- CENTER (CANVAS) -->
-    <main id="canvas-container" class="grid-radar" data-augmented-ui="tl-clip tr-clip br-clip bl-clip exe">
-      <canvas id="math-canvas"></canvas>
+      <section id="studio" class="section">
+        <div class="studio-grid">
+          <aside class="panel panel-pad">
+            <p class="eyebrow">Discipline map</p>
+            <h2>Choose an art.</h2>
+            <div class="discipline-list" id="disciplineList"></div>
+          </aside>
+
+          <div class="panel panel-pad">
+            <div class="lab">
+              <div class="move-card">
+                <div class="move-art" id="moveArt"></div>
+                <div class="hotspots" aria-hidden="true">
+                  <span class="hotspot"></span>
+                  <span class="hotspot"></span>
+                  <span class="hotspot"></span>
+                </div>
+                <div class="move-caption">
+                  <strong id="moveName">Siu Nim Tao</strong>
+                  <span id="moveOrigin">Wing Chun</span>
+                </div>
+              </div>
+              <div class="technique-copy">
+                <div>
+                  <p class="eyebrow" id="disciplineType">Foundation</p>
+                  <h2 id="disciplineTitle">Wing Chun</h2>
+                  <p id="disciplineCopy"></p>
+                </div>
+                <div class="principle-box">
+                  <b>Studio Focus</b>
+                  <span id="disciplineFocus"></span>
+                </div>
+                <div class="principle-box">
+                  <b>Move Breakdown</b>
+                  <span id="moveBreakdown"></span>
+                </div>
+                <div class="score-grid" aria-label="Training metrics">
+                  <div class="score"><span>Speed</span><b id="speedScore">82</b></div>
+                  <div class="score"><span>Power</span><b id="powerScore">76</b></div>
+                  <div class="score"><span>Range</span><b id="rangeScore">54</b></div>
+                  <div class="score"><span>Flow</span><b id="flowScore">91</b></div>
+                </div>
+                <div class="move-controls" id="moveControls"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="section">
+        <p class="eyebrow">Six interactive systems</p>
+        <h2>A complete cyber training studio.</h2>
+        <div class="features">
+          <article class="feature-card">
+            <b>1. Style Mixer</b>
+            <p>Blend two arts and see how the studio reframes distance, stance, entry, and finishing strategy.</p>
+          </article>
+          <article class="feature-card">
+            <b>2. Tempo Rounds</b>
+            <p>Run short interval rounds for slow form, sharp burst, recovery, and reaction timing.</p>
+          </article>
+          <article class="feature-card">
+            <b>3. Form Builder</b>
+            <p>Assemble a six-step flow from selected moves and advance through each step interactively.</p>
+          </article>
+          <article class="feature-card">
+            <b>4. Principle Lens</b>
+            <p>Switch the training lens between interception, economy, centerline, rhythm, and adaptability.</p>
+          </article>
+          <article class="feature-card">
+            <b>5. Reaction Grid</b>
+            <p>Test visual response speed by striking randomized targets and tracking accuracy in real time.</p>
+          </article>
+          <article class="feature-card">
+            <b>6. Session Protocol</b>
+            <p>Generate a focused training circuit from your selected art, intensity, and available time.</p>
+          </article>
+        </div>
+        <div class="panel panel-pad mixer">
+          <div>
+            <p class="eyebrow">Live style mixer</p>
+            <h2>Blend two influences.</h2>
+            <p>Choose a base and a pressure style. The studio generates a training prompt that connects them into one
+              practical movement idea.</p>
+          </div>
+          <div>
+            <div class="mixer-controls">
+              <label>Base style<select id="mixerA"></select></label>
+              <label>Pressure style<select id="mixerB"></select></label>
+            </div>
+            <div class="mixer-output" id="mixerOutput"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="forms" class="section">
+        <div class="forms">
+          <div class="panel panel-pad">
+            <p class="eyebrow">Form builder</p>
+            <h2>Six-count flow sequence.</h2>
+            <p id="formInstruction">Add moves from the current discipline, then step through the sequence like a short
+              studio kata.</p>
+            <div class="feature-controls">
+              <button id="addMove" class="primary" type="button">Add Current Move</button>
+              <button id="nextStep" type="button">Next Step</button>
+              <button id="clearForm" type="button">Clear Form</button>
+            </div>
+            <div class="sequence" id="sequence"></div>
+          </div>
+
+          <aside class="panel panel-pad">
+            <p class="eyebrow">Tempo rounds</p>
+            <h2>Round timer.</h2>
+            <div class="timer-face" id="timerFace">30</div>
+            <div class="feature-controls">
+              <button id="startTimer" class="primary" type="button">Start</button>
+              <button id="resetTimer" type="button">Reset</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="reaction" class="section">
+        <p class="eyebrow">Neural response lab</p>
+        <h2>React before thought becomes delay.</h2>
+        <div class="cyber-grid">
+          <div class="panel reaction-arena" id="reactionArena" aria-label="Reaction target grid">
+            <button class="reaction-pad" type="button" data-pad="0">High Left</button>
+            <button class="reaction-pad" type="button" data-pad="1">Centerline</button>
+            <button class="reaction-pad" type="button" data-pad="2">High Right</button>
+            <button class="reaction-pad" type="button" data-pad="3">Low Left</button>
+            <button class="reaction-pad" type="button" data-pad="4">Body Line</button>
+            <button class="reaction-pad" type="button" data-pad="5">Low Right</button>
+          </div>
+          <aside class="panel panel-pad">
+            <p class="eyebrow">Live telemetry</p>
+            <h3>Intercept Signal</h3>
+            <p>Start a ten-target run. Strike only the illuminated zone as quickly as possible.</p>
+            <div class="data-row">
+              <div class="data-cell"><span>Hits</span><b id="reactionHits">0/10</b></div>
+              <div class="data-cell"><span>Average</span><b id="reactionAverage">--</b></div>
+              <div class="data-cell"><span>Best</span><b id="reactionBest">--</b></div>
+            </div>
+            <p class="status-line" id="reactionStatus" aria-live="polite">System ready.</p>
+            <button class="primary" id="startReaction" type="button">Start Reaction Run</button>
+          </aside>
+        </div>
+      </section>
+
+      <section id="protocol" class="section">
+        <div class="cyber-grid">
+          <div>
+            <p class="eyebrow">Adaptive session protocol</p>
+            <h2>Build today’s training circuit.</h2>
+            <p>Select a focus, duration, and intensity. The studio assembles a practical progression from activation to applied flow.</p>
+            <div class="mixer-controls">
+              <label>Primary art<select id="protocolArt"></select></label>
+              <label>Session duration<select id="protocolTime"><option value="15">15 minutes</option><option value="30" selected>30 minutes</option><option value="45">45 minutes</option></select></label>
+              <label>Intensity<select id="protocolIntensity"><option value="Technical">Technical</option><option value="Balanced" selected>Balanced</option><option value="Combat pace">Combat pace</option></select></label>
+            </div>
+            <button class="primary" id="generateProtocol" type="button">Generate Protocol</button>
+          </div>
+          <div class="panel panel-pad">
+            <p class="eyebrow">Generated sequence</p>
+            <div class="protocol-list" id="protocolList"></div>
+            <p class="status-line" id="protocolStatus">Protocol linked to Wing Chun.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="principles" class="section">
+        <p class="eyebrow">Principle lens</p>
+        <h2>Change the way each movement is read.</h2>
+        <div class="mode-tabs" id="lensTabs"></div>
+        <div class="notes-grid">
+          <article class="note-card"><b>Entry</b><p id="entryNote"></p></article>
+          <article class="note-card"><b>Structure</b><p id="structureNote"></p></article>
+          <article class="note-card"><b>Finish</b><p id="finishNote"></p></article>
+        </div>
+      </section>
     </main>
 
-    <!-- RIGHT PANEL (PROPS & TERMINAL) -->
-    <aside class="cyber-panel right-panel" data-augmented-ui="bl-clip l-clip-y exe">
-      
-      <div>
-        <div class="control-label">INK_COLOR</div>
-        <div class="swatch-grid">
-          <div class="swatch active" style="background:#00f3ff; color:#00f3ff;" data-color="#00f3ff" data-augmented-ui="tl-clip br-clip exe"></div>
-          <div class="swatch" style="background:#ff0055; color:#ff0055;" data-color="#ff0055" data-augmented-ui="tl-clip br-clip exe"></div>
-          <div class="swatch" style="background:#fcee0a; color:#fcee0a;" data-color="#fcee0a" data-augmented-ui="tl-clip br-clip exe"></div>
-          <div class="swatch" style="background:#00ffaa; color:#00ffaa;" data-color="#00ffaa" data-augmented-ui="tl-clip br-clip exe"></div>
-          <div class="swatch" style="background:#ffffff; color:#ffffff;" data-color="#ffffff" data-augmented-ui="tl-clip br-clip exe"></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="control-label">OUTPUT_THICKNESS</div>
-        <input type="range" id="brush-size" min="1" max="40" value="4">
-      </div>
-
-      <div>
-        <div class="control-label">DATA_PAGES</div>
-        <div style="display:flex; gap:5px;">
-          <button id="btn-prev" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe"><</button>
-          <button id="page-display" class="cyber-btn" style="flex:1; pointer-events:none;" data-augmented-ui="tl-clip br-clip exe">1/1</button>
-          <button id="btn-next" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">></button>
-          <button id="btn-add" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">+</button>
-        </div>
-      </div>
-
-      <button id="btn-clear" class="cyber-btn danger" data-augmented-ui="tl-clip br-clip exe">WIPE_PAGE</button>
-      <button id="btn-reset" class="cyber-btn danger" data-augmented-ui="tl-clip br-clip exe">FACTORY_RESET</button>
-
-      <!-- TERMINAL READOUT -->
-      <div id="terminal-log" data-augmented-ui="tl-clip br-clip exe">
-        <div class="log-entry">> BOOT SEQUENCE INITIATED...</div>
-      </div>
-
-    </aside>
+    <footer class="footer">
+      <div><div class="footer-brand"><img src="studio-mark.svg" alt=""><span>Bruce Lee Interactive Studio</span></div><p>Explore movement through interception, economy, rhythm, structure, and adaptation.</p></div>
+      <nav aria-label="Footer studio links"><b>Studio</b><a href="#studio">Discipline map</a><a href="#forms">Form builder</a><a href="#reaction">Reaction lab</a></nav>
+      <nav aria-label="Footer training links"><b>Training</b><a href="#features">Style mixer</a><a href="#protocol">Session protocol</a><a href="#principles">Principle lens</a></nav>
+      <span class="footer-legal">Educational movement reference. Train safely with qualified instruction. © <span id="year"></span> Interactive Studio.</span>
+    </footer>
   </div>
 
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
-    /* ==========================================
-       QAMELOT CYBER-ENGINE (Zero-Dependency)
-       ========================================== */
-
-    // 🚨 APPS SCRIPT URL HERE
-    const DB_URL = "https://script.google.com/macros/s/YOUR_APPS_SCRIPT_ID/exec";
-    const BOARD_ID = "qamelot_cyber_1";
-
-    // App State
-    let state = {
-      tool: 'pen', color: '#00f3ff', size: 4,
-      currentPage: 1, totalPages: 1,
-      pages: { 1: [] }, undoStacks: { 1: [] },
-      isDrawing: false, currentPath: null
+    const spritePositions = {
+      siu: ['0%', '0%'],
+      tan: ['50%', '0%'],
+      chi: ['100%', '0%'],
+      bong: ['0%', '100%'],
+      muk: ['50%', '100%'],
+      chain: ['100%', '100%']
     };
 
-    let lastSyncTimestamp = 0;
-    const canvas = document.getElementById('math-canvas');
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    
-    /* --- TERMINAL LOGGING --- */
-    function sysLog(msg, type="info") {
-      const term = document.getElementById('terminal-log');
-      const time = new Date().toLocaleTimeString('en-US', { hour12: false });
-      const entry = document.createElement('div');
-      entry.className = 'log-entry';
-      entry.innerText = `[${time}] ${msg}`;
-      if(type === "error") entry.style.color = "var(--neon-pink)";
-      if(type === "warn") entry.style.color = "var(--neon-yellow)";
-      term.appendChild(entry);
-      if(term.childElementCount > 6) term.removeChild(term.firstChild);
+    const disciplines = [
+      {
+        name: 'Wing Chun',
+        type: 'Foundation',
+        tag: 'centerline',
+        sprite: 'siu',
+        metrics: [76, 72, 48, 94],
+        copy: 'A compact Southern Chinese system that shaped Lee early: centerline control, trapping, short power, sensitivity, and direct hand paths.',
+        focus: 'Hold structure while keeping the hands alive. Read pressure through contact and return to the centerline.',
+        moves: [
+          ['Siu Nim Tao', 'Root stance, guard shape, elbow position, and quiet control before speed.'],
+          ['Tan Sao Deflection', 'Open the center, redirect force, and answer with a straight counter.'],
+          ['Chi Sao Sensitivity', 'Sticky-hands contact training for pressure, angle, and timing.'],
+          ['Bong Sao Yield', 'Wing-arm redirection that turns incoming force off the line.'],
+          ['Muk Yan Jong Alignment', 'Dummy work for angle, foot placement, and simultaneous defense.'],
+          ['Lin Wan Kuen Power', 'Chain punching for direct pressure and forward recovery.']
+        ]
+      },
+      {
+        name: 'Western Boxing',
+        type: 'Hands and rhythm',
+        tag: 'rhythm',
+        sprite: 'chain',
+        metrics: [91, 82, 62, 84],
+        copy: 'Boxing contributed footwork, evasive head movement, jab timing, combinations, and practical distance management.',
+        focus: 'Use the lead hand as a probe, shield, range finder, and entry weapon while the feet keep you available.',
+        moves: [
+          ['Lead Jab', 'Touch range, draw reaction, and recover the shoulder line.'],
+          ['Cross Counter', 'Slip outside the attack and return down the open lane.'],
+          ['Hook Angle', 'Turn the hip and cut across the guard after a straight-line setup.']
+        ]
+      },
+      {
+        name: 'Fencing',
+        type: 'Interception',
+        tag: 'interception',
+        sprite: 'tan',
+        metrics: [94, 68, 86, 78],
+        copy: 'Fencing informed the stop-hit idea, broken rhythm, linear entry, feints, and the explosive lead-side attack.',
+        focus: 'Win the moment of entry. Strike while the opponent is preparing rather than waiting for a full exchange.',
+        moves: [
+          ['Stop-Hit Entry', 'Intercept the advance with a straight-line lead attack.'],
+          ['Broken Rhythm', 'Change tempo so the counter arrives between beats.'],
+          ['Lunge Recovery', 'Enter sharply, land balanced, and exit without leaning.']
+        ]
+      },
+      {
+        name: 'Judo and Jujutsu',
+        type: 'Clinching and leverage',
+        tag: 'adaptability',
+        sprite: 'chi',
+        metrics: [63, 86, 38, 74],
+        copy: 'Grappling study added balance disruption, leverage, falls, locks, and practical answers when striking range collapses.',
+        focus: 'Do not freeze at contact. Connect posture, hips, and leverage so pressure becomes a takedown or escape.',
+        moves: [
+          ['Off-Balance Pull', 'Break posture before trying to throw.'],
+          ['Arm Control', 'Pin the limb, turn the body, and create leverage.'],
+          ['Base Recovery', 'Return to a stable stance after a clash or clinch.']
+        ]
+      },
+      {
+        name: 'Wrestling',
+        type: 'Base and pressure',
+        tag: 'structure',
+        sprite: 'muk',
+        metrics: [68, 90, 32, 70],
+        copy: 'Wrestling concepts strengthen base, pummeling, level change, body control, and pressure against resistance.',
+        focus: 'Keep hips under you, deny easy grips, and use pressure without sacrificing mobility.',
+        moves: [
+          ['Level Change', 'Drop under the line while keeping spine and eyes active.'],
+          ['Inside Position', 'Win the inside lane before driving or turning.'],
+          ['Sprawl Recovery', 'Hips back, hands frame, and feet reset.']
+        ]
+      },
+      {
+        name: 'Karate',
+        type: 'Linear power',
+        tag: 'economy',
+        sprite: 'bong',
+        metrics: [78, 92, 70, 62],
+        copy: 'Karate offered committed line work, hip snap, chambered power, and disciplined striking mechanics.',
+        focus: 'Compress the motion into one decisive line, then recover before the shape becomes rigid.',
+        moves: [
+          ['Reverse Punch', 'Drive from the floor through the hip into a direct strike.'],
+          ['Front Kick Line', 'Lift, extend, retract, and land ready.'],
+          ['Guarded Reset', 'Return hands and stance immediately after impact.']
+        ]
+      },
+      {
+        name: 'Taekwondo',
+        type: 'Kicking range',
+        tag: 'rhythm',
+        sprite: 'bong',
+        metrics: [82, 84, 94, 72],
+        copy: 'Kicking arts broadened long-range tools, chambering, high-line attacks, and dynamic leg recovery.',
+        focus: 'Use kicks as range tools without overcommitting the stance or losing the ability to punch.',
+        moves: [
+          ['Side Kick Stop', 'Intercept forward pressure with the heel line.'],
+          ['Round Kick Arc', 'Whip the shin or instep around the guard.'],
+          ['Chamber Reset', 'Retract cleanly so the leg is not captured.']
+        ]
+      },
+      {
+        name: 'Tai Chi',
+        type: 'Flow and balance',
+        tag: 'adaptability',
+        sprite: 'siu',
+        metrics: [52, 58, 44, 96],
+        copy: 'Internal practice supports relaxation, rooted balance, soft redirection, breathing, and whole-body coordination.',
+        focus: 'Remove extra tension. Let posture and breath make the transition smoother than the attack.',
+        moves: [
+          ['Rooted Shift', 'Move weight without lifting the center.'],
+          ['Soft Parry', 'Redirect force with minimal collision.'],
+          ['Breath Transition', 'Pair inhale, turn, and release into one action.']
+        ]
+      },
+      {
+        name: 'Filipino Martial Arts',
+        type: 'Angles and weapons logic',
+        tag: 'interception',
+        sprite: 'tan',
+        metrics: [86, 74, 78, 88],
+        copy: 'Weapon-based angle logic translates into hand checking, line recognition, rhythm changes, and entry awareness.',
+        focus: 'Track angle before tool. The same line can become a hand trap, elbow entry, or stick defense.',
+        moves: [
+          ['Angle One Entry', 'Read the diagonal line and step outside it.'],
+          ['Checking Hand', 'Monitor the live hand during the counter.'],
+          ['Flow Drill', 'Alternate angle, check, strike, and reset.']
+        ]
+      }
+    ];
+
+    const lenses = {
+      interception: ['Enter before the attack fully forms.', 'Keep the lead side ready and measure the open lane.', 'Finish by landing first and leaving the line.'],
+      economy: ['Choose the shortest useful path.', 'Cut extra motion from stance, guard, and recovery.', 'Finish with one clean answer instead of three decorative ones.'],
+      centerline: ['Protect the direct route between bodies.', 'Elbows, knees, and shoulders organize around the middle.', 'Finish by taking the center back after contact.'],
+      rhythm: ['Break the expected beat.', 'Use pauses, feints, and half-steps to change timing.', "Finish between the opponent's decisions."],
+      adaptability: ['Let the range tell you what tool is honest.', 'Shift from strike to trap to clinch without clinging to one style.', 'Finish by returning to balance, not by posing.'],
+      structure: ['Build from stance and spine first.', 'Keep joints stacked enough to absorb pressure.', 'Finish without collapsing the frame.']
+    };
+
+    let activeDiscipline = 0;
+    let activeMove = 0;
+    let activeLens = 'centerline';
+    let sequence = [];
+    let sequenceIndex = 0;
+    let timerValue = 30;
+    let timerId = null;
+    let reactionActive = false;
+    let reactionTarget = -1;
+    let reactionHits = 0;
+    let reactionTimes = [];
+    let reactionStartedAt = 0;
+    let reactionTimeout = null;
+    const saved = JSON.parse(localStorage.getItem('blStudioProgress') || '{}');
+    let xp = Number(saved.xp) || 0;
+    let sessions = Number(saved.sessions) || 0;
+    let reactionRecord = Number(saved.reactionRecord) || 0;
+
+    const list = document.getElementById('disciplineList');
+    const moveArt = document.getElementById('moveArt');
+    const moveControls = document.getElementById('moveControls');
+    const sequenceEl = document.getElementById('sequence');
+    const mixerA = document.getElementById('mixerA');
+    const mixerB = document.getElementById('mixerB');
+    const protocolArt = document.getElementById('protocolArt');
+    const reactionPads = [...document.querySelectorAll('.reaction-pad')];
+
+    function notify(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(notify.timeout);
+      notify.timeout = setTimeout(() => toast.classList.remove('show'), 2200);
     }
 
-    /* --- INDEXED-DB OFFLINE STORAGE --- */
-    let db;
-    const request = indexedDB.open("QamelotCyberDB", 1);
-    request.onupgradeneeded = (e) => {
-      db = e.target.result;
-      if (!db.objectStoreNames.contains("boards")) db.createObjectStore("boards", { keyPath: 'id' });
-    };
-    request.onsuccess = (e) => {
-      db = e.target.result;
-      sysLog("LOCAL_DB_MOUNTED");
-      loadLocalData();
-    };
+    function renderProgress() {
+      const level = Math.floor(xp / 100) + 1;
+      const current = xp % 100;
+      document.getElementById('levelValue').textContent = String(level).padStart(2, '0');
+      document.getElementById('xpLabel').textContent = `${current} / 100 XP`;
+      document.getElementById('xpFill').style.width = `${current}%`;
+      document.getElementById('sessionCount').textContent = sessions;
+      document.getElementById('recordValue').textContent = reactionRecord ? `${reactionRecord}ms` : '--';
+    }
 
-    function saveLocalData(triggerSync = true) {
-      if(!db) return;
-      db.transaction(["boards"], "readwrite").objectStore("boards").put({
-        id: BOARD_ID, pages: state.pages, totalPages: state.totalPages,
-        needsSync: true, timestamp: Date.now()
+    function saveProgress() {
+      localStorage.setItem('blStudioProgress', JSON.stringify({ xp, sessions, reactionRecord }));
+      renderProgress();
+    }
+
+    function award(amount, message) {
+      xp += amount;
+      saveProgress();
+      if (message) notify(`${message} +${amount} XP`);
+    }
+
+    function setMoveArt(sprite) {
+      const [x, y] = spritePositions[sprite];
+      moveArt.style.setProperty('--sprite-x', x);
+      moveArt.style.setProperty('--sprite-y', y);
+      moveArt.classList.remove('strike');
+      void moveArt.offsetWidth;
+      moveArt.classList.add('strike');
+    }
+
+    function renderMetrics(metrics) {
+      ['speedScore', 'powerScore', 'rangeScore', 'flowScore'].forEach((id, index) => {
+        document.getElementById(id).textContent = metrics[index];
       });
-      if(triggerSync) debounceSync();
     }
 
-    function loadLocalData() {
-      const req = db.transaction(["boards"], "readonly").objectStore("boards").get(BOARD_ID);
-      req.onsuccess = () => {
-        if (req.result && req.result.pages) {
-          state.pages = req.result.pages;
-          state.totalPages = req.result.totalPages || 1;
-          if (!state.pages[state.currentPage]) state.pages[state.currentPage] = [];
-          if (!state.undoStacks[state.currentPage]) state.undoStacks[state.currentPage] = [];
-          updatePageUI();
-          redrawCanvas();
-          sysLog("RESTORED_PREVIOUS_SESSION");
-        }
-      };
+    function renderMixerOptions() {
+      if (mixerA.childElementCount) return;
+      disciplines.forEach((discipline, index) => {
+        const a = new Option(discipline.name, index);
+        const b = new Option(discipline.name, index);
+        mixerA.add(a);
+        mixerB.add(b);
+        protocolArt.add(new Option(discipline.name, index));
+      });
+      mixerA.value = 0;
+      mixerB.value = 2;
+      protocolArt.value = 0;
     }
 
-    /* --- CLOUD SYNC ENGINE --- */
-    let syncTimeout;
-    function debounceSync() {
-      clearTimeout(syncTimeout);
-      syncTimeout = setTimeout(() => executePush(), 2000); 
+    function renderMixer() {
+      const a = disciplines[Number(mixerA.value)];
+      const b = disciplines[Number(mixerB.value)];
+      const blendedMetrics = a.metrics.map((score, index) => Math.round((score + b.metrics[index]) / 2));
+      document.getElementById('mixerOutput').innerHTML = `
+        <strong>${a.name} x ${b.name}</strong>
+        <p>Use <b>${a.moves[0][0]}</b> as the structure, then apply <b>${b.moves[0][0]}</b> as the entry pressure. Keep the ${a.tag} lens active until contact, then shift into ${b.tag} for the finish.</p>
+        <p>Blend score: speed ${blendedMetrics[0]}, power ${blendedMetrics[1]}, range ${blendedMetrics[2]}, flow ${blendedMetrics[3]}.</p>
+      `;
     }
 
-    async function executePush() {
-      if (!navigator.onLine || !db) return;
-      const status = document.getElementById('status-indicator');
-      status.innerText = "[UPLINKING...]"; status.style.color = "var(--neon-yellow)";
-      
-      const req = db.transaction(["boards"], "readonly").objectStore("boards").getAll();
-      req.onsuccess = async () => {
-        const items = req.result.filter(i => i.needsSync);
-        if (items.length === 0) return;
-        
-        for (let item of items) {
-          try {
-            // Uncomment to activate actual fetch
-            /* await fetch(DB_URL, {
-              method: "POST",
-              body: JSON.stringify(item),
-              headers: { "Content-Type": "text/plain" }
-            }); */
-            item.needsSync = false;
-            db.transaction(["boards"], "readwrite").objectStore("boards").put(item);
-            sysLog("DATA_SYNCED_TO_MAINFRAME");
-            status.innerText = "[SYS: SECURE]"; status.style.color = "var(--neon-green)";
-          } catch(e) {
-            sysLog("SYNC_FAILED. RETRYING...", "warn");
-            status.innerText = "[SYS: OFFLINE]"; status.style.color = "var(--neon-pink)";
-          }
-        }
-      };
-    }
-
-    /* --- CANVAS ENGINE --- */
-    function resizeCanvas() {
-      const rect = document.getElementById('canvas-container').getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-      redrawCanvas();
-    }
-    window.addEventListener('resize', resizeCanvas);
-
-    function redrawCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const paths = state.pages[state.currentPage] || [];
-      
-      paths.forEach(path => {
-        if(path.points.length === 0) return;
-        ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-        
-        if (path.tool === 'highlighter') {
-          ctx.globalCompositeOperation = 'source-over';
-          ctx.strokeStyle = path.color + '44'; // Hex Alpha transparency
-          ctx.lineWidth = path.size * 3;
-        } else if (path.tool === 'eraser') {
-          ctx.globalCompositeOperation = 'destination-out';
-          ctx.strokeStyle = 'rgba(0,0,0,1)';
-          ctx.lineWidth = path.size * 6;
-        } else {
-          ctx.globalCompositeOperation = 'source-over';
-          ctx.strokeStyle = path.color;
-          ctx.lineWidth = path.size;
-          // Cyber glow for pen
-          ctx.shadowBlur = (path.tool === 'pen' || path.tool === 'laser') ? 8 : 0;
-          ctx.shadowColor = path.color;
-        }
-
-        ctx.beginPath();
-        const pts = path.points;
-        if(path.tool === 'line') {
-          ctx.moveTo(pts[0].x, pts[0].y); ctx.lineTo(pts[pts.length-1].x, pts[pts.length-1].y);
-        } else if (path.tool === 'rect') {
-          ctx.rect(pts[0].x, pts[0].y, pts[pts.length-1].x - pts[0].x, pts[pts.length-1].y - pts[0].y);
-        } else {
-          // Quadratic Smoothing
-          ctx.moveTo(pts[0].x, pts[0].y);
-          for (let i = 1; i < pts.length - 2; i++) {
-            const xc = (pts[i].x + pts[i + 1].x) / 2;
-            const yc = (pts[i].y + pts[i + 1].y) / 2;
-            ctx.quadraticCurveTo(pts[i].x, pts[i].y, xc, yc);
-          }
-          if (pts.length > 2) {
-            ctx.quadraticCurveTo(pts[pts.length - 2].x, pts[pts.length - 2].y, pts[pts.length - 1].x, pts[pts.length - 1].y);
-          } else if (pts.length > 1) {
-             ctx.lineTo(pts[1].x, pts[1].y);
-          }
-        }
-        ctx.stroke();
-        ctx.shadowBlur = 0; // Reset cyber glow for the next path
+    function renderDisciplines() {
+      list.innerHTML = '';
+      disciplines.forEach((discipline, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = index === activeDiscipline ? 'active' : '';
+        button.innerHTML = `${discipline.name}<span>${discipline.type}</span>`;
+        button.addEventListener('click', () => {
+          activeDiscipline = index;
+          activeMove = 0;
+          activeLens = discipline.tag;
+          render();
+        });
+        list.appendChild(button);
       });
     }
 
-    /* --- POINTER EVENTS (TOUCH/PEN/MOUSE) --- */
-    function getPos(e) {
-      const rect = canvas.getBoundingClientRect();
-      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    function renderMoves() {
+      moveControls.innerHTML = '';
+      disciplines[activeDiscipline].moves.forEach((move, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = index === activeMove ? 'active' : '';
+        button.textContent = move[0];
+        button.addEventListener('click', () => {
+          activeMove = index;
+          render();
+        });
+        moveControls.appendChild(button);
+      });
     }
 
-    canvas.addEventListener('pointerdown', (e) => {
-      canvas.setPointerCapture(e.pointerId); // Locks pointer to prevent scrolling
-      state.isDrawing = true;
-      const pos = getPos(e);
-      state.currentPath = { tool: state.tool, color: state.color, size: state.size, points: [pos] };
-      state.pages[state.currentPage].push(state.currentPath);
-      state.undoStacks[state.currentPage] = []; 
+    function renderLenses() {
+      const tabs = document.getElementById('lensTabs');
+      tabs.innerHTML = '';
+      Object.keys(lenses).forEach((lens) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = lens === activeLens ? 'active' : '';
+        button.textContent = lens.replace('-', ' ');
+        button.addEventListener('click', () => {
+          activeLens = lens;
+          renderLens();
+          renderLenses();
+        });
+        tabs.appendChild(button);
+      });
+    }
+
+    function renderLens() {
+      const [entry, structure, finish] = lenses[activeLens];
+      document.getElementById('entryNote').textContent = entry;
+      document.getElementById('structureNote').textContent = structure;
+      document.getElementById('finishNote').textContent = finish;
+    }
+
+    function renderSequence() {
+      sequenceEl.innerHTML = '';
+      const slots = Math.max(6, sequence.length);
+      for (let i = 0; i < slots; i++) {
+        const div = document.createElement('div');
+        div.className = `sequence-step ${i === sequenceIndex && sequence[i] ? 'active' : ''}`;
+        div.textContent = sequence[i] || `Step ${i + 1}`;
+        sequenceEl.appendChild(div);
+      }
+    }
+
+    function render() {
+      const discipline = disciplines[activeDiscipline];
+      const move = discipline.moves[activeMove];
+      document.getElementById('disciplineType').textContent = discipline.type;
+      document.getElementById('disciplineTitle').textContent = discipline.name;
+      document.getElementById('disciplineCopy').textContent = discipline.copy;
+      document.getElementById('disciplineFocus').textContent = discipline.focus;
+      document.getElementById('moveName').textContent = move[0];
+      document.getElementById('moveOrigin').textContent = discipline.name;
+      document.getElementById('moveBreakdown').textContent = move[1];
+      setMoveArt(discipline.sprite);
+      renderMetrics(discipline.metrics);
+      renderDisciplines();
+      renderMoves();
+      renderLenses();
+      renderLens();
+      renderSequence();
+      renderMixerOptions();
+      renderMixer();
+    }
+
+    mixerA.addEventListener('change', renderMixer);
+    mixerB.addEventListener('change', renderMixer);
+
+    document.getElementById('addMove').addEventListener('click', () => {
+      const move = disciplines[activeDiscipline].moves[activeMove][0];
+      if (sequence.length >= 6) sequence.shift();
+      sequence.push(move);
+      sequenceIndex = sequence.length - 1;
+      renderSequence();
+      award(2, 'Move added');
     });
 
-    canvas.addEventListener('pointermove', (e) => {
-      if (!state.isDrawing || !state.currentPath) return;
-      state.currentPath.points.push(getPos(e));
-      redrawCanvas();
+    document.getElementById('nextStep').addEventListener('click', () => {
+      if (!sequence.length) return;
+      sequenceIndex = (sequenceIndex + 1) % sequence.length;
+      renderSequence();
     });
 
-    function stopDrawing(e) {
-      if (!state.isDrawing) return;
-      state.isDrawing = false;
-      canvas.releasePointerCapture(e.pointerId);
+    document.getElementById('clearForm').addEventListener('click', () => {
+      sequence = [];
+      sequenceIndex = 0;
+      renderSequence();
+    });
 
-      // Laser Pointer fades after 1 second
-      if (state.tool === 'laser') {
-        const pathRef = state.currentPath;
-        setTimeout(() => {
-          state.pages[state.currentPage] = state.pages[state.currentPage].filter(p => p !== pathRef);
-          redrawCanvas();
-        }, 1000);
+    function renderTimer() {
+      document.getElementById('timerFace').textContent = timerValue;
+    }
+
+    document.getElementById('startTimer').addEventListener('click', () => {
+      if (timerId) return;
+      timerId = setInterval(() => {
+        timerValue -= 1;
+        if (timerValue <= 0) {
+          clearInterval(timerId);
+          timerId = null;
+          timerValue = 30;
+        }
+        renderTimer();
+      }, 1000);
+    });
+
+    document.getElementById('resetTimer').addEventListener('click', () => {
+      clearInterval(timerId);
+      timerId = null;
+      timerValue = 30;
+      renderTimer();
+    });
+
+    function generateProtocol() {
+      const art = disciplines[Number(protocolArt.value)];
+      const minutes = Number(document.getElementById('protocolTime').value);
+      const intensity = document.getElementById('protocolIntensity').value;
+      const blocks = [
+        ['Prime', `${art.moves[0][0]} mechanics`, Math.max(3, Math.round(minutes * 0.2))],
+        ['Pattern', `${art.moves[1][0]} repetitions`, Math.max(4, Math.round(minutes * 0.3))],
+        ['Pressure', `${art.moves[2][0]} with ${intensity.toLowerCase()} intent`, Math.max(4, Math.round(minutes * 0.3))],
+        ['Integrate', `${art.tag} flow and reset`, Math.max(3, minutes - Math.round(minutes * 0.8))]
+      ];
+      document.getElementById('protocolList').innerHTML = blocks.map((block, index) => `
+        <div class="protocol-step"><strong>0${index + 1}</strong><div><b>${block[0]}</b><br><span>${block[1]}</span></div><strong>${block[2]}m</strong></div>
+      `).join('');
+      document.getElementById('protocolStatus').textContent = `${minutes}-minute ${intensity.toLowerCase()} protocol linked to ${art.name}.`;
+    }
+
+    function queueReactionTarget() {
+      if (!reactionActive) return;
+      reactionPads.forEach((pad) => pad.classList.remove('live', 'hit'));
+      reactionTarget = Math.floor(Math.random() * reactionPads.length);
+      document.getElementById('reactionStatus').textContent = 'Read the grid...';
+      reactionTimeout = setTimeout(() => {
+        reactionPads[reactionTarget].classList.add('live');
+        reactionStartedAt = performance.now();
+        document.getElementById('reactionStatus').textContent = 'INTERCEPT';
+      }, 450 + Math.random() * 950);
+    }
+
+    reactionPads.forEach((pad, index) => pad.addEventListener('click', () => {
+      if (!reactionActive || index !== reactionTarget || !pad.classList.contains('live')) return;
+      reactionTimes.push(Math.round(performance.now() - reactionStartedAt));
+      reactionHits += 1;
+      pad.classList.remove('live');
+      pad.classList.add('hit');
+      document.getElementById('reactionHits').textContent = `${reactionHits}/10`;
+      document.getElementById('reactionAverage').textContent = `${Math.round(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length)}ms`;
+      document.getElementById('reactionBest').textContent = `${Math.min(...reactionTimes)}ms`;
+      if (reactionHits >= 10) {
+        reactionActive = false;
+        reactionTarget = -1;
+        document.getElementById('reactionStatus').textContent = 'Run complete. Neural timing captured.';
+        document.getElementById('startReaction').textContent = 'Run Again';
+        const best = Math.min(...reactionTimes);
+        if (!reactionRecord || best < reactionRecord) reactionRecord = best;
+        sessions += 1;
+        award(25, 'Reaction run complete');
       } else {
-        saveLocalData(true);
+        queueReactionTarget();
       }
-      state.currentPath = null;
+    }));
+
+    document.getElementById('startReaction').addEventListener('click', () => {
+      clearTimeout(reactionTimeout);
+      reactionActive = true;
+      reactionHits = 0;
+      reactionTimes = [];
+      document.getElementById('reactionHits').textContent = '0/10';
+      document.getElementById('reactionAverage').textContent = '--';
+      document.getElementById('reactionBest').textContent = '--';
+      document.getElementById('startReaction').textContent = 'Restart Run';
+      queueReactionTarget();
+    });
+
+    document.getElementById('generateProtocol').addEventListener('click', generateProtocol);
+    document.getElementById('generateProtocol').addEventListener('click', () => award(5, 'Protocol generated'));
+    protocolArt.addEventListener('change', generateProtocol);
+    document.getElementById('protocolTime').addEventListener('change', generateProtocol);
+    document.getElementById('protocolIntensity').addEventListener('change', generateProtocol);
+
+    const nav = document.querySelector('.nav');
+    const menuToggle = document.getElementById('menuToggle');
+    menuToggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+    });
+    nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
+      nav.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    }));
+
+    document.getElementById('focusMode').addEventListener('click', () => {
+      document.getElementById('studio').scrollIntoView({ behavior: 'smooth' });
+      document.querySelector('.site-header').style.opacity = '.18';
+      notify('Focus mode active — select an art and move.');
+      setTimeout(() => document.querySelector('.site-header').style.opacity = '', 5000);
+    });
+
+    document.getElementById('resetProgress').addEventListener('click', () => {
+      if (!confirm('Reset saved studio progress on this device?')) return;
+      xp = 0; sessions = 0; reactionRecord = 0;
+      saveProgress();
+      notify('Studio progress reset.');
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
     }
 
-    canvas.addEventListener('pointerup', stopDrawing);
-    canvas.addEventListener('pointercancel', stopDrawing);
+    render();
+    generateProtocol();
+    renderProgress();
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-    /* --- UI CONTROLS & LISTENERS --- */
-    
-    // Tools
-    document.querySelectorAll('.cyber-btn[data-tool]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.cyber-btn[data-tool]').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        state.tool = e.target.dataset.tool;
-        sysLog(`TOOL_UPDATED: ${state.tool.toUpperCase()}`);
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => entry.target.classList.toggle('visible', entry.isIntersecting));
+    }, { threshold: .12 });
+    document.querySelectorAll('.section, .command-deck, .footer').forEach((el) => {
+      el.classList.add('reveal');
+      revealObserver.observe(el);
+    });
+
+    let lastScroll = 0;
+    addEventListener('scroll', () => {
+      const header = document.querySelector('.site-header');
+      header.classList.toggle('scrolled', scrollY > 20);
+      if (scrollY > lastScroll && scrollY > 180) header.style.transform = 'translateY(-100%)';
+      else header.style.transform = '';
+      lastScroll = scrollY;
+    }, { passive: true });
+
+    if (matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion:reduce)').matches) {
+      document.querySelectorAll('.command-card,.feature-card,.note-card').forEach((card) => {
+        card.addEventListener('pointermove', (event) => {
+          const box = card.getBoundingClientRect();
+          const x = (event.clientX - box.left) / box.width - .5;
+          const y = (event.clientY - box.top) / box.height - .5;
+          card.style.transform = `perspective(700px) rotateX(${-y * 5}deg) rotateY(${x * 7}deg) translateY(-4px)`;
+        });
+        card.addEventListener('pointerleave', () => card.style.transform = '');
       });
-    });
-
-    // Colors
-    document.querySelectorAll('.swatch').forEach(sw => {
-      sw.addEventListener('click', (e) => {
-        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-        e.target.classList.add('active');
-        state.color = e.target.dataset.color;
-        sysLog(`COLOR_UPDATED: ${state.color}`);
-      });
-    });
-
-    // Size Slider
-    document.getElementById('brush-size').addEventListener('input', (e) => {
-      state.size = Number(e.target.value);
-    });
-
-    /* --- PAGE NAVIGATION --- */
-    function updatePageUI() {
-      document.getElementById('page-display').innerText = `${state.currentPage}/${state.totalPages}`;
     }
-
-    document.getElementById('btn-prev').addEventListener('click', () => {
-      if(state.currentPage > 1) {
-        state.currentPage--;
-        if (!state.pages[state.currentPage]) state.pages[state.currentPage] = [];
-        updatePageUI(); redrawCanvas(); sysLog(`PAGE_NAV: ${state.currentPage}`);
-      }
-    });
-
-    document.getElementById('btn-next').addEventListener('click', () => {
-      if(state.currentPage < state.totalPages) {
-        state.currentPage++;
-        if (!state.pages[state.currentPage]) state.pages[state.currentPage] = [];
-        updatePageUI(); redrawCanvas(); sysLog(`PAGE_NAV: ${state.currentPage}`);
-      }
-    });
-
-    document.getElementById('btn-add').addEventListener('click', () => {
-      state.totalPages++;
-      state.currentPage = state.totalPages;
-      state.pages[state.currentPage] = [];
-      state.undoStacks[state.currentPage] = [];
-      updatePageUI(); redrawCanvas(); saveLocalData(true);
-      sysLog("NEW_PAGE_CREATED");
-    });
-
-    /* --- UTILITIES --- */
-    document.getElementById('btn-undo').addEventListener('click', () => {
-      const paths = state.pages[state.currentPage];
-      if (paths.length === 0) return;
-      state.undoStacks[state.currentPage].push(paths.pop());
-      redrawCanvas(); saveLocalData(false); sysLog("ACTION_UNDONE");
-    });
-
-    document.getElementById('btn-redo').addEventListener('click', () => {
-      const undos = state.undoStacks[state.currentPage];
-      if (undos.length === 0) return;
-      state.pages[state.currentPage].push(undos.pop());
-      redrawCanvas(); saveLocalData(false); sysLog("ACTION_REDONE");
-    });
-
-    document.getElementById('btn-clear').addEventListener('click', () => {
-      state.undoStacks[state.currentPage] = state.undoStacks[state.currentPage].concat(state.pages[state.currentPage].reverse());
-      state.pages[state.currentPage] = [];
-      redrawCanvas(); saveLocalData(true); sysLog("PAGE_WIPED", "warn");
-    });
-
-    document.getElementById('btn-reset').addEventListener('click', () => {
-      if(confirm("CRITICAL WARNING: This will permanently purge all local data. Proceed?")) {
-        sysLog("INITIATING_PURGE...", "error");
-        indexedDB.deleteDatabase("QamelotCyberDB").onsuccess = () => location.reload();
-      }
-    });
-
-    // --- BOOT SEQUENCE ---
-    setTimeout(() => {
-      resizeCanvas();
-      updatePageUI();
-      sysLog("SYSTEM_READY", "info");
-    }, 250);
-
   </script>
 </body>
+
 </html>

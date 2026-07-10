@@ -1,575 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="https://i.imgur.com/p7JzFKA.png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="Qamelot Logistics — Operations hub, system links, and developer dashboard.">
-    <meta name="theme-color" content="#0a060d">
-    <meta name="color-scheme" content="dark">
-    <title>Qamelot Logistics Dashboard</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap">
-
-    <style>
-        /* =======================================================
-           DESIGN TOKENS
-           ======================================================= */
-        :root {
-            --bg-deep:      #0a060d;
-            --bg-mid:       #160e25;
-            --bg-panel:     #1c0e2b;
-            --purple:       #8a4fcf;
-            --purple-deep:  #4b1b6d;
-            --gold:         #cfb997;
-            --text:         #e5dcf5;
-            --text-dim:     #5b738b;
-            --grid-line:    rgba(138, 79, 207, 0.05);
-            --cyan:         #00f0ff;
-
-            --cursor-default: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><polygon points='16,2 28,24 16,19 4,24' fill='%230a060d' stroke='%238a4fcf' stroke-width='2' stroke-linejoin='round'/><polygon points='16,6 24,20 16,17 8,20' fill='%23cfb997'/></svg>") 16 2, auto;
-            --cursor-hover:  url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><polygon points='16,2 28,24 16,19 4,24' fill='%238a4fcf' stroke='%23ffffff' stroke-width='2' stroke-linejoin='round'/><polygon points='16,6 24,20 16,17 8,20' fill='%23ffffff'/><animateTransform attributeName='transform' type='rotate' from='0 16 16' to='360 16 16' dur='6s' repeatCount='indefinite'/></svg>") 16 2, pointer;
-        }
-
-        /* =======================================================
-           BASE
-           ======================================================= */
-        *, *::before, *::after { box-sizing: border-box; }
-
-        a, a:visited { text-decoration: none; color: inherit; }
-
-        body {
-            margin: 0;
-            padding: 40px 20px 100px;
-            background-color: var(--bg-deep);
-            background-image:
-                radial-gradient(circle at 50% 50%, var(--bg-mid) 0%, var(--bg-deep) 80%),
-                linear-gradient(var(--grid-line) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-            background-size: 100% 100%, 20px 20px, 20px 20px;
-            font-family: 'Orbitron', system-ui, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            min-height: 100dvh;
-            color: white;
-            cursor: var(--cursor-default);
-        }
-
-        /* =======================================================
-           HEADER
-           ======================================================= */
-        .dashboard-header { text-align: center; margin-bottom: 40px; z-index: 2; }
-
-        .brand-logo {
-            width: 100%;
-            max-width: 280px;
-            height: auto;
-            filter: drop-shadow(0 0 15px rgba(138, 79, 207, 0.4));
-            margin-bottom: 15px;
-            transition: filter 0.3s ease;
-        }
-        .brand-logo:hover { filter: drop-shadow(0 0 25px rgba(138, 79, 207, 0.7)); }
-
-        .brand-title {
-            font-size: clamp(22px, 4vw, 28px);
-            font-weight: 900;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #ffffff;
-            text-shadow: 0 0 10px rgba(138, 79, 207, 0.7), 0 0 20px rgba(207, 185, 151, 0.3);
-            margin: 0;
-        }
-
-        /* =======================================================
-           LAYOUT
-           ======================================================= */
-        .dashboard-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            width: 100%;
-            max-width: 680px;
-        }
-
-        .section-title {
-            font-size: 13px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 12px;
-            border-left: 3px solid var(--purple);
-            padding-left: 8px;
-            text-shadow: 0 0 5px rgba(138, 79, 207, 0.3);
-        }
-
-        .menu-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            width: 100%;
-        }
-
-        /* =======================================================
-           CYBER BUTTONS
-           ======================================================= */
-        .btn-link { display: block; width: 100%; }
-
-        .btn-wrapper {
-            width: 100%;
-            filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.8)) drop-shadow(0px 8px 10px rgba(0, 0, 0, 0.6));
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            cursor: var(--cursor-default);
-        }
-
-        .btn-wrapper:hover,
-        .btn-wrapper:focus-within {
-            transform: translateY(-2px) scale(1.02);
-            filter: drop-shadow(0 0 12px rgba(138, 79, 207, 0.5)) drop-shadow(0px 8px 10px rgba(0, 0, 0, 0.8));
-            cursor: var(--cursor-hover);
-        }
-        .btn-wrapper:focus-within {
-            outline: 2px solid var(--gold);
-            outline-offset: 4px;
-        }
-
-        .btn-wrapper:hover .cyber-btn {
-            background: linear-gradient(to bottom, var(--purple) 0%, var(--purple-deep) 25%, var(--bg-mid) 75%, var(--gold) 100%);
-        }
-
-        .btn-wrapper:active { transform: translateY(2px) scale(0.99); }
-        .btn-wrapper:active .cyber-btn-inner {
-            background: linear-gradient(90deg, var(--purple) 0%, var(--purple-deep) 50%, var(--purple) 100%);
-            transition: background 0.1s;
-        }
-        .btn-wrapper:active .btn-text {
-            color: #ffffff;
-            text-shadow: 0 0 10px #ffffff, 0 0 20px var(--purple);
-        }
-
-        /* Active (current) page indicator */
-        [aria-current="page"] .cyber-btn-inner {
-            background: linear-gradient(90deg, var(--gold) 0%, var(--purple) 50%, var(--gold) 100%);
-            box-shadow: inset 0 0 12px rgba(207, 185, 151, 0.4);
-        }
-        [aria-current="page"] .btn-text {
-            color: #ffffff;
-            text-shadow: 0 0 8px var(--gold), 0 0 16px var(--purple);
-        }
-
-        .cyber-btn {
-            height: 55px;
-            padding: 3px;
-            background: linear-gradient(to bottom, var(--purple) 0%, var(--purple-deep) 25%, var(--bg-mid) 75%, var(--gold) 100%);
-            clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px), 0 15px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .cyber-btn-inner {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--bg-deep) 0%, var(--bg-panel) 50%, var(--bg-deep) 100%);
-            clip-path: polygon(13px 0, calc(100% - 13px) 0, 100% 13px, 100% calc(100% - 13px), calc(100% - 13px) 100%, 13px 100%, 0 calc(100% - 13px), 0 13px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .cyber-btn-inner::before {
-            content: '';
-            position: absolute; inset: 0;
-            box-shadow: inset 0 4px 8px rgba(138, 79, 207, 0.2), inset 0 -4px 8px rgba(138, 79, 207, 0.05);
-            z-index: 1;
-        }
-
-        .btn-text {
-            position: relative;
-            z-index: 2;
-            color: var(--text);
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            text-shadow: 0 0 5px rgba(138, 79, 207, 0.8), 0 0 10px rgba(138, 79, 207, 0.4);
-        }
-
-        /* =======================================================
-           PAGE LIST (auto-discovered, searchable)
-           ======================================================= */
-        .page-filter {
-            width: 100%;
-            padding: 0.7rem 0.9rem;
-            margin-bottom: 1rem;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(138, 79, 207, 0.3);
-            border-radius: 8px;
-            color: var(--text);
-            font-family: inherit;
-            font-size: 0.85rem;
-            letter-spacing: 0.04em;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .page-filter::placeholder { color: var(--text-dim); }
-        .page-filter:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(207, 185, 151, 0.15);
-        }
-
-        .page-link-list { display: grid; gap: 16px; }
-
-        .page-group { display: grid; gap: 10px; }
-
-        .page-group-title {
-            margin: 0;
-            color: var(--gold);
-            font-size: 0.82rem;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-        }
-
-        .page-group-links {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 10px;
-        }
-
-        .page-link {
-            display: block;
-            padding: 0.7rem 0.8rem;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(138, 79, 207, 0.2);
-            color: var(--text);
-            font-size: 0.8rem;
-            letter-spacing: 0.04em;
-            transition: all 0.2s ease;
-        }
-        .page-link small { color: var(--text-dim); display: block; font-size: 0.65rem; margin-top: 2px; }
-        .page-link:hover, .page-link:focus-visible {
-            border-color: var(--gold);
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(138, 79, 207, 0.15);
-            outline: none;
-        }
-        .page-link[hidden] { display: none; }
-
-        /* =======================================================
-           FOOTER
-           ======================================================= */
-        .frozen-footer {
-            position: fixed;
-            bottom: 0; left: 0;
-            width: 100%;
-            height: 50px;
-            background: linear-gradient(to top, #03060f 80%, rgba(6, 10, 20, 0.9) 100%);
-            border-top: 1px solid rgba(0, 240, 255, 0.15);
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            z-index: 100;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-        }
-        .frozen-footer small { color: var(--text-dim); letter-spacing: 1px; font-size: 0.7rem; }
-
-        .social-links-container { display: flex; gap: 25px; }
-
-        .social-link {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            transition: all 0.2s ease;
-        }
-        .social-link:hover, .social-link:focus-visible {
-            color: var(--cyan);
-            text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
-            outline: none;
-        }
-
-        /* =======================================================
-           REDUCED MOTION
-           ======================================================= */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-            body { cursor: auto; }
-            .btn-wrapper, .brand-logo, .social-link, .page-link { transition: none; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Complete, searchable directory for every Qamelot project page.">
+  <meta name="theme-color" content="#070a10">
+  <title>Qamelot Project Directory</title>
+  <style>
+    :root {
+      --bg: #070a10;
+      --panel: #0e1420;
+      --panel-2: #121c2a;
+      --line: rgba(57, 218, 255, .22);
+      --text: #eefbff;
+      --muted: #88a1ad;
+      --cyan: #39daff;
+      --lime: #79f7b5;
+      --red: #ff4967;
+    }
+    * { box-sizing: border-box; }
+    html { color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background: linear-gradient(135deg, rgba(57, 218, 255, .08), transparent 35%), var(--bg);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    .shell { width: min(1180px, 100%); margin: 0 auto; padding: 26px clamp(16px, 4vw, 40px) 60px; }
+    header { display: flex; justify-content: space-between; gap: 24px; align-items: end; padding: 30px 0; border-bottom: 1px solid var(--line); }
+    .eyebrow { margin: 0 0 8px; color: var(--cyan); font-size: .76rem; font-weight: 800; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(2rem, 6vw, 4.7rem); line-height: .95; }
+    .summary { max-width: 460px; margin: 12px 0 0; color: var(--muted); line-height: 1.55; }
+    .home { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); font-weight: 750; }
+    .tools { position: sticky; top: 0; z-index: 5; display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 16px 0; background: rgba(7, 10, 16, .92); backdrop-filter: blur(12px); }
+    input { width: 100%; min-height: 46px; padding: 10px 13px; color: var(--text); border: 1px solid var(--line); border-radius: 6px; background: var(--panel); outline: none; }
+    input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(57, 218, 255, .12); }
+    .count { display: grid; place-items: center; min-width: 100px; padding: 0 12px; color: var(--lime); border: 1px solid var(--line); border-radius: 6px; background: var(--panel); font-weight: 800; }
+    #directory { display: grid; gap: 12px; }
+    details { overflow: hidden; border: 1px solid var(--line); border-radius: 7px; background: var(--panel); }
+    summary { display: flex; justify-content: space-between; gap: 12px; padding: 16px 18px; cursor: pointer; font-weight: 850; }
+    summary span { color: var(--muted); font-size: .8rem; font-weight: 700; }
+    .links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border-top: 1px solid var(--line); }
+    .page { min-width: 0; padding: 15px; background: var(--panel-2); transition: background .16s ease; }
+    .page:hover, .page:focus-visible { background: #17283a; outline: none; }
+    .page strong, .page small { display: block; overflow-wrap: anywhere; }
+    .page strong { font-size: .9rem; }
+    .page small { margin-top: 5px; color: var(--muted); font-size: .7rem; }
+    .page.current { border-left: 3px solid var(--cyan); }
+    .empty { padding: 40px 20px; color: var(--muted); text-align: center; border: 1px dashed var(--line); }
+    footer { margin-top: 24px; padding-top: 18px; color: var(--muted); border-top: 1px solid var(--line); font-size: .8rem; }
+    @media (max-width: 820px) { .links { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 560px) {
+      header { align-items: start; flex-direction: column; }
+      .tools, .links { grid-template-columns: 1fr; }
+      .count { min-height: 40px; }
+    }
+  </style>
 </head>
 <body>
-
-    <header class="dashboard-header">
-        <a href="../index.html" title="Return to Hub Home" aria-label="Return to Hub Home">
-            <svg class="brand-logo" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-                <defs>
-                    <linearGradient id="g-logo" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#cfb997"/>
-                        <stop offset="100%" stop-color="#8a4fcf"/>
-                    </linearGradient>
-                </defs>
-                <circle cx="50" cy="50" r="40" fill="none" stroke="url(#g-logo)" stroke-width="6"/>
-                <path d="M35 32 L65 32 L65 48 L50 68 L35 48 Z" fill="none" stroke="url(#g-logo)" stroke-width="6" stroke-linejoin="round"/>
-                <circle cx="50" cy="44" r="5" fill="#8a4fcf"/>
-            </svg>
-        </a>
-        <h1 class="brand-title">Qamelot Logistics</h1>
+  <div class="shell">
+    <header>
+      <div>
+        <p class="eyebrow">Qamelot system index</p>
+        <h1>Project Directory</h1>
+        <p class="summary">Every user-facing page in the workspace, organized by project and linked once.</p>
+      </div>
+      <a class="home" href="../index.html">Open Main Hub</a>
     </header>
 
-    <main class="dashboard-grid">
+    <div class="tools">
+      <input id="filter" type="search" placeholder="Search projects, pages, or paths" aria-label="Search project directory">
+      <div class="count" id="count" aria-live="polite"></div>
+    </div>
 
-        <section>
-            <div class="section-title">Operational Utilities</div>
-            <div class="menu-container">
-                <a class="btn-link" href="https://www.odoo.com" target="_blank" rel="noopener noreferrer">
-                    <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">Odoo Core ERP</span></div></div></div>
-                </a>
-                <a class="btn-link" href="https://script.google.com" target="_blank" rel="noopener noreferrer">
-                    <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">Automation Engine</span></div></div></div>
-                </a>
-                <a class="btn-link" href="https://github.com" target="_blank" rel="noopener noreferrer">
-                    <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">Deployment Repository</span></div></div></div>
-                </a>
-            </div>
-        </section>
+    <main id="directory"></main>
+    <footer>Generated from the organized workspace inventory. Dependency pages and duplicate build output are intentionally excluded.</footer>
+  </div>
 
-        <section>
-            <div class="section-title">System Links</div>
-            <div class="menu-container">
-                <a class="btn-link" href="locmein/index.html"><div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--LOC-ME-IN--</span></div></div></div></a>
-                <a class="btn-link" href="StixStaxStonzV1.htm"><div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">Stix Stax Stonz</span></div></div></div></a>
-                <a class="btn-link" href="C4N8.htm"><div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--CONNECT4--</span></div></div></div></a>
-                <a class="btn-link" href="QamelotTriNexusV1.htm"><div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--TRINEXUS--</span></div></div></div></a>
-                <a class="btn-link" href="QamelotConquest.html"><div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--CONQUEST--</span></div></div></div></a>
-                <a class="btn-link" href="QamelotMenu.html" aria-current="page"><div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--MENU--</span></div></div></div></a>
-            </div>
-        </section>
+  <script>
+    const pages = [
+      ['Workspace', '../index.html', 'Main Development Hub'],
+      ['Workspace', '../Pages/index.html', 'Project Pages'],
+      ['Workspace', '../snippets/hf-gemma-background-animation-usage.html', 'HF Gemma Animation Example'],
+      ['Core Apps', 'index.html', 'Mecha Strike: Overdrive'],
+      ['Core Apps', 'ACAI.html', 'ACAI'],
+      ['Core Apps', 'awesome.html', 'Interactive Nebula'],
+      ['Core Apps', 'bptka_TD.html', 'BPTKA Tactical Defense'],
+      ['Core Apps', 'C4N8.htm', 'Panther Arena Connect Four'],
+      ['Core Apps', 'CalcuN8r.html', 'CalcuN8r'],
+      ['Core Apps', 'CFPsimpleFooter.html', 'Social Footer'],
+      ['Core Apps', 'ContractorToolBelt.html', 'Contractor Tool Belt Classic'],
+      ['Core Apps', 'gemini-code-1782079525974.html', 'Portfolio and Project Hub'],
+      ['Core Apps', 'Home.html', 'Qamelot Home'],
+      ['Core Apps', 'MechaStrike.html', 'Mecha Strike Protocol'],
+      ['Core Apps', 'MechaStrike_v3.html', 'Mecha Strike v3'],
+      ['Core Apps', 'Motion Dynamics Library.htm', 'Motion Dynamics Library'],
+      ['Core Apps', 'NeonPong.htm', 'Neon Pong'],
+      ['Core Apps', 'NeonPongMini.html', 'Neon Pong Mini'],
+      ['Core Apps', 'nodeExplorer.html', 'Node Explorer'],
+      ['Core Apps', 'QamelotConquest.html', 'Qamelot Conquest'],
+      ['Core Apps', 'QamelotMenu.html', 'Qamelot Project Directory'],
+      ['Core Apps', 'QamelotTacticalDefensev1.htm', 'Qamelot Tactical Defense'],
+      ['Core Apps', 'QamelotTriNexusV1.htm', 'Qamelot Tri-Nexus'],
+      ['Core Apps', 'QamoMATH.html', 'QamoMATH Classic'],
+      ['Core Apps', 'qmathcore.html', 'Qamelot Math Core'],
+      ['Core Apps', 'StixStaxStonzV1.htm', 'Stix Stax Stonz'],
+      ['Core Apps', 'vizi.html', 'CSS Visuals Library'],
+      ['Core Apps', 'WebToolsResources.html', 'Web Tools and Resources'],
+      ['Featured Projects', 'BruceLeeStyle/Index.html', 'Bruce Lee Interactive Studio'],
+      ['Featured Projects', 'contractor-toolbelt/index.html', 'Contractor Tool Belt'],
+      ['Featured Projects', 'courage-td/index.html', 'Courage Tower Defense'],
+      ['Featured Projects', 'EcoTechComm/index.html', 'EcoTechComm'],
+      ['Featured Projects', 'locmein/index.html', 'Loc-Me-In'],
+      ['Featured Projects', 'locmein/index02.html', 'Loc-Me-In Alternate'],
+      ['Featured Projects', 'N8Park/N8Park.html', 'N8 Parking Locator'],
+      ['Featured Projects', 'perspective-painting/index.html', 'New Perspective Painting'],
+      ['Featured Projects', 'pulse-productivity-studio/index.html', 'Pulse Productivity Studio'],
+      ['Featured Projects', 'sprite-forge/index.html', 'Sprite Forge Pro'],
+      ['Featured Projects', 'sprite-forge/SpriteForge.html', 'Sprite Forge Classic'],
+      ['Featured Projects', 'task-forge/index.html', 'Task Forge'],
+      ['QamoMATH', 'QamoMATH/Index.html', 'QamoMATH Nexus'],
+      ['QamoMATH', 'QamoMATH/QamoMATH.html', 'QamoMATH Studio'],
+      ['DevDash', 'DevDash/index.html', 'DevDashboard Hub'],
+      ['DevDash', 'DevDash/DevDashV1.html', 'DevDashboard v1'],
+      ['DevDash', 'DevDash/Pages/index.html', 'DevDash Pages'],
+      ['DevDash', 'DevDash/blob-fighter.html', 'Blob Bash Royale'],
+      ['DevDash', 'DevDash/push-complete.html', 'Push Complete'],
+      ['DevDash', 'DevDash/QamelotConquest.html', 'Qamelot Conquest Dev Build'],
+      ['DevDash', 'DevDash/QamelotTacticalDefensev1.html', 'Tactical Defense Sprite Build'],
+      ['DevDash', 'DevDash/svg-studio.html', 'SVG Studio'],
+      ['DevDash', 'DevDash/SVGStudio/sandbox.html', 'SVG Studio Sandbox']
+    ];
 
-        <section>
-            <div class="section-title">All HTML Pages</div>
-            <input type="search" class="page-filter" id="page-filter"
-                   placeholder="Filter pages… (e.g. qamo, td, dev)" aria-label="Filter page list">
-            <div class="page-link-list" id="page-link-list" aria-live="polite">
-                <div class="page-group">
-                    <h3 class="page-group-title">Root</h3>
-                    <div class="page-group-links">
-                        <a href="../index.html" class="page-link">Hub Index<small>index.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps</h3>
-                    <div class="page-group-links">
-                        <a href="bptka_TD.html" class="page-link">Bptka TD<small>apps/bptka_TD.html</small></a>
-                        <a href="C4N8.htm" class="page-link">C4N8<small>apps/C4N8.htm</small></a>
-                        <a href="CalcuN8r.html" class="page-link">CalcuN8r<small>apps/CalcuN8r.html</small></a>
-                        <a href="CFPsimpleFooter.html" class="page-link">CFPsimpleFooter<small>apps/CFPsimpleFooter.html</small></a>
-                        <a href="ContractorToolBelt.html" class="page-link">ContractorToolBelt<small>apps/ContractorToolBelt.html</small></a>
-                        <a href="gemini-code-1782079525974.html" class="page-link">Gemini Code 1782079525974<small>apps/gemini-code-1782079525974.html</small></a>
-                        <a href="Home.html" class="page-link">Home<small>apps/Home.html</small></a>
-                        <a href="index.html" class="page-link">Apps Index<small>apps/index.html</small></a>
-                        <a href="MechaStrike.html" class="page-link">MechaStrike<small>apps/MechaStrike.html</small></a>
-                        <a href="MechaStrike_v3.html" class="page-link">MechaStrike V3<small>apps/MechaStrike_v3.html</small></a>
-                        <a href="QamelotConquest.html" class="page-link">QamelotConquest<small>apps/QamelotConquest.html</small></a>
-                        <a href="QamelotMenu.html" class="page-link">QamelotMenu<small>apps/QamelotMenu.html</small></a>
-                        <a href="QamelotTacticalDefensev1.htm" class="page-link">QamelotTacticalDefensev1<small>apps/QamelotTacticalDefensev1.htm</small></a>
-                        <a href="QamelotTriNexusV1.htm" class="page-link">QamelotTriNexusV1<small>apps/QamelotTriNexusV1.htm</small></a>
-                        <a href="QamoMATH.html" class="page-link">QamoMATH<small>apps/QamoMATH.html</small></a>
-                        <a href="qmathcore.html" class="page-link">Qmathcore<small>apps/qmathcore.html</small></a>
-                        <a href="StixStaxStonzV1.htm" class="page-link">StixStaxStonzV1<small>apps/StixStaxStonzV1.htm</small></a>
-                        <a href="vizi.html" class="page-link">Vizi<small>apps/vizi.html</small></a>
-                        <a href="WebToolsResources.html" class="page-link">WebToolsResources<small>apps/WebToolsResources.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / BruceLeeStyle</h3>
-                    <div class="page-group-links">
-                        <a href="BruceLeeStyle/Index.html" class="page-link">BruceLeeStyle Index<small>apps/BruceLeeStyle/Index.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / contractor-toolbelt</h3>
-                    <div class="page-group-links">
-                        <a href="contractor-toolbelt/index.html" class="page-link">Contractor Toolbelt Index<small>apps/contractor-toolbelt/index.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / contractor-toolbelt / dist</h3>
-                    <div class="page-group-links">
-                        <a href="contractor-toolbelt/dist/index.html" class="page-link">Dist Index<small>apps/contractor-toolbelt/dist/index.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / courage-td</h3>
-                    <div class="page-group-links">
-                        <a href="courage-td/index.html" class="page-link">Courage Td Index<small>apps/courage-td/index.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / DevDash</h3>
-                    <div class="page-group-links">
-                        <a href="DevDash/blob-fighter.html" class="page-link">Blob Fighter<small>apps/DevDash/blob-fighter.html</small></a>
-                        <a href="DevDash/bptka_TD.html" class="page-link">Bptka TD<small>apps/DevDash/bptka_TD.html</small></a>
-                        <a href="DevDash/C4N8.htm" class="page-link">C4N8<small>apps/DevDash/C4N8.htm</small></a>
-                        <a href="DevDash/CalcuN8r.html" class="page-link">CalcuN8r<small>apps/DevDash/CalcuN8r.html</small></a>
-                        <a href="DevDash/CFPsimpleFooter.html" class="page-link">CFPsimpleFooter<small>apps/DevDash/CFPsimpleFooter.html</small></a>
-                        <a href="DevDash/ContractorToolBelt.html" class="page-link">ContractorToolBelt<small>apps/DevDash/ContractorToolBelt.html</small></a>
-                        <a href="DevDash/DevDashV1.html" class="page-link">DevDashV1<small>apps/DevDash/DevDashV1.html</small></a>
-                        <a href="DevDash/gemini-code-1782079525974.html" class="page-link">Gemini Code 1782079525974<small>apps/DevDash/gemini-code-1782079525974.html</small></a>
-                        <a href="DevDash/Home.html" class="page-link">Home<small>apps/DevDash/Home.html</small></a>
-                        <a href="DevDash/index.html" class="page-link">DevDash Index<small>apps/DevDash/index.html</small></a>
-                        <a href="DevDash/push-complete.html" class="page-link">Push Complete<small>apps/DevDash/push-complete.html</small></a>
-                        <a href="DevDash/QamelotConquest.html" class="page-link">QamelotConquest<small>apps/DevDash/QamelotConquest.html</small></a>
-                        <a href="DevDash/QamelotTacticalDefensev1.htm" class="page-link">QamelotTacticalDefensev1<small>apps/DevDash/QamelotTacticalDefensev1.htm</small></a>
-                        <a href="DevDash/QamelotTacticalDefensev1.html" class="page-link">QamelotTacticalDefensev1<small>apps/DevDash/QamelotTacticalDefensev1.html</small></a>
-                        <a href="DevDash/QamelotTriNexusV1.htm" class="page-link">QamelotTriNexusV1<small>apps/DevDash/QamelotTriNexusV1.htm</small></a>
-                        <a href="DevDash/StixStaxStonzV1.htm" class="page-link">StixStaxStonzV1<small>apps/DevDash/StixStaxStonzV1.htm</small></a>
-                        <a href="DevDash/svg-studio.html" class="page-link">SVG Studio<small>apps/DevDash/svg-studio.html</small></a>
-                        <a href="DevDash/WebToolsResources.html" class="page-link">WebToolsResources<small>apps/DevDash/WebToolsResources.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / DevDash / Pages</h3>
-                    <div class="page-group-links">
-                        <a href="DevDash/Pages/index.html" class="page-link">Pages Index<small>apps/DevDash/Pages/index.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / DevDash / QamoMATH</h3>
-                    <div class="page-group-links">
-                        <a href="DevDash/QamoMATH/Index.html" class="page-link">QamoMATH Index<small>apps/DevDash/QamoMATH/Index.html</small></a>
-                        <a href="DevDash/QamoMATH/QamoMATH.html" class="page-link">QamoMATH<small>apps/DevDash/QamoMATH/QamoMATH.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / DevDash / SVGStudio</h3>
-                    <div class="page-group-links">
-                        <a href="DevDash/SVGStudio/sandbox.html" class="page-link">Sandbox<small>apps/DevDash/SVGStudio/sandbox.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / EcoTechComm</h3>
-                    <div class="page-group-links">
-                        <a href="EcoTechComm/index.html" class="page-link">EcoTechComm Index<small>apps/EcoTechComm/index.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / locmein</h3>
-                    <div class="page-group-links">
-                        <a href="locmein/index.html" class="page-link">LocMeIn Index<small>apps/locmein/index.html</small></a>
-                        <a href="locmein/index02.html" class="page-link">Index02<small>apps/locmein/index02.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / perspective-painting</h3>
-                    <div class="page-group-links">
-                        <a href="perspective-painting/index.html" class="page-link">Perspective Painting Index<small>apps/perspective-painting/index.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / pulse-productivity-studio</h3>
-                    <div class="page-group-links">
-                        <a href="pulse-productivity-studio/index.html" class="page-link">Pulse Productivity Studio Index<small>apps/pulse-productivity-studio/index.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / QamoMATH</h3>
-                    <div class="page-group-links">
-                        <a href="QamoMATH/Index.html" class="page-link">QamoMATH Index<small>apps/QamoMATH/Index.html</small></a>
-                        <a href="QamoMATH/QamoMATH.html" class="page-link">QamoMATH<small>apps/QamoMATH/QamoMATH.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">apps / sprite-forge</h3>
-                    <div class="page-group-links">
-                        <a href="sprite-forge/index.html" class="page-link">Sprite Forge Index<small>apps/sprite-forge/index.html</small></a>
-                        <a href="sprite-forge/SpriteForge.html" class="page-link">SpriteForge<small>apps/sprite-forge/SpriteForge.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">Pages</h3>
-                    <div class="page-group-links">
-                        <a href="../Pages/index.html" class="page-link">Pages Index<small>Pages/index.html</small></a>
-                    </div>
-                </div>
-                <div class="page-group">
-                    <h3 class="page-group-title">snippets</h3>
-                    <div class="page-group-links">
-                        <a href="../snippets/hf-gemma-background-animation-usage.html" class="page-link">Hf Gemma Background Animation Usage<small>snippets/hf-gemma-background-animation-usage.html</small></a>
-                    </div>
-                </div>
-            </div>
-        </section>
+    const directory = document.getElementById('directory');
+    const filter = document.getElementById('filter');
+    const count = document.getElementById('count');
 
-    </main>
+    function render(query = '') {
+      const needle = query.trim().toLowerCase();
+      const matches = pages.filter((page) => page.join(' ').toLowerCase().includes(needle));
+      const groups = matches.reduce((map, page) => {
+        if (!map.has(page[0])) map.set(page[0], []);
+        map.get(page[0]).push(page);
+        return map;
+      }, new Map());
+      count.textContent = `${matches.length} ${matches.length === 1 ? 'page' : 'pages'}`;
+      if (!matches.length) {
+        directory.innerHTML = '<div class="empty">No matching pages found.</div>';
+        return;
+      }
+      directory.innerHTML = [...groups].map(([group, items]) => `
+        <details open>
+          <summary>${group}<span>${items.length} ${items.length === 1 ? 'page' : 'pages'}</span></summary>
+          <div class="links">
+            ${items.map(([, href, label]) => `
+              <a class="page ${href === 'QamelotMenu.html' ? 'current' : ''}" href="${href}">
+                <strong>${label}</strong><small>${href.replace(/^\.\.\//, '')}</small>
+              </a>`).join('')}
+          </div>
+        </details>`).join('');
+    }
 
-    <footer class="frozen-footer" role="contentinfo">
-        <small>© Qamelot Logistics</small>
-        <div class="social-links-container">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-link">Facebook</a>
-            <a href="https://linkedin.com"  target="_blank" rel="noopener noreferrer" class="social-link">LinkedIn</a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-link">Instagram</a>
-            <a href="https://youtube.com"   target="_blank" rel="noopener noreferrer" class="social-link">YouTube</a>
-        </div>
-    </footer>
-
-    <script>
-        (function () {
-            'use strict';
-
-            // 1) Dedupe page links by canonical href (.htm vs .html collapsed)
-            const links = Array.from(document.querySelectorAll('.page-link'));
-            const seen = new Set();
-            links.forEach(a => {
-                const key = (a.getAttribute('href') || '')
-                    .toLowerCase()
-                    .replace(/\.html?$/, '');
-                if (seen.has(key)) {
-                    a.remove();
-                } else {
-                    seen.add(key);
-                    a.dataset.key = key;
-                }
-            });
-
-            // 2) Live filter
-            const filter = document.getElementById('page-filter');
-            const groups = Array.from(document.querySelectorAll('.page-group'));
-            if (!filter) return;
-
-            const apply = (raw) => {
-                const q = raw.trim().toLowerCase();
-                groups.forEach(group => {
-                    const items = group.querySelectorAll('.page-link');
-                    let anyVisible = false;
-                    items.forEach(link => {
-                        const key = link.dataset.key || '';
-                        const label = (link.textContent || '').toLowerCase();
-                        const match = !q || key.includes(q) || label.includes(q);
-                        link.hidden = !match;
-                        if (match) anyVisible = true;
-                    });
-                    group.style.display = (!q || anyVisible) ? '' : 'none';
-                });
-            };
-
-            filter.addEventListener('input', e => apply(e.target.value));
-        })();
-    </script>
+    filter.addEventListener('input', () => render(filter.value));
+    render();
+  </script>
 </body>
 </html>
