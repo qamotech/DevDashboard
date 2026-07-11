@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qamelot Media Component</title>
+    <style>
+        :root {
+            --bg-color: #0d0e12;
+            --card-bg: #161820;
+            --text-color: #ffffff;
+            --font-accent: #ff4757;
+            --skeleton-base: #2a2d3d;
+            --skeleton-shimmer: #3b3f56;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Container & Conic Border Card */
+        .card-wrapper {
+            position: relative;
+            width: 450px;
+            height: 200px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        /* The Conic Border Effect */
+        .card-wrapper::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 20%,
+                var(--font-accent) 40%,
+                #2ed573 60%,
+                #1e90ff 80%,
+                transparent 100%
+            );
+            animation: rotateBorder 4s linear infinite;
+            z-index: 1;
+        }
+
+        /* Inner card body to mask the conic background into a border */
+        .card-content {
+            position: absolute;
+            inset: 4px; /* Controls border thickness */
+            background: var(--card-bg);
+            border-radius: 12px;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* --- 1. Skeleton Loader State --- */
+        .skeleton-container {
+            position: absolute;
+            inset: 0;
+            background: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            z-index: 4;
+            /* Toggle 'fade-out' class via JS to reveal the actual content */
+            animation: hideSkeleton 3.5s forwards; 
+        }
+
+        .skeleton-title {
+            width: 280px;
+            height: 36px;
+            background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shimmer) 50%, var(--skeleton-base) 75%);
+            background-size: 200% 100%;
+            border-radius: 8px;
+            animation: shimmer 1.5s infinite linear;
+        }
+
+        /* --- 2. Actual Content & Bouncing Ball Title --- */
+        .title-container {
+            position: relative;
+            display: flex;
+            gap: 2px;
+        }
+
+        .letter {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: inline-block;
+        }
+
+        /* Space between words */
+        .space {
+            width: 15px; 
+        }
+
+        /* The Bouncing Ball Effect */
+        .ball {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--font-accent);
+            border-radius: 50%;
+            bottom: 8px;
+            left: 0;
+            /* Matches the staggered letter bounces */
+            animation: ballBounce 4s ease-in-out infinite; 
+            box-shadow: 0 0 10px var(--font-accent);
+        }
+
+        /* Individual letter bounce triggers as ball passes over them */
+        .letter:nth-child(1)  { animation: letterJump 4s ease-in-out infinite; animation-delay: 0.0s; }
+        .letter:nth-child(2)  { animation: letterJump 4s ease-in-out infinite; animation-delay: 0.2s; }
+        .letter:nth-child(3)  { animation: letterJump 4s ease-in-out infinite; animation-delay: 0.4s; }
+        .letter:nth-child(4)  { animation: letterJump 4s ease-in-out infinite; animation-delay: 0.6s; }
+        .letter:nth-child(5)  { animation: letterJump 4s ease-in-out infinite; animation-delay: 0.8s; }
+        .letter:nth-child(6)  { animation: letterJump 4s ease-in-out infinite; animation-delay: 1.0s; }
+        .letter:nth-child(7)  { animation: letterJump 4s ease-in-out infinite; animation-delay: 1.2s; }
+        /* Child 8 is the space */
+        .letter:nth-child(9)  { animation: letterJump 4s ease-in-out infinite; animation-delay: 1.4s; }
+        .letter:nth-child(10) { animation: letterJump 4s ease-in-out infinite; animation-delay: 1.6s; }
+        .letter:nth-child(11) { animation: letterJump 4s ease-in-out infinite; animation-delay: 1.8s; }
+        .letter:nth-child(12) { animation: letterJump 4s ease-in-out infinite; animation-delay: 2.0s; }
+        .letter:nth-child(13) { animation: letterJump 4s ease-in-out infinite; animation-delay: 2.2s; }
+
+        /* --- ANIMATIONS --- */
+
+        /* 1. Conic Border Rotation */
+        @keyframes rotateBorder {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 2. Skeleton Shimmer */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Simulated Loader Dismissal */
+        @keyframes hideSkeleton {
+            0%, 75% { opacity: 1; visibility: visible; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+
+        /* 3. Bouncing Ball Path */
+        @keyframes ballBounce {
+            0%   { left: 0px; bottom: 8px; }
+            /* Ball bounces across the letters */
+            10%  { bottom: 55px; }
+            20%  { left: 70px; bottom: 8px; }
+            30%  { bottom: 55px; }
+            40%  { left: 150px; bottom: 8px; }
+            50%  { bottom: 55px; }
+            60%  { left: 240px; bottom: 8px; }
+            70%  { bottom: 55px; }
+            80%  { left: 310px; bottom: 8px; }
+            /* Ball rolls off / resets */
+            90%  { left: 340px; bottom: 8px; opacity: 1; }
+            95%  { opacity: 0; bottom: 8px; }
+            100% { left: 0px; bottom: 8px; opacity: 0; }
+        }
+
+        /* 4. Letter Reaction Jump */
+        @keyframes letterJump {
+            0%, 20%, 100% { transform: translateY(0); }
+            10% { transform: translateY(-10px); color: var(--font-accent); text-shadow: 0 0 8px var(--font-accent); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="card-wrapper">
+        <div class="card-content">
+            
+            <div class="skeleton-container">
+                <div class="skeleton-title"></div>
+            </div>
+
+            <div class="title-container">
+                <div class="ball"></div>
+                <span class="letter">Q</span>
+                <span class="letter">a</span>
+                <span class="letter">m</span>
+                <span class="letter">e</span>
+                <span class="letter">l</span>
+                <span class="letter">o</span>
+                <span class="letter">t</span>
+                <span class="letter space"></span>
+                <span class="letter">M</span>
+                <span class="letter">e</span>
+                <span class="letter">d</span>
+                <span class="letter">i</span>
+                <span class="letter">a</span>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

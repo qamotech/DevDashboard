@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qamelot Media - Forward Flick Edition</title>
+    <style>
+        :root {
+            --bg-color: #06070a;
+            --card-bg: rgba(12, 14, 22, 0.95);
+            --text-color: #ffffff;
+            --cyan: #00f2fe;
+            --neon-pink: #ff007f;
+            --gold: #ffd700;
+            --laser-green: #39ff14;
+            --skeleton-base: #181b26;
+            --skeleton-shimmer: #252a3d;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* --- DASHBOARD UI --- */
+        .game-ui {
+            width: 550px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+            margin-bottom: 12px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-sizing: border-box;
+        }
+
+        .stat-box span {
+            color: var(--cyan);
+            text-shadow: 0 0 10px var(--cyan);
+        }
+
+        .multiplier {
+            background: linear-gradient(45deg, var(--neon-pink), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.3rem;
+            animation: pulse 0.5s infinite alternate;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .multiplier.active { opacity: 1; }
+
+        /* --- ARCADE STAGE (NO ROTATION) --- */
+        .game-stage-wrapper {
+            position: relative;
+            padding: 6px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, var(--cyan), var(--neon-pink), var(--gold));
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 242, 254, 0.2);
+            transition: all 0.5s ease;
+        }
+
+        .game-stage-wrapper.frozen {
+            background: linear-gradient(135deg, var(--gold), #ff9f43, var(--neon-pink));
+            box-shadow: 0 0 40px var(--gold);
+        }
+
+        .game-stage {
+            position: relative;
+            width: 550px;
+            height: 420px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        /* Bumper Laser Tracks */
+        .laser-bumper {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--laser-green);
+            box-shadow: 0 0 15px var(--laser-green);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+        .laser-bumper.left { left: 0; }
+        .laser-bumper.right { right: 0; }
+        .laser-bumper.active { opacity: 1; }
+
+        .card-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 20px;
+            box-sizing: border-box;
+        }
+
+        /* SCREEN SHAKE EFFECT */
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0); }
+            20% { transform: translate(-4px, 4px); }
+            40% { transform: translate(4px, -4px); }
+            60% { transform: translate(-4px, -4px); }
+            80% { transform: translate(4px, 4px); }
+        }
+        .shake { animation: shake 0.25s linear; }
+
+        /* --- SKELETON INFRASTRUCTURE --- */
+        .skeleton-container {
+            position: absolute;
+            inset: 0;
+            background: #0f111a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            z-index: 15;
+            animation: hideSkeleton 1.5s cubic-bezier(0.8, 0, 0.2, 1) forwards; 
+            pointer-events: none;
+        }
+        .sk-bar {
+            background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shimmer) 50%, var(--skeleton-base) 75%);
+            background-size: 200% 100%;
+            border-radius: 6px;
+            animation: shimmer 1.2s infinite linear;
+        }
+
+        /* --- PIN MECHANICS --- */
+        .pins-alley {
+            display: flex;
+            gap: 6px;
+            margin-top: 50px;
+            perspective: 600px;
+        }
+
+        .letter-pin {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--text-color);
+            text-transform: uppercase;
+            display: inline-block;
+            transform-origin: bottom center;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .letter-pin.boss {
+            color: var(--gold);
+            text-shadow: 0 0 12px rgba(255,215,0,0.4);
+        }
+
+        .letter-pin.semi-knocked {
+            transform: rotateX(35deg) scaleY(0.8);
+            color: #ff9f43;
+        }
+
+        .letter-pin.knocked {
+            color: rgba(35, 40, 55, 0.3);
+            transform: translateY(60px) rotateX(85deg) rotateZ(45deg) scale(0.7);
+            text-shadow: none;
+            pointer-events: none;
+        }
+
+        .space { width: 20px; }
+
+        /* --- INTERACTIVE BALL --- */
+        .bowling-ball {
+            width: 36px;
+            height: 36px;
+            background: radial-gradient(circle at 30% 30%, #ffffff 0%, var(--cyan) 40%, #005a6b 100%);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 45px;
+            left: calc(50% - 18px);
+            cursor: grab;
+            z-index: 5;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 15px var(--cyan);
+            touch-action: none;
+        }
+        .bowling-ball:active { cursor: grabbing; }
+
+        /* --- CONTROLS --- */
+        .control-panel {
+            width: 550px;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            background: #141722;
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #fff;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover {
+            background: #1c2030;
+            border-color: var(--cyan);
+        }
+        .btn.active {
+            background: rgba(57, 255, 20, 0.12);
+            border-color: var(--laser-green);
+            color: var(--laser-green);
+            box-shadow: 0 0 12px rgba(57, 255, 20, 0.2);
+        }
+
+        /* --- AWESOME WIN SCREEN --- */
+        .victory-screen {
+            position: absolute;
+            inset: 0;
+            background: rgba(6, 7, 10, 0.97);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+
+        .victory-screen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .victory-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(to right, var(--gold), #ff9f43, var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            animation: victoryPulse 1s infinite alternate;
+        }
+
+        .victory-subtitle {
+            color: #a4b0be;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .victory-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .v-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .v-label {
+            font-size: 0.8rem;
+            color: #747d8c;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .v-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            animation: dropConfetti 3.2s infinite linear;
+            pointer-events: none;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        @keyframes hideSkeleton { 0%, 85% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
+        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+        @keyframes victoryPulse { from { transform: scale(0.97); filter: drop-shadow(0 0 10px rgba(255,215,0,0.3)); } to { transform: scale(1.03); filter: drop-shadow(0 0 25px rgba(255,215,0,0.6)); } }
+        
+        @keyframes dropConfetti {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(450px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-ui">
+        <div class="stat-box">SCORE: <span id="score-val">0</span></div>
+        <div class="multiplier" id="mult-ui">X2 COMBO</div>
+        <div class="stat-box">GOLD: <span id="gold-val">0</span></div>
+    </div>
+
+    <div class="game-stage-wrapper" id="stage-wrapper">
+        <div class="game-stage">
+            
+            <div class="laser-bumper left" id="bumper-l"></div>
+            <div class="laser-bumper right" id="bumper-r"></div>
+
+            <div class="victory-screen" id="victory-modal">
+                <div class="victory-title">Perfect Strike!</div>
+                <div class="victory-subtitle">You demolished Qamelot Media</div>
+                
+                <div class="victory-stats">
+                    <div class="v-box">
+                        <div class="v-label">Total Score</div>
+                        <div class="v-value" id="final-score" style="color: var(--cyan);">0</div>
+                    </div>
+                    <div class="v-box">
+                        <div class="v-label">Gold Multiplied</div>
+                        <div class="v-value" id="final-gold" style="color: var(--gold);">0</div>
+                    </div>
+                </div>
+
+                <button class="btn" id="btn-claim" style="max-width: 200px; background: var(--gold); color: #000; font-weight:800; border:none;">CLAIM REWARDS</button>
+            </div>
+
+            <div class="card-content">
+                
+                <div class="skeleton-container">
+                    <div class="sk-bar" style="width:340px; height:45px;"></div>
+                    <div class="sk-bar" style="width:36px; height:36px; border-radius:50%; margin-top:100px;"></div>
+                </div>
+
+                <div class="pins-alley" id="pins-container">
+                    <span class="letter-pin boss" data-hp="2">Q</span>
+                    <span class="letter-pin" data-hp="1">a</span>
+                    <span class="letter-pin" data-hp="1">m</span>
+                    <span class="letter-pin" data-hp="1">e</span>
+                    <span class="letter-pin" data-hp="1">l</span>
+                    <span class="letter-pin" data-hp="1">o</span>
+                    <span class="letter-pin" data-hp="1">t</span>
+                    <span class="space"></span>
+                    <span class="letter-pin boss" data-hp="2">M</span>
+                    <span class="letter-pin" data-hp="1">e</span>
+                    <span class="letter-pin" data-hp="1">d</span>
+                    <span class="letter-pin" data-hp="1">i</span>
+                    <span class="letter-pin" data-hp="1">a</span>
+                </div>
+
+                <div class="bowling-ball" id="ball"></div>
+
+                <div style="color: #4e5d78; font-size: 0.8rem; letter-spacing: 2px; font-weight:700;">FLICK THE BALL FORWARD TOWARD THE PINS</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <button class="btn" id="btn-bumper">🛡️ ACTIVATE BUMPERS</button>
+        <button class="btn" id="btn-skin" style="border-color: rgba(255,0,127,0.3)">🎨 BUY SKIN (50G)</button>
+        <button class="btn" id="btn-reset" style="flex: 0.5;">🔄 RESET</button>
+    </div>
+
+    <script>
+        const ball = document.getElementById('ball');
+        const stageWrapper = document.getElementById('stage-wrapper');
+        const scoreVal = document.getElementById('score-val');
+        const goldVal = document.getElementById('gold-val');
+        const multUi = document.getElementById('mult-ui');
+        const pins = document.querySelectorAll('.letter-pin');
+        
+        const bumperL = document.getElementById('bumper-l');
+        const bumperR = document.getElementById('bumper-r');
+
+        const victoryModal = document.getElementById('victory-modal');
+        const finalScore = document.getElementById('final-score');
+        const finalGold = document.getElementById('final-gold');
+        const btnClaim = document.getElementById('btn-claim');
+
+        const btnBumper = document.getElementById('btn-bumper');
+        const btnSkin = document.getElementById('btn-skin');
+        const btnReset = document.getElementById('btn-reset');
+
+        const originBottom = 45;
+        const originLeftPercent = 50;
+        let stageWidth = 550;
+
+        let isDragging = false;
+        let startX, startY;
+        let lastX, lastY, lastTime;
+        
+        let score = 0;
+        let gold = 0;
+        let currentMultiplier = 1;
+        let hitInCurrentTurn = 0;
+
+        let vx = 0, vy = 0;
+        let loopId = null;
+        let bumpersActive = false;
+        let activeSkin = 'cyan';
+
+        ball.addEventListener('mousedown', initiateDrag);
+        ball.addEventListener('touchstart', initiateDrag, { passive: false });
+        btnBumper.addEventListener('click', toggleBumpers);
+        btnSkin.addEventListener('click', purchaseSkin);
+        btnReset.addEventListener('click', resetBoard);
+        btnClaim.addEventListener('click', closeVictoryScreen);
+
+        function initiateDrag(e) {
+            e.preventDefault();
+            if (loopId || victoryModal.classList.contains('active')) return;
+            
+            isDragging = true;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            startX = clientX;
+            startY = clientY;
+            
+            lastX = clientX;
+            lastY = clientY;
+            lastTime = performance.now();
+
+            document.addEventListener('mousemove', computeDrag);
+            document.addEventListener('touchmove', computeDrag, { passive: false });
+            document.addEventListener('mouseup', releaseDrag);
+            document.addEventListener('touchend', releaseDrag);
+        }
+
+        function computeDrag(e) {
+            if (!isDragging) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const now = performance.now();
+            const dt = now - lastTime;
+
+            if (dt > 0) {
+                // Calculate actual track speed of the forward push gesture
+                vx = (clientX - lastX) / dt * 8;
+                vy = (lastY - clientY) / dt * 8; 
+            }
+
+            let dx = clientX - startX;
+            let dy = startY - clientY;
+
+            // Restrict drag positions so users stay inside launching configurations
+            let targetLeft = (stageWidth / 2 - 18) + dx;
+            let targetBottom = originBottom + dy;
+
+            if(targetLeft < 20) targetLeft = 20;
+            if(targetLeft > stageWidth - 50) targetLeft = stageWidth - 50;
+            if(targetBottom < 10) targetBottom = 10;
+            if(targetBottom > 160) targetBottom = 160;
+
+            ball.style.left = `${targetLeft}px`;
+            ball.style.bottom = `${targetBottom}px`;
+
+            lastX = clientX;
+            lastY = clientY;
+            lastTime = now;
+        }
+
+        function releaseDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+
+            document.removeEventListener('mousemove', computeDrag);
+            document.removeEventListener('touchmove', computeDrag);
+            document.removeEventListener('mouseup', releaseDrag);
+            document.removeEventListener('touchend', releaseDrag);
+
+            // Execute forward travel parameters
+            if (vy > 1.8) {
+                hitInCurrentTurn = 0;
+                executePhysicsLoop();
+            } else {
+                resetBallToPocket();
+            }
+        }
+
+        function executePhysicsLoop() {
+            let bBottom = parseFloat(window.getComputedStyle(ball).bottom);
+            let bLeft = parseFloat(window.getComputedStyle(ball).left);
+
+            bBottom += vy;
+            bLeft += vx;
+
+            vy *= 0.985;
+            vx *= 0.985;
+
+            ball.style.bottom = `${bBottom}px`;
+            ball.style.left = `${bLeft}px`;
+
+            if (bLeft <= 15 || bLeft >= (stageWidth - 50)) {
+                if (bumpersActive) {
+                    vx *= -1.15; 
+                    triggerScreenShake();
+                } else {
+                    vx *= -0.7;
+                }
+            }
+
+            processCollisions(bLeft, bBottom);
+
+            if (bBottom < 450 && bBottom > -10 && Math.abs(vy) > 0.15) {
+                loopId = requestAnimationFrame(executePhysicsLoop);
+            } else {
+                terminateTurn();
+            }
+        }
+
+        function processCollisions(ballX, ballY) {
+            if (ballY > 290 && ballY < 360) {
+                pins.forEach(pin => {
+                    if (pin.classList.contains('knocked')) return;
+
+                    const pinBounds = pin.getBoundingClientRect();
+                    const stageBounds = document.querySelector('.card-content').getBoundingClientRect();
+
+                    const pinLeft = pinBounds.left - stageBounds.left;
+                    const pinRight = pinBounds.right - stageBounds.left;
+                    const bCenter = ballX + 18;
+
+                    if (bCenter >= pinLeft - 12 && bCenter <= pinRight + 12) {
+                        let hp = parseInt(pin.getAttribute('data-hp'));
+                        hp--;
+                        pin.setAttribute('data-hp', hp);
+
+                        triggerScreenShake();
+
+                        if (hp <= 0) {
+                            pin.classList.remove('semi-knocked');
+                            pin.classList.add('knocked');
+                            
+                            hitInCurrentTurn++;
+                            if (hitInCurrentTurn > 1) {
+                                currentMultiplier = hitInCurrentTurn;
+                                multUi.innerText = `X${currentMultiplier} COMBO`;
+                                multUi.classList.add('active');
+                            }
+
+                            const pointYield = 1 * currentMultiplier;
+                            score += pointYield;
+                            gold += pointYield * 2;
+
+                            scoreVal.innerText = score;
+                            goldVal.innerText = gold;
+                        } else {
+                            pin.classList.add('semi-knocked');
+                        }
+
+                        vx += (Math.random() - 0.5) * 6;
+                        vy *= 0.82; 
+                    }
+                });
+            }
+        }
+
+        function terminateTurn() {
+            cancelAnimationFrame(loopId);
+            loopId = null;
+            currentMultiplier = 1;
+            multUi.classList.remove('active');
+            resetBallToPocket();
+            evalWinCondition();
+        }
+
+        function resetBallToPocket() {
+            ball.style.transition = "all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2)";
+            ball.style.bottom = `${originBottom}px`;
+            ball.style.left = `calc(${originLeftPercent}% - 18px)`;
+            setTimeout(() => { ball.style.transition = "none"; }, 500);
+        }
+
+        function toggleBumpers() {
+            bumpersActive = !bumpersActive;
+            if (bumpersActive) {
+                btnBumper.classList.add('active');
+                btnBumper.innerText = "🛡️ BUMPERS ACTIVE";
+                bumperL.classList.add('active');
+                bumperR.classList.add('active');
+            } else {
+                btnBumper.classList.remove('active');
+                btnBumper.innerText = "🛡️ ACTIVATE BUMPERS";
+                bumperL.classList.remove('active');
+                bumperR.classList.remove('active');
+            }
+        }
+
+        function purchaseSkin() {
+            if (gold >= 50) {
+                gold -= 50;
+                goldVal.innerText = gold;
+                activeSkin = 'gold';
+                ball.style.background = `radial-gradient(circle at 30% 30%, #ffffff 0%, var(--gold) 50%, #b38f00 100%)`;
+                ball.style.boxShadow = `0 10px 20px rgba(0,0,0,0.5), 0 0 20px var(--gold)`;
+                btnSkin.innerText = "🎨 SKIN EQUIPPED";
+                btnSkin.disabled = true;
+                btnSkin.style.borderColor = "var(--gold)";
+            } else {
+                alert("Need 50 Gold! Hit high multipliers to stock up.");
+            }
+        }
+
+        function triggerScreenShake() {
+            stageWrapper.classList.add('shake');
+            setTimeout(() => stageWrapper.classList.remove('shake'), 250);
+        }
+
+        function evalWinCondition() {
+            const standingPins = Array.from(pins).filter(p => !p.classList.contains('knocked') && !p.classList.contains('space'));
+            if (standingPins.length === 0) {
+                stageWrapper.classList.add('frozen');
+                finalScore.innerText = score;
+                finalGold.innerText = gold;
+                spawnVictoryConfetti();
+                victoryModal.classList.add('active');
+            }
+        }
+
+        document.documentElement.style.setProperty('--cyan-raw', '#00f2fe');
+        document.documentElement.style.setProperty('--pink-raw', '#ff007f');
+        document.documentElement.style.setProperty('--gold-raw', '#ffd700');
+
+        function spawnVictoryConfetti() {
+            const colors = ['#00f2fe', '#ff007f', '#ffd700', '#2ed573', '#1e90ff'];
+            for(let i=0; i<60; i++) {
+                const conf = document.createElement('div');
+                conf.classList.add('confetti');
+                conf.style.left = Math.random() * 100 + '%';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.animationDelay = Math.random() * 2 + 's';
+                conf.style.boxShadow = `0 0 8px ${conf.style.backgroundColor}`;
+                victoryModal.appendChild(conf);
+            }
+        }
+
+        function closeVictoryScreen() {
+            const confettiElements = document.querySelectorAll('.confetti');
+            confettiElements.forEach(c => c.remove());
+            victoryModal.classList.remove('active');
+            resetBoard();
+        }
+
+        function resetBoard() {
+            score = 0;
+            scoreVal.innerText = score;
+            multUi.classList.remove('active');
+            currentMultiplier = 1;
+            stageWrapper.classList.remove('frozen');
+
+            pins.forEach(pin => {
+                pin.classList.remove('knocked', 'semi-knocked');
+                if (pin.classList.contains('boss')) {
+                    pin.setAttribute('data-hp', '2');
+                } else {
+                    pin.setAttribute('data-hp', '1');
+                }
+            });
+            resetBallToPocket();
+        }
+    </script>
+</body>
+</html>
