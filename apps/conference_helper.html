@@ -637,7 +637,7 @@
             // Link Mapping Configurations based on Active Coordinates
             const getExternalLinks = () => {
                 if(currentVenue === 'raleigh') {
-                    return { google: "http://googleusercontent.com/google.com/travel/hotels/1", cheapest: "https://www.google.com/travel/hotels" };
+                    return { google: "https://www.google.com/travel/hotels?q=hotels+near+Raleigh+Convention+Center", cheapest: "https://www.google.com/travel/hotels?q=cheap+hotels+near+Raleigh+Convention+Center" };
                 } else if(currentVenue === 'orlando') {
                     return { google: "https://www.google.com/travel/hotels?q=hotels+near+Kia+Center+Orlando", cheapest: "https://www.google.com/travel/hotels?q=cheap+hotels+near+Kia+Center+Orlando" };
                 } else {
@@ -863,7 +863,7 @@
                                             <strong>Status:</strong> {spot.hours}<br />
                                             <span style={{color: 'var(--neon-orange)', fontSize: '0.75rem', fontWeight: 700}}>{spot.address}</span>
                                         </div>
-                                        <a href={`http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(spot.name + ' ' + spot.address)}`} target="_blank" class="btn btn-cyan btn-full" style={{fontSize: '0.75rem', padding: '10px 12px'}}>Engage Vector Route ↗</a>
+                                        <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(spot.name + ' ' + spot.address)}`} target="_blank" rel="noopener noreferrer" class="btn btn-cyan btn-full" style={{fontSize: '0.75rem', padding: '10px 12px'}}>Engage Vector Route ↗</a>
                                     </div>
                                 ))}
                             </div>
