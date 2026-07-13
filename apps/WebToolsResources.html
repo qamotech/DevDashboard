@@ -1,856 +1,191 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="https://i.imgur.com/p7JzFKA.png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Developer Toolkit & Resources</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary-glow: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 60%);
-            --secondary-glow: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 60%);
-            
-            --glass-bg: rgba(13, 20, 35, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-border-hover: rgba(0, 210, 255, 0.3);
-            
-            --text-primary: #f0f8ff;
-            --text-secondary: #94a3b8;
-            --accent-cyan: #00f5d4;
-            --accent-purple: #8b5cf6;
-            --accent-green: #10b981;
-            
-            --font-main: 'Outfit', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: #030712;
-            color: var(--text-primary);
-            font-family: var(--font-main);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-            padding: 2rem;
-            line-height: 1.5;
-        }
-
-        /* Ambient background blobs for glassmorphism pop */
-        .ambient-bg {
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.4;
-            animation: float 20s infinite ease-in-out;
-        }
-
-        .blob-1 {
-            width: 350px;
-            height: 350px;
-            background: #6366f1;
-            top: -50px;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .blob-2 {
-            width: 400px;
-            height: 400px;
-            background: #06b6d4;
-            bottom: 10%;
-            right: 5%;
-            animation-delay: -5s;
-        }
-
-        .blob-3 {
-            width: 300px;
-            height: 300px;
-            background: #ec4899;
-            top: 40%;
-            left: 50%;
-            animation-delay: -10s;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) scale(1) rotate(0deg);
-            }
-            33% {
-                transform: translateY(-50px) scale(1.1) rotate(120deg);
-            }
-            66% {
-                transform: translateY(40px) scale(0.9) rotate(240deg);
-            }
-        }
-
-        header {
-            max-width: 1200px;
-            margin: 0 auto 2.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-        }
-
-        .header-title h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #fff 40%, var(--accent-cyan) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header-title p {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
-        }
-
-        /* Glass Container Layout */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 2rem;
-        }
-
-        @media (max-width: 1024px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Glassmorphic Panel Base style */
-        .glass-panel {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            padding: 2rem;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        /* Controls Section */
-        .controls-row {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .search-box {
-            position: relative;
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .search-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            color: var(--text-primary);
-            font-family: var(--font-main);
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 15px rgba(0, 245, 212, 0.15);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 0.9rem;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0.5;
-        }
-
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            color: var(--text-secondary);
-            padding: 0.75rem 1.25rem;
-            font-family: var(--font-main);
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            color: var(--text-primary);
-            background: rgba(0, 245, 212, 0.1);
-            border-color: var(--accent-cyan);
-        }
-
-        /* Resource Grid */
-        .resource-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .resource-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .resource-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(0, 245, 212, 0.05), rgba(139, 92, 246, 0.05));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .resource-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--glass-border-hover);
-            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.05);
-        }
-
-        .resource-card:hover::before {
-            opacity: 1;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            z-index: 2;
-        }
-
-        .category-badge {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            background: rgba(139, 92, 246, 0.2);
-            color: #c084fc;
-            border: 1px solid rgba(139, 92, 246, 0.3);
-        }
-
-        .category-badge.ui {
-            background: rgba(6, 182, 212, 0.2);
-            color: #22d3ee;
-            border: 1px solid rgba(6, 182, 212, 0.3);
-        }
-
-        .category-badge.design {
-            background: rgba(236, 72, 153, 0.2);
-            color: #f472b6;
-            border: 1px solid rgba(236, 72, 153, 0.3);
-        }
-
-        .category-badge.sandbox {
-            background: rgba(16, 185, 129, 0.2);
-            color: #34d399;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .category-badge.hosting {
-            background: rgba(245, 158, 11, 0.2);
-            color: #fbbf24;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-
-        .favorite-btn {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            transition: all 0.2s ease;
-            outline: none;
-        }
-
-        .favorite-btn:hover {
-            color: #ef4444;
-            transform: scale(1.15);
-        }
-
-        .favorite-btn.active {
-            color: #ef4444;
-        }
-
-        .card-body {
-            z-index: 2;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .card-desc {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            min-height: 52px;
-        }
-
-        .card-footer {
-            margin-top: auto;
-            display: flex;
-            justify-content: flex-end;
-            z-index: 2;
-        }
-
-        .visit-link {
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            color: var(--accent-cyan);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .visit-link:hover {
-            color: #fff;
-        }
-
-        /* Glass Generator Panel */
-        .generator-sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding-bottom: 0.5rem;
-        }
-
-        .gen-control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .control-label-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .control-val {
-            font-family: var(--font-mono);
-            color: var(--accent-cyan);
-        }
-
-        .slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: rgba(255, 255, 255, 0.1);
-            outline: none;
-            transition: background 0.3s;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--accent-cyan);
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(0, 245, 212, 0.5);
-            transition: transform 0.1s ease;
-        }
-
-        .slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        /* Live Preview Container */
-        .preview-container {
-            position: relative;
-            height: 150px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #1e1b4b, #311042);
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
-
-        .preview-shape-1 {
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: #8b5cf6;
-            left: 20%;
-            top: 15%;
-            filter: blur(2px);
-        }
-
-        .preview-shape-2 {
-            position: absolute;
-            width: 90px;
-            height: 90px;
-            background: #00f5d4;
-            right: 15%;
-            bottom: 10%;
-            transform: rotate(45deg);
-            filter: blur(1px);
-        }
-
-        .preview-glass-card {
-            width: 80%;
-            height: 70%;
-            border-radius: 12px;
-            z-index: 5;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 1rem;
-            color: #fff;
-            font-size: 0.8rem;
-            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3);
-        }
-
-        .preview-glass-title {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        /* Code box */
-        .code-box-wrapper {
-            position: relative;
-        }
-
-        .code-box {
-            width: 100%;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            padding: 0.75rem;
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--accent-cyan);
-            resize: none;
-            height: 120px;
-            outline: none;
-            line-height: 1.4;
-        }
-
-        .btn-copy {
-            background: var(--accent-cyan);
-            border: none;
-            border-radius: 6px;
-            color: #030712;
-            padding: 0.5rem 1rem;
-            font-family: var(--font-main);
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            width: 100%;
-            margin-top: 0.5rem;
-        }
-
-        .btn-copy:hover {
-            filter: brightness(1.1);
-            box-shadow: 0 0 15px rgba(0, 245, 212, 0.3);
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="N8 Tools — fast, private browser utilities for developers, designers, writers, and makers.">
+  <meta name="theme-color" content="#f3f1e9">
+  <title>N8 Tools — Your browser workbench</title>
+  <script>try{const t=localStorage.getItem('n8-theme');document.documentElement.dataset.theme=t||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch{}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:light;--ink:#17201b;--muted:#667169;--paper:#f3f1e9;--panel:#fbfaf5;--field:#fff;--soft:#e9e8e0;--line:#d9d8cf;--acid:#d8ff51;--orange:#ff7043;--blue:#3567ff;--shadow:0 20px 55px rgba(23,32,27,.1);--header:rgba(243,241,233,.88);--r:18px}
+    :root[data-theme="dark"]{color-scheme:dark;--ink:#f4fff7;--muted:#b6c5bb;--paper:#070b09;--panel:#121a15;--field:#0b120e;--soft:#202c24;--line:#394a3f;--acid:#caff38;--orange:#ff7a52;--blue:#8aa6ff;--shadow:0 22px 65px rgba(0,0,0,.46);--header:rgba(7,11,9,.88)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 Manrope,sans-serif;transition:background .3s,color .3s}body:before,body:after{content:"";position:fixed;width:38vw;height:38vw;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:-1;opacity:0;transition:opacity .5s}body:before{left:-12vw;top:14vh;background:rgba(202,255,56,.1);animation:ambientA 14s ease-in-out infinite alternate}body:after{right:-14vw;bottom:-12vw;background:rgba(53,103,255,.13);animation:ambientB 18s ease-in-out infinite alternate}:root[data-theme="dark"] body:before,:root[data-theme="dark"] body:after{opacity:1}button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit}.mono,textarea,.output{font-family:"DM Mono",monospace}.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+    @keyframes ambientA{to{transform:translate(12vw,-8vh) scale(1.18)}}@keyframes ambientB{to{transform:translate(-10vw,-6vh) scale(.86)}}@keyframes iconPulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 22px 2px color-mix(in srgb,var(--card-glow) 48%,transparent)}}@keyframes neonSweep{0%{transform:translateX(-140%) skewX(-20deg)}100%{transform:translateX(420%) skewX(-20deg)}}
+    .noise{position:fixed;inset:0;pointer-events:none;opacity:.035;z-index:10;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+    header{position:sticky;top:0;z-index:8;background:var(--header);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}.nav{max-width:1440px;margin:auto;height:72px;padding:0 28px;display:flex;align-items:center;gap:24px}.brand{font-size:20px;font-weight:800;letter-spacing:-.06em;text-decoration:none}.brand b{display:inline-grid;place-items:center;width:30px;height:30px;margin-right:8px;background:var(--ink);color:var(--acid);border-radius:8px}.search{margin-left:auto;position:relative;width:min(410px,42vw)}.search input{width:100%;padding:11px 48px 11px 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);outline:none}.search input:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(216,255,81,.7)}.key{position:absolute;right:10px;top:9px;padding:2px 7px;border:1px solid var(--line);border-radius:6px;color:var(--muted);font:11px "DM Mono"}.privacy{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700}.dot{width:8px;height:8px;background:#36a767;border-radius:50%;box-shadow:0 0 0 4px color-mix(in srgb,#36a767 22%,transparent)}
+    .theme-toggle{position:relative;display:grid;grid-template-columns:1fr 1fr;width:92px;height:42px;padding:4px;margin:0;border:1px solid var(--line);border-radius:999px;background:var(--panel);isolation:isolate;transition:box-shadow .3s,border-color .3s}.theme-toggle:hover{border-color:var(--acid);box-shadow:0 0 22px rgba(202,255,56,.17)}.theme-toggle legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.theme-toggle:before{content:"";position:absolute;z-index:-1;top:4px;left:4px;width:40px;height:32px;border-radius:999px;background:var(--ink);box-shadow:0 4px 14px rgba(0,0,0,.16),0 0 16px rgba(202,255,56,.12);transition:transform .35s cubic-bezier(.2,.8,.2,1)}.theme-toggle:has(#theme-dark:checked):before{transform:translateX(42px)}.theme-option{position:relative;display:grid;place-items:center;cursor:pointer;border-radius:999px;color:var(--muted)}.theme-option input{position:absolute;opacity:0;pointer-events:none}.theme-option span{font-size:17px;line-height:1;transition:transform .25s,color .25s}.theme-option:has(input:checked){color:var(--paper)}.theme-option:hover span{transform:rotate(12deg) scale(1.1)}.theme-option:has(input:focus-visible){outline:3px solid var(--blue);outline-offset:4px}
+    main{max-width:1440px;margin:auto;padding:46px 28px 80px}.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:end;padding:35px 0 50px}.eyebrow{display:inline-flex;align-items:center;gap:9px;font:12px "DM Mono";text-transform:uppercase;letter-spacing:.1em}.eyebrow:before{content:"";width:30px;height:2px;background:var(--orange)}h1{font-size:clamp(48px,7vw,96px);line-height:.92;letter-spacing:-.075em;margin:18px 0 24px;max-width:850px}.scribble{position:relative;display:inline-block}.scribble:after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:10px;background:var(--acid);z-index:-1;transform:rotate(-1deg)}.hero p{font-size:18px;color:var(--muted);max-width:660px}.hero-note{border-left:1px solid var(--line);padding:24px 0 24px 38px}.stat{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:12px 0}.stat b{font:500 13px "DM Mono"}.stat span{color:var(--muted)}
+    .layout{display:grid;grid-template-columns:220px 1fr;gap:32px}.side{position:sticky;top:104px;height:max-content}.side-label{font:11px "DM Mono";color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin:0 0 12px}.filters{display:grid;gap:5px}.filter{border:1px solid transparent;background:transparent;text-align:left;padding:9px 11px;border-radius:9px;color:var(--muted);font-weight:600;transition:.25s}.filter:hover{color:var(--ink);border-color:var(--line);transform:translateX(3px)}.filter.active{background:var(--acid);color:#10150f;border-color:var(--acid);box-shadow:0 0 24px rgba(202,255,56,.2)}.filter span{float:right;font:11px "DM Mono";opacity:.7}.side-foot{margin-top:30px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+    .section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:18px}.section-head h2{margin:0;font-size:28px;letter-spacing:-.04em}.section-head span{font:12px "DM Mono";color:var(--muted)}.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.card{--card-glow:var(--acid);position:relative;overflow:hidden;border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 94%,var(--card-glow) 6%);border-radius:var(--r);padding:22px;min-height:190px;display:flex;flex-direction:column;transition:transform .32s cubic-bezier(.2,.8,.2,1),border-color .32s,box-shadow .32s}.card:before{content:"";position:absolute;inset:0 auto 0 0;width:22%;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--card-glow) 12%,transparent),transparent);transform:translateX(-140%) skewX(-20deg);pointer-events:none}.card:hover{transform:translateY(-6px) scale(1.008);border-color:color-mix(in srgb,var(--card-glow) 70%,white);box-shadow:0 16px 50px rgba(0,0,0,.28),0 0 24px color-mix(in srgb,var(--card-glow) 16%,transparent)}.card:hover:before{animation:neonSweep .85s ease-out}.card:focus-within{outline:2px solid var(--card-glow);outline-offset:3px}.card.hide{display:none}.card:nth-child(3n+2){--card-glow:var(--blue)}.card:nth-child(3n){--card-glow:var(--orange)}.tag{font:10px "DM Mono";text-transform:uppercase;letter-spacing:.1em;color:color-mix(in srgb,var(--muted) 76%,var(--card-glow))}.icon{width:42px;height:42px;display:grid;place-items:center;background:var(--acid);color:#11170e;border-radius:12px;margin-bottom:22px;font:20px "DM Mono";animation:iconPulse 4s ease-in-out infinite}.card:nth-child(3n+2) .icon{background:#bccbff}.card:nth-child(3n) .icon{background:#ffc2b0}.card h3{margin:0 0 6px;font-size:18px;letter-spacing:-.025em;color:var(--ink)}.card p{margin:0 0 20px;color:var(--muted);font-size:13px}.launch{margin-top:auto;border:0;border-top:1px solid var(--line);background:transparent;color:var(--ink);padding:13px 0 0;text-align:left;font-weight:800;transition:color .2s,letter-spacing .2s}.launch:after{content:"↗";float:right;transition:transform .25s}.launch:hover{color:var(--card-glow);letter-spacing:.01em}.launch:hover:after{transform:translate(3px,-3px)}
+    dialog{width:min(950px,calc(100% - 28px));border:0;border-radius:24px;padding:0;background:var(--panel);color:var(--ink);box-shadow:0 30px 100px rgba(0,0,0,.28)}dialog::backdrop{background:rgba(19,26,22,.65);backdrop-filter:blur(5px)}.modal-head{display:flex;align-items:center;padding:22px 25px;border-bottom:1px solid var(--line)}.modal-head h2{margin:0;font-size:22px}.close{margin-left:auto;border:0;background:var(--soft);color:var(--ink);width:38px;height:38px;border-radius:50%;font-size:20px}.workspace{padding:25px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field label{display:block;font:11px "DM Mono";text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;color:var(--muted)}textarea,.output,.text-input{width:100%;min-height:270px;padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--field);color:var(--ink);resize:vertical;outline:none}.text-input{min-height:auto}.output{white-space:pre-wrap;overflow:auto}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}.btn{border:1px solid var(--ink);border-radius:10px;padding:10px 15px;background:var(--ink);color:var(--paper);font-weight:800}.btn.alt{background:transparent;color:var(--ink)}.btn:hover{transform:translateY(-1px)}.notice{margin-top:14px;font-size:12px;color:var(--muted)}.empty{display:none;padding:80px 20px;text-align:center;border:1px dashed var(--line);border-radius:var(--r)}footer{max-width:1440px;margin:auto;padding:30px 28px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.card:hover{transform:none}}
+    @media(max-width:1000px){.hero{grid-template-columns:1fr}.hero-note{display:none}.layout{grid-template-columns:1fr}.side{position:static}.filters{display:flex;overflow:auto}.filter{white-space:nowrap}.tools{grid-template-columns:repeat(2,1fr)}}@media(max-width:720px){.nav{padding:0 16px;gap:10px}.privacy,.key{display:none}.search{width:auto;flex:1}.brand{font-size:0}.brand b{font-size:14px;margin:0}.theme-toggle{width:82px}.theme-toggle:before{width:35px}.theme-toggle:has(#theme-dark:checked):before{transform:translateX(37px)}main{padding:30px 16px 60px}.hero{padding-bottom:30px}h1{font-size:52px}.tools{grid-template-columns:1fr}.fields{grid-template-columns:1fr}.workspace{padding:18px}footer{padding:25px 16px;display:block}}
+  </style>
 </head>
 <body>
-
-    <!-- Ambient background blobs -->
-    <div class="ambient-bg">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
-
-    <!-- Header Section -->
-    <header>
-        <div class="header-title">
-            <h1>Web Developer Toolkit</h1>
-            <p> Frosted-glass resource deck & CSS Morphism designer </p>
-        </div>
-    </header>
-
-    <div class="container">
-        <!-- Main Workspace -->
-        <main class="glass-panel">
-            <div class="controls-row">
-                <div class="search-box">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="resource-search" class="search-input" placeholder="Search toolkit resources..." oninput="filterResources()">
-                </div>
-                <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
-                <button class="filter-btn" onclick="setFilter('icons', this)">Icons</button>
-                <button class="filter-btn" onclick="setFilter('ui', this)">UI Libraries</button>
-                <button class="filter-btn" onclick="setFilter('design', this)">Design Tools</button>
-                <button class="filter-btn" onclick="setFilter('sandbox', this)">Playgrounds</button>
-                <button class="filter-btn" onclick="setFilter('hosting', this)">Hosting</button>
-                <button class="filter-btn" onclick="setFilter('starred', this)">⭐ Starred</button>
-            </div>
-
-            <div class="resource-grid" id="resource-grid">
-                <!-- Dynamic cards populated by script -->
-            </div>
-        </main>
-
-        <!-- Sidebar Designer -->
-        <aside class="glass-panel generator-sidebar">
-            <div>
-                <h2 class="section-title"> ✨ Glassmorphism Generator </h2>
-                <div class="preview-container">
-                    <div class="preview-shape-1"></div>
-                    <div class="preview-shape-2"></div>
-                    <div id="preview-card" class="preview-glass-card">
-                        <div class="preview-glass-title">Frosted Preview</div>
-                        <div style="font-size: 0.7rem; opacity: 0.8;">Live Morphism Render</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="gen-controls">
-                <div class="gen-control-group">
-                    <div class="control-label-row">
-                        <span>Background Blur</span>
-                        <span class="control-val" id="val-blur">16px</span>
-                    </div>
-                    <input type="range" id="input-blur" class="slider" min="0" max="40" value="16" oninput="updateGenerator()">
-                </div>
-
-                <div class="gen-control-group">
-                    <div class="control-label-row">
-                        <span>Glass Opacity</span>
-                        <span class="control-val" id="val-opacity">0.45</span>
-                    </div>
-                    <input type="range" id="input-opacity" class="slider" min="0" max="100" value="45" oninput="updateGenerator()">
-                </div>
-
-                <div class="gen-control-group">
-                    <div class="control-label-row">
-                        <span>Saturation</span>
-                        <span class="control-val" id="val-saturate">180%</span>
-                    </div>
-                    <input type="range" id="input-saturate" class="slider" min="100" max="300" value="180" oninput="updateGenerator()">
-                </div>
-
-                <div class="gen-control-group">
-                    <div class="control-label-row">
-                        <span>Border Opacity</span>
-                        <span class="control-val" id="val-border">0.08</span>
-                    </div>
-                    <input type="range" id="input-border" class="slider" min="0" max="100" value="8" oninput="updateGenerator()">
-                </div>
-            </div>
-
-            <div>
-                <h3 style="font-size: 0.9rem; font-weight:600; margin-bottom: 0.5rem;"> Generated CSS </h3>
-                <div class="code-box-wrapper">
-                    <textarea id="css-output" class="code-box" readonly></textarea>
-                    <button class="btn-copy" onclick="copyCSS()">Copy CSS Stylesheet</button>
-                </div>
-            </div>
-        </aside>
-    </div>
-
-    <script>
-        // Database of premium web tool assets
-        const resources = [
-            {
-                id: 1,
-                title: "Google Fonts / Icons",
-                desc: "High quality font catalog and clean vector iconography package.",
-                category: "icons",
-                url: "https://fonts.google.com/"
-            },
-            {
-                id: 2,
-                title: "SVGRepo",
-                desc: "Over 500,000+ free SVG vectors, icons, and logo sets for developers.",
-                category: "icons",
-                url: "https://www.svgrepo.com/"
-            },
-            {
-                id: 3,
-                title: "Heroicons",
-                desc: "Beautiful hand-crafted SVG icons by the makers of Tailwind CSS.",
-                category: "icons",
-                url: "https://heroicons.com/"
-            },
-            {
-                id: 4,
-                title: "Uiverse.io",
-                desc: "Community-built library of UI assets including buttons, cards, and inputs.",
-                category: "ui",
-                url: "https://uiverse.io/"
-            },
-            {
-                id: 5,
-                title: "DaisyUI",
-                desc: "Clean Tailwind CSS component class utilities with rich themes.",
-                category: "ui",
-                url: "https://daisyui.com/"
-            },
-            {
-                id: 6,
-                title: "Aceternity UI",
-                desc: "Stunning futuristic components to copy/paste into React & Next.js.",
-                category: "ui",
-                url: "https://ui.aceternity.com/"
-            },
-            {
-                id: 7,
-                title: "CSS Glassmorphism",
-                desc: "Fast glass-frosted generator tool to visualize complex layered UI.",
-                category: "design",
-                url: "https://css.glass/"
-            },
-            {
-                id: 8,
-                title: "Neumorphism.io",
-                desc: "Generate soft UI shadow styles for widgets and cards.",
-                category: "design",
-                url: "https://neumorphism.io/"
-            },
-            {
-                id: 9,
-                title: "CSS Gradient",
-                desc: "Interactive tool to create colorful gradients and export code.",
-                category: "design",
-                url: "https://cssgradient.io/"
-            },
-            {
-                id: 10,
-                title: "CodePen",
-                desc: "Social development environment to preview HTML/CSS/JS snippets.",
-                category: "sandbox",
-                url: "https://codepen.io/"
-            },
-            {
-                id: 11,
-                title: "StackBlitz",
-                desc: "Complete WebContainers powered node development environment in the browser.",
-                category: "sandbox",
-                url: "https://stackblitz.com/"
-            },
-            {
-                id: 12,
-                title: "Vercel Hosting",
-                desc: "Deploy web applications and serverless modules directly from Git.",
-                category: "hosting",
-                url: "https://vercel.com/"
-            },
-            {
-                id: 13,
-                title: "Netlify",
-                desc: "Instant build and global hosting platform for modern web projects.",
-                category: "hosting",
-                url: "https://www.netlify.com/"
-            }
-        ];
-
-        let currentFilter = 'all';
-        let starredIds = JSON.parse(localStorage.getItem('dev-bookmarks') || '[]');
-
-        function logConsoleAction(message, level = 'info') {
-            if (window.parent) {
-                window.parent.postMessage({
-                    type: 'log',
-                    message: message,
-                    level: level,
-                    app: 'Web Developer Toolkit'
-                }, '*');
-            }
-        }
-
-        // Initialize resource cards
-        function renderResources() {
-            const grid = document.getElementById('resource-grid');
-            grid.innerHTML = '';
-            
-            const searchTerm = document.getElementById('resource-search').value.toLowerCase();
-
-            const filtered = resources.filter(res => {
-                const matchesCategory = (currentFilter === 'all') || 
-                                        (currentFilter === 'starred' && starredIds.includes(res.id)) ||
-                                        (res.category === currentFilter);
-                
-                const matchesSearch = res.title.toLowerCase().includes(searchTerm) || 
-                                      res.desc.toLowerCase().includes(searchTerm);
-                
-                return matchesCategory && matchesSearch;
-            });
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 3rem;">No resources found. Try another query or category filter.</div>`;
-                return;
-            }
-
-            filtered.forEach(res => {
-                const isStarred = starredIds.includes(res.id);
-                const card = document.createElement('div');
-                card.className = 'resource-card';
-                card.innerHTML = `
-                    <div class="card-header">
-                        <span class="category-badge ${res.category}">${res.category}</span>
-                        <button class="favorite-btn ${isStarred ? 'active' : ''}" onclick="toggleStar(${res.id})" title="Add to My Toolkit">
-                            ${isStarred ? '★' : '☆'}
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title">${res.title}</h3>
-                        <p class="card-desc">${res.desc}</p>
-                    </div>
-                    <div class="card-footer">
-                        <a href="${res.url}" target="_blank" class="visit-link" onclick="logConsoleAction('Navigating to external resource: ${res.title}')">
-                            Open Tool ↗
-                        </a>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function toggleStar(id) {
-            if (starredIds.includes(id)) {
-                starredIds = starredIds.filter(x => x !== id);
-                logConsoleAction(`Removed item ID ${id} from toolkit bookmarks.`);
-            } else {
-                starredIds.push(id);
-                logConsoleAction(`Added item ID ${id} to toolkit bookmarks.`);
-            }
-            localStorage.setItem('dev-bookmarks', JSON.stringify(starredIds));
-            renderResources();
-        }
-
-        function setFilter(filter, el) {
-            currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            el.classList.add('active');
-            logConsoleAction(`Changed resource category filter to: ${filter}`);
-            renderResources();
-        }
-
-        function filterResources() {
-            renderResources();
-        }
-
-        // CSS Glassmorphism Generator Logic
-        function updateGenerator() {
-            const blur = document.getElementById('input-blur').value;
-            const opacity = document.getElementById('input-opacity').value / 100;
-            const saturate = document.getElementById('input-saturate').value;
-            const borderOpacity = document.getElementById('input-border').value / 100;
-
-            document.getElementById('val-blur').innerText = `${blur}px`;
-            document.getElementById('val-opacity').innerText = opacity;
-            document.getElementById('val-saturate').innerText = `${saturate}%`;
-            document.getElementById('val-border').innerText = borderOpacity;
-
-            // Apply preview styles
-            const previewCard = document.getElementById('preview-card');
-            
-            const backgroundStr = `rgba(255, 255, 255, ${opacity})`;
-            const borderStr = `1px solid rgba(255, 255, 255, ${borderOpacity})`;
-            const backdropFilterStr = `blur(${blur}px) saturate(${saturate}%)`;
-
-            previewCard.style.backgroundColor = backgroundStr;
-            previewCard.style.border = borderStr;
-            previewCard.style.backdropFilter = backdropFilterStr;
-            previewCard.style.webkitBackdropFilter = backdropFilterStr;
-
-            // Update code output
-            const cssText = `background: rgba(255, 255, 255, ${opacity});\n` +
-                            `border: 1px solid rgba(255, 255, 255, ${borderOpacity});\n` +
-                            `backdrop-filter: blur(${blur}px) saturate(${saturate}%);\n` +
-                            `-webkit-backdrop-filter: blur(${blur}px) saturate(${saturate}%);\n` +
-                            `border-radius: 12px;\n` +
-                            `box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);`;
-            
-            document.getElementById('css-output').value = cssText;
-        }
-
-        function copyCSS() {
-            const copyText = document.getElementById("css-output");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(copyText.value);
-            
-            const copyBtn = document.querySelector('.btn-copy');
-            const originalText = copyBtn.innerText;
-            copyBtn.innerText = 'Copied to Clipboard! ✓';
-            logConsoleAction('Copied glassmorphism generator CSS styles.');
-            
-            setTimeout(() => {
-                copyBtn.innerText = originalText;
-            }, 2000);
-        }
-
-        // On Page Load
-        document.addEventListener('DOMContentLoaded', () => {
-            renderResources();
-            updateGenerator();
-            logConsoleAction('Toolkit app page initialized.');
-        });
-    </script>
+<div class="noise"></div>
+<header><nav class="nav" aria-label="Main navigation"><a class="brand" href="#top"><b>N8</b>TOOLS</a><div class="search"><label class="sr-only" for="search"></label><input id="search" type="search" placeholder="Search tools…" autocomplete="off"><span class="key">/</span></div><fieldset class="theme-toggle" aria-label="Color theme"><legend>Color theme</legend><label class="theme-option" title="Use light theme"><input id="theme-light" type="radio" name="theme" value="light"><span aria-hidden="true">☀</span><span class="sr-only">Light</span></label><label class="theme-option" title="Use dark theme"><input id="theme-dark" type="radio" name="theme" value="dark"><span aria-hidden="true">☾</span><span class="sr-only">Dark</span></label></fieldset><div class="privacy"><i class="dot"></i> Runs locally</div></nav></header>
+<main id="top">
+  <section class="hero"><div><div class="eyebrow">The browser workbench</div><h1>One tab.<br><span class="scribble">Every tool.</span></h1><p>Quick, private utilities for the tiny jobs that slow down big ideas. No accounts, no uploads, no waiting.</p></div><aside class="hero-note"><div class="stat"><b>TOOLS READY</b><span>70</span></div><div class="stat"><b>DATA UPLOADED</b><span>0 bytes</span></div><div class="stat"><b>WORKFLOW</b><span>Input → Done</span></div></aside></section>
+  <div class="layout"><aside class="side"><p class="side-label">Filter toolbox</p><div class="filters" id="filters"><button class="filter active" data-filter="all">All tools <span>70</span></button><button class="filter" data-filter="developer">Developer <span>22</span></button><button class="filter" data-filter="text">Text <span>14</span></button><button class="filter" data-filter="convert">Convert <span>13</span></button><button class="filter" data-filter="design">Design <span>11</span></button><button class="filter" data-filter="calculate">Calculate <span>10</span></button></div><p class="side-foot">Everything happens inside your browser. Your input never leaves this device.</p></aside>
+  <section><div class="section-head"><h2>Utility shelf</h2><span id="count">12 tools</span></div><div class="tools" id="tools"></div><div class="empty" id="empty"><h2>No tools found</h2><p>Try a different search or category.</p></div></section></div>
+</main>
+<footer><span>© 2026 N8 CyberDev</span><span>Built for fast-moving humans.</span></footer>
+<dialog id="modal"><div class="modal-head"><div><div class="tag" id="modalTag"></div><h2 id="modalTitle"></h2></div><button class="close" aria-label="Close tool">×</button></div><div class="workspace" id="workspace"></div></dialog>
+<script>
+const themeInputs=document.querySelectorAll('input[name="theme"]'),activeTheme=document.documentElement.dataset.theme||'light';document.querySelector(`#theme-${activeTheme}`).checked=true;themeInputs.forEach(radio=>radio.addEventListener('change',()=>{if(!radio.checked)return;document.documentElement.dataset.theme=radio.value;document.querySelector('meta[name="theme-color"]').content=radio.value==='dark'?'#0d1210':'#f3f1e9';try{localStorage.setItem('n8-theme',radio.value)}catch{}}));document.querySelector('meta[name="theme-color"]').content=activeTheme==='dark'?'#0d1210':'#f3f1e9';
+const tools=[
+ {id:'json',cat:'developer',icon:'{ }',name:'JSON Studio',desc:'Format, minify, and validate JSON instantly.',placeholder:'{"project":"N8 Tools","ready":true}'},
+ {id:'base64',cat:'convert',icon:'64',name:'Base64 Encoder',desc:'Encode or decode UTF-8 text safely.',placeholder:'Paste text to encode or Base64 to decode…'},
+ {id:'url',cat:'convert',icon:'%2',name:'URL Encoder',desc:'Encode or decode URL components.',placeholder:'https://example.com/search?q=web tools'},
+ {id:'case',cat:'text',icon:'Aa',name:'Case Converter',desc:'Switch text between useful naming styles.',placeholder:'Make this text work anywhere'},
+ {id:'stats',cat:'text',icon:'№',name:'Text Inspector',desc:'Count words, characters, lines, and reading time.',placeholder:'Paste your writing here…'},
+ {id:'lorem',cat:'text',icon:'¶',name:'Lorem Generator',desc:'Create clean placeholder copy on demand.',placeholder:''},
+ {id:'hash',cat:'developer',icon:'#',name:'SHA-256 Hash',desc:'Generate a secure SHA-256 digest locally.',placeholder:'Text to hash…'},
+ {id:'uuid',cat:'developer',icon:'ID',name:'UUID Generator',desc:'Create unique identifiers in one click.',placeholder:''},
+ {id:'timestamp',cat:'convert',icon:'⌚',name:'Time Converter',desc:'Translate dates and Unix timestamps.',placeholder:'2026-07-12T12:00:00Z'},
+ {id:'color',cat:'design',icon:'◐',name:'Color Converter',desc:'Convert HEX colors to RGB and HSL.',placeholder:'#3567ff'},
+ {id:'regex',cat:'developer',icon:'.*',name:'Regex Tester',desc:'Test expressions with live match highlighting.',placeholder:'The quick brown fox jumps over the lazy dog.'},
+ {id:'password',cat:'developer',icon:'••',name:'Password Generator',desc:'Create strong random passwords locally.',placeholder:''},
+ {id:'entities',cat:'convert',icon:'&;',name:'HTML Entities',desc:'Encode or decode HTML special characters.',placeholder:'<h1>N8 Tools & Utilities</h1>'},
+ {id:'jwt',cat:'developer',icon:'JWT',name:'JWT Inspector',desc:'Decode JWT headers and payloads without sending them anywhere.',placeholder:'Paste a JSON Web Token…'},
+ {id:'csvjson',cat:'convert',icon:'⇄',name:'CSV to JSON',desc:'Turn simple comma-separated data into structured JSON.',placeholder:'name,role\nQamel,Builder\nN8,Toolkit'},
+ {id:'slug',cat:'text',icon:'-',name:'Slug Maker',desc:'Create clean URL-friendly slugs from any title.',placeholder:'My Brilliant New Web Project!'},
+ {id:'markdown',cat:'text',icon:'MD',name:'Markdown to HTML',desc:'Convert common Markdown syntax into clean HTML.',placeholder:'# Hello world\n\nThis is **bold** and this is *italic*.'},
+ {id:'numberbase',cat:'convert',icon:'01',name:'Number Base Converter',desc:'Convert decimal values to binary, octal, and hexadecimal.',placeholder:'255'},
+ {id:'units',cat:'design',icon:'px',name:'CSS Unit Converter',desc:'Convert pixels to rem, em, points, and percent.',placeholder:'32'},
+ {id:'metatags',cat:'developer',icon:'</>',name:'Meta Tag Builder',desc:'Generate essential SEO and social metadata from a page title.',placeholder:'N8 Tools | Your Browser Workbench'},
+ {id:'queryparse',cat:'convert',icon:'?=',name:'Query String Parser',desc:'Turn URL query parameters into readable JSON.',placeholder:'https://example.com/?name=N8&tool=converter&tag=web&tag=fast'},
+ {id:'jsoncsv',cat:'convert',icon:'⇥',name:'JSON to CSV',desc:'Convert an array of flat JSON objects into CSV.',placeholder:'[{"name":"Qamel","role":"Builder"},{"name":"N8","role":"Toolkit"}]'},
+ {id:'sqlformat',cat:'developer',icon:'SQL',name:'SQL Formatter',desc:'Make SQL statements easier to scan and review.',placeholder:'select id,name from users where active=true order by name;'},
+ {id:'cssmin',cat:'developer',icon:'CSS',name:'CSS Minifier',desc:'Remove comments and unnecessary CSS whitespace.',placeholder:'/* Card */\n.card { color: #17201b; padding: 16px; }'},
+ {id:'jsmin',cat:'developer',icon:'JS',name:'JavaScript Minifier',desc:'Compact straightforward JavaScript without external services.',placeholder:'// Greeting\nfunction hello(name) {\n  return `Hello ${name}`;\n}'},
+ {id:'wordfreq',cat:'text',icon:'W×',name:'Word Frequency',desc:'Rank the most-used words in any passage.',placeholder:'Tools help people build better things. Better tools save time.'},
+ {id:'aspect',cat:'design',icon:'16:9',name:'Aspect Ratio Calculator',desc:'Calculate proportional dimensions from width and ratio.',placeholder:'1920,16:9'},
+ {id:'gradient',cat:'design',icon:'◒',name:'Gradient Builder',desc:'Generate a CSS linear gradient from two colors.',placeholder:'#3567ff,#d8ff51,135'},
+ {id:'jsonflat',cat:'developer',icon:'↘',name:'JSON Flattener',desc:'Flatten nested objects into dot-notation paths.',placeholder:'{"user":{"name":"Qamel","skills":["design","code"]}}'},
+ {id:'cron',cat:'developer',icon:'*/',name:'Cron Explainer',desc:'Translate common five-field cron schedules into plain English.',placeholder:'*/15 9-17 * * 1-5'},
+ {id:'mime',cat:'developer',icon:'M',name:'MIME Type Lookup',desc:'Find common content types from a file extension.',placeholder:'document.pdf'},
+ {id:'textdiff',cat:'text',icon:'±',name:'Text Diff',desc:'Compare two blocks line by line.',placeholder:'Original line\nKeep this line\n---\nUpdated line\nKeep this line'},
+ {id:'dedupe',cat:'text',icon:'≠',name:'Duplicate Line Remover',desc:'Remove repeated lines while preserving order.',placeholder:'alpha\nbeta\nalpha\ngamma\nbeta'},
+ {id:'palette',cat:'design',icon:'▥',name:'Color Shade Palette',desc:'Generate lighter and darker shades from one HEX color.',placeholder:'#3567ff'},
+ {id:'shadow',cat:'design',icon:'▣',name:'Box Shadow Builder',desc:'Create polished CSS shadow declarations from numeric inputs.',placeholder:'0,20,55,10,#17201b,0.18'},
+ {id:'datauri',cat:'convert',icon:'URI',name:'Text Data URI',desc:'Convert text, CSS, HTML, or SVG markup into a data URI.',placeholder:'<h1>Hello from N8 Tools</h1>'},
+ {id:'htmlmin',cat:'developer',icon:'H-',name:'HTML Minifier',desc:'Compact HTML while preserving preformatted content.',placeholder:'<main>\n  <h1>Hello</h1>\n  <p>Built with N8 Tools.</p>\n</main>'},
+ {id:'specificity',cat:'developer',icon:'0,1',name:'CSS Specificity',desc:'Calculate selector specificity and compare its weight.',placeholder:'#app .card:hover > h2::before'},
+ {id:'subnet',cat:'developer',icon:'IP',name:'IPv4 Subnet Calculator',desc:'Calculate network, broadcast, mask, and usable host range.',placeholder:'192.168.1.42/24'},
+ {id:'rot13',cat:'convert',icon:'R13',name:'ROT13 Cipher',desc:'Encode or decode letters with the reversible ROT13 cipher.',placeholder:'Hello from N8 Tools'},
+ {id:'unicode',cat:'text',icon:'U+',name:'Unicode Inspector',desc:'Inspect characters, code points, and UTF notation.',placeholder:'N8 ⚡ Tools'},
+ {id:'readability',cat:'text',icon:'Aa',name:'Readability Score',desc:'Estimate reading ease, grade level, and sentence density.',placeholder:'Clear writing helps people understand complex ideas quickly.'},
+ {id:'clamp',cat:'design',icon:'↔',name:'CSS Clamp Builder',desc:'Create fluid responsive sizes between two viewport limits.',placeholder:'16,24,320,1200'},
+ {id:'radius',cat:'design',icon:'◜',name:'Border Radius Builder',desc:'Generate CSS radius values for custom corner shapes.',placeholder:'24,8,24,8'},
+ {id:'xmlformat',cat:'developer',icon:'XML',name:'XML Formatter',desc:'Validate and indent XML markup into a readable tree.',placeholder:'<catalog><tool id="1"><name>N8</name></tool></catalog>'},
+ {id:'httpstatus',cat:'developer',icon:'200',name:'HTTP Status Lookup',desc:'Explain common HTTP response status codes.',placeholder:'404'},
+ {id:'chmod',cat:'developer',icon:'rwx',name:'Unix Permission Calculator',desc:'Translate numeric chmod values into symbolic permissions.',placeholder:'755'},
+ {id:'linesort',cat:'text',icon:'A↓',name:'Line Sorter',desc:'Sort lines alphabetically, numerically, or in reverse.',placeholder:'zebra\nApple\n42\n8\nbanana'},
+ {id:'whitespace',cat:'text',icon:'␠',name:'Whitespace Cleaner',desc:'Trim lines, collapse spacing, and remove excess blank lines.',placeholder:'  First line   with spaces  \n\n\n  Second line  '},
+ {id:'contrast',cat:'design',icon:'A◐',name:'Contrast Checker',desc:'Measure WCAG contrast between foreground and background colors.',placeholder:'#17201b,#f3f1e9'},
+ {id:'grid',cat:'design',icon:'▦',name:'CSS Grid Builder',desc:'Generate a responsive grid declaration from column settings.',placeholder:'3,16,240'},
+ {id:'temperature',cat:'convert',icon:'°',name:'Temperature Converter',desc:'Convert Celsius, Fahrenheit, and Kelvin values.',placeholder:'72 F'},
+ {id:'envparse',cat:'developer',icon:'ENV',name:'ENV to JSON',desc:'Parse dotenv configuration into a structured JSON object.',placeholder:'APP_NAME=N8 Tools\nDEBUG=true\nPORT=8080'},
+ {id:'useragent',cat:'developer',icon:'UA',name:'User Agent Inspector',desc:'Identify common browser, engine, operating system, and device clues.',placeholder:'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36'},
+ {id:'csp',cat:'developer',icon:'CSP',name:'CSP Header Builder',desc:'Generate a practical Content Security Policy from allowed origins.',placeholder:'self,https://fonts.googleapis.com,https://fonts.gstatic.com'},
+ {id:'reverse',cat:'text',icon:'↶',name:'Text Reverser',desc:'Reverse characters, word order, or line order.',placeholder:'Build useful things every day.'},
+ {id:'sentencecase',cat:'text',icon:'A.',name:'Sentence Case',desc:'Normalize capitalization while preserving sentence boundaries.',placeholder:'tHIS IS THE FIRST SENTENCE. here is another! is this working? yes.'},
+ {id:'length',cat:'convert',icon:'↔',name:'Length Converter',desc:'Convert metric and imperial length measurements.',placeholder:'12 in'},
+ {id:'filesize',cat:'convert',icon:'KB',name:'File Size Converter',desc:'Convert bytes across decimal and binary storage units.',placeholder:'1048576 bytes'},
+ {id:'easing',cat:'design',icon:'⌁',name:'Easing Curve Library',desc:'Generate CSS cubic-bezier timing functions by motion style.',placeholder:'spring'},
+ {id:'percentage',cat:'calculate',icon:'%',name:'Percentage Calculator',desc:'Calculate percentages, increases, and decreases.',placeholder:'15,240'},
+ {id:'tipsplit',cat:'calculate',icon:'$',name:'Tip & Split',desc:'Calculate a tip and divide the total between people.',placeholder:'86.50,20,3'},
+ {id:'loan',cat:'calculate',icon:'APR',name:'Loan Payment',desc:'Estimate monthly payments and total interest.',placeholder:'25000,6.5,60'},
+ {id:'datediff',cat:'calculate',icon:'ΔD',name:'Date Difference',desc:'Measure the time between two calendar dates.',placeholder:'2026-07-12,2027-01-01'},
+ {id:'age',cat:'calculate',icon:'🎂',name:'Age Calculator',desc:'Calculate an exact age from a birth date.',placeholder:'1990-05-20'},
+ {id:'randompick',cat:'calculate',icon:'?',name:'Random Picker',desc:'Choose one unbiased result from a list.',placeholder:'Launch today\nPolish one more day\nAsk for feedback'},
+ {id:'shuffle',cat:'calculate',icon:'↝',name:'List Shuffler',desc:'Randomize a list using a secure Fisher–Yates shuffle.',placeholder:'Alpha\nBravo\nCharlie\nDelta\nEcho'},
+ {id:'countdown',cat:'calculate',icon:'T−',name:'Countdown Calculator',desc:'Calculate the remaining time until a date and time.',placeholder:'2027-01-01T00:00'},
+ {id:'workdays',cat:'calculate',icon:'M–F',name:'Workday Counter',desc:'Count weekdays between two dates, excluding weekends.',placeholder:'2026-07-13,2026-07-31'},
+ {id:'pace',cat:'calculate',icon:'⏱',name:'Pace Calculator',desc:'Calculate running pace and speed from distance and time.',placeholder:'5 km,25:00'}
+];
+const grid=document.querySelector('#tools'),modal=document.querySelector('#modal'),workspace=document.querySelector('#workspace');
+grid.innerHTML=tools.map(t=>`<article class="card" data-cat="${t.cat}" data-search="${t.name.toLowerCase()} ${t.desc.toLowerCase()}"><div class="icon">${t.icon}</div><span class="tag">${t.cat}</span><h3>${t.name}</h3><p>${t.desc}</p><button class="launch" data-open="${t.id}">Open tool</button></article>`).join('');
+let filter='all';
+function applyFilters(){const q=document.querySelector('#search').value.toLowerCase().trim();let n=0;document.querySelectorAll('.card').forEach(c=>{const show=(filter==='all'||c.dataset.cat===filter)&&c.dataset.search.includes(q);c.classList.toggle('hide',!show);if(show)n++});document.querySelector('#count').textContent=`${n} tool${n===1?'':'s'}`;document.querySelector('#empty').style.display=n?'none':'block'}
+document.querySelector('#filters').addEventListener('click',e=>{const b=e.target.closest('.filter');if(!b)return;document.querySelector('.filter.active').classList.remove('active');b.classList.add('active');filter=b.dataset.filter;applyFilters()});
+document.querySelector('#search').addEventListener('input',applyFilters);document.addEventListener('keydown',e=>{if(e.key==='/'&&!/input|textarea/i.test(e.target.tagName)){e.preventDefault();document.querySelector('#search').focus()}if(e.key==='Escape'&&modal.open)modal.close()});
+const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function shell(t,extra=''){return `<div class="fields"><div class="field"><label>Input</label><textarea id="input" placeholder="${esc(t.placeholder)}"></textarea></div><div class="field"><label>Output</label><div class="output" id="output" tabindex="0">Ready when you are.</div></div></div><div class="actions" id="actions">${extra}</div><p class="notice" id="notice">Your data stays in this browser.</p>`}
+function setOut(v){document.querySelector('#output').textContent=v}function input(){return document.querySelector('#input').value}function btn(label,act,alt=false){return `<button class="btn ${alt?'alt':''}" data-act="${act}">${label}</button>`}function copy(){navigator.clipboard.writeText(document.querySelector('#output').textContent);document.querySelector('#notice').textContent='Copied to clipboard.'}
+function openTool(id){const t=tools.find(x=>x.id===id);document.querySelector('#modalTitle').textContent=t.name;document.querySelector('#modalTag').textContent=t.cat;workspace.innerHTML=shell(t,btn('Run','run')+btn('Copy output','copy',true)+btn('Clear','clear',true));const inp=document.querySelector('#input');if(id==='json')inp.value=t.placeholder;if(id==='regex'){workspace.innerHTML=`<div class="field"><label>Expression</label><input class="text-input mono" id="pattern" value="\\b\\w{4}\\b"></div><br>${shell(t,btn('Test matches','run')+btn('Copy output','copy',true))}`}
+ if(['uuid','password','lorem'].includes(id)){document.querySelector('#input').closest('.field').style.display='none';document.querySelector('.fields').style.gridTemplateColumns='1fr'}
+ workspace.onclick=async e=>{const a=e.target.dataset.act;if(a==='copy')copy();if(a==='clear'){inp.value='';setOut('Ready when you are.')}if(a==='run')await run(id)};modal.showModal();if(!['uuid','password','lorem'].includes(id))setTimeout(()=>inp.focus(),50)}
+async function run(id){let v=input(),o='';try{if(id==='json')o=JSON.stringify(JSON.parse(v),null,2);if(id==='base64')o=/^[A-Za-z0-9+/=\s]+$/.test(v)&&v.trim().length%4===0?decodeURIComponent(Array.from(atob(v.trim()),c=>'%'+c.charCodeAt(0).toString(16).padStart(2,'0')).join('')):btoa(unescape(encodeURIComponent(v)));if(id==='url')o=/%[0-9A-F]{2}/i.test(v)?decodeURIComponent(v):encodeURIComponent(v);if(id==='case'){const w=v.trim().split(/[^a-zA-Z0-9]+/).filter(Boolean),low=w.map(x=>x.toLowerCase());o=`UPPER CASE\n${v.toUpperCase()}\n\nlower case\n${v.toLowerCase()}\n\nTitle Case\n${low.map(x=>x[0].toUpperCase()+x.slice(1)).join(' ')}\n\ncamelCase\n${low.map((x,i)=>i?x[0].toUpperCase()+x.slice(1):x).join('')}\n\nsnake_case\n${low.join('_')}\n\nkebab-case\n${low.join('-')}`}
+if(id==='stats'){const words=v.trim()?v.trim().split(/\s+/).length:0;o=`Words          ${words}\nCharacters     ${v.length}\nWithout spaces ${v.replace(/\s/g,'').length}\nLines          ${v? v.split(/\n/).length:0}\nReading time   ${Math.max(1,Math.ceil(words/225))} min`}
+if(id==='lorem')o='Design is not just what it looks like and feels like. Design is how it works. Clear systems create room for better ideas, faster decisions, and work that moves with purpose. Start small, stay curious, and make every detail earn its place.';if(id==='hash'){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));o=Array.from(new Uint8Array(b),x=>x.toString(16).padStart(2,'0')).join('')}if(id==='uuid')o=Array.from({length:5},()=>crypto.randomUUID()).join('\n');if(id==='timestamp'){const d=/^\d{10,13}$/.test(v.trim())?new Date(Number(v)*(v.trim().length===10?1000:1)):new Date(v);if(isNaN(d))throw Error('Enter a valid date or timestamp.');o=`Local   ${d.toLocaleString()}\nUTC     ${d.toUTCString()}\nISO     ${d.toISOString()}\nUnix    ${Math.floor(d.getTime()/1000)}\nMillis  ${d.getTime()}`}
+if(id==='color'){let h=v.trim().replace('#','');if(h.length===3)h=[...h].map(x=>x+x).join('');if(!/^[0-9a-f]{6}$/i.test(h))throw Error('Enter a valid HEX color.');let [r,g,b]=[0,2,4].map(i=>parseInt(h.slice(i,i+2),16)),mx=Math.max(r,g,b)/255,mn=Math.min(r,g,b)/255,l=(mx+mn)/2,d=mx-mn,s=d?d/(1-Math.abs(2*l-1)):0,hh=0;if(d){if(mx===r/255)hh=60*(((g-b)/255/d)%6);else if(mx===g/255)hh=60*((b-r)/255/d+2);else hh=60*((r-g)/255/d+4)}o=`HEX  #${h.toUpperCase()}\nRGB  rgb(${r}, ${g}, ${b})\nHSL  hsl(${Math.round((hh+360)%360)}, ${Math.round(s*100)}%, ${Math.round(l*100)}%)`}
+if(id==='entities'){const area=document.createElement('textarea');if(/&(?:#\d+|#x[\da-f]+|\w+);/i.test(v)){area.innerHTML=v;o=area.value}else{o=v.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}}
+if(id==='jwt'){const parts=v.trim().split('.');if(parts.length<2)throw Error('Enter a valid JWT with header and payload.');const decode=p=>JSON.parse(decodeURIComponent(Array.from(atob(p.replace(/-/g,'+').replace(/_/g,'/').padEnd(Math.ceil(p.length/4)*4,'=')),c=>'%'+c.charCodeAt(0).toString(16).padStart(2,'0')).join('')));o=`HEADER\n${JSON.stringify(decode(parts[0]),null,2)}\n\nPAYLOAD\n${JSON.stringify(decode(parts[1]),null,2)}\n\nSignature is not verified.`}
+if(id==='csvjson'){const lines=v.trim().split(/\r?\n/).filter(Boolean),parse=line=>line.split(/,(?=(?:[^"']|"[^"]*")*$)/).map(x=>x.trim().replace(/^"|"$/g,'').replace(/""/g,'"')),headers=parse(lines.shift()||'');o=JSON.stringify(lines.map(line=>Object.fromEntries(headers.map((h,i)=>[h,parse(line)[i]??'']))),null,2)}
+if(id==='slug')o=v.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/['’]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+if(id==='markdown'){o=v.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2">$1</a>').replace(/^(?!<h\d|\s*$)(.+)$/gm,'<p>$1</p>')}
+if(id==='numberbase'){const n=Number(v.trim());if(!Number.isSafeInteger(n)||n<0)throw Error('Enter a non-negative whole number.');o=`Decimal      ${n}\nBinary       ${n.toString(2)}\nOctal        ${n.toString(8)}\nHexadecimal  ${n.toString(16).toUpperCase()}`}
+if(id==='units'){const px=Number(v.trim());if(!Number.isFinite(px))throw Error('Enter a pixel value.');o=`Pixels   ${px}px\nREM      ${px/16}rem\nEM       ${px/16}em\nPoints   ${(px*.75).toFixed(2)}pt\nPercent  ${(px/16*100).toFixed(2)}%\n\nBased on a 16px root size.`}
+if(id==='metatags'){const title=v.trim();if(!title)throw Error('Enter a page title.');const description=`Discover ${title.replace(/[|—-].*$/,'').trim()}, a fast and useful web experience.`;o=`<title>${esc(title)}</title>\n<meta name="description" content="${esc(description)}">\n<meta property="og:title" content="${esc(title)}">\n<meta property="og:description" content="${esc(description)}">\n<meta property="og:type" content="website">\n<meta property="og:url" content="https://example.com/">\n<meta name="twitter:card" content="summary_large_image">`}
+if(id==='queryparse'){const raw=v.trim(),query=raw.includes('?')?raw.slice(raw.indexOf('?')+1).split('#')[0]:raw.replace(/^\?/,'');const params=new URLSearchParams(query),obj={};for(const [k,val] of params)obj[k]=k in obj?[].concat(obj[k],val):val;o=JSON.stringify(obj,null,2)}
+if(id==='jsoncsv'){const rows=JSON.parse(v);if(!Array.isArray(rows)||!rows.length||rows.some(x=>!x||typeof x!=='object'||Array.isArray(x)))throw Error('Enter a non-empty array of objects.');const headers=[...new Set(rows.flatMap(Object.keys))],cell=x=>`"${String(x??'').replace(/"/g,'""')}"`;o=[headers.map(cell).join(','),...rows.map(r=>headers.map(h=>cell(r[h])).join(','))].join('\n')}
+if(id==='sqlformat'){const keywords=['SELECT','FROM','WHERE','LEFT JOIN','RIGHT JOIN','INNER JOIN','OUTER JOIN','JOIN','GROUP BY','ORDER BY','HAVING','LIMIT','OFFSET','UNION','VALUES','SET'];o=v.trim().replace(/\s+/g,' ');keywords.forEach(k=>{o=o.replace(new RegExp(`\\s*\\b${k}\\b\\s*`,'gi'),`\n${k} `)});o=o.trim().replace(/\s*,\s*/g,',\n  ').replace(/\b(AND|OR)\b/gi,'\n  $1')}
+if(id==='cssmin')o=v.replace(/\/\*[\s\S]*?\*\//g,'').replace(/\s+/g,' ').replace(/\s*([{}:;,>+~])\s*/g,'$1').replace(/;}/g,'}').trim();
+if(id==='jsmin')o=v.replace(/\/\*[\s\S]*?\*\//g,'').replace(/^\s*\/\/.*$/gm,'').replace(/\s+/g,' ').replace(/\s*([{}();,:=+*<>])\s*/g,'$1').trim();
+if(id==='wordfreq'){const words=(v.toLowerCase().match(/[\p{L}\p{N}']+/gu)||[]),counts=words.reduce((a,w)=>(a[w]=(a[w]||0)+1,a),{});o=Object.entries(counts).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,30).map(([w,n],i)=>`${String(i+1).padStart(2)}. ${w.padEnd(20)} ${n}`).join('\n')||'No words found.'}
+if(id==='aspect'){const [width,ratio='16:9']=v.split(',').map(x=>x.trim()),[rw,rh]=ratio.split(':').map(Number),w=Number(width);if(!w||!rw||!rh)throw Error('Use width,ratio — for example: 1920,16:9');const height=w*rh/rw;o=`Width   ${w.toFixed(2)}px\nHeight  ${height.toFixed(2)}px\nRatio   ${rw}:${rh}\n\nCommon scale\n50%     ${(w*.5).toFixed(0)} × ${(height*.5).toFixed(0)}\n25%     ${(w*.25).toFixed(0)} × ${(height*.25).toFixed(0)}`}
+if(id==='gradient'){const [a,b,deg='135']=v.split(',').map(x=>x.trim());if(!/^#[\da-f]{3,8}$/i.test(a)||!/^#[\da-f]{3,8}$/i.test(b)||!Number.isFinite(Number(deg)))throw Error('Use color,color,angle — for example: #3567ff,#d8ff51,135');o=`background: ${a};\nbackground: linear-gradient(${Number(deg)}deg, ${a} 0%, ${b} 100%);`}
+if(id==='jsonflat'){const source=JSON.parse(v),flat={};const walk=(x,path='')=>{if(x!==null&&typeof x==='object'){const entries=Object.entries(x);if(!entries.length)flat[path]=Array.isArray(x)?[]:{};entries.forEach(([k,val])=>walk(val,path?`${path}.${k}`:k))}else flat[path]=x};walk(source);o=JSON.stringify(flat,null,2)}
+if(id==='cron'){const p=v.trim().split(/\s+/);if(p.length!==5)throw Error('Enter five fields: minute hour day month weekday.');const [min,hour,day,month,week]=p,describe=(x,unit)=>x==='*'?`every ${unit}`:x.startsWith('*/')?`every ${x.slice(2)} ${unit}s`:x.includes('-')?`${unit}s ${x}`:`${unit} ${x}`;o=`Runs at ${describe(min,'minute')}, ${describe(hour,'hour')}, ${describe(day,'day')}, ${describe(month,'month')}, ${describe(week,'weekday')}.\n\nFields\nMinute   ${min}\nHour     ${hour}\nDay      ${day}\nMonth    ${month}\nWeekday  ${week}`}
+if(id==='mime'){const ext=v.trim().toLowerCase().split('.').pop(),types={html:'text/html',htm:'text/html',css:'text/css',js:'text/javascript',mjs:'text/javascript',json:'application/json',xml:'application/xml',txt:'text/plain',csv:'text/csv',pdf:'application/pdf',svg:'image/svg+xml',png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',gif:'image/gif',webp:'image/webp',ico:'image/x-icon',mp3:'audio/mpeg',wav:'audio/wav',mp4:'video/mp4',webm:'video/webm',woff:'font/woff',woff2:'font/woff2',zip:'application/zip'};o=types[ext]?`.${ext}\n${types[ext]}`:`Unknown extension: .${ext}`}
+if(id==='textdiff'){const parts=v.split(/\n---\n/);if(parts.length!==2)throw Error('Separate the two versions with a line containing ---.');const a=parts[0].split(/\r?\n/),b=parts[1].split(/\r?\n/),n=Math.max(a.length,b.length),rows=[];for(let i=0;i<n;i++){if(a[i]===b[i])rows.push(`  ${a[i]??''}`);else{if(a[i]!==undefined)rows.push(`- ${a[i]}`);if(b[i]!==undefined)rows.push(`+ ${b[i]}`)}}o=rows.join('\n')}
+if(id==='dedupe'){const seen=new Set(),lines=v.split(/\r?\n/),unique=lines.filter(line=>{if(seen.has(line))return false;seen.add(line);return true});o=`${unique.join('\n')}\n\nRemoved ${lines.length-unique.length} duplicate line${lines.length-unique.length===1?'':'s'}.`}
+if(id==='palette'){let h=v.trim().replace('#','');if(h.length===3)h=[...h].map(x=>x+x).join('');if(!/^[\da-f]{6}$/i.test(h))throw Error('Enter a six-digit HEX color.');const rgb=[0,2,4].map(i=>parseInt(h.slice(i,i+2),16)),mix=(target,p)=>'#'+rgb.map(c=>Math.round(c+(target-c)*p).toString(16).padStart(2,'0')).join('').toUpperCase();o=`900  ${mix(0,.65)}\n700  ${mix(0,.35)}\n500  #${h.toUpperCase()}\n300  ${mix(255,.35)}\n100  ${mix(255,.75)}\n050  ${mix(255,.9)}`}
+if(id==='shadow'){const [x,y,blur,spread,color,opacity]=v.split(',').map(x=>x.trim());if([x,y,blur,spread,opacity].some(n=>!Number.isFinite(Number(n)))||!/^#[\da-f]{3,6}$/i.test(color))throw Error('Use x,y,blur,spread,color,opacity.');let h=color.slice(1);if(h.length===3)h=[...h].map(c=>c+c).join('');const rgb=[0,2,4].map(i=>parseInt(h.slice(i,i+2),16));o=`box-shadow: ${Number(x)}px ${Number(y)}px ${Number(blur)}px ${Number(spread)}px rgba(${rgb.join(', ')}, ${Math.min(1,Math.max(0,Number(opacity)))});`}
+if(id==='datauri'){const type=v.trim().startsWith('<svg')?'image/svg+xml':v.trim().startsWith('<')?'text/html':'text/plain';o=`data:${type};charset=UTF-8,${encodeURIComponent(v)}`}
+if(id==='htmlmin'){const held=[];o=v.replace(/<(pre|textarea|script|style)\b[^>]*>[\s\S]*?<\/\1>/gi,m=>`___N8HOLD${held.push(m)-1}___`).replace(/<!--[\s\S]*?-->/g,'').replace(/>\s+</g,'><').replace(/\s{2,}/g,' ').trim().replace(/___N8HOLD(\d+)___/g,(_,i)=>held[Number(i)])}
+if(id==='specificity'){const selectors=v.split(',').map(x=>x.trim()).filter(Boolean);o=selectors.map(sel=>{const ids=(sel.match(/#[\w-]+/g)||[]).length,classes=(sel.match(/\.[\w-]+|\[[^\]]+\]|:(?!:)[\w-]+(?:\([^)]*\))?/g)||[]).length,clean=sel.replace(/#[\w-]+|\.[\w-]+|\[[^\]]+\]|::?[\w-]+(?:\([^)]*\))?|\*/g,' '),elements=(clean.match(/(^|[\s>+~])([a-z][\w-]*)/gi)||[]).length+(sel.match(/::[\w-]+/g)||[]).length;return `${ids},${classes},${elements}  ${sel}`}).join('\n')}
+if(id==='subnet'){const [ip,prefixRaw]=v.trim().split('/'),octets=(ip||'').split('.').map(Number),prefix=Number(prefixRaw);if(octets.length!==4||octets.some(n=>!Number.isInteger(n)||n<0||n>255)||!Number.isInteger(prefix)||prefix<0||prefix>32)throw Error('Enter IPv4/CIDR, for example 192.168.1.42/24.');const num=octets.reduce((a,n)=>(a*256+n)>>>0,0),mask=prefix===0?0:(0xffffffff<<(32-prefix))>>>0,network=(num&mask)>>>0,broadcast=(network|(~mask>>>0))>>>0,toIp=n=>[24,16,8,0].map(s=>(n>>>s)&255).join('.'),total=2**(32-prefix),usable=prefix>=31?total:Math.max(0,total-2);o=`Address     ${ip}\nPrefix      /${prefix}\nMask        ${toIp(mask)}\nNetwork     ${toIp(network)}\nBroadcast   ${toIp(broadcast)}\nFirst host  ${toIp(prefix>=31?network:(network+1)>>>0)}\nLast host   ${toIp(prefix>=31?broadcast:(broadcast-1)>>>0)}\nUsable      ${usable.toLocaleString()}`}
+if(id==='rot13')o=v.replace(/[a-z]/gi,c=>String.fromCharCode(c.charCodeAt(0)+(c.toLowerCase()<'n'?13:-13)));
+if(id==='unicode')o=Array.from(v).map((c,i)=>{const cp=c.codePointAt(0),hex=cp.toString(16).toUpperCase().padStart(4,'0'),utf16=cp<=0xffff?`\\u${hex}`:`\\u{${hex}}`;return `${String(i+1).padStart(3)}  ${c===' '?'␠':c}  U+${hex.padEnd(8)} ${utf16}`}).join('\n')||'No characters found.';
+if(id==='readability'){const sentences=Math.max(1,(v.match(/[.!?]+(?:\s|$)/g)||[]).length),words=v.match(/[A-Za-z]+(?:'[A-Za-z]+)?/g)||[],syllables=words.reduce((sum,w)=>{let x=w.toLowerCase().replace(/(?:es|ed|e)$/,'').match(/[aeiouy]+/g);return sum+Math.max(1,x?x.length:1)},0),count=words.length;if(!count)throw Error('Enter a passage to analyze.');const ease=206.835-1.015*(count/sentences)-84.6*(syllables/count),grade=.39*(count/sentences)+11.8*(syllables/count)-15.59;o=`Reading ease   ${Math.max(0,Math.min(100,ease)).toFixed(1)} / 100\nGrade level    ${Math.max(0,grade).toFixed(1)}\nWords          ${count}\nSentences      ${sentences}\nSyllables      ${syllables}\nWords/sentence ${(count/sentences).toFixed(1)}\n\nHigher reading ease means simpler copy.`}
+if(id==='clamp'){const [min,max,minV,maxV]=v.split(',').map(Number);if([min,max,minV,maxV].some(n=>!Number.isFinite(n))||maxV<=minV)throw Error('Use min px,max px,min viewport,max viewport.');const slope=(max-min)/(maxV-minV)*100,intercept=min-slope*minV/100;o=`font-size: clamp(${min/16}rem, ${intercept.toFixed(4)/16}rem + ${slope.toFixed(4)}vw, ${max/16}rem);\n\nMinimum  ${min}px at ${minV}px\nMaximum  ${max}px at ${maxV}px`}
+if(id==='radius'){const values=v.split(',').map(x=>Number(x.trim()));if(values.length!==4||values.some(n=>!Number.isFinite(n)||n<0))throw Error('Enter four non-negative corner values.');o=`border-radius: ${values.map(n=>`${n}px`).join(' ')};\n\nTop-left     ${values[0]}px\nTop-right    ${values[1]}px\nBottom-right ${values[2]}px\nBottom-left  ${values[3]}px`}
+if(id==='xmlformat'){const doc=new DOMParser().parseFromString(v,'application/xml'),err=doc.querySelector('parsererror');if(err)throw Error(err.textContent.split('\n')[0]||'Invalid XML.');const format=(node,depth=0)=>{const pad='  '.repeat(depth);if(node.nodeType===3)return node.textContent.trim()?pad+node.textContent.trim():'';if(node.nodeType!==1)return'';const attrs=[...node.attributes].map(a=>` ${a.name}="${a.value}"`).join(''),children=[...node.childNodes].map(n=>format(n,depth+1)).filter(Boolean);if(!children.length)return`${pad}<${node.nodeName}${attrs}/>`;if(children.length===1&&node.children.length===0)return`${pad}<${node.nodeName}${attrs}>${node.textContent.trim()}</${node.nodeName}>`;return`${pad}<${node.nodeName}${attrs}>\n${children.join('\n')}\n${pad}</${node.nodeName}>`};o=(v.trim().startsWith('<?xml')?'<?xml version="1.0" encoding="UTF-8"?>\n':'')+format(doc.documentElement)}
+if(id==='httpstatus'){const codes={100:['Continue','Interim response; continue the request.'],200:['OK','The request succeeded.'],201:['Created','A new resource was created.'],202:['Accepted','The request was accepted for processing.'],204:['No Content','The request succeeded without a response body.'],301:['Moved Permanently','The resource has a permanent new URL.'],302:['Found','The resource is temporarily available elsewhere.'],304:['Not Modified','Use the cached representation.'],307:['Temporary Redirect','Repeat the request at another URL with the same method.'],308:['Permanent Redirect','Permanent redirect that preserves the method.'],400:['Bad Request','The server could not understand the request.'],401:['Unauthorized','Authentication is required or invalid.'],403:['Forbidden','The server understood but refuses the request.'],404:['Not Found','The requested resource could not be found.'],405:['Method Not Allowed','This HTTP method is unsupported for the resource.'],409:['Conflict','The request conflicts with current resource state.'],418:["I'm a Teapot",'An intentionally playful client-error response.'],422:['Unprocessable Content','The request syntax is valid but its instructions are invalid.'],429:['Too Many Requests','The client exceeded a rate limit.'],500:['Internal Server Error','The server encountered an unexpected condition.'],502:['Bad Gateway','An upstream server returned an invalid response.'],503:['Service Unavailable','The service is temporarily unavailable.'],504:['Gateway Timeout','An upstream server did not respond in time.']},code=v.trim(),entry=codes[code];if(!entry)throw Error('Enter a supported common HTTP status code.');o=`${code} ${entry[0]}\n\n${entry[1]}\n\nClass: ${code[0]}xx ${({'1':'Informational','2':'Success','3':'Redirection','4':'Client Error','5':'Server Error'})[code[0]]}`}
+if(id==='chmod'){const mode=v.trim();if(!/^[0-7]{3}$/.test(mode))throw Error('Enter a three-digit mode such as 755.');const symbolic=[...mode].map(n=>{const x=Number(n);return`${x&4?'r':'-'}${x&2?'w':'-'}${x&1?'x':'-'}`});o=`Numeric   ${mode}\nSymbolic  ${symbolic.join('')}\n\nOwner    ${symbolic[0]}\nGroup    ${symbolic[1]}\nOthers   ${symbolic[2]}\n\nchmod ${mode} filename`}
+if(id==='linesort'){const lines=v.split(/\r?\n/).filter(x=>x.length),numeric=lines.every(x=>Number.isFinite(Number(x))),sorted=[...lines].sort(numeric?(a,b)=>Number(a)-Number(b):(a,b)=>a.localeCompare(b,undefined,{sensitivity:'base',numeric:true}));o=`ASCENDING\n${sorted.join('\n')}\n\nDESCENDING\n${[...sorted].reverse().join('\n')}`}
+if(id==='whitespace')o=v.split(/\r?\n/).map(line=>line.trim().replace(/[ \t]+/g,' ')).join('\n').replace(/\n{3,}/g,'\n\n').trim();
+if(id==='contrast'){const [fg,bg]=v.split(',').map(x=>x.trim()),lum=h=>{h=h.replace('#','');if(h.length===3)h=[...h].map(c=>c+c).join('');if(!/^[\da-f]{6}$/i.test(h))throw Error('Use two HEX colors separated by a comma.');const rgb=[0,2,4].map(i=>parseInt(h.slice(i,i+2),16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4);return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]},l1=lum(fg),l2=lum(bg),ratio=(Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);o=`Contrast ratio  ${ratio.toFixed(2)}:1\n\nAA normal text  ${ratio>=4.5?'PASS':'FAIL'}\nAA large text   ${ratio>=3?'PASS':'FAIL'}\nAAA normal text ${ratio>=7?'PASS':'FAIL'}\nAAA large text  ${ratio>=4.5?'PASS':'FAIL'}\n\nLarge text is 24px regular or 18.66px bold.`}
+if(id==='grid'){const [cols,gap,min]=v.split(',').map(Number);if(!Number.isInteger(cols)||cols<1||cols>12||!Number.isFinite(gap)||gap<0||!Number.isFinite(min)||min<=0)throw Error('Use columns,gap px,minimum width px.');o=`display: grid;\ngrid-template-columns: repeat(${cols}, minmax(0, 1fr));\ngap: ${gap}px;\n\n/* Responsive alternative */\ngrid-template-columns: repeat(auto-fit, minmax(min(100%, ${min}px), 1fr));`}
+if(id==='temperature'){const m=v.trim().match(/^(-?\d+(?:\.\d+)?)\s*°?\s*([CFK])$/i);if(!m)throw Error('Enter a value and unit, such as 72 F.');const n=Number(m[1]),u=m[2].toUpperCase(),c=u==='C'?n:u==='F'?(n-32)*5/9:n-273.15;o=`Celsius     ${c.toFixed(2)} °C\nFahrenheit  ${(c*9/5+32).toFixed(2)} °F\nKelvin      ${(c+273.15).toFixed(2)} K`}
+if(id==='envparse'){const obj={};v.split(/\r?\n/).forEach((line,i)=>{line=line.trim();if(!line||line.startsWith('#'))return;const at=line.indexOf('=');if(at<1)throw Error(`Invalid assignment on line ${i+1}.`);const key=line.slice(0,at).trim(),raw=line.slice(at+1).trim().replace(/^(['"])([\s\S]*)\1$/,'$2');obj[key]=/^(true|false)$/i.test(raw)?raw.toLowerCase()==='true':/^-?\d+(?:\.\d+)?$/.test(raw)?Number(raw):raw});o=JSON.stringify(obj,null,2)}
+if(id==='useragent'){const ua=v.trim();if(!ua)throw Error('Enter a user agent string.');const browser=/Edg\/([\d.]+)/.exec(ua)?['Edge',RegExp.$1]:/OPR\/([\d.]+)/.exec(ua)?['Opera',RegExp.$1]:/Chrome\/([\d.]+)/.exec(ua)?['Chrome',RegExp.$1]:/Firefox\/([\d.]+)/.exec(ua)?['Firefox',RegExp.$1]:/Version\/([\d.]+).*Safari/.exec(ua)?['Safari',RegExp.$1]:['Unknown','—'],os=/Windows NT 10/.test(ua)?'Windows':/Android/.test(ua)?'Android':/iPhone|iPad/.test(ua)?'iOS / iPadOS':/Mac OS X/.test(ua)?'macOS':/Linux/.test(ua)?'Linux':'Unknown',engine=/AppleWebKit/.test(ua)?'WebKit / Blink':/Gecko\//.test(ua)?'Gecko':'Unknown',device=/Mobile|Android|iPhone/.test(ua)?'Mobile':/iPad|Tablet/.test(ua)?'Tablet':'Desktop';o=`Browser  ${browser[0]} ${browser[1]}\nEngine   ${engine}\nOS       ${os}\nDevice   ${device}\nMobile   ${/Mobile|Android|iPhone/.test(ua)?'Yes':'No'}`}
+if(id==='csp'){const values=v.split(',').map(x=>x.trim()).filter(Boolean),sources=values.map(x=>x==='self'?"'self'":x);if(!sources.length)throw Error('Enter at least one origin or self.');if(sources.some(x=>x!=="'self'"&&!/^https:\/\//.test(x)))throw Error('Origins must use HTTPS.');const list=sources.join(' ');o=`Content-Security-Policy: default-src 'self'; script-src ${list}; style-src ${list} 'unsafe-inline'; font-src ${list} data:; img-src 'self' data: https:; connect-src ${list}; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests`}
+if(id==='reverse'){const chars=Array.from(v).reverse().join(''),words=v.trim().split(/\s+/).reverse().join(' '),lines=v.split(/\r?\n/).reverse().join('\n');o=`CHARACTERS\n${chars}\n\nWORD ORDER\n${words}\n\nLINE ORDER\n${lines}`}
+if(id==='sentencecase'){const normalized=v.toLowerCase().replace(/(^\s*[a-z]|[.!?]\s+[a-z])/g,m=>m.toUpperCase()).replace(/\bi\b/g,'I');o=normalized}
+if(id==='length'){const m=v.trim().match(/^(-?\d+(?:\.\d+)?)\s*(mm|cm|m|km|in|ft|yd|mi)$/i);if(!m)throw Error('Enter a number and unit: mm, cm, m, km, in, ft, yd, or mi.');const n=Number(m[1]),u=m[2].toLowerCase(),meters=n*({mm:.001,cm:.01,m:1,km:1000,in:.0254,ft:.3048,yd:.9144,mi:1609.344})[u],fmt=x=>Number(x.toPrecision(10));o=`Millimeters  ${fmt(meters*1000)} mm\nCentimeters  ${fmt(meters*100)} cm\nMeters       ${fmt(meters)} m\nKilometers   ${fmt(meters/1000)} km\nInches       ${fmt(meters/.0254)} in\nFeet         ${fmt(meters/.3048)} ft\nYards        ${fmt(meters/.9144)} yd\nMiles        ${fmt(meters/1609.344)} mi`}
+if(id==='filesize'){const m=v.trim().match(/^(\d+(?:\.\d+)?)\s*(b|bytes?|kb|mb|gb|tb|kib|mib|gib|tib)$/i);if(!m)throw Error('Enter a value and storage unit.');const n=Number(m[1]),u=m[2].toLowerCase(),factors={b:1,byte:1,bytes:1,kb:1e3,mb:1e6,gb:1e9,tb:1e12,kib:1024,mib:1024**2,gib:1024**3,tib:1024**4},bytes=n*factors[u],fmt=x=>Number(x.toPrecision(8)).toLocaleString();o=`Bytes  ${fmt(bytes)} B\nKB     ${fmt(bytes/1e3)} KB\nMB     ${fmt(bytes/1e6)} MB\nGB     ${fmt(bytes/1e9)} GB\nKiB    ${fmt(bytes/1024)} KiB\nMiB    ${fmt(bytes/1024**2)} MiB\nGiB    ${fmt(bytes/1024**3)} GiB`}
+if(id==='easing'){const curves={smooth:'cubic-bezier(0.4, 0, 0.2, 1)',spring:'cubic-bezier(0.34, 1.56, 0.64, 1)',snappy:'cubic-bezier(0.2, 0.8, 0.2, 1)',enter:'cubic-bezier(0, 0, 0.2, 1)',exit:'cubic-bezier(0.4, 0, 1, 1)',bounce:'cubic-bezier(0.68, -0.55, 0.27, 1.55)',linear:'linear'},name=v.trim().toLowerCase(),curve=curves[name];if(!curve)throw Error(`Choose: ${Object.keys(curves).join(', ')}.`);o=`--ease-${name}: ${curve};\n\ntransition: transform 400ms var(--ease-${name});\nanimation-timing-function: ${curve};`}
+if(id==='percentage'){const [p,n]=v.split(',').map(Number);if(!Number.isFinite(p)||!Number.isFinite(n))throw Error('Use percentage,number — for example 15,240.');const amount=n*p/100;o=`${p}% of ${n} = ${amount.toLocaleString()}\n\nIncrease by ${p}%  ${(n+amount).toLocaleString()}\nDecrease by ${p}%  ${(n-amount).toLocaleString()}\n${p} is ${n?((p/n)*100).toFixed(2):'undefined'}% of ${n}`}
+if(id==='tipsplit'){const [bill,tip,people]=v.split(',').map(Number);if(!Number.isFinite(bill)||bill<0||!Number.isFinite(tip)||tip<0||!Number.isInteger(people)||people<1)throw Error('Use bill,tip percent,people.');const tipAmount=bill*tip/100,total=bill+tipAmount;o=`Bill          $${bill.toFixed(2)}\nTip (${tip}%)    $${tipAmount.toFixed(2)}\nTotal         $${total.toFixed(2)}\nPeople        ${people}\nPer person    $${(total/people).toFixed(2)}`}
+if(id==='loan'){const [principal,annual,months]=v.split(',').map(Number);if(!Number.isFinite(principal)||principal<=0||!Number.isFinite(annual)||annual<0||!Number.isInteger(months)||months<1)throw Error('Use amount,annual rate,months.');const r=annual/1200,payment=r?principal*r*(1+r)**months/((1+r)**months-1):principal/months,total=payment*months;o=`Monthly payment  $${payment.toFixed(2)}\nTotal paid      $${total.toFixed(2)}\nTotal interest  $${(total-principal).toFixed(2)}\nTerm            ${months} months\nAPR             ${annual}%\n\nEstimate only; fees are not included.`}
+if(id==='datediff'){const [aRaw,bRaw]=v.split(',').map(x=>x.trim()),a=new Date(`${aRaw}T00:00:00`),b=new Date(`${bRaw}T00:00:00`);if(isNaN(a)||isNaN(b))throw Error('Use two YYYY-MM-DD dates.');const ms=Math.abs(b-a),days=Math.round(ms/86400000);o=`Days     ${days.toLocaleString()}\nWeeks    ${(days/7).toFixed(2)}\nMonths   ${(days/30.436875).toFixed(2)}\nYears    ${(days/365.2425).toFixed(3)}\nHours    ${(days*24).toLocaleString()}\n\n${a.toLocaleDateString()} → ${b.toLocaleDateString()}`}
+if(id==='age'){const birth=new Date(`${v.trim()}T00:00:00`),today=new Date();if(isNaN(birth)||birth>today)throw Error('Enter a valid past birth date as YYYY-MM-DD.');let years=today.getFullYear()-birth.getFullYear(),months=today.getMonth()-birth.getMonth(),days=today.getDate()-birth.getDate();if(days<0){months--;days+=new Date(today.getFullYear(),today.getMonth(),0).getDate()}if(months<0){years--;months+=12}const totalDays=Math.floor((today-birth)/86400000),next=new Date(today.getFullYear(),birth.getMonth(),birth.getDate());if(next<today)next.setFullYear(next.getFullYear()+1);o=`Age          ${years} years, ${months} months, ${days} days\nTotal days   ${totalDays.toLocaleString()}\nNext birthday in ${Math.ceil((next-today)/86400000)} days`}
+if(id==='randompick'){const items=v.split(/\r?\n|,/).map(x=>x.trim()).filter(Boolean);if(items.length<2)throw Error('Enter at least two choices.');const r=crypto.getRandomValues(new Uint32Array(1))[0]/4294967296;o=`PICKED\n${items[Math.floor(r*items.length)]}\n\nChosen from ${items.length} options using secure randomness.`}
+if(id==='shuffle'){const items=v.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(items.length<2)throw Error('Enter at least two lines.');for(let i=items.length-1;i>0;i--){const r=crypto.getRandomValues(new Uint32Array(1))[0]/4294967296,j=Math.floor(r*(i+1));[items[i],items[j]]=[items[j],items[i]]}o=items.map((x,i)=>`${String(i+1).padStart(2)}. ${x}`).join('\n')}
+if(id==='countdown'){const target=new Date(v.trim()),now=new Date();if(isNaN(target))throw Error('Enter a valid future date and time.');let seconds=Math.floor((target-now)/1000);if(seconds<=0)throw Error('That date has already passed.');const days=Math.floor(seconds/86400);seconds%=86400;const hours=Math.floor(seconds/3600);seconds%=3600;const minutes=Math.floor(seconds/60);seconds%=60;o=`${days} days\n${hours} hours\n${minutes} minutes\n${seconds} seconds\n\nTarget: ${target.toLocaleString()}`}
+if(id==='workdays'){const [aRaw,bRaw]=v.split(',').map(x=>x.trim()),a=new Date(`${aRaw}T12:00:00`),b=new Date(`${bRaw}T12:00:00`);if(isNaN(a)||isNaN(b)||b<a)throw Error('Use start,end dates with the end on or after the start.');let weekdays=0,weekends=0;for(const d=new Date(a);d<=b;d.setDate(d.getDate()+1)){const day=d.getDay();if(day===0||day===6)weekends++;else weekdays++}o=`Workdays  ${weekdays}\nWeekend days  ${weekends}\nCalendar days ${weekdays+weekends}\n\nIncludes both start and end dates; holidays are not excluded.`}
+if(id==='pace'){const m=v.trim().match(/^(\d+(?:\.\d+)?)\s*(km|mi)\s*,\s*(?:(\d+):)?(\d+):([0-5]\d)$/i);if(!m)throw Error('Use distance unit,time — for example 5 km,25:00.');const distance=Number(m[1]),unit=m[2].toLowerCase(),seconds=Number(m[3]||0)*3600+Number(m[4])*60+Number(m[5]);if(!distance||!seconds)throw Error('Distance and time must be greater than zero.');const km=unit==='km'?distance:distance*1.609344,perKm=seconds/km,perMi=seconds/(km/1.609344),format=s=>`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`,hours=seconds/3600;o=`Pace / km   ${format(perKm)}\nPace / mile ${format(perMi)}\nSpeed       ${(km/hours).toFixed(2)} km/h\nSpeed       ${(km/1.609344/hours).toFixed(2)} mph\nTotal time  ${format(seconds)}`}
+if(id==='regex'){const re=new RegExp(document.querySelector('#pattern').value,'g'),matches=[...v.matchAll(re)];o=matches.length?matches.map((m,i)=>`${i+1}. “${m[0]}” at index ${m.index}`).join('\n'):'No matches found.'}if(id==='password'){const chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*+-=?',a=new Uint32Array(24);crypto.getRandomValues(a);o=Array.from(a,x=>chars[x%chars.length]).join('')}setOut(o||'No output.')}catch(e){setOut(`Error: ${e.message}`)}}
+grid.addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)openTool(b.dataset.open)});document.querySelector('.close').onclick=()=>modal.close();modal.addEventListener('click',e=>{if(e.target===modal)modal.close()});
+</script>
 </body>
 </html>
