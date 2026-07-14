@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/p7JzFKA.png">
+  <meta charset="utf-8" />
+  <title>QamoMathCore // SCI-FI_NEXUS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#03020a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Sci-Fi Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <!-- Augmented UI for Cybernetic Framework Panels -->
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/augmented-ui@2/augmented-ui.min.css">
+
+  <style>
+    :root {
+      --bg: #060913;
+      --panel-bg: rgba(13, 20, 35, 0.85);
+      --neon-cyan: #00f3ff;
+      --neon-blue: #0066ff;
+      --gold: #00ff66; /* Neon Green */
+      --danger: #ff0055;
+      --grid-line: rgba(0, 243, 255, 0.12);
+      --glow: 0 0 12px var(--neon-cyan);
+    }
+
+    html.light-mode {
+      --bg: #f0f4f8;
+      --panel-bg: rgba(255, 255, 255, 0.9);
+      --neon-cyan: #0099ff;
+      --neon-blue: #0033aa;
+      --gold: #cc8500;
+      --grid-line: rgba(0, 102, 255, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--neon-cyan);
+      font-family: 'Share Tech Mono', monospace;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+      transition: background 0.3s;
+    }
+
+    /* Scanline/Grid Overlay Layer */
+    body::after {
+      content: " ";
+      display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+      z-index: 999; background-size: 100% 3px; pointer-events: none;
+    }
+
+    #sys-header {
+      padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--panel-bg);
+      border-bottom: 2px solid var(--neon-blue);
+      box-shadow: 0 2px 15px rgba(0, 102, 255, 0.2);
+      z-index: 10;
+    }
+
+    #sys-header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem; letter-spacing: 2px;
+      font-weight: 900; color: #fff;
+      text-shadow: 0 0 8px var(--neon-cyan);
+    }
+
+    #main-deck {
+      display: flex; flex: 1;
+      height: calc(100vh - 50px);
+      position: relative;
+    }
+
+    /* Control Panel Layouts */
+    .cyber-panel {
+      background: var(--panel-bg);
+      display: flex; flex-direction: column; gap: 12px;
+      padding: 15px; z-index: 10; backdrop-filter: blur(8px);
+      --aug-border: 2px; --aug-border-bg: var(--neon-blue);
+    }
+
+    .left-panel { width: 95px; align-items: center; overflow-y: auto; }
+    .right-panel { width: 240px; overflow-y: auto; }
+
+    .panel-section { width: 100%; display: flex; flex-direction: column; gap: 5px; }
+    .control-label { font-size: 0.75rem; color: var(--gold); text-transform: uppercase; font-weight: bold; }
+
+    /* Tactical UI Controls */
+    .cyber-btn {
+      width: 100%; background: rgba(0, 40, 80, 0.2); color: var(--neon-cyan);
+      border: none; padding: 10px 5px; font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem; font-weight: 700; cursor: pointer; text-align: center;
+      transition: all 0.2s; --aug-border: 1px; --aug-border-bg: var(--neon-blue);
+    }
+
+    .cyber-btn:hover { background: rgba(0, 243, 255, 0.15); box-shadow: 0 0 8px var(--neon-cyan); }
+    .cyber-btn.active { background: var(--neon-cyan); color: #000; box-shadow: var(--glow); text-shadow: none; }
+    .cyber-btn.comms-btn { --aug-border-bg: var(--gold); color: var(--gold); }
+    .cyber-btn.comms-btn.transmitting { background: var(--danger); color: #fff; --aug-border-bg: var(--danger); box-shadow: 0 0 12px var(--danger); }
+    .cyber-btn.danger { --aug-border-bg: var(--danger); color: var(--danger); }
+    .cyber-btn.danger:hover { background: rgba(255, 0, 85, 0.15); box-shadow: 0 0 8px var(--danger); }
+
+    /* Canvas Arena */
+    #canvas-container { flex: 1; position: relative; margin: 12px; --aug-border: 2px; --aug-border-bg: var(--neon-cyan); }
+    #math-canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+    
+    .grid-scifi {
+      background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 40px 40px; background-position: center center;
+    }
+
+    #text-input {
+      position: absolute; display: none; background: rgba(3, 2, 10, 0.95);
+      border: 1px solid var(--neon-cyan); outline: none; font-family: 'Share Tech Mono', monospace;
+      color: var(--neon-cyan); padding: 6px; z-index: 100; box-shadow: var(--glow);
+    }
+
+    .symmetry-line {
+      position: absolute; top: 0; left: 50%; width: 1px; height: 100%;
+      border-left: 2px dashed var(--gold); opacity: 0.4; display: none; pointer-events: none;
+    }
+
+    /* Live Feed Terminal console */
+    #terminal-log {
+      flex: 1; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--neon-blue);
+      padding: 10px; font-size: 0.65rem; color: var(--neon-cyan);
+      overflow-y: hidden; display: flex; flex-direction: column; justify-content: flex-end;
+      min-height: 90px; margin-top: 5px;
+    }
+    .log-entry { margin-bottom: 3px; animation: glitch 0.15s ease-out; }
+    @keyframes glitch { 0% { opacity: 0.3; } 100% { opacity: 1; } }
+  </style>
+</head>
+<body>
+
+  <input type="text" id="text-input" placeholder="INPUT COMMAND DATA..." autocomplete="off">
+
+  <!-- HUD TERMINAL FRAMEWORK -->
+  <header id="sys-header">
+    <h1>QAMOMATH // CORE_NEXUS</h1>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <button id="btn-theme" class="cyber-btn" style="width: 130px;" data-augmented-ui="tl-clip br-clip exe">THEME_TOGGLE</button>
+      <div id="status-display" style="color: var(--gold); font-weight: bold; font-size: 0.85rem;">[COMMS_STANDBY]</div>
+    </div>
+  </header>
+
+  <div id="main-deck">
+    
+    <!-- PRIMARY INTERFACE OVERLAYS (TOOLS) -->
+    <aside class="cyber-panel left-panel" data-augmented-ui="br-clip r-clip-y exe">
+      <div class="control-label">MATRICES</div>
+      <button class="cyber-btn active" data-tool="pen" data-augmented-ui="tl-clip br-clip exe">PEN</button>
+      <button class="cyber-btn" data-tool="highlighter" data-augmented-ui="tl-clip br-clip exe">GLOW</button>
+      <button class="cyber-btn" data-tool="laser" data-augmented-ui="tl-clip br-clip exe">LASER</button>
+      <button class="cyber-btn" data-tool="text" data-augmented-ui="tl-clip br-clip exe">TEXT</button>
+      <button class="cyber-btn" data-tool="eraser" data-augmented-ui="tl-clip br-clip exe">ERASE</button>
+      
+      <div class="control-label" style="margin-top: 8px;">GEOMETRY</div>
+      <button class="cyber-btn" data-tool="line" data-augmented-ui="tl-clip br-clip exe">LINE</button>
+      <button class="cyber-btn" data-tool="rect" data-augmented-ui="tl-clip br-clip exe">BOX</button>
+      <button class="cyber-btn" data-tool="circle" data-augmented-ui="tl-clip br-clip exe">RING</button>
+      <button class="cyber-btn" data-tool="triangle" data-augmented-ui="tl-clip br-clip exe">DELTA</button>
+    </aside>
+
+    <!-- CORE INTERACTIVE ENGINE AREA -->
+    <main id="canvas-container" class="grid-scifi" data-augmented-ui="tl-clip tr-clip br-clip bl-clip exe">
+      <div id="sym-axis" class="symmetry-line"></div>
+      <canvas id="math-canvas"></canvas>
+    </main>
+
+    <!-- CRITICAL UTILITIES & COMMS HARDWARE -->
+    <aside class="cyber-panel right-panel" data-augmented-ui="bl-clip l-clip-y exe">
+      
+      <div class="panel-section">
+        <!-- COMM_01: Walkie Talkie Voice Uplink Matrix -->
+        <div class="control-label">VOICE_COMMS_UPLINK</div>
+        <button id="btn-comms" class="cyber-btn comms-btn" data-augmented-ui="tl-clip br-clip exe">HOLD TO TALK</button>
+      </div>
+
+      <div class="panel-section">
+        <div class="control-label">CYBER_HUE_PICKER</div>
+        <input type="color" id="color-picker" value="#00f3ff">
+      </div>
+
+      <div class="panel-section">
+        <div class="control-label">VECTOR_BEAM_WEIGHT</div>
+        <input type="range" id="brush-size" min="1" max="50" value="4">
+      </div>
+
+      <div class="panel-section">
+        <button id="btn-symmetry" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">MIRROR_FIELD: OFF</button>
+      </div>
+
+      <div class="panel-section">
+        <div class="control-label">BOARD_ARRAY</div>
+        <div style="display: flex; gap: 4px;">
+          <button id="btn-prev" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">&lt;</button>
+          <button id="page-display" class="cyber-btn" style="flex:1; pointer-events:none;" data-augmented-ui="tl-clip br-clip exe">1/1</button>
+          <button id="btn-next" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">&gt;</button>
+          <button id="btn-add" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">+</button>
+        </div>
+      </div>
+
+      <div style="flex:1;"></div>
+
+      <div class="panel-section">
+        <div style="display: flex; gap: 4px;">
+          <button id="btn-undo" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">UNDO</button>
+          <button id="btn-redo" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">REDO</button>
+        </div>
+        <button id="btn-export" class="cyber-btn" data-augmented-ui="tl-clip br-clip exe">DOWNLOAD_MATRIX</button>
+        <button id="btn-clear" class="cyber-btn danger" data-augmented-ui="tl-clip br-clip exe">WIPE_CORE</button>
+        <button id="btn-reset" class="cyber-btn danger" data-augmented-ui="tl-clip br-clip exe">HARD_RESET</button>
+      </div>
+
+      <div id="terminal-log" data-augmented-ui="tl-clip br-clip exe">
+        <div class="log-entry">> MATRIX INITIALIZED.</div>
+      </div>
+
+    </aside>
+  </div>
+
+  <script>
+    /* ==========================================================
+       QAMOMATH VECTORS & LOGIC PROCESSING CORE
+       ========================================================== */
+
+    const DB_URL = "https://script.google.com/macros/s/AKfycbwiC_I_QH8EeuoKOc_ZUoVjbO227IDyUFLj05ZWp42Ide23aCW63f4u7GgYpoQJvw8jeg/exec";
+    const BOARD_ID = "qamomath_mainframe";
+
+    let state = {
+      tool: 'pen', color: '#00f3ff', size: 4, symmetry: false,
+      currentPage: 1, totalPages: 1,
+      pages: { 1: [] }, undoStacks: { 1: [] },
+      isDrawing: false, currentPath: null, textPos: { x: 0, y: 0 }
+    };
+
+    const canvas = document.getElementById('math-canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const textInput = document.getElementById('text-input');
+    const statusDisplay = document.getElementById('status-display');
+
+    function sysLog(msg) {
+      const term = document.getElementById('terminal-log');
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerText = `[${new Date().toLocaleTimeString('en-US', { hour12: false })}] > ${msg}`;
+      term.appendChild(entry);
+      if(term.childElementCount > 6) term.removeChild(term.firstChild);
+    }
+
+    // --- WALKIE-TALKIE SYSTEM VIA AUDIO NODES ---
+    let audioStream = null;
+    let mediaRecorder = null;
+    let voiceChunks = [];
+    const commsBtn = document.getElementById('btn-comms');
+
+    async function initVoiceComms() {
+      try {
+        audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        setupMediaRecorder();
+        sysLog("VOICE_UPLINK_ESTABLISHED");
+      } catch (err) {
+        sysLog("MIC_HARDWARE_DENIED", "warn");
+        statusDisplay.innerText = "[HARDWARE_ERROR]";
+      }
+    }
+
+    function setupMediaRecorder() {
+      mediaRecorder = new MediaRecorder(audioStream);
+      mediaRecorder.ondataavailable = e => voiceChunks.push(e.data);
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(voiceChunks, { type: 'audio/webm' });
+        voiceChunks = [];
+        sysLog("TRANSMISSION_COMPILING");
+        
+        // Convert to Base64 to safely bridge across Google Apps Script
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = () => {
+          const base64Audio = reader.result.split(',')[1];
+          transmitVoiceData(base64Audio);
+        };
+      };
+    }
+
+    async function transmitVoiceData(audioData) {
+      if (!navigator.onLine) return;
+      try {
+        await fetch(DB_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "voiceTransmit", boardId: BOARD_ID, audio: audioData }),
+          headers: { "Content-Type": "text/plain;charset=utf-8" }
+        });
+        sysLog("TRANSMISSION_DISPATCHED");
+      } catch (e) {
+        sysLog("TRANSMISSION_DROPPED");
+      }
+    }
+
+    // Handle Walkie-Talkie Push interactions securely across both mobile and desktop
+    commsBtn.addEventListener('mousedown', startTransmission);
+    commsBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startTransmission(); });
+    window.addEventListener('mouseup', stopTransmission);
+    window.addEventListener('touchend', stopTransmission);
+
+    function startTransmission() {
+      if(!audioStream) { initVoiceComms().then(() => { if(audioStream) beginRecording(); }); }
+      else { beginRecording(); }
+    }
+
+    function beginRecording() {
+      if(mediaRecorder && mediaRecorder.state === "inactive") {
+        mediaRecorder.start();
+        commsBtn.classList.add('transmitting');
+        commsBtn.innerText = "TRANSMITTING...";
+        statusDisplay.innerText = "[COMM_UPLINK_LIVE]";
+      }
+    }
+
+    function stopTransmission() {
+      if(mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+        commsBtn.classList.remove('transmitting');
+        commsBtn.innerText = "HOLD TO TALK";
+        statusDisplay.innerText = "[COMMS_STANDBY]";
+      }
+    }
+
+    // --- AUTOMATED SYNC RADAR (POLLING OVER AIR) ---
+    async function pullCommsPayload() {
+      if (state.isDrawing || !navigator.onLine) return;
+      try {
+        const res = await fetch(`${DB_URL}?action=getCommsPayload&boardId=${BOARD_ID}`);
+        const payload = await res.json();
+        
+        // Handle incoming Voice transmission data
+        if(payload.audioTransmission) {
+          sysLog("RECEIVING_TRANS_BURST");
+          const audioCtl = new Audio("data:audio/webm;base64," + payload.audioTransmission);
+          audioCtl.play().catch(() => {});
+        }
+        
+        // Handle vector whiteboard updates
+        if(payload.timestamp && payload.timestamp !== lastSyncTimestamp) {
+          lastSyncTimestamp = payload.timestamp;
+          if (payload.pages) {
+            state.pages = payload.pages;
+            state.totalPages = payload.totalPages || 1;
+            updatePageUI();
+            redrawCanvas();
+            saveLocalState(false);
+            sysLog("BOARD_DATA_SYNCHRONIZED");
+          }
+        }
+      } catch(e) {}
+    }
+    setInterval(pullCommsPayload, 3500);
+
+    // --- LOCAL PERSISTENCE FRAMEWORK (INDEXEDDB) ---
+    const dbName = "QamoMathCoreDB";
+    let db;
+    const dbReq = indexedDB.open(dbName, 2);
+
+    dbReq.onupgradeneeded = (e) => {
+      db = e.target.result;
+      if (!db.objectStoreNames.contains("matrix_cache")) {
+        db.createObjectStore("matrix_cache", { keyPath: 'id' });
+      }
+    };
+    dbReq.onsuccess = (e) => {
+      db = e.target.result;
+      loadLocalState();
+    };
+
+    function saveLocalState(triggerCloud = true) {
+      if(!db) return;
+      const tx = db.transaction(["matrix_cache"], "readwrite");
+      tx.objectStore("matrix_cache").put({
+        id: BOARD_ID, pages: state.pages, totalPages: state.totalPages, needsSync: triggerCloud, timestamp: Date.now()
+      });
+      if(triggerCloud) debounceCloudPush();
+    }
+
+    function loadLocalState() {
+      const tx = db.transaction(["matrix_cache"], "readonly");
+      const req = tx.objectStore("matrix_cache").get(BOARD_ID);
+      req.onsuccess = () => {
+        if (req.result && req.result.pages) {
+          state.pages = req.result.pages;
+          state.totalPages = req.result.totalPages || 1;
+          if (!state.pages[state.currentPage]) state.pages[state.currentPage] = [];
+          if (!state.undoStacks[state.currentPage]) state.undoStacks[state.currentPage] = [];
+          updatePageUI();
+          redrawCanvas();
+          sysLog("RESTORED_LOCAL_SESSION_CACHES");
+        }
+      };
+    }
+
+    let cloudTimeout;
+    function debounceCloudPush() {
+      clearTimeout(cloudTimeout);
+      cloudTimeout = setTimeout(() => dispatchCloudPayload(), 1500);
+    }
+
+    async function dispatchCloudPayload() {
+      if(!navigator.onLine || !db) return;
+      const req = db.transaction(["matrix_cache"], "readonly").objectStore("matrix_cache").getAll();
+      req.onsuccess = async () => {
+        const structuralItems = req.result.filter(i => i.needsSync);
+        if(structuralItems.length === 0) return;
+        
+        for (let item of structuralItems) {
+          try {
+            await fetch(DB_URL, {
+              method: "POST",
+              body: JSON.stringify({ action: "saveBoard", boardId: item.id, pages: item.pages, totalPages: item.totalPages, timestamp: item.timestamp }),
+              headers: { "Content-Type": "text/plain;charset=utf-8" }
+            });
+            item.needsSync = false;
+            db.transaction(["matrix_cache"], "readwrite").objectStore("matrix_cache").put(item);
+            sysLog("UPLINK_DATA_SECURED");
+          } catch(e) {
+            sysLog("UPLINK_CONNECTION_LAG", "warn");
+          }
+        }
+      };
+    }
+
+    // --- CANVAS GEOMETRY & RENDER MATRIX ---
+    function initCanvasDimensions() {
+      const container = document.getElementById('canvas-container');
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+      redrawCanvas();
+    }
+    window.addEventListener('resize', initCanvasDimensions);
+
+    function redrawCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const activePaths = state.pages[state.currentPage] || [];
+      
+      activePaths.forEach(path => {
+        if(path.points.length === 0 && !path.text) return;
+        
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.strokeStyle = path.color; ctx.fillStyle = path.color; ctx.lineWidth = path.size;
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.shadowBlur = 0;
+
+        if(path.tool === 'highlighter') {
+          ctx.strokeStyle = path.color + '44'; // Hex Alpha channel translation
+          ctx.lineWidth = path.size * 2.5;
+        } else if(path.tool === 'eraser') {
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.strokeStyle = 'rgba(0,0,0,1)';
+          ctx.lineWidth = path.size * 5;
+        } else if(path.tool === 'pen' || path.tool === 'laser') {
+          ctx.shadowBlur = 8; ctx.shadowColor = path.color; // Neon Photon Glow
+        }
+
+        if(path.text) {
+          ctx.shadowBlur = 0;
+          ctx.font = `${path.size * 5}px 'Share Tech Mono'`;
+          ctx.fillText(path.text, path.points[0].x, path.points[0].y);
+          if(path.sym) ctx.fillText(path.text, canvas.width - path.points[0].x, path.points[0].y);
+          return;
+        }
+
+        const executeStrokes = (points, mirror = false) => {
+          ctx.beginPath();
+          const p1 = points[0];
+          const pEnd = points[points.length - 1];
+          
+          let sX = mirror ? canvas.width - p1.x : p1.x;
+          let eX = mirror ? canvas.width - pEnd.x : pEnd.x;
+
+          if(path.tool === 'line') {
+            ctx.moveTo(sX, p1.y); ctx.lineTo(eX, pEnd.y);
+          } else if(path.tool === 'rect') {
+            ctx.rect(sX, p1.y, eX - sX, pEnd.y - p1.y);
+          } else if(path.tool === 'circle') {
+            ctx.arc(sX, p1.y, Math.hypot(eX - sX, pEnd.y - p1.y), 0, Math.PI * 2);
+          } else if(path.tool === 'triangle') {
+            ctx.moveTo(sX, p1.y); ctx.lineTo(eX, pEnd.y); ctx.lineTo(sX - (eX - sX), pEnd.y); ctx.closePath();
+          } else {
+            // Algorithmic Handwriting Smoothing Loop via Quadratic Splines
+            ctx.moveTo(sX, p1.y);
+            for (let i = 1; i < points.length - 2; i++) {
+              let xc1 = mirror ? canvas.width - points[i].x : points[i].x;
+              let xc2 = mirror ? canvas.width - points[i+1].x : points[i+1].x;
+              ctx.quadraticCurveTo(xc1, points[i].y, (xc1 + xc2) / 2, (points[i].y + points[i+1].y) / 2);
+            }
+            if(points.length > 2) {
+              let p2x = mirror ? canvas.width - points[points.length-2].x : points[points.length-2].x;
+              ctx.quadraticCurveTo(p2x, points[points.length-2].y, eX, pEnd.y);
+            } else if(points.length > 1) {
+              let p1x = mirror ? canvas.width - points[1].x : points[1].x;
+              ctx.lineTo(p1x, points[1].y);
+            }
+          }
+          ctx.stroke();
+        };
+
+        executeStrokes(path.points, false);
+        if(path.sym) executeStrokes(path.points, true);
+      });
+    }
+
+    // --- TACTICAL COORDINATE EVENT INTERCEPTORS ---
+    function captureCoordinates(e) {
+      const rect = canvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      if(state.tool === 'text') return triggerVirtualText(e);
+      canvas.setPointerCapture(e.pointerId);
+      state.isDrawing = true;
+      state.currentPath = { tool: state.tool, color: state.color, size: state.size, sym: state.symmetry, points: [captureCoordinates(e)] };
+      state.pages[state.currentPage].push(state.currentPath);
+      state.undoStacks[state.currentPage] = [];
+    });
+
+    canvas.addEventListener('pointermove', (e) => {
+      if(!state.isDrawing) return;
+      state.currentPath.points.push(captureCoordinates(e));
+      redrawCanvas();
+    });
+
+    function terminationDrawingCycle(e) {
+      if(!state.isDrawing) return;
+      state.isDrawing = false;
+      canvas.releasePointerCapture(e.pointerId);
+
+      if(state.tool === 'laser') {
+        const targetingReference = state.currentPath;
+        setTimeout(() => {
+          state.pages[state.currentPage] = state.pages[state.currentPage].filter(p => p !== targetingReference);
+          redrawCanvas();
+        }, 1200);
+      } else {
+        saveLocalState(true);
+      }
+      state.currentPath = null;
+    }
+    canvas.addEventListener('pointerup', terminationDrawingCycle);
+    canvas.addEventListener('pointercancel', terminationDrawingCycle);
+
+    // --- CORE TEXT MODULE ---
+    function triggerVirtualText(e) {
+      const pos = captureCoordinates(e); state.textPos = pos;
+      const rect = canvas.getBoundingClientRect();
+      textInput.style.left = (rect.left + pos.x) + 'px';
+      textInput.style.top = (rect.top + pos.y - 15) + 'px';
+      textInput.style.display = 'block'; textInput.style.color = state.color; textInput.style.borderColor = state.color;
+      textInput.style.fontSize = `${state.size * 5}px`;
+      textInput.value = ''; setTimeout(() => textInput.focus(), 60);
+    }
+
+    textInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        if(textInput.value.trim() !== '') {
+          state.pages[state.currentPage].push({ tool: 'text', color: state.color, size: state.size, sym: state.symmetry, points: [state.textPos], text: textInput.value });
+          state.undoStacks[state.currentPage] = []; redrawCanvas(); saveLocalState(true);
+          sysLog("ALPHANUMERIC_MATRIX_COMPILED");
+        }
+        textInput.style.display = 'none';
+      }
+    });
+    textInput.addEventListener('blur', () => textInput.style.display = 'none');
+
+    // --- INTERFACE OPERN_LISTENERS & HANDLERS ---
+    document.querySelectorAll('.cyber-btn[data-tool]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.cyber-btn[data-tool]').forEach(b => b.classList.remove('active'));
+        const activeTarget = e.target.closest('button');
+        activeTarget.classList.add('active');
+        state.tool = activeTarget.dataset.tool;
+        sysLog(`MOD_EMISSION: ${state.tool.toUpperCase()}`);
+      });
+    });
+
+    document.getElementById('color-picker').addEventListener('input', (e) => state.color = e.target.value);
+    document.getElementById('brush-size').addEventListener('input', (e) => state.size = Number(e.target.value));
+
+    document.getElementById('btn-symmetry').addEventListener('click', (e) => {
+      state.symmetry = !state.symmetry;
+      e.target.classList.toggle('active', state.symmetry);
+      e.target.innerText = state.symmetry ? 'MIRROR_FIELD: LAUNCHED' : 'MIRROR_FIELD: OFF';
+      document.getElementById('sym-axis').style.display = state.symmetry ? 'block' : 'none';
+      sysLog(`MIRROR_SYSTEM_STATE: ${state.symmetry}`);
+    });
+
+    // Theme Swap Matrix
+    document.getElementById('btn-theme').addEventListener('click', () => {
+      document.documentElement.classList.toggle('light-mode');
+      sysLog("OPTICAL_FILTERS_INVERTED");
+    });
+
+    /* --- PAGE STACK COMPILERS --- */
+    function updatePageUI() {
+      document.getElementById('page-display').innerText = `${state.currentPage}/${state.totalPages}`;
+    }
+
+    document.getElementById('btn-prev').addEventListener('click', () => {
+      if(state.currentPage > 1) {
+        state.currentPage--;
+        if(!state.pages[state.currentPage]) state.pages[state.currentPage] = [];
+        if(!state.undoStacks[state.currentPage]) state.undoStacks[state.currentPage] = [];
+        updatePageUI(); redrawCanvas(); sysLog(`DECK_SHIFT: BLOCK_${state.currentPage}`);
+      }
+    });
+
+    document.getElementById('btn-next').addEventListener('click', () => {
+      if(state.currentPage < state.totalPages) {
+        state.currentPage++;
+        if(!state.pages[state.currentPage]) state.pages[state.currentPage] = [];
+        if(!state.undoStacks[state.currentPage]) state.undoStacks[state.currentPage] = [];
+        updatePageUI(); redrawCanvas(); sysLog(`DECK_SHIFT: BLOCK_${state.currentPage}`);
+      }
+    });
+
+    document.getElementById('btn-add').addEventListener('click', () => {
+      state.totalPages++;
+      state.currentPage = state.totalPages;
+      state.pages[state.currentPage] = [];
+      state.undoStacks[state.currentPage] = [];
+      updatePageUI(); redrawCanvas(); saveLocalState(true);
+      sysLog("NEW_DECK_ALLOCATED");
+    });
+
+    // --- TIMELINE COMMAND CONTROLS ---
+    document.getElementById('btn-undo').addEventListener('click', () => {
+      const paths = state.pages[state.currentPage];
+      if (paths.length === 0) return;
+      state.undoStacks[state.currentPage].push(paths.pop());
+      redrawCanvas(); saveLocalState(true); sysLog("TIMELINE_ROLLBACK");
+    });
+
+    document.getElementById('btn-redo').addEventListener('click', () => {
+      const undos = state.undoStacks[state.currentPage];
+      if (undos.length === 0) return;
+      state.pages[state.currentPage].push(undos.pop());
+      redrawCanvas(); saveLocalState(true); sysLog("TIMELINE_FORWARD_SHIFT");
+    });
+
+    document.getElementById('btn-clear').addEventListener('click', () => {
+      state.undoStacks[state.currentPage] = state.undoStacks[state.currentPage].concat(state.pages[state.currentPage].reverse());
+      state.pages[state.currentPage] = [];
+      redrawCanvas(); saveLocalState(true); sysLog("CORE_ARRAY_WIPED");
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if(confirm("CRITICAL PROTOCOL: Purge entire storage arrays and reload framework?")) {
+        indexedDB.deleteDatabase(dbName);
+        location.reload();
+      }
+    });
+
+    document.getElementById('btn-export').addEventListener('click', () => {
+      sysLog("EXTRACTING_MATRIX_MAP...");
+      const snapshotCanvas = document.createElement('canvas');
+      snapshotCanvas.width = canvas.width; snapshotCanvas.height = canvas.height;
+      const tCtx = snapshotCanvas.getContext('2d');
+      tCtx.fillStyle = document.documentElement.classList.contains('light-mode') ? '#f0f4f8' : '#03020a';
+      tCtx.fillRect(0, 0, snapshotCanvas.width, snapshotCanvas.height);
+      tCtx.drawImage(canvas, 0, 0);
+      
+      const beamLink = document.createElement('a');
+      beamLink.download = `QAMOMATH_DATA_BURST_${Date.now()}.png`;
+      beamLink.href = snapshotCanvas.toDataURL();
+      beamLink.click();
+    });
+
+    // SYSTEM ONLINE INITIALIZER
+    setTimeout(() => { initCanvasDimensions(); sysLog("QAMOMATH CORE RUNTIME ONLINE."); }, 300);
+  </script>
+</body>
+</html>

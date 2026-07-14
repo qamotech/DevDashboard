@@ -5,7 +5,7 @@
   "scripts": {
     "check": "python quality_check.py",
     "check:links": "python scan_links.py",
-    "build": "npm run check",
+    "build": "npm run check && python build_site.py",
     "lhci": "lhci autorun"
   },
   "devDependencies": {

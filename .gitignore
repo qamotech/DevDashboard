@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.tar.gz
+dist/
+.lighthouseci/
+*.tsbuildinfo
+apps/task-forge/vite.config.js
+apps/task-forge/vite.config.d.ts
+apps/DevDashboard/task-forge/

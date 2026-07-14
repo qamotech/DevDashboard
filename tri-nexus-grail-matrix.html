@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/p7JzFKA.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TRI-NEXUS: GRAIL MATRIX</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
+
+        :root {
+            --neon-cyan: #00d2ff;
+            --royal-gold: #00ff66;
+            --matrix-purple: #00ff66;
+            --danger-red: #ff3366;
+            --bg-dark: #060913;
+        }
+
+        body { 
+            margin: 0; 
+            background: var(--bg-dark); 
+            background-image: 
+                radial-gradient(circle at 50% 50%, #0a162b 0%, #060913 80%),
+                linear-gradient(rgba(0, 210, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 210, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 25px 25px, 25px 25px;
+            color: #fff; 
+            font-family: 'Orbitron', sans-serif; 
+            text-align: center; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            padding: 10px;
+            overflow: hidden;
+        }
+        
+        #header { 
+            width: 100%;
+            max-width: 380px;
+            padding: 12px; 
+            background: rgba(6, 4, 14, 0.85); 
+            border: 1px solid rgba(189, 0, 255, 0.2);
+            border-radius: 14px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
+            margin-bottom: 10px;
+            z-index: 10;
+        }
+
+        h1 { 
+            margin: 0; 
+            text-transform: uppercase; 
+            letter-spacing: 3px; 
+            font-size: 1.4rem; 
+            font-weight: 900;
+            text-shadow: 0 0 10px var(--matrix-purple), 0 0 20px rgba(189, 0, 255, 0.4);
+        }
+
+        .subtitle {
+            font-size: 0.6rem;
+            letter-spacing: 5px;
+            color: #8a7fa4;
+            margin: 4px 0 10px 0;
+            text-transform: uppercase;
+        }
+
+        .gauge-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            background: rgba(255,255,255,0.03);
+            padding: 6px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .gauge-bar {
+            width: 45%;
+            height: 14px;
+            background: #110d22;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .gauge-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        #fill-p1 { background: linear-gradient(90deg, #885500, var(--royal-gold)); box-shadow: 0 0 8px var(--royal-gold); }
+        #fill-p2 { background: linear-gradient(90deg, #007788, var(--neon-cyan)); box-shadow: 0 0 8px var(--neon-cyan); }
+        .gauge-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 0.55rem;
+            line-height: 14px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 1px 2px #000;
+        }
+
+        #score-ledger {
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .score-box { font-weight: 900; }
+        #score-p1 { color: var(--royal-gold); }
+        #score-p2 { color: var(--neon-cyan); }
+        
+        .config-panel {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        select, button.action-btn { 
+            background: linear-gradient(to bottom, #201335 0%, #090412 100%); 
+            border: 1px solid rgba(189, 0, 255, 0.3); 
+            color: #dfcaff; 
+            padding: 6px 10px; 
+            border-radius: 6px; 
+            font-size: 0.65rem; 
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        select { outline: none; }
+        button.action-btn:hover, select:hover {
+            border-color: var(--neon-cyan);
+            color: #fff;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+        }
+        button.burn-active {
+            border-color: var(--danger-red) !important;
+            color: #fff !important;
+            animation: burnPulse 0.6s infinite alternate;
+        }
+        @keyframes burnPulse {
+            0% { box-shadow: 0 0 2px var(--danger-red); }
+            100% { box-shadow: 0 0 12px var(--danger-red); }
+        }
+
+        #arena { 
+            width: 350px; 
+            height: 350px;
+            background: linear-gradient(135deg, #0f071f 0%, #04020a 100%); 
+            border: 3px solid #3c1e5c;
+            border-top-color: #8a46d6;
+            border-radius: 20px; 
+            padding: 15px; 
+            box-shadow: 0 20px 45px rgba(0,0,0,0.9), 0 0 25px rgba(189, 0, 255, 0.2);
+            box-sizing: border-box;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .ele-shake { animation: tremor 0.08s infinite; }
+        @keyframes tremor {
+            0% { transform: translate(3px, 2px) rotate(0deg); }
+            100% { transform: translate(-2px, -3px) rotate(0.5deg); }
+        }
+
+        #board { 
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 12px;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .sector {
+            background: rgba(9, 5, 18, 0.6);
+            border: 1px solid rgba(189, 0, 255, 0.15);
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.85);
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .sector:hover {
+            background: rgba(29, 13, 56, 0.4);
+            border-color: rgba(0, 240, 255, 0.4);
+            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1), 0 0 12px rgba(189, 0, 255, 0.2);
+            transform: scale(1.02);
+        }
+
+        .token {
+            font-size: 2.2rem;
+            font-weight: 900;
+            position: absolute;
+            animation: spawnScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            user-select: none;
+        }
+        @keyframes spawnScale {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .token-p1 {
+            color: var(--royal-gold);
+            text-shadow: 0 0 12px var(--royal-gold), 0 0 25px rgba(255,170,0,0.4);
+        }
+        .token-p2 {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 12px var(--neon-cyan), 0 0 25px rgba(0,240,255,0.4);
+        }
+
+        .anomaly-icon {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            font-size: 0.6rem;
+            color: #d1b1ff;
+            text-shadow: 0 0 4px var(--matrix-purple);
+            animation: float 1.5s infinite alternate ease-in-out;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-3px); }
+        }
+
+        .shield-indicator {
+            position: absolute;
+            bottom: 6px;
+            left: 8px;
+            font-size: 0.5rem;
+            background: rgba(0, 240, 255, 0.15);
+            border: 1px solid var(--neon-cyan);
+            padding: 1px 4px;
+            border-radius: 4px;
+            color: #fff;
+            font-weight: 900;
+            box-shadow: 0 0 6px var(--neon-cyan);
+        }
+        .shield-p1 {
+            background: rgba(255, 170, 0, 0.15);
+            border-color: var(--royal-gold);
+            box-shadow: 0 0 6px var(--royal-gold);
+        }
+
+        .sector.winner-glow {
+            animation: hyper-cycle 0.3s infinite alternate;
+            border: 2px solid #ffffff !important;
+            z-index: 20;
+        }
+        @keyframes hyper-cycle {
+            0% { box-shadow: 0 0 8px #fff, inset 0 0 15px var(--matrix-purple); transform: scale(1.02); }
+            100% { box-shadow: 0 0 25px var(--neon-cyan), inset 0 0 20px #fff; transform: scale(1.05); }
+        }
+        
+        #tactical-feed {
+            width: 100%;
+            max-width: 380px;
+            background: #020105;
+            border: 1px solid rgba(189, 0, 255, 0.15);
+            border-radius: 6px;
+            padding: 4px 8px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            font-size: 0.55rem;
+            color: #8a7fa4;
+            white-space: nowrap;
+            overflow: hidden;
+            text-align: left;
+        }
+        #feed-inner {
+            display: inline-block;
+            animation: marquee 14s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translate3d(100%, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        #status { 
+            margin-top: 12px; 
+            color: var(--royal-gold); 
+            font-weight: 900; 
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px rgba(255,170,0,0.3);
+            z-index: 10;
+        }
+
+        #ele-blast-shield {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            background: transparent;
+        }
+        .ele-active { animation: radiation-blast 1.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards; }
+        @keyframes radiation-blast {
+            0% { background: #ffffff; opacity: 1; }
+            20% { background: var(--matrix-purple); opacity: 1; }
+            40% { background: var(--danger-red); opacity: 0.8; }
+            100% { background: transparent; opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="ele-blast-shield"></div>
+
+<div id="header">
+    <h1>TRI-NEXUS</h1>
+    <div class="subtitle">Grail Matrix Core</div>
+
+    <div id="score-ledger">
+        <div class="score-box">CAMELOT CORE [X]: <span id="score-p1">0</span></div>
+        <div class="score-box">MORDRED MALWARE [O]: <span id="score-p2">0</span></div>
+    </div>
+
+    <div class="gauge-container">
+        <div class="gauge-bar">
+            <div id="fill-p1" class="gauge-fill"></div>
+            <div class="gauge-text">OVERDRIVE: <span id="text-p1">0</span>%</div>
+        </div>
+        <div class="gauge-bar">
+            <div id="fill-p2" class="gauge-fill"></div>
+            <div class="gauge-text">OVERDRIVE: <span id="text-p2">0</span>%</div>
+        </div>
+    </div>
+
+    <div class="config-panel">
+        <select id="aiMode" onchange="window.updateAISettings()">
+            <option value="perfect">GRANDMASTER AI</option>
+            <option value="aggressive">BERSERKER AI</option>
+            <option value="defensive">SHIELD-MAIDEN AI</option>
+            <option value="pvp">LOCAL CO-OP MODE</option>
+        </select>
+        <button id="burnBtn" class="action-btn" onclick="window.toggleOverdriveBreak()">OVERDRIVE BREAK</button>
+        <button class="action-btn" onclick="window.undoTurn()">UNDO</button>
+        <button class="action-btn" onclick="window.resetMatch()">RESET</button>
+    </div>
+</div>
+
+<div id="arena">
+    <div id="board"></div>
+</div>
+
+<div id="tactical-feed"><div id="feed-inner">SYS STATUS: ONLINE // ESTABLISHING ROUND TABLE CONNECTION // SCANNING ALBION SECTORS...</div></div>
+
+<div id="status">CAMELOT CORE'S TURN</div>
+
+<script>
+    const GRID_SIZE = 3;
+    let matchSeed = "";
+    let streakCount = 0;
+    let p1Wins = 0;
+    let p2Wins = 0;
+
+    window.turn = 1; // 1 = Camelot Core (X), 2 = Mordred Malware (O)
+    window.gameOver = false;
+    window.gameState = []; 
+    window.moveHistory = [];
+    
+    let overdriveP1 = 0;
+    let overdriveP2 = 0;
+    let burnActive = false;
+
+    const AudioEngine = {
+        ctx: null,
+        init() {
+            if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        },
+        playTone(freq, type, duration) {
+            this.init();
+            try {
+                let osc = this.ctx.createOscillator();
+                let gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + duration);
+            } catch (e) {}
+        },
+        click() { this.playTone(440, 'sine', 0.1); },
+        shield() { this.playTone(220, 'square', 0.15); },
+        break() { this.playTone(180, 'sawtooth', 0.25); },
+        win() {
+            this.init();
+            try {
+                let now = this.ctx.currentTime;
+                this.playTone(587.33, 'triangle', 0.3);
+                setTimeout(() => this.playTone(659.25, 'triangle', 0.3), 150);
+                setTimeout(() => this.playTone(880.00, 'triangle', 0.5), 300);
+            } catch(e){}
+        }
+    };
+
+    const board = document.getElementById('board');
+    for (let r = 0; r < GRID_SIZE; r++) {
+        for (let c = 0; c < GRID_SIZE; c++) {
+            const sector = document.createElement('div');
+            sector.className = 'sector';
+            sector.id = `sector-${r}-${c}`;
+            sector.onclick = () => window.handleSectorClick(r, c);
+            board.appendChild(sector);
+        }
+    }
+
+    function generateMatchSeed() {
+        matchSeed = Math.random().toString(36).substring(2, 7).toUpperCase();
+        logTactical(`NEW GRID MATRIX COMPILED [SEED: ${matchSeed}] // MERLIN PROTOCOL LOADED.`);
+    }
+
+    function initMatrix() {
+        window.gameState = [];
+        for (let r = 0; r < GRID_SIZE; r++) {
+            let row = [];
+            for (let c = 0; c < GRID_SIZE; c++) {
+                let type = 'normal';
+                let rand = Math.random();
+                if (rand < 0.15) type = 'grail'; 
+                else if (rand > 0.85) type = 'shield-node'; 
+                
+                row.push({ owner: 0, shield: 0, type: type });
+            }
+            window.gameState.push(row);
+        }
+        burnActive = false;
+        document.getElementById('burnBtn').classList.remove('burn-active');
+    }
+
+    window.updateAISettings = function() {
+        logTactical(`AI ARCHITECTURE RE-ALIGNED TO: ${document.getElementById('aiMode').value.toUpperCase()}`);
+        window.resetMatch();
+    };
+
+    window.toggleOverdriveBreak = function() {
+        if (window.gameOver) return;
+        let currentOverdrive = (window.turn === 1) ? overdriveP1 : overdriveP2;
+        if (currentOverdrive < 100) {
+            logTactical("METER INSUFFICIENT // OVERDRIVE BREAK LOCKED");
+            return;
+        }
+        burnActive = !burnActive;
+        AudioEngine.break();
+        const btn = document.getElementById('burnBtn');
+        if (burnActive) {
+            btn.classList.add('burn-active');
+            logTactical(`CRITICAL: PLAYER ${window.turn === 1 ? 'CAMELOT' : 'MORDRED'} INJECTS OVERDRIVE CODE`);
+        } else {
+            btn.classList.remove('burn-active');
+        }
+    };
+
+    window.resetMatch = function() {
+        window.turn = 1;
+        window.gameOver = false;
+        window.moveHistory = [];
+        overdriveP1 = 0;
+        overdriveP2 = 0;
+        generateMatchSeed();
+        initMatrix();
+        
+        document.getElementById('arena').classList.remove('ele-shake');
+        document.getElementById('ele-blast-shield').classList.remove('ele-active');
+        
+        const statusEl = document.getElementById('status');
+        statusEl.innerHTML = "CAMELOT CORE'S TURN";
+        statusEl.style.color = "var(--royal-gold)";
+        statusEl.style.textShadow = "0 0 5px rgba(255,170,0,0.3)";
+
+        syncDOMToState();
+    };
+
+    window.handleSectorClick = function(r, c) {
+        if (window.gameOver) return;
+        
+        let currentMode = document.getElementById('aiMode').value;
+        if (currentMode !== 'pvp' && window.turn === 2) return;
+
+        processTurnSequence(r, c);
+    };
+
+    function processTurnSequence(r, c) {
+        let target = window.gameState[r][c];
+        let pName = window.turn === 1 ? 'CAMELOT' : 'MORDRED';
+
+        if (target.owner !== 0) {
+            if (burnActive && target.owner !== window.turn) {
+                if (target.shield > 0) {
+                    target.shield--;
+                    logTactical(`EXCALIBUR EXCAVATED SHIELD AT FIELD SECTOR [${r},${c}]`);
+                    AudioEngine.break();
+                } else {
+                    target.owner = window.turn;
+                    logTactical(`CORRUPTION FORCED: SECTOR [${r},${c}] DATA-URP COMPLETED BY ${pName}`);
+                    AudioEngine.break();
+                }
+                consumeOverdrive();
+            } else {
+                logTactical(`SECTOR COMPROMISED // FORCE BREACH APPARATUS REQUIRED AT [${r},${c}]`);
+                return;
+            }
+        } else {
+            if (burnActive) {
+                target.owner = window.turn;
+                target.shield = 1;
+                logTactical(`FORTRESS BARRIER DEPLOYED ON EMPTY MATRIX NODE [${r},${c}] BY ${pName}`);
+                AudioEngine.shield();
+                consumeOverdrive();
+            } else {
+                target.owner = window.turn;
+                logTactical(`${pName} CLAIMS DIRECT PATH NODE AT KEY [${r},${c}]`);
+                AudioEngine.click();
+            }
+        }
+
+        if (target.type === 'grail') {
+            adjustOverdrive(window.turn, 50);
+            logTactical(`SANCTUARY FOUND // HOLY GRAIL DATASTREAM ACCELERATES ${pName} METER`);
+            target.type = 'normal'; 
+        } else if (target.type === 'shield-node') {
+            target.shield++;
+            logTactical(`SHIELD FIELD FABRICATED IN SECURED LINE AT [${r},${c}]`);
+            target.type = 'normal';
+        }
+
+        adjustOverdrive(window.turn, 25);
+        adjustOverdrive(window.turn === 1 ? 2 : 1, 10); 
+
+        window.moveHistory.push({
+            gameState: JSON.parse(JSON.stringify(window.gameState)),
+            turn: window.turn,
+            overdriveP1: overdriveP1,
+            overdriveP2: overdriveP2
+        });
+
+        syncDOMToState();
+
+        let winVectors = checkVictoryState();
+        if (winVectors) {
+            executeELESequence(winVectors);
+            return;
+        }
+
+        if (checkTieState()) {
+            executeELESequence([]);
+            return;
+        }
+
+        window.turn = (window.turn === 1 ? 2 : 1);
+        updateStatusDisplay();
+
+        let currentMode = document.getElementById('aiMode').value;
+        if (currentMode !== 'pvp' && window.turn === 2) {
+            setTimeout(() => executeAdaptiveAI(currentMode), 400);
+        }
+    }
+
+    function consumeOverdrive() {
+        if (window.turn === 1) overdriveP1 = 0;
+        else overdriveP2 = 0;
+        burnActive = false;
+        document.getElementById('burnBtn').classList.remove('burn-active');
+    }
+
+    function adjustOverdrive(player, amount) {
+        if (player === 1) {
+            overdriveP1 = Math.min(100, overdriveP1 + amount);
+        } else {
+            overdriveP2 = Math.min(100, overdriveP2 + amount);
+        }
+    }
+
+    function logTactical(msg) {
+        const feed = document.getElementById('feed-inner');
+        feed.innerText = `// ${msg}   |   ${feed.innerText}`.substring(0, 400);
+    }
+
+    function syncDOMToState() {
+        for (let r = 0; r < GRID_SIZE; r++) {
+            for (let c = 0; c < GRID_SIZE; c++) {
+                const sectorEl = document.getElementById(`sector-${r}-${c}`);
+                sectorEl.innerHTML = '';
+                sectorEl.className = 'sector';
+
+                let data = window.gameState[r][c];
+
+                if (data.owner === 1) {
+                    let token = document.createElement('div');
+                    token.className = 'token token-p1';
+                    token.innerText = 'X';
+                    sectorEl.appendChild(token);
+                } else if (data.owner === 2) {
+                    let token = document.createElement('div');
+                    token.className = 'token token-p2';
+                    token.innerText = 'O';
+                    sectorEl.appendChild(token);
+                }
+
+                if (data.type === 'grail') {
+                    let icon = document.createElement('div');
+                    icon.className = 'anomaly-icon';
+                    icon.innerText = '✦';
+                    sectorEl.appendChild(icon);
+                } else if (data.type === 'shield-node') {
+                    let icon = document.createElement('div');
+                    icon.className = 'anomaly-icon';
+                    icon.innerText = '☖';
+                    sectorEl.appendChild(icon);
+                }
+
+                if (data.shield > 0) {
+                    let shieldIndicator = document.createElement('div');
+                    shieldIndicator.className = `shield-indicator ${data.owner === 1 ? 'shield-p1' : ''}`;
+                    shieldIndicator.innerText = `🛡×${data.shield}`;
+                    sectorEl.appendChild(shieldIndicator);
+                }
+            }
+        }
+
+        document.getElementById('fill-p1').style.width = `${overdriveP1}%`;
+        document.getElementById('text-p1').innerText = overdriveP1;
+        document.getElementById('fill-p2').style.width = `${overdriveP2}%`;
+        document.getElementById('text-p2').innerText = overdriveP2;
+    }
+
+    window.undoTurn = function() {
+        if (window.gameOver || window.moveHistory.length === 0) return;
+
+        let snapshot = window.moveHistory.pop();
+        let currentMode = document.getElementById('aiMode').value;
+        if (currentMode !== 'pvp') {
+            while (snapshot && snapshot.turn === 2 && window.moveHistory.length > 0) {
+                snapshot = window.moveHistory.pop();
+            }
+        }
+
+        if (snapshot) {
+            window.gameState = snapshot.gameState;
+            window.turn = snapshot.turn;
+            overdriveP1 = snapshot.overdriveP1;
+            overdriveP2 = snapshot.overdriveP2;
+            logTactical("MERLIN TIME-REVERSAL ENGAGED // REWINDING MATRIX MATRIX STATE...");
+            syncDOMToState();
+            updateStatusDisplay();
+        }
+    };
+
+    function checkVictoryState() {
+        for (let r = 0; r < GRID_SIZE; r++) {
+            if (window.gameState[r][0].owner !== 0 &&
+                window.gameState[r][0].owner === window.gameState[r][1].owner &&
+                window.gameState[r][0].owner === window.gameState[r][2].owner) {
+                return [[r,0], [r,1], [r,2]];
+            }
+        }
+        for (let c = 0; c < GRID_SIZE; c++) {
+            if (window.gameState[0][c].owner !== 0 &&
+                window.gameState[0][c].owner === window.gameState[1][c].owner &&
+                window.gameState[0][c].owner === window.gameState[2][c].owner) {
+                return [[0,c], [1,c], [2,c]];
+            }
+        }
+        if (window.gameState[0][0].owner !== 0 &&
+            window.gameState[0][0].owner === window.gameState[1][1].owner &&
+            window.gameState[0][0].owner === window.gameState[2][2].owner) {
+            return [[0,0], [1,1], [2,2]];
+        }
+        if (window.gameState[0][2].owner !== 0 &&
+            window.gameState[0][2].owner === window.gameState[1][1].owner &&
+            window.gameState[0][2].owner === window.gameState[2][0].owner) {
+            return [[0,2], [1,1], [2,0]];
+        }
+        return null;
+    }
+
+    function checkTieState() {
+        for (let r = 0; r < GRID_SIZE; r++) {
+            for (let c = 0; c < GRID_SIZE; c++) {
+                if (window.gameState[r][c].owner === 0) return false;
+            }
+        }
+        return true;
+    }
+
+    function updateStatusDisplay() {
+        const statusEl = document.getElementById('status');
+        if (window.turn === 1) {
+            statusEl.innerHTML = "CAMELOT CORE'S TURN";
+            statusEl.style = "color: var(--royal-gold); text-shadow: 0 0 5px rgba(255,170,0,0.4);";
+        } else {
+            statusEl.innerHTML = "MORDRED MALWARE'S TURN";
+            statusEl.style = "color: var(--neon-cyan); text-shadow: 0 0 5px rgba(0,240,255,0.4);";
+        }
+    }
+
+    function executeAdaptiveAI(mode) {
+        if (window.gameOver) return;
+
+        let standardTargets = [];
+        let breakTargets = [];
+
+        for (let r = 0; r < GRID_SIZE; r++) {
+            for (let c = 0; c < GRID_SIZE; c++) {
+                if (window.gameState[r][c].owner === 0) standardTargets.push({ r, c });
+                else if (window.gameState[r][c].owner === 1) breakTargets.push({ r, c });
+            }
+        }
+
+        if (mode === 'aggressive') {
+            if (overdriveP2 >= 100 && breakTargets.length > 0 && Math.random() > 0.3) {
+                window.toggleOverdriveBreak();
+                let randomBreak = breakTargets[Math.floor(Math.random() * breakTargets.length)];
+                processTurnSequence(randomBreak.r, randomBreak.c);
+                return;
+            }
+        } else if (mode === 'defensive') {
+            if (overdriveP2 >= 100 && standardTargets.length > 0) {
+                window.toggleOverdriveBreak(); 
+                let bestDef = standardTargets[Math.floor(Math.random() * standardTargets.length)];
+                processTurnSequence(bestDef.r, bestDef.c);
+                return;
+            }
+        }
+
+        for (let target of standardTargets) {
+            window.gameState[target.r][target.c].owner = 2;
+            let win = checkVictoryState();
+            window.gameState[target.r][target.c].owner = 0;
+            if (win) { processTurnSequence(target.r, target.c); return; }
+        }
+
+        for (let target of standardTargets) {
+            window.gameState[target.r][target.c].owner = 1;
+            let loss = checkVictoryState();
+            window.gameState[target.r][target.c].owner = 0;
+            if (loss) { processTurnSequence(target.r, target.c); return; }
+        }
+
+        let center = standardTargets.find(t => t.r === 1 && t.c === 1);
+        if (center) { processTurnSequence(center.r, center.c); return; }
+
+        if (standardTargets.length > 0) {
+            let fallbackMove = standardTargets[Math.floor(Math.random() * standardTargets.length)];
+            processTurnSequence(fallbackMove.r, fallbackMove.c);
+        }
+    }
+
+    function executeELESequence(winningCoordinates) {
+        window.gameOver = true;
+        
+        const shield = document.getElementById('ele-blast-shield');
+        shield.classList.add('ele-active');
+        
+        document.getElementById('arena').classList.add('ele-shake');
+        AudioEngine.win();
+
+        if (navigator.vibrate) {
+            navigator.vibrate([150, 70, 150, 70, 500]);
+        }
+
+        flashHardwareTorch(600);
+
+        let winner = 0;
+        if (winningCoordinates.length > 0) {
+            let firstCoord = winningCoordinates[0];
+            winner = window.gameState[firstCoord[0]][firstCoord[1]].owner;
+        }
+
+        if (winner === 1) {
+            p1Wins++;
+            streakCount++;
+            document.getElementById('score-p1').innerHTML = p1Wins;
+        } else if (winner === 2) {
+            p2Wins++;
+            streakCount = 0; 
+            document.getElementById('score-p2').innerHTML = p2Wins;
+        }
+
+        winningCoordinates.forEach(coord => {
+            const sectorEl = document.getElementById(`sector-${coord[0]}-${coord[1]}`);
+            if (sectorEl) sectorEl.classList.add('winner-glow');
+        });
+
+        const statusEl = document.getElementById('status');
+        if (winner === 1) {
+            statusEl.innerHTML = streakCount >= 3 ? "🔥 CHOSEN SOVEREIGN 🔥" : "CAMELOT CORE SECURES ALBION";
+            statusEl.style.color = "var(--royal-gold)";
+            statusEl.style.textShadow = "0 0 15px var(--royal-gold)";
+        } else if (winner === 2) {
+            statusEl.innerHTML = "MORDRED MALWARE CORRUPTS MATRIX";
+            statusEl.style.color = "var(--neon-cyan)";
+            statusEl.style.textShadow = "0 0 15px var(--neon-cyan)";
+        } else {
+            statusEl.innerHTML = "GRID LOCK: MATRIX FLUSH REQ";
+            statusEl.style.color = "#ffffff";
+            statusEl.style.textShadow = "0 0 15px #ffffff";
+        }
+        logTactical("WAR FOR ALBION CONCLUDED // SIMULATION SUSPENDED... IMMINENT MATRIX REBOOT.");
+    }
+
+    async function flashHardwareTorch(durationMs) {
+        try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            const track = stream.getVideoTracks()[0];
+            const capabilities = track.getCapabilities();
+            if (capabilities.torch) {
+                await track.applyConstraints({ advanced: [{ torch: true }] });
+                setTimeout(async () => {
+                    await track.applyConstraints({ advanced: [{ torch: false }] });
+                    track.stop();
+                }, durationMs);
+            } else {
+                track.stop();
+            }
+        } catch (e) {}
+    }
+
+    window.resetMatch();
+</script>
+
+
+    <footer class="cyber-footer">
+        <div class="footer-title">System Navigation</div>
+        <div class="menu-container">
+            
+        <a href="stix-stax-stonz-cyber-camelot.html" style="text-decoration: none; display: block;">
+            <div class="btn-wrapper">
+                <div class="cyber-btn">
+                    <div class="cyber-btn-inner">
+                        <span class="btn-text">Stix Stax Stonz</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        
+        <a href="blood-and-gold-panther-arena.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--C4N8--</span></div></div></div>
+        </a>
+        
+        
+        <a href="tri-nexus-grail-matrix.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--TRINEXUS--</span></div></div></div>
+        </a>
+        
+        
+        <a href="mecha-strike-overdrive.html" style="text-decoration: none; display: block;">
+                <div class="btn-wrapper"><div class="cyber-btn"><div class="cyber-btn-inner"><span class="btn-text">--MENU--</span></div></div></div>
+        </a>
+        </div>
+    </footer>
+
+
+</body>
+</html>

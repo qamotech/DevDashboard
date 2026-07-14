@@ -1,0 +1,1920 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Qamelot Tower Defense: Courage Under Fire</title>
+    <link rel="icon" hdata:image/x-icon;base64,AAABAAMAEBAAAAEAIABoBAAANgAAACAgAAABACAAKBEAAJ4EAAAwMAAAAQAgAGgmAADGFQAAKAAAABAAAAAgAAAAAQAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8FB/8VBwn/GwkL/x0KDf8eCw7/IQsP/yIKD/8kCxD/JQoR/yMKEP8hCxD/HgoO/x4JDv8dCAz/FwcJ/w8EBv8XCAr/HwoN/yELDv8gCw7/KA8R/y8RFP9AIR//Qx4f/0EcIf9BICn/Mg8h/ywNHP8tDhz/OhYl/zwfJ/8dDA//IAsO/yYMEP8xFxj/Riko/0wxLP9SNC3/Ty0p/1EwK/9WNjL/TSoz/08yOf9NMTr/Ricy/0AoLf9ZPDv/KA8V/yELDf8pCw//QiAg/11FOv9WOzP/UDMv/1g6NP9lRED/XTw5/15BPP9PMjb/VjtB/2NNSf9bPj3/NBUb/yIKDv8gCw//KA0R/0cmIv8/LCf/RjIp/1I7Lv9UODT/WTs7/1c1PP9UNDr/TDMw/z0pJf9GMy//TSks/yoMFP8gDA//IgwQ/ywME/9aOzD/STYp/2pSN/9aQTz/YD42/1s/Mv9dOTr/XzQ9/2tROf9nTjf/Tzsq/2FCOv8vDRb/IwwR/yQNEf8yDRT/bE8z/3ZcLv9mS0H/VDc4/0Y1Mf8oGxn/KRwa/0g0M/9ZNjv/a05A/35iL/9zVzz/Mg4X/yYNEf8mDRH/NA4W/4ZzPP+9uk3/YUA5/0k3Nf89Li3/MiUj/zQnJf9DNTT/YE5N/2RDPf/Cv03/inlE/zUOF/8nDhL/Jg4S/zQOFf99Zjr/gHBC/1E5OP9XRUD/PC4r/0U3NP9PQD3/Sz06/31qZ/9lTEz/h3dK/4NxQ/81Dhb/Jw8S/zAQFP89Exj/WD80/2VKQf9YREH/YkxH/0c5Nf9HODT/WEhC/15PS/+JdHH/fWpp/3FUUv9kTkH/PRcd/zARF/8xEBT/Pxsd/11IPv9rUTb/a1NL/2dPTf9tW1b/a1lU/46Aef+XioX/inN0/5J3eP9sUj//cFxT/0YnIv8yEhX/MhAU/0koI/9pUUD/SDUs/2NJM/9wWU3/e2Zh/5B8cf+woJj/qpiT/5J1ef91Rlb/VkQ7/39rVP9XOy3/MxEW/y0RFP8zGBn/RScl/1VBOv9BLyz/RjMu/2VNQ/95Y1z/qZiQ/3xkXP9kUEr/YE9I/3RkVP9SOi7/Nh0b/y0SFf8mEBL/KRUU/y8XF/9LKCf/YT85/2NDO/9nST3/g3Be/7aolP91WUf/c1dF/3daR/9XOC7/LhgY/yoWFf8kEBL/IRES/yUUFP8tFxb/NxYY/zEYGv82Fhr/ORkb/2xVPf95Y0n/Ohoc/zUXGv8yGhv/NhcZ/y0XF/8kFBX/IBIT/x4PEP8iEhP/KhIU/ygVFP8rFRX/MxYW/zEXGP8zHBv/Mhsb/zAYGf8zFxf/KxYV/ykWFv8pExT/IhIT/x8QEf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAAAACAAAABAAAAAAQAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0FBv8QBQf/EQUG/xUHCf8aCQz/GQgK/x0JDP8cCQ3/GwoN/x0LDv8gCw//IQoQ/yEKD/8iChD/IgsP/yMKEP8jChD/JAsR/yIKEP8iChD/IAoO/x8LDv8dCg7/GwoN/xwJDv8fCA3/HAgL/xwJDP8WBwn/EwUH/xAEBv8MBAX/DgUG/xMGCP8UBwn/HAoM/xwJC/8fCQ3/HgsO/x4LDv8fDA//IQwP/yILD/8jCw//IgsP/yQLD/8lCw//JwsR/ycKEf8lCxH/JAkQ/yQKEf8kCxL/IgsS/yELEP8fCg//HgoO/x8JD/8fCA7/HggM/xwJDP8WBwn/EgUH/w8FB/8VBwn/FwgK/xwKDf8gCgz/IAoN/yILD/8dCw7/HwsO/yEKDv8iCg7/JQoO/yQKDv8tDxL/NhYY/zMTFv8qCg//KAoP/zIQGv85FCL/Lw4d/yUJFf8mChX/JAoU/yMJEv8gCRH/HggO/yEHDv8dBgz/HQcM/xkHCv8WBwr/FAcJ/xYICv8cCQz/IwsO/x8KDf8kDBD/HgoN/yINEP8iCw7/KRAR/zYXF/81FRb/Phwd/0wtKf9SNCr/XTcw/1ElJ/9PIij/WzU0/08zMf9OLDX/RBkw/zkRKf89Eyz/Lg4f/ywMHf9JHDb/UiA6/1oqQv9pRFL/UCkz/zcaIv8VBwn/GwkM/x8LDv8lDBD/JQwQ/x8LDf8vFhb/SCon/0gkJf9OMS3/UTYu/1IvKf9NLyr/XUI3/1w8NP9RMiv/VzYu/109Nv9aOzj/WTk+/1k/Q/9LLjX/USw7/1M3Pv9VMUD/RRoz/0YnMf9LKzP/TTI2/1lAP/9iQz//Px8m/xoIDP8hCw//JQwQ/ycNEP8pDRH/NBYY/0QnJP8+JCL/SzEy/0YsKP9LMiz/TTEq/15AN/9QLCj/MgwR/zwXGv9hQzv/XUA5/0MfI/80Chn/TyYx/1c7Pv9IMzb/SDA4/0UrMv9OMzn/QSkt/zkiKP8vIST/XEU+/00oMP8nDRP/IAoO/yIKDf8oCw7/LQsO/zELDv8/Fxn/Vjoz/2JQPf9RPTn/UTUw/1A1K/9nSj7/UDEt/1Y4Mv9OLSf/Y0Y6/29OSP9hQTr/Wjw3/1IxMP9fQT3/VTg4/15CRv9ONTn/UTQ8/1dDRP9sWEj/V0BB/19FPv9NKjD/Lw4T/ykKEP8hCg7/GwoN/yAMDv8iCw//JgwR/ywMEf9GJCP/XkE1/2JIPv9dQTj/XEE6/0YsKf9CJyf/Vjk2/2ZKQv9qS0f/WDE3/1IqL/9mSUP/bFFI/1tCPf9FKCz/Ricv/1tAR/9eRUf/Z09Q/2FJSP9lSEP/Ui0y/zEQGv8lCxH/IAsP/x0KDf8dCw7/IQwQ/yQMEP8qDRL/MRAU/08uJP9YPTD/MiIg/zQiIP84JSP/Oicj/zsoIv88KCP/PSYi/zwnIv9PMzL/TC4v/z0nJf8+JyP/PCgk/zonI/88JiT/OiYm/zcjJP8zJCT/XkU//1YzM/85FB//LgwW/yYMEv8iDA//HgsO/x8LDv8iDA//Jg0R/ywNEv9AHh//XD0w/zwrKP82JyT/RjMp/2ZQN/9qUDf/a0w9/21JRP9sSUj/bktN/21ITf9pPkv/bEBR/2xAUv9sQFD/bUZL/004Lf9DMCb/QC0m/z0rJf9MODP/XD42/0gfKf8uDBb/KA0S/yMNEf8fDA//IQwP/yMMEP8oDRL/LgwT/0soI/9hRjn/Pywm/0MxKP91XDv/aFEu/15HMf9gQzj/ZzZE/2VCLf9uSjD/bUQx/3A8Ov9uNUL/YypB/04gMv9oRTz/V0Ao/1I8Jv9eRzj/RzQn/0UzKP9qUET/USsu/zAMGP8rDhT/JAwR/yAMEP8hDBD/JAwR/ysNEv8xDBT/Ui4m/2lQPf9NOij/V0Iv/3ZYO/9URDr/TDw6/2A+Tf9gPzL/VUM2/0c1Mf9KODb/Tzw5/0g2M/9SMzX/eFNM/3dfQv93YUD/fWdG/3FQOv9bRC7/VkAr/3JYR/9YNC//Mg4Y/y4NFf8nDRL/IgwQ/yENEP8mDRH/Lg0T/zQNFf9XMyf/dl5A/2VNK/9rUjP/dFM+/08/PP9iRE7/UzIx/1VBOP9HNjT/Khwa/ykcGv8sHx3/Kx4c/0cxMf9VOzf/WDE2/2U/RP9cQTr/c1A6/3NYMv9sUyz/fmZJ/108MP80Dhn/Lw0W/ycOEv8jDRD/Iw0Q/ygOEv8vDRP/Ng0V/107J/+HcT//hGgq/4ZqMv90UUD/Y0pK/0wrLv9QOzX/STg3/zMmI/8sHx3/IBQS/yIVE/8sHx3/NScl/1A/QP9ZQEH/TSgy/2ZOT/95WD//jXAy/4tvK/+PeEj/YkQv/zYOGf8wDhb/KQ4S/yQNEf8jDBD/KQ4S/zANFP83DRf/ZEYp/6GRR/+zpDf/rps9/35YSP9RMTL/TTc0/0c1NP9DMjH/Nyoo/ygbGf86LSv/Oi0r/yodG/83Kij/TT07/1hIRv9bRUb/UjE0/4BbR/+1ozz/uqo3/6SXT/9pTjH/OA4Z/zIOFv8qDhL/JA0R/yQNEf8qDhP/MQ4V/zgPF/9qTCz/q6lU/9DhX//CyGD/XTk1/1c9Nf9JODX/STg2/0s6Of8wIyH/PTAu/yodG/8tIB7/QDIw/zUoJv9VR0b/Z1ZV/2hWVf9fRkX/YDw1/8bLYf/T42D/r6td/2xVMv84Dxj/Mw4W/yoPE/8kDRL/JA0R/yoOE/8xDhT/OA8X/2dIKv+glUz/tbZP/3xnQf9UPzr/Vzo3/1FAO/9OPjz/NCYk/0o7Of9SQj//Nykm/zstK/9pWVb/Xk9N/z0vLf92ZGP/eGZi/15AQ/9sVk//gGpF/7e5U/+knFb/bFQx/zgPF/8zDhb/Kg8T/yUPEf8jDhH/KQ4T/zAOFP83Dhb/Xz8n/457TP92XUD/W0g3/0o6OP9RMzf/Y1BF/1pIRv85Kyj/Oi0p/0I0Mf9LPjr/UUE+/0g6N/9IOzj/STs4/4Rxbv+Cb2j/X0FI/2taWP9wW07/dl5B/5aHV/9lTjD/Nw8X/zIOFv8qDxP/JQ8R/yoSFP8xERb/ORIY/zkRF/9WNij/YEs7/1pBPf9jSTv/Tjw6/1hAQf9fSD//YU5M/04+O/85LSn/U0VC/0U2M/9PQDr/YVJO/0g7OP9lVlP/lIF9/3hgXf90XV//cmFg/3FWUP9oTkr/aFJH/2BJMv85FBr/OxMc/zMUGv8tExf/MQ8S/zYPFP89EBf/RBoc/1c7MP9VQD3/bVVT/2xJOP9dS0L/XklI/1o/Pv9uXFX/STo2/04/O/8+Lyz/RjYx/1lHQP9XRkD/ZlZS/2RVUf+qmpT/cFRX/4p5d/+FcW//bUhH/31lZ/9mU1D/Ykw8/0ckJP86ERv/NA8X/y4OFP8uEBT/NBIX/zkRGf9FIyH/WUM2/1tGQv9wUz//dl8y/2lQRP9kUU3/XkRF/3ZiWv9JOjb/XU5K/0AwLf9HNjH/W0pE/1tLRv+BdG//Y1ZR/6ialP9/ZWf/moqH/4xwb/93XTz/blFH/2tVVf9oVEb/UDcp/zkSGf81FBj/MBIV/ywPEf82ERb/NA8V/0woJP9YRDb/alVM/19CMP9nUjb/a0xB/3NfW/9oUFD/YUhH/31nYv+Qfnb/lIJ7/5B+d/+voZn/1MrC/9HHv/+pmJb/f2Rn/4Nobf+ikIv/f1Ng/2tVQP9gRTn/gmxn/2xaSv9dQjD/MxIV/zYSF/8uDxL/Lg8T/zEOE/80DhP/VDkq/3JhS/9qUj//TDgs/1NAMv9nSi//YEE6/3VdVv93ZF7/b1lV/3BaVf+ah3r/saCW/9fKwP/LwLj/k358/5uGhP+omJH/moGC/3RJWv9zOlL/Xks//1dEOf93YVD/h3Zi/21XPP81ERX/MxAV/y4PE/82Ehb/NREV/zsVGf9jRTb/Zkk6/2NIPf8/LSj/QzAq/15IM/9oUC//YUkx/3NaTv+GcWr/iXVv/29YUv+IcmP/mod//4Vvav+/san/u6yl/5J0ef92SVr/e0ZZ/3NPVP9UQzz/UD44/35pVf+Abkv/gGtJ/zwaG/81Exf/OBMY/yQMD/8zExf/NBMW/0EkIv88Gx3/Y0c6/088N/85KSf/Pisq/0AvKv9DMSz/TDcv/1xBOP96Y1n/cFlT/4JuZf+/sqn/kHp1/5iDe/9qTUz/ZE1H/2NRSf9hTkf/WUhC/1JCPP9oWE//g29Q/0EmIf9ONyr/NBIY/zQVGf8mDhD/LBIV/zISFf8qExT/LBYX/zEVGf9GJyX/b1RG/11KQ/9EMi//QzAu/0QyLv9GNDH/UT83/21SRP9oUEj/iXdw/8e7sf+OenH/iW9i/2VSSf9jUUv/ZVNM/2RTS/9jUkv/gXFj/5eFYv9VOy3/MRga/y0XGP8pExT/MBIW/ywUFf8uEBP/JhAS/ykVFP8sFxb/LxcX/zMWGv9EJSX/aEg8/3tfUP99YlL/gGVT/4NoVv+GbVn/cFdE/3xpXv99aFr/no5//8C0p/+HbVf/mYJj/5uFZP+eiWf/oIto/6WPav+Kck7/UTYs/zIYG/8tGRj/LBgX/ykVFf8lERL/KhAT/yEPEP8iExT/JxQT/yoWFf8rFxb/LhcX/zYZG/9MGiH/Shwg/0IhJP9FIiT/Rh8g/0khI/9ePzX/emVS/5uLbf/Nw6P/rJyG/2lOO/9NJyb/SiUi/0sqJ/9ILCf/TiMi/04cIv81Gxv/LhkY/ysYFv8rFxb/JxQU/yMTFP8gDg//IRES/yISE/8kFBT/KBUU/ykWFf8vGBj/Pxgb/z8WG/8wFxr/Mxkc/zoZHf83FRr/OhYa/z0cIP9kSjj/mopg/7irg/9yWj//Ph4h/zsXHP81Fhr/Oxod/zQbHf8yGRz/Phcc/z0ZHf8uGRj/KhcW/ycVFf8kFBX/IRMU/yASE/8gEBH/IRES/yMSFP8kFBX/KRYV/zUXF/8zExX/KhYV/y0YF/80Ghr/NRYX/zIWGf84Fhf/NRwc/z0gH/91YT//e2dD/z4iIP82HRz/OBgZ/zEXGP8zFxn/NBob/y4bGf8qFxb/MhQX/zQWGf8nFhb/JRQV/yETFP8gEhP/HxES/x4PEP8gEBH/IhIT/yMTFP8lEhP/MxMW/yYTE/8rFxb/KxgX/y8UFf83Fhj/LxcX/zQVF/8xGxv/Mxsb/zohHf86IB7/Mhoa/zEbG/8zFhj/LxgX/zcYGP8uFBX/LBkY/ywYGP8nFBT/MhMW/yMTE/8jExT/IhIT/x8REv8gEBH/HQ8Q/x4PEP8gEBH/IhIT/yQREv8uEhX/JxUU/ykWFf8pFhX/KhMS/zkUFv8tFhX/MBQU/y4aGf8vGhr/Lxoa/y8aGv8vGhr/Lhsa/y8VFv8tFhX/ORYX/ysTEv8pFxb/KRcX/ycXFv8tFBb/IRER/yISE/8hERL/HhAR/x4PEP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAAAADAAAABgAAAAAQAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwFBv8PBQf/DwQG/xAFBf8SBgf/FAcI/xgJDP8bCgz/GQgJ/xUHCf8iCg7/GgkN/xoKDf8cCw7/HQsO/yAMD/8hCw//IQoQ/yIKEP8iChD/IwoQ/yILD/8iCw//IgoQ/yIKEP8jChD/JAsR/yIKEP8iChD/IQoQ/x8LDv8fCw7/HgwN/xwLDv8cCg7/GgoN/xoJDf8jChD/FwYK/xwICv8eCg3/GwoM/xUHCf8UBgj/EgUH/w8EBv8OBAb/CwUG/wwFBv8RBQf/EQUH/xMFB/8VBwn/GAoL/xwKDP8bCAv/GAcK/yILD/8dCg3/HAsN/x0LDv8eCw7/HwsO/yELD/8iCw//IgoP/yELD/8iCw//IwsQ/yMLD/8kCxD/JQsR/yYLEf8lCxH/JQsR/yMKEP8jChD/IwoQ/yMKEP8iChD/IQoP/yEKD/8fCg//HAoO/xsKDf8eCQ3/JQoR/xoHC/8dCAz/HgoN/xoJDP8WBwn/EwYI/xEEBv8PBQb/DQQF/w4GB/8SBgj/EwYI/xQHCf8ZCgz/HwsN/x8KDP8ZBwr/JgsQ/x4LDv8cDA//HwsO/yAMD/8hDA//IgwP/yIKD/8jCw//JAsO/yMLD/8jCw//JAoO/yQLD/8mCxD/KAsR/ygKEf8nCxH/JAoR/yQJEf8kCRH/JQoS/yQLEv8kDBP/IwwT/yEMEf8hCxD/IAsQ/yAKEP8dCg7/HgkO/yYKEf8aBwv/IAkN/x8KDf8aCAv/FQYI/xIFB/8SBgj/DwYH/xUHCf8VBwn/FggK/xoJDf8gCw7/IgoN/xgHCf8lDBD/IQoP/x0LDv8eCw7/IAwP/yELD/8gCw7/IwsP/yQKDv8kCw//JQoP/yYMD/8pDRD/Kw0R/yoOEf8rCxD/KQoQ/ygJEP8oChH/KgsV/ysNFv8pDBj/JwoU/yUJFP8lChX/JwwU/yMKE/8kChL/JAoS/yEKEf8eCQ//HQkN/yAIDf8iBw7/GgUJ/x8HDf8bCAv/GAcK/xUHCf8VCAr/FAcJ/xQGCP8XCAv/GwkM/x0KDf8hCg3/GggL/ycMEf8jCw//HgsO/x0KDf8eCg3/HwsO/yAJDf8hCQz/IwkM/yQJDf8lCg3/MBEU/z4bHf9FIiH/SiYi/0ojIv9EHR7/NxEX/zMPFf9DGSP/SyAp/00jL/9HHy7/Qhkt/zURIv8nChb/JgkW/yUJFv8kBxT/IQkS/yAIEv8oCxn/MhMh/zUTIv85EiT/OBUl/zwhKv83FyD/MBYd/ygSF/8XCAv/EwYI/xYHCf8aCQv/HgoN/yELDv8hCg3/KA0R/yMLD/8eCw7/HwkN/yMNEP8oERT/IgoN/yoQEf88HR3/QyEg/0QfIP9AHR3/RyIj/0ouKv9UOTD/WT4x/2NDOP9fNzH/VCcp/1QmLP9dNTH/X0E6/1U+N/9QODX/TTA2/0oeNP9GGDX/SRg4/00bO/9HGDb/Mg0i/ykKG/9FGTP/UR47/1UhO/9VIjz/ZzlO/3xYZv9eN0P/VCw0/0MhKv8lERX/FgcJ/xcICv8cCgz/HwsO/x8LD/8pDRH/JAsP/yAMDf8gDA3/LhUV/0YoJv9JJyb/SSgn/0sqKP9JLCj/UDEq/1IsJ/9MJiP/TjIu/1U7Mv9aPzT/W0E2/1EzLP9PMSj/WDUt/1c1Lv9fQTn/UTMx/1c8PP9YPUD/Tjk4/040Of9LITb/USg7/1IxPP9OLDr/VSVB/08dPf9BGi3/SSQx/1cwOv9aNDz/XDo+/2tNTv9lREL/Y0E+/0EhKP8rExj/FgcK/x8JDv8gCQ7/IQsP/yMMD/8lDBD/IAsO/yEMD/8wFhf/QCEg/0EkI/9NLS3/RSQm/0szLv9VPDX/TjYt/0ovKP9UNjD/UjUt/2FDOP9QKyj/RR4f/0smJ/9PLyn/XT42/2BCPP9bPTn/Tywx/0ceK/9OJjT/Xz1H/0wzNP9QNjv/SDE0/004O/9VPkH/TDM5/0MiL/9LLjj/QSkt/zIcIv8yIST/MiUn/0MyMP9gR0D/UjE1/zobJP8iChD/HggN/yINEP8mDRD/KQ4R/ysOEf8uDhL/MA4S/zMUFv9GJiT/SC4p/0AgIf9DLy3/SjMy/0EjIf9PNTD/Rysm/1AyK/9cQDb/YUI4/1k2MP85EhX/Mw0S/zYRFf9VNC7/ZEY9/1s9Nv9WNzT/OBIZ/zQMGP84Dx3/WTI6/1w9QP9TPD7/SzQ4/0MrM/9ONT7/PCAo/040Of9JNTf/PSIo/0kvNP8yICP/NScp/2NNRP9YNTf/RB0m/yoNFP8mDBH/IA0P/ycLDv8rCg7/MAsO/zQLD/83Cw//OgsP/0ASFP9PKyr/WkM6/1pHOf9OOzX/Tzs3/1Y4Nf9GKCT/TjMr/2NHOv9kRjz/Ryok/1M2MP9QKyn/Px0a/1Q1Lf9tUEP/aUhB/2ZGP/9bPzj/Vzg0/0IfIv9TLjD/XkE+/080Mv9eQUH/WD9C/082O/9CJi7/VjY//1dCQ/9WQ0D/ZE9D/2JKSf9KNDb/Zk5D/1M1M/9GHSj/NQ0U/zAKEf8rChD/JQoP/xsKDf8dCg3/IAsO/yELD/8iCw//JwsP/y0NEv8/HB7/VDUw/3dfSP9mT0H/Xkg//1E3MP9XPTL/Z0w+/2VIPf9RMi//UDAw/1o+OP9ZPjX/Y0Y7/21QQ/92VlD/Yzg+/1YsL/9mSD//ZUlA/2pPRf9gSD7/YUlB/1k7O/9RLzf/Xz9G/2ZLTv9ZQUT/UDk6/19KSP9uWVH/g2xc/1g/P/9hRz//XDk4/0UhKv8qDxT/IwsQ/yALD/8eCg7/GgkN/xoKDf8dCw7/IQwO/yMMD/8jDBD/KQwR/ywMEf8xERX/Tioo/0wvJP9ZPDT/Ykc//2dJQP9dQTr/TjMx/zwlI/87JSP/PCMj/0ssLf9jREH/bU9L/2xNS/9QMDP/WDA2/1MrMf9NLS3/aEtG/3JWT/9oTUf/TzY0/z0jJv89Iif/PSIp/0svNv9eQkn/aU1Q/2pRVP9aQUX/SjM2/2xPSf9eOzr/SCIs/zAOGf8pDBT/JAsR/yEMEP8fCw7/HAsN/xwLDv8fDA//Ig0Q/yMMEP8nDRH/Kw0S/y4NEv8/HR7/TCwh/14/K/9HMSv/MB8e/zQfH/82Ih//OCQj/zgmI/85JiL/Oici/zsnI/86JSH/OyQh/zslIv89KCT/WDg5/1QxM/8/KCb/PSUk/z0kI/87JSH/Oyck/zomJP86JSX/OSUl/zklJf83IiT/NiAj/zMhJP85KCn/aU5G/18+OP9MJS7/MQ8a/y8MF/8rDBT/JAwR/yILD/8gDA//HgsO/x4LDv8gDA//IgwQ/yQNEf8oDRH/LA0S/zERFP9KKCP/Wzss/1M9Nf82JiT/MiUi/zcnI/86KST/QS4m/0UxJv9GMib/RjIp/0k0Kv9JNCr/STQq/0k0Kv9KMy3/Xz9A/1c4OP9KMS//SDEt/0kyLv9KMy7/STIs/0gyK/9FMCj/Pysl/z8rJv89Kif/Oykm/zknJf9BLyv/aU9H/1U2MP9NJy7/NRAa/y4MFv8rDBX/JQ0R/yMNEP8hDA//HgsO/x4LDv8hDA//IwwQ/yUMEP8pDRH/LQwS/zoXGv9SMSn/ZEc6/z0sKf81JiP/Oiol/0QxKP9tVz7/fGJA/3xfQP99XEP/flZK/39SUf9+UVX/f1JZ/39UXP+AVl//cUVQ/207T/99R2P/fEVk/31FZf99RGT/fERh/3tJWv9wTkz/TTcp/0YzJ/9EMCb/QS4m/z4tJv89Kyb/Tjo0/2lMQv9XMzL/QBgi/y4MFv8tDBX/Jw0S/yQNEf8hDRD/HwwP/yANDv8iCxD/JA0P/yYNEf8sDBP/LgwT/0cjIv9YOSz/X0c7/z0qJf8+LCf/QzAn/3BaPv9xVjH/aE4r/2dML/9lSDL/ZUM3/2w9Rv9WJzD/Yzoq/2o+K/9qPCv/ajgu/2syNf9sLjv/aytC/2ImQv9NGzH/TiAx/2Q4Pf9hRTX/VD0n/1E6Jv9QOir/Tjot/0UzJv9DMCj/RDEp/2tSSP9cPDf/TSUt/zALF/8uDRf/KQ4T/yUNEf8iCxH/HwwP/yANEP8iDBD/JA0R/ykOEv8uDBP/MAwT/08qJv9gQTD/XEU5/0QzJv9GNCf/UDwt/4BjQf9pUjH/Wkg3/08/Nv9NPjn/ZEVM/2I1RP9nRTP/aVI4/2FLNf9hSTX/X0U2/2JDOv9gQDv/Xz09/2Y8Q/9YJzn/Yjc7/2tNOf9fSCr/XEUp/1xGLP9wVz7/el1H/1I8K/9NOSn/TDkp/2lQQ/9lRjv/VS8x/zIOGP8vDRf/LA0U/ycNEv8jDBH/IAwQ/yEMEP8iDBD/JQ0S/yoNEv8vDBP/Mg0U/1AqKP9nSDT/Ykw7/1A8Kf9SPin/Xkg0/31dQP9hSzn/T0A7/009O/9cREr/WjBD/1s7MP9hTDj/STkz/0c2M/9CMjD/Szs5/1A+O/9JOTf/SDY0/0wyMv9oRUD/iWpa/4NrUP+GcFD/hnJO/4l0T/9vUTr/dVE8/2JJMv9aRCv/WUMs/2xVQf9sTj3/WTIz/zMOGP8wDRj/LQwU/ygOEv8kDBH/Ig0Q/yENEP8jDRH/Jw4S/y0NE/8xDBT/NA0V/1MtJ/9uUDb/a1U8/2BJK/9hSiz/a1I3/31ZQf9eRjz/Tj47/1dERv9gOUr/UjEu/2RPO/9KOTX/SDY0/zEjIf8kFxX/NSgm/zksKv8nGhj/MiQj/0YuL/9NMjD/Wjw3/186O/9bNTf/Z0M//2FDOP9hQTT/e1M9/3NXNv9pUSz/Z04s/3RdQ/9zV0D/WjUz/zUOGf8yDhj/Lg4V/ygOEv8kDhH/Ig0Q/yINEP8kDRH/KA4S/y4OE/8zDRT/NQ0V/1UvKP91WjX/dl89/3JZK/90Wiz/eV44/3xXQv9bRTr/WUVF/2VBTf9QLS//WEA2/0o5Nv9LOTf/Oiwq/zEjIf8gFBL/IRQS/yEUEv8hFBL/MiQj/zwuLP9MOzr/UT09/1s7QP9QJTT/ZUBM/2BKSf9gSj7/fVc+/4FkN/98YCv/el8s/39mRP96Yj3/XTox/zYOGf8yDhj/Lw4V/ykOEv8lDhL/Iw0Q/yINEP8lDRH/KQ8T/y8NE/80DRX/Ng0V/1gyKf9+aDX/g2w8/4ltKf+NcCr/i243/35VRP9kTEL/a0xQ/0QjJ/9QODL/STc0/0k3Nv89Ly3/LyIe/zQlI/8iFRP/IBMR/yIVE/8kFxX/MiUj/y8iIP9CMzH/UUBA/1RCQP9XOTz/RSIp/21NUP9uV0v/gFpA/5F0Nf+Tdir/kHQr/4xzRf+CbTz/YDwy/zcOGf80Dhn/Lw4V/ysOE/8mDhL/IwwQ/yMMEP8lDRH/Kw0S/zAOFP80DRb/Nw0X/1w3KP+KeTj/loFB/6mTLf+rlS//oYk7/4NZR/91VU3/Rygo/040Mf9KNjX/SDU1/0c1NP8yJSP/PjEu/yodG/8uIR//PC8t/z0wLv8uIR//LB8d/zwvLf82KSf/VUNC/1dGRP9aSEf/VTs+/0cnK/96WE7/hFxF/6mROv+ynC//r5ou/5yISP+NfkD/YUAy/zcOGf82Dhj/MQ4W/ywOE/8mDhH/JAwR/yMMEP8lDRH/Kw4T/zAOFP80Dhb/Nw4X/186Kv+Shj7/qKFR/8zRUf/M0VL/u7RV/3lQRP9RMC7/Uzk0/0w5Nv9HNjT/STY1/0o4N/8/MS//LiEf/ywfHf87Liz/LyIg/zAjIf86LSv/LyIg/zEkIv9BNDL/WUlI/15NTP9gT07/Y1BP/1pBQP9TLzD/dlA+/8C6Vv/S11P/0NRS/6ykWP+UiUX/YkUy/zgOGf83Dxj/MQ4V/ywOFP8mDhH/JAwR/yQNEf8mDhL/Kw4T/zAOFP81Dhb/OQ8Y/2I9Kv+Thz//qKZX/8zeXv/M3WD/tbFg/2A8Nf9SMDH/YUw+/0o5Nv9JODX/Sjk3/1NBP/80JiX/OSwq/0I1M/8wIyH/Kh0b/y0gHv8zJiT/SDo4/z4xL/85LCr/YVNR/2lYWP9rWVj/a1hX/25ZU/9WNTf/Yj81/7eyX//Q4mH/zuFe/6yqX/+Vikb/Zkgx/zgPF/83Dxj/Mg4V/ywOFP8mDxL/JA0S/yQNEf8mDhL/LA4T/zAOFP81Dhb/OA8X/2E8Kv+MfDz/n5hQ/7rBUP+ysFj/clo6/1hENv9SMzn/YUk7/1FAOv9KOTf/Tz89/zgqKP85Kyn/Rjc1/1JBPv9BMi//MCMg/zIlI/9MPjv/bl1a/1lKSP9BMzH/QTQy/3NhX/90Y2H/dmNg/2hRTP9gQEX/bFVG/3ZdPf+zsln/vcVU/6WeWf+PhEP/aEoz/zgPFv83Dxf/Mg4V/ywPFP8nDxL/JQ8R/yMNEf8mDhL/Kw4T/zAOFP80DhX/Nw8W/145Kv+Cbjj/lYVK/6SYSf98ZkD/X0o2/007Of9TOj3/TjIw/2NSQ/9SQD7/VURC/zYoJv86Liv/TT47/0w8Ov9IOTb/QTQx/0c4Nf9PQT3/XE9L/2ZWVf9KPDr/RDQx/31qaP98amn/g3Fo/1U4PP9oT1L/alhV/29ZR/9/aUX/pZtN/5qMU/+GeED/Zksz/zcPFv82Dxf/MQ4V/ywPFP8nDxL/JQ8R/yMOEf8lDhL/Kg4T/zAOFP80DhX/Nw4V/1w3KP92Xjb/jXlS/3deRf9eQzP/VEI4/0s5N/9SPT3/Sywx/2lVRv9cSkX/XktJ/0c2M/8uIh7/Oy0o/0U4Nf9KPTn/STo3/00+Ov9RQT7/Sz48/0Q4NP87Lyv/WktI/4d0cP+Fc23/f2tk/1Y2Pf9wXFz/a1pZ/29cVP9nSz//dl5F/5aEX/99bED/Y0sx/zYPFv82Dxf/MQ4V/ywPFP8nDxL/JQ8R/yUQEv8oDxP/LQ8U/zIPFv82Dxb/NxAW/1k1KP9kSzf/YEg8/1I5Nf9jRTz/X0s9/008Of9QPjz/WjtB/1Y+Nv9nVUz/Yk5N/1xMSP80JyT/PjIt/0Q4NP9XSUb/QjMw/0o6Nf9iUk7/U0RB/0w/PP9AMzD/e2po/5F/ev+SgHj/aE5N/21PVv90YmH/cF9e/3hiW/9pTEX/XUM9/2lQSP9oUj7/ZEw0/zURGP84EBn/NBAY/y8RFv8qERX/KBAU/zcTFv86Exf/QBIY/0UUGv9FExr/Qhga/1k3K/9YQjT/V0U//1lEQ/9pSUj/blE//1RCPf9TQUD/X0dI/08yNf9rWE7/ZlRQ/15OSv8zJSL/TD46/1NEQf9BMi//RDQw/1FAOf9URD7/ZldR/2BRTv9GODT/fG1q/6CPi/+XhX//Xj9G/4Jsbf96amj/emhm/3tbWv9yU1b/a1hW/2ZTT/9kUEP/ZU43/0QgIf9DFSL/QxQh/z8THv85Exz/NxIZ/ygOEf8qDhL/Lg4T/zQQFf8zDxb/SiUh/1AyKf9WQDj/Tzo5/2hTT/96WUr/ZUUy/2hVRf9aR0T/YUxL/1w/Qf9lT0f/bl1Y/1dIQ/81JiT/YFBM/z0tK/9BMS3/STkz/1tJQv9cSUP/V0VA/3hoY/9NPjn/dmdi/6+emP+Ld3X/c1Zb/5CAff+HdnT/jndz/2pGQv92VFL/fmho/2RRT/9hTEX/W0I0/1E4K/80EBj/MREX/y4QFP8pDxP/Jw4R/zETFv80Exj/OhUb/zsUG/8zERf/UC0o/1c+Lv9XRT7/XkhG/3pdVP94XzP/bVMv/2xSQv9iT0n/ZVJP/2dOTf9eRkP/d2Zd/1NEQP87LSr/XE5J/z0tKv9CMi7/TDw2/2BOSP9fTUb/WUdD/3tuaP9VRkL/cGNc/7Kmnv99Z2j/j3d5/5yLiP+UhIH/iWpr/3BSO/9zWTv/fV9g/3FbW/9oVlH/YEo4/2BKMv81FBj/OxYb/zoYG/82FRn/MxUY/ycMDv8uDhL/MA4T/zMNFP85Ehj/UzAr/11HNv9UQT3/Z01K/2NAM/9vWjL/cVs4/2ZHPP9tV1H/aVZS/3JdW/9aPkD/eGJd/25dVv9uXlf/gW5p/21cWP9gTkr/WUlC/2lZU/+Acmz/m4+J/7qvqP+dkYz/lYeD/6aTkv9wVFn/nIiG/6CPif+dhoX/eE9X/3RbP/9yXDv/XT04/3ZcXP9qWFT/bVpH/2lSOP87Fxr/Mg8U/y8RFP8wEBT/KgwP/ysREf81ERX/OhMY/zoRF/87Fxn/UTEo/1xIM/9TQjr/gGxd/1o8L/9fSTD/Z1E4/2xLPv9sU0v/fGhn/2dPT/9jSkn/XkJE/2lQT/+Oe3T/koB3/5aDfP+di4P/p5WN/8O1q//UycL/2dDH/9TKw//Ft7T/iXJ1/3dbX/+EZ2v/f2Np/6SSj/+SdHf/eEVX/2xVQ/9jUDv/Wz05/5B5cv9xYFj/b1tI/2ZRNv9AIh//ORQY/zkTGP82Ehb/LRAT/zERFf8yEBX/NxAW/zkQFf9AHx//VToq/2hWP/91ZE//aU89/1E5Lf9OPC3/WkY2/25SOP9kRjr/Z0xI/2pSTv9zYFr/eGRf/2xVUv9hSEf/iHNq/52Lf/+lk4v/s6KZ/9LFuv/c0sj/1czD/7Ginf9/Zmj/lX19/6iXkf+gjon/jnN2/31YZP93SVv/d0BV/2VPRP9ZSDn/WkM6/3BYS/+Kemf/fm1Y/2tVOv9NMij/ORIY/zkSGP80EBb/MhAV/zARFP8xDhP/Mg4T/zYQFP9HJSP/aE84/3tmT/9pTj3/XUU4/0QyKv9EMyr/Tjsy/2pQNf9dQCL/Xj8n/2lPPf94YVT/f2tj/39sZ/99aWT/bllV/3VfV/+Sfm//uKeZ/9HDuf+wopr/lH95/5aAe/+yoZ3/uquk/7OinP+bgoX/g1lm/3A0UP9sLUr/eUpX/11JQf9SQjj/UkA5/3JeT/99Z0//jHtf/39pSf9YPiz/NxMW/zMRFf8yDxT/MREV/zYTFv83ERb/LxEU/zcTGP9OKyb/XUAx/2RFOP9gPzT/aFFF/z8sKf8/LCf/QS8p/1VCNP9lTjb/aVI0/2dQNf9lSzj/bFFF/4hyaP+Kd2//i3hx/4ZxbP9nTUP/d19R/4JtZf95YFv/pJGM/8G0rP/Cta3/s6Od/4VmbP94Tlz/e1Bf/35SX/97VVz/blRR/1RDPP9RQDr/UD04/4dyYv98Z0f/gnBK/3hjRP9hRzT/ORca/zASFv83Exj/OBMX/yYMD/8oDxH/NRQX/zkUGP9AHh3/UjIr/z4eH/9QLyr/bVRE/089OP86KSj/Oiom/z4rKf9CLyr/QzIq/0UzK/9LNy//VT4y/1c6Mv94YFX/jnpw/3ljXv9xWlL/hHFn/7qrof+nlpD/jXhz/7inn/+SfHb/ZEZH/2VJSP9mUUr/ZFJK/2NQSf9eS0X/V0ZA/1NCPf9QQTz/aFdP/496X/9kTDX/RSsk/2dTOv9ILCT/NxQY/zYWGv8qERL/Kg4R/yMND/8vExb/NhMX/zASFP8rFBb/LxYZ/zEVGv9AISH/XkE1/21WSf9OOzf/Oioo/zooKP88Kin/PCsp/z8sKv8/LSz/QS8t/0s3Mv9YPTL/cVhN/2JIQP91YFn/jXtz/8m+tP+woZj/emJb/4pyaf9lSD//YEpG/19MRv9gT0f/YU9I/2BOR/9dS0X/WEdC/1dFQP9pW1D/k4Jo/4BqSv9LMSb/Mxgb/zAYGv8rFBf/MBEV/zQUGf8vFRf/Iw8Q/y0TFf8yExb/LhAT/ycTE/8rFhb/LBYX/zAWGP80Fhr/Ryck/2lKPf93YFH/aFRN/087OP9HNTH/SDUx/0g1Mf9KNzP/Szk0/1A9N/9fRzn/emJR/3JcVP9yWlP/koF6/8zBt/+fjIH/qZeO/6ONf/9rU0T/ZlNM/2ZVTf9pVk//aFdP/2hXTv9nVk7/bFxU/46Ab/+kk3P/kHxU/1Q7Lf80Ghz/MBga/y4YGf8rFhf/KBMU/ywRFP8yExb/LBQW/zITFv8rDxL/JhES/ykVFP8rFhX/LBcW/y8XF/8yFxn/NBYa/0UlJP9jQzj/clZH/4VrW/+NdGP/kHdm/5J5Zv+VfGn/l39q/5mCbf+NdWH/c1tG/3tpX/9xW1H/jXps/62flf+aiXz/w7ir/5J5Zv+ag2j/rJd4/66aef+wnXz/sp9//7Sifv+1o4D/sp96/5uGX/+EbUr/UDYr/zUZHP8vGRn/LhkY/y0ZGP8rFxb/KRQW/yUQEv8pEBL/LRIV/yoPEf8hDxD/JRMU/ygVFP8qFhX/KxYV/ywXFv8uFxf/MRcZ/zMYG/9AHiH/Wi4s/2M3Mf9ZNi//WDgx/1k5MP9bODD/Wzkv/188Mv9gQjX/Zks7/39rW/+BbmX/kH1c/6qcfP/Iva//vrCe/35jS/9vUjz/bk44/2tMNv9tTzj/bVI7/25TO/9vUjv/elI+/2pENf9GJyX/NBoa/zEZGv8tGRj/LBgX/ywYF/8qFhX/KBQV/yUTFP8hEBH/Jw4Q/x8OD/8gERL/IxMU/yYUE/8oFRT/KhYV/yoXFv8sFxb/LRcX/zQZGv9DGR7/Uhwk/0UXHv86GB3/PBsg/z0cIP9BGR7/QBgd/0MYHf9EICP/ZUY4/21XQP+HdWb/qZts/8vBlf/Ivan/jHhd/29VP/9GJCX/Qxsf/0AbHP9CHB7/QCEi/z4hI/87Hh7/SBsf/1QcJP9DGx7/Mxob/y4ZGP8rGRf/KxgV/ysXFv8oFhX/JhQV/yQUFf8hEhP/Hg4P/yEREv8hERL/IxMU/yQUFP8mFBT/KRUU/ykWFf8rFxb/LxkY/zwZG/9IGR//QxYc/y8VGP8zGRv/NBkd/zcaHf87Fxz/OBYb/zsVGf87GR3/QR8i/2lPO/95Y03/raBr/8m/j/+ci2//d2BD/0IiI/88Gx//PBUb/zYXG/86Fxv/Ohwf/zUcHf80Gx3/MBca/0EXHf9IGyD/ORod/y4aGf8rGBf/KhcW/ygWFf8mFBX/JBMV/yETFP8gEhP/IBIT/yAQEf8hERL/IhIT/yMTFP8kFBT/JhUU/yoWFf8rFxb/NhgZ/z0XGv83FBf/LBUV/y8ZGf8vGRr/NBoc/zkZG/81Fhn/NRca/zwWGf83Ghz/ORwe/0UnJP9qUjz/l4hT/6WUZP91YET/SCwl/zodH/84HB3/PBYa/zMXGv8zFhn/ORod/zQcHf8xGxz/MRsb/y0WF/81FRj/PBcc/zQYGf8qGBf/KRYV/ygVFf8kFBX/IhQV/yASE/8gEhP/HxES/yAQEf8hERL/IhIT/yIRFP8jExT/JBQV/ygVFP8wFhb/NxYX/zMTFf8pFBP/LRgX/ywYF/8vGRn/Nxoa/zMVFv8wFxj/NhYZ/zsVF/8zGhn/NRwc/zccHP9MMij/fGhE/4BtRv9ONCj/OR0d/zUcG/8zGxr/OhcY/zUXGP8vGBj/MhYX/zUYG/8wGxr/LhoZ/y0ZF/8pFBX/MhQY/zYWGf8tFRf/JRYX/yUVFv8jFBX/IRIT/yASE/8fERL/HxES/x4PEP8fDxD/IRES/yISE/8iEhP/JBQV/yUTFP8wExb/MhMW/yMREP8pFxb/LBgX/ysYF/8uFxf/MRQU/zcYGf8xFhb/MRYX/zkUGP8xGRr/Mhsc/zMbGv80Ghr/RCsj/0QqJP81Gxv/Mxsa/zIbHP8wGRv/OBYZ/zAXFv8yGBf/Nxka/y8VFf8sFxb/LRkY/y0ZGP8qFxf/JBES/zITF/8uFBX/IxQV/yQUFf8jExT/IhIT/yASE/8fEBH/IBAR/x0PEP8eDxD/Hw8Q/yEREv8iEhP/IhIT/yQSE/8tEhX/LBEU/ycUFP8oFhX/KxcW/yoXFv8rFhX/LhMT/zwXGf8yFhb/LxYV/zUTFf8vGRj/Lxsa/zEbG/8yGhv/Mhsa/zIaGv8xGhv/MBsa/zAbGv8uGRn/NRUW/y8VFf8yFxf/PRka/y0UFP8rFhX/KxgX/ysXGP8pFxf/JxYV/ykSFf8rExT/IhIU/yISE/8iEhP/IhIT/x8REv8fEBH/Hw8Q/x0QEf8dDxD/Hg8Q/yAQEf8hERL/IhIT/yMSE/8sEhT/KBIU/yYVFP8oFhX/KhYV/ygWFP8pFRT/KhIR/zsWF/8vFRX/LhQU/zMSE/8tGBj/LhoZ/y4aGv8vGhn/LhsZ/y4bGf8vGhr/Lhoa/y4aGf8sGRj/MhQV/y4UFP8vFhb/PBcY/ysTEv8qFRT/KRcW/ygXFv8oFxb/JhYX/ykTFf8qEhP/IBIS/yISE/8iEhP/IRES/x4QEf8eDxD/Hg4P/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==n.ico" type="image/x-icon">
+    <style data-inlined-from="styles.css">
+﻿* { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body, html {
+            margin: 0; padding: 0;
+            background:
+                radial-gradient(circle at 50% 18%, rgba(0, 217, 255, 0.16), transparent 34%),
+                radial-gradient(circle at 82% 80%, rgba(177, 0, 255, 0.18), transparent 32%),
+                #020817; 
+            color: #d0e0ff;
+            width: 100vw; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 99vw;
+            height: 99vh;
+            max-width: none;
+            background: linear-gradient(180deg, rgba(7,19,38,0.98), rgba(3,7,17,0.98));
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9), 0 0 0 2px #b100ff, 0 0 30px rgba(177,0,255,0.95), inset 0 0 24px rgba(0,255,255,0.1); 
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #top-bar {
+            height: 44px; min-height: 44px;
+            background: linear-gradient(90deg, #050816, #102b46 36%, #27124a 68%, #050816);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 12px; border-bottom: 2px solid #00ffff; 
+            box-shadow: 0 0 18px rgba(0,255,255,0.45), inset 0 -1px 0 rgba(255,215,0,0.32);
+            z-index: 10;
+        }
+
+        .stat-group { display: flex; gap: 15px; align-items: center; }
+        .stat { font-size: 15px; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; gap: 5px; text-shadow: 0 0 8px rgba(0, 255, 255, 0.4); }
+        .stat-icon { font-size: 16px; }
+        .c-red { color: #ff3366; text-shadow: 0 0 8px #ff3366;} 
+        .c-gold { color: #ffd700; text-shadow: 0 0 8px #ffd700;} 
+        .c-cyan { color: #00ffff; text-shadow: 0 0 8px #00ffff;} 
+
+        .ctrl-btn {
+            background: linear-gradient(180deg, #0b1b31, #0a0510); border: 1px solid #00d9ff; color: #fff;
+            padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer;
+            text-shadow: 0 1px 2px #000; transition: 0.2s;
+        }
+        .ctrl-btn:hover { background: #102b46; border-color: #00ffff; box-shadow: 0 0 10px rgba(0,255,255,0.5); }
+        .ctrl-btn.active { background: linear-gradient(180deg, #00ffff, #0088aa); border-color: #00ffff; box-shadow: 0 0 15px #00ffff; color: #000; }
+
+        #canvas-wrapper {
+            flex-grow: 1;
+            display: flex; justify-content: center; align-items: center;
+            background: radial-gradient(circle at center, #0d2742 0%, #030a15 100%);
+            position: relative; overflow: hidden;
+            border-bottom: 2px solid #00ffff;
+            box-shadow: inset 0 0 34px rgba(177,0,255,0.24);
+        }
+
+        #game-canvas {
+            max-width: 100%; max-height: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: contain;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8) inset, 0 0 22px rgba(0,255,255,0.16);
+        }
+
+        #screen-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 2, 10, 0.85); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(4px);
+        }
+        #screen-overlay h1 { color: #00ffff; font-size: 56px; text-shadow: 0 0 20px #00d9ff; margin: 0 0 10px 0; letter-spacing: 4px; text-transform: uppercase;}
+        #screen-overlay h1.rock-title {
+            font-family: Impact, 'Arial Black', 'Segoe UI Black', sans-serif;
+            font-size: clamp(42px, 7vw, 84px);
+            line-height: 0.92;
+            max-width: min(980px, 92vw);
+            color: transparent;
+            background-image:
+                linear-gradient(28deg, transparent 0 44%, rgba(24,20,18,0.95) 45% 47%, transparent 48% 100%),
+                linear-gradient(116deg, transparent 0 58%, rgba(35,31,28,0.9) 59% 61%, transparent 62% 100%),
+                linear-gradient(74deg, transparent 0 33%, rgba(255,255,255,0.55) 34% 35%, transparent 36% 100%),
+                linear-gradient(180deg, #f5f1e8 0%, #d5d0c3 35%, #9a978f 63%, #f2efe5 100%);
+            background-size: 118px 82px, 154px 96px, 92px 68px, 100% 100%;
+            background-position: center;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-text-stroke: 3px #181512;
+            filter: drop-shadow(4px 5px 0 rgba(0,0,0,0.95)) drop-shadow(0 0 2px rgba(255,244,210,0.75));
+            text-shadow: none;
+            letter-spacing: 2px;
+            word-spacing: 0.08em;
+        }        #screen-overlay p { font-size: 24px; margin-bottom: 40px; font-weight: bold; color: #ffd700; text-shadow: 0 0 10px #ffaa00;}
+        
+        #overlay-tutorial {
+            max-width: min(760px, 86vw);
+            margin: -18px 0 26px 0;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(220px, 1fr));
+            gap: 8px 18px;
+            color: rgba(210, 245, 255, 0.92);
+            font-size: 13px;
+            line-height: 1.35;
+            text-align: left;
+            text-shadow: 0 0 8px rgba(0,255,255,0.45);
+        }
+        #screen-overlay.victory-matrix::before {
+            content: '0101 1010 0011 1100 0110 1001 1110 0001 0101 1010 0011 1100 0110 1001 1110 0001\A 1100 0011 1010 0101 1001 0110 0001 1110 1100 0011 1010 0101 1001 0110 0001 1110\A 0011 1100 0110 1001 1110 0001 0101 1010 0011 1100 0110 1001 1110 0001 0101 1010\A 1001 0110 0001 1110 1100 0011 1010 0101 1001 0110 0001 1110 1100 0011 1010 0101';
+            position: absolute;
+            inset: -20%;
+            color: rgba(57, 255, 20, 0.16);
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 22px;
+            line-height: 1.35;
+            white-space: pre-wrap;
+            transform: rotate(-8deg);
+            pointer-events: none;
+            z-index: 0;
+            text-shadow: 0 0 12px rgba(57,255,20,0.5);
+        }
+        #screen-overlay.victory-matrix { background: rgba(0, 16, 12, 0.88); overflow: hidden; }
+        #screen-overlay > * { position: relative; z-index: 1; }
+        .action-btn { background: linear-gradient(135deg, #00d9ff, #075f8f); border: 2px solid #00ffff; color: #fff; padding: 15px 40px; font-size: 20px; font-weight: 900; border-radius: 8px; cursor: pointer; box-shadow: 0 0 20px rgba(0,255,255,0.4); text-transform: uppercase; letter-spacing: 2px; transition: 0.2s;}
+        .action-btn:hover { background: linear-gradient(135deg, #00ffff, #00cccc); border-color: #00d9ff; box-shadow: 0 0 30px #00d9ff; color: #000; transform: scale(1.05); }
+
+        #bottom-panel {
+            height: 76px; min-height: 76px;
+            background: linear-gradient(to bottom, rgba(9, 7, 22, 0.98), rgba(2, 8, 23, 0.98));
+            display: flex; align-items: center; padding: 5px 6px; gap: 8px; overflow: hidden;
+            box-shadow: inset 0 1px 0 rgba(0,255,255,0.5), 0 -8px 22px rgba(0,255,255,0.08);
+        }
+
+        .panel-section { display: flex; gap: 8px; flex-grow: 1; justify-content: center; align-content: center; flex-wrap: wrap; }
+
+        .shop-btn {
+            flex: 1 1 68px; max-width: 86px; min-width: 60px;
+            background: linear-gradient(135deg, #0b1b31, #0a0510); border: 2px solid #00d9ff; border-radius: 8px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; position: relative; transition: 0.2s;
+            box-shadow: inset 0 2px 5px rgba(255,255,255,0.07), 0 4px 8px rgba(0,0,0,0.55), 0 0 12px rgba(0,217,255,0.2);
+        }
+        .shop-btn:hover { border-color: #00ffff; background: linear-gradient(135deg, #102b46, #06101f); transform: translateY(-2px); box-shadow: 0 0 16px rgba(0,255,255,0.52); }
+        .shop-btn.selected { border-color: #ffd700; background: linear-gradient(135deg, #3d1459, #0b1b31); box-shadow: 0 0 18px rgba(255,215,0,0.55), inset 0 0 14px rgba(0,255,255,0.18); }
+        .shop-btn.disabled { opacity: 0.4; filter: grayscale(1); pointer-events: none; border-color: #333;}
+        
+        .preview-cvs { width: 28px; height: 28px; pointer-events: none; }
+        .shop-lbl { font-size: 8px; font-weight: 800; letter-spacing: 0.5px; margin-top: 2px; text-transform: uppercase; color: #00ffff; pointer-events: none; text-align: center; text-shadow: 0 0 5px rgba(0,255,255,0.3); }
+        .shop-cost { font-size: 10px; font-weight: 900; color: #ffd700; pointer-events: none; text-shadow: 0 0 5px rgba(255,215,0,0.5); }
+
+        .action-container { display: flex; flex-direction: column; gap: 5px; min-width: 104px; align-self: stretch; }
+        .big-btn {
+            flex-grow: 1; background: linear-gradient(135deg, #00d9ff, #075f8f); border: 1px solid #00ffff;
+            border-radius: 8px; color: #fff; font-weight: 900; font-size: 12px; cursor: pointer; text-shadow: 0 2px 2px rgba(0,0,0,0.8);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); letter-spacing: 1px; transition: 0.2s;
+        }
+        .big-btn:hover { background: linear-gradient(135deg, #00ffff, #00cccc); box-shadow: 0 0 15px #00ffff; color: #000; border-color: #00d9ff;}
+        .big-btn:disabled { background: #06101f; border-color: #333; color: #555; cursor: not-allowed; box-shadow: none; }
+
+        #upgrade-ui { display: none; width: 100%; gap: 10px; align-items: center; justify-content: space-between; padding: 0 10px;}
+        .upg-info { font-size: 11px; color: #aaddff; line-height: 1.35; background: rgba(0,0,0,0.5); padding: 6px 12px; border-radius: 8px; border: 1px solid #00d9ff; }
+        .upg-info h3 { margin: 0 0 3px 0; color: #00ffff; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 5px #00ffff;}
+        .hl { color: #fff; font-weight: bold; }
+        .c-purple { color: #00d9ff; }
+        
+        .upg-btn { background: linear-gradient(180deg, #cc8800, #885500); border: 1px solid #ffd700; border-radius: 6px; padding: 6px 12px; color: #fff; font-weight: bold; cursor: pointer; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .upg-btn:hover { background: linear-gradient(180deg, #ffaa00, #aa6600); box-shadow: 0 0 10px #ffd700; }
+        .upg-btn:disabled { background: #443; border-color: #665; color: #887; cursor: not-allowed; box-shadow: none; }
+        
+        .sell-btn { background: linear-gradient(180deg, #cc0033, #660011); border: 1px solid #ff3366; border-radius: 6px; padding: 6px 12px; color: #fff; font-weight: bold; cursor: pointer; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .sell-btn:hover { background: linear-gradient(180deg, #ff1a55, #990022); box-shadow: 0 0 10px #ff3366;}
+        
+        .tgt-btn { background: linear-gradient(180deg, #102b46, #06101f); border: 1px solid #00ffff; border-radius: 6px; padding: 6px 8px; color: #fff; cursor: pointer; font-size: 11px; font-weight:bold;}
+        .tgt-btn:hover { background: linear-gradient(180deg, #3d1459, #0b1b31); border-color:#00d9ff;}
+
+
+        .side-shop {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 20;
+            pointer-events: auto;
+        }
+        .side-shop.unlocked { display: flex; }
+        #advanced-left { left: 10px; }
+        #advanced-right { right: 10px; }
+        .side-shop .shop-btn {
+            width: 76px;
+            height: 70px;
+            flex: 0 0 auto;
+            min-width: 0;
+            max-width: none;
+            background: linear-gradient(135deg, rgba(11,27,49,0.96), rgba(10,5,16,0.96));
+        }
+        .prime-special {
+            position: absolute;
+            left: 50%;
+            bottom: 10px;
+            transform: translateX(-50%);
+            display: none;
+            z-index: 21;
+            pointer-events: auto;
+        }
+        .prime-special.unlocked { display: block; }
+        .prime-special .shop-btn {
+            width: 104px;
+            height: 74px;
+            flex: 0 0 auto;
+            min-width: 0;
+            max-width: none;
+            border-color: #b100ff;
+            box-shadow: inset 0 2px 5px rgba(255,255,255,0.08), 0 0 18px rgba(177,0,255,0.55);
+        }
+        .shop-btn.locked { display: none !important; }
+        @media (max-width: 900px) {
+            .side-shop { top: auto; bottom: 6px; transform: none; flex-direction: row; gap: 5px; }
+            #advanced-left { left: 6px; }
+            #advanced-right { right: 6px; }
+            .side-shop .shop-btn { width: 54px; height: 58px; border-width: 1px; }
+            .side-shop .preview-cvs { width: 25px; height: 25px; }
+            .side-shop .shop-lbl { font-size: 7px; }
+            .side-shop .shop-cost { font-size: 8px; }
+            .prime-special { bottom: 70px; }
+            .prime-special .shop-btn { width: 76px; height: 58px; }
+        }
+        @media (max-width: 700px) {
+            .shop-btn { max-width: 65px; }
+            .preview-cvs { width: 36px; height: 36px; }
+            .shop-lbl { font-size: 8px; }
+            .shop-cost { font-size: 10px; }
+            .big-btn { font-size: 12px; }
+            .upg-info h3 { font-size: 14px; }
+            .upg-info { font-size: 10px; padding: 5px 10px;}
+            #upgrade-ui { padding: 0 5px; gap: 8px;}
+            #screen-overlay h1 { font-size: 36px; }
+            #overlay-tutorial { grid-template-columns: 1fr; font-size: 11px; max-width: 92vw; }
+        }
+
+
+</style>
+
+</head>
+<body>
+
+<div id="app-container">
+    <div id="top-bar">
+        <div class="stat-group">
+            <div class="stat"><span class="stat-icon c-red">HP</span> <span id="ui-lives">25</span></div>
+            <div class="stat"><span class="stat-icon c-gold">$</span> $<span id="ui-gold">600</span></div>
+            <div class="stat"><span class="stat-icon c-cyan">W</span>: <span id="ui-wave">0</span></div>
+            <div class="stat"><span class="stat-icon c-cyan">Shield</span> <span id="ui-shield">5</span></div>
+        </div>
+        <div class="stat-group">
+            <button class="ctrl-btn" id="btn-overdrive" title="Temporary tower fire-rate boost">OVERDRIVE</button>
+            <button class="ctrl-btn" id="btn-pause">PAUSE</button>
+            <button class="ctrl-btn" id="btn-spd-1">1X</button>
+            <button class="ctrl-btn" id="btn-spd-2">2X</button>
+            <button class="ctrl-btn" id="btn-spd-4">4X</button>
+            <button class="ctrl-btn" id="btn-spd-8">8X</button>
+            <button class="ctrl-btn" id="btn-spd-16">16X</button>
+            <button class="ctrl-btn" id="btn-spd-32">32X</button>
+        </div>
+    </div>
+
+    <div id="canvas-wrapper">
+        <div id="advanced-left" class="side-shop">
+            <div class="shop-btn advanced" data-type="7" onclick="selectTower(7)"><canvas class="preview-cvs" id="prev-7"></canvas><div class="shop-lbl" id="lbl-7">C4</div><div class="shop-cost">$450</div></div>
+            <div class="shop-btn advanced" data-type="8" onclick="selectTower(8)"><canvas class="preview-cvs" id="prev-8"></canvas><div class="shop-lbl" id="lbl-8">Flash</div><div class="shop-cost">$500</div></div>
+            <div class="shop-btn advanced" data-type="9" onclick="selectTower(9)"><canvas class="preview-cvs" id="prev-9"></canvas><div class="shop-lbl" id="lbl-9">Eagle</div><div class="shop-cost">$550</div></div>
+            <div class="shop-btn advanced" data-type="10" onclick="selectTower(10)"><canvas class="preview-cvs" id="prev-10"></canvas><div class="shop-lbl" id="lbl-10">P90</div><div class="shop-cost">$650</div></div>
+        </div>
+        <div id="advanced-right" class="side-shop">
+            <div class="shop-btn advanced" data-type="11" onclick="selectTower(11)"><canvas class="preview-cvs" id="prev-11"></canvas><div class="shop-lbl" id="lbl-11">AA12</div><div class="shop-cost">$850</div></div>
+            <div class="shop-btn advanced" data-type="12" onclick="selectTower(12)"><canvas class="preview-cvs" id="prev-12"></canvas><div class="shop-lbl" id="lbl-12">AK-47</div><div class="shop-cost">$950</div></div>
+            <div class="shop-btn advanced" data-type="13" onclick="selectTower(13)"><canvas class="preview-cvs" id="prev-13"></canvas><div class="shop-lbl" id="lbl-13">Barrett</div><div class="shop-cost">$1400</div></div>
+            <div class="shop-btn advanced" data-type="14" onclick="selectTower(14)"><canvas class="preview-cvs" id="prev-14"></canvas><div class="shop-lbl" id="lbl-14">Prime Bomb</div><div class="shop-cost">$7500</div></div>
+        </div>
+
+        <canvas id="game-canvas"></canvas>
+        <div id="screen-overlay">
+            <h1 id="overlay-title">QAMELOT TOWER DEFENSE</h1>
+            <p id="overlay-desc">Courage Under Fire</p>
+                        <div id="overlay-tutorial">
+                <span><strong>Build:</strong> pick a tower, then click open ground. C4 and Flash go directly on the enemy path.</span>
+                <span><strong>Upgrade:</strong> click a placed tower to upgrade, sell, or change targeting.</span>
+                <span><strong>Shield:</strong> this is your home-base buffer before HP takes damage.</span>
+                <span><strong>Overdrive:</strong> temporary rapid-fire mode. Advanced weapons unlock after Qamelot Prime at wave 30.</span>
+            </div>            <button class="action-btn" id="overlay-btn" onclick="startGame()">INITIALIZE</button>
+        </div>
+    </div>
+
+    <div id="bottom-panel">
+        <div id="shop-ui" class="panel-section">
+            <div class="shop-btn" data-type="2" onclick="selectTower(2)">
+                <canvas class="preview-cvs" id="prev-2"></canvas>
+                <div class="shop-lbl" id="lbl-2">Rock</div><div class="shop-cost">$100</div>
+            </div>
+            <div class="shop-btn" data-type="0" onclick="selectTower(0)">
+                <canvas class="preview-cvs" id="prev-0"></canvas>
+                <div class="shop-lbl" id="lbl-0">Electric</div><div class="shop-cost">$150</div>
+            </div>
+            <div class="shop-btn" data-type="3" onclick="selectTower(3)">
+                <canvas class="preview-cvs" id="prev-3"></canvas>
+                <div class="shop-lbl" id="lbl-3">Water</div><div class="shop-cost">$175</div>
+            </div>
+            <div class="shop-btn" data-type="1" onclick="selectTower(1)">
+                <canvas class="preview-cvs" id="prev-1"></canvas>
+                <div class="shop-lbl" id="lbl-1">Fire</div><div class="shop-cost">$200</div>
+            </div>
+            <div class="shop-btn" data-type="4" onclick="selectTower(4)">
+                <canvas class="preview-cvs" id="prev-4"></canvas>
+                <div class="shop-lbl" id="lbl-4">Ice</div><div class="shop-cost">$225</div>
+            </div>
+            <div class="shop-btn" data-type="5" onclick="selectTower(5)">
+                <canvas class="preview-cvs" id="prev-5"></canvas>
+                <div class="shop-lbl" id="lbl-5">Wind</div><div class="shop-cost">$250</div>
+            </div>
+            <div class="shop-btn" data-type="6" onclick="selectTower(6)">
+                <canvas class="preview-cvs" id="prev-6"></canvas>
+                <div class="shop-lbl" id="lbl-6">Magnet</div><div class="shop-cost">$300</div>
+            </div>
+        </div>
+        <div id="upgrade-ui" class="panel-section">
+            <div class="upg-info">
+                <h3 id="upg-name">TOWER</h3>
+                <div>Lvl: <span class="hl" id="upg-lvl">1</span>/3 | Dmg: <span class="hl" id="upg-dmg">0</span></div>
+                <div>Rng: <span class="hl" id="upg-rng">0</span> | Target: <span class="hl c-cyan" id="upg-tgt">FIRST</span></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+                <button class="tgt-btn" onclick="cycleTarget()">CHANGE TARGET</button>
+                <button class="sell-btn" onclick="sellTower()">SELL $<span id="upg-sell">0</span></button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+                <button class="upg-btn" id="btn-d-upg" onclick="upgradeTower()">UPGRADE $<span id="upg-cost">0</span></button>
+                <button class="ctrl-btn" style="padding: 8px; font-size:11px;" onclick="deselectAll()">CANCEL</button>
+            </div>
+        </div>
+
+        <div class="action-container">
+            <button class="big-btn" id="btn-wave" onclick="startWave()">START WAVE</button>
+        </div>
+    </div>
+</div>
+<script data-inlined-from="game.js">
+const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+
+    const C_WIDTH = 1280;
+    const C_HEIGHT = 720;
+    canvas.width = C_WIDTH;
+    canvas.height = C_HEIGHT;
+
+    function loadSprite(src, onLoad) {
+        const img = new Image();
+        if (onLoad) img.onload = () => setTimeout(onLoad, 0);
+        img.src = src;
+        return img;
+    }
+
+    const towerAssetBase = 'assets/';
+    const towerAssets = {
+        electric: loadSprite(towerAssetBase + 'elec.png', () => drawPreviews()),
+        fire: loadSprite(towerAssetBase + 'fire.png', () => drawPreviews()),
+        rock: loadSprite(towerAssetBase + 'rock.png', () => drawPreviews()),
+        water: loadSprite(towerAssetBase + 'h2o.png', () => drawPreviews()),
+        ice: loadSprite(towerAssetBase + 'ice.png', () => drawPreviews()),
+        wind: loadSprite(towerAssetBase + 'wind.png', () => drawPreviews()),
+        magnet: loadSprite(towerAssetBase + 'mags.svg', () => drawPreviews()),
+        qamelotPrime: loadSprite(towerAssetBase + 'qamelot-prime.png', () => drawPreviews()),
+        scorpion: loadSprite(towerAssetBase + 'scorpion.png'),
+        electricShot: loadSprite(towerAssetBase + 'selec.png'),
+        fireShot: loadSprite(towerAssetBase + 'sfire.svg'),
+        rockShot: loadSprite(towerAssetBase + 'srock.png'),
+        waterShot: loadSprite(towerAssetBase + 'swater.png'),
+        windShot: loadSprite(towerAssetBase + 'swind.png'),
+        magnetShot: loadSprite(towerAssetBase + 'smag.svg')
+    };
+
+    let frameCount = 0;
+
+    const TARGET_MODES = ["FIRST", "LAST", "STRONG", "CLOSE"];
+    const TOWER_COUNT = 15;
+    const TOWER_DEFS = {
+        0: { name: 'Electric Tower', cost: 150, range: 210, fireRate: 22, damage: 18, pSpeed: 28, color: '#f6ff9a', img: towerAssets.electric, projectileImg: towerAssets.electricShot, facing: -Math.PI / 2, drawW: 43, drawH: 63, muzzle: 32, crop: { sx: 900, sy: 200, sw: 1050, sh: 1240 } },
+        1: { name: 'Fire Tower', cost: 200, range: 165, fireRate: 45, damage: 48, pSpeed: 11, color: '#ff5a18', img: towerAssets.fire, projectileImg: towerAssets.fireShot, splash: 55, facing: -Math.PI / 2, drawW: 42, drawH: 62, muzzle: 27 },
+        2: { name: 'Rock Tower', cost: 100, range: 175, fireRate: 34, damage: 30, pSpeed: 16, color: '#b9a37d', img: towerAssets.rock, projectileImg: towerAssets.rockShot, facing: Math.PI, drawW: 56, drawH: 58, muzzle: 25, crop: { sx: 105, sy: 8, sw: 326, sh: 430 } },
+        3: { name: 'Water Tower', cost: 175, range: 205, fireRate: 38, damage: 25, pSpeed: 18, color: '#68d8ff', img: towerAssets.water, projectileImg: towerAssets.waterShot, effect: 'slow', facing: Math.PI, drawW: 48, drawH: 50, muzzle: 31, crop: { sx: 1510, sy: 0, sw: 1280, sh: 1536 } },
+        4: { name: 'Ice Tower', cost: 225, range: 185, fireRate: 52, damage: 20, pSpeed: 13, color: '#b8f6ff', img: towerAssets.ice, projectileImg: towerAssets.waterShot, effect: 'freeze', facing: -Math.PI / 2, drawW: 38, drawH: 58, muzzle: 26 },
+        5: { name: 'Wind Tower', cost: 250, range: 230, fireRate: 35, damage: 28, pSpeed: 20, color: '#d9f6ff', img: towerAssets.wind, projectileImg: towerAssets.windShot, splash: 45, facing: 0, drawW: 48, drawH: 50, muzzle: 31, crop: { sx: 330, sy: 120, sw: 1030, sh: 1370 } },
+        6: { name: 'Magnet Tower', cost: 300, range: 300, fireRate: 12, damage: 22, pSpeed: 18, color: '#ff7cff', img: towerAssets.magnet, projectileImg: towerAssets.magnetShot, facing: 0, drawW: 38, drawH: 38, muzzle: 22 },
+        7: { name: 'C4 Charge', cost: 450, range: 88, fireRate: 0, damage: 320, pSpeed: 0, color: '#ff9d2e', tactical: 'c4', pathOnly: true, splash: 145, jamMult: 0.35, maxLevel: 5, upgradeCosts: { 1: 450, 2: 900, 3: 3500, 4: 7000 }, drawW: 42, drawH: 42 },
+        8: { name: 'Flashbang', cost: 500, range: 112, fireRate: 0, damage: 140, pSpeed: 0, color: '#f7fbff', tactical: 'flash', pathOnly: true, splash: 145, drawW: 34, drawH: 34 },
+        9: { name: 'Eagle .50', cost: 550, range: 250, fireRate: 30, damage: 95, pSpeed: 28, color: '#ffd27a', weapon: 'pistol', drawW: 47, drawH: 32, muzzle: 30 },
+        10: { name: 'P90 SMG', cost: 650, range: 215, fireRate: 6, damage: 24, pSpeed: 30, color: '#a7f7ff', weapon: 'smg', drawW: 58, drawH: 34, muzzle: 32 },
+        11: { name: 'AA12 Shotgun', cost: 850, range: 185, fireRate: 12, damage: 34, pSpeed: 24, color: '#ffb347', weapon: 'shotgun', splash: 35, pellets: 5, spread: 0.34, drawW: 60, drawH: 34, muzzle: 31 },
+        12: { name: 'AK-47', cost: 950, range: 285, fireRate: 9, damage: 48, pSpeed: 31, color: '#ffdf8a', weapon: 'rifle', drawW: 62, drawH: 34, muzzle: 33 },
+        13: { name: 'Barrett .50', cost: 1400, range: 520, fireRate: 70, damage: 260, pSpeed: 42, color: '#f5f5ff', weapon: 'sniper', pierce: 1, drawW: 72, drawH: 34, muzzle: 38 },
+        14: { name: 'Qamelot Prime Bomb', cost: 7500, range: 9999, fireRate: 0, damage: 999999, pSpeed: 0, color: '#b100ff', tactical: 'primeBomb', anywhere: true, drawW: 48, drawH: 48 }
+    };
+    const MAX_WAVE = 100;
+    const ENEMY_TIERS = [
+        { name: 'Scout', color: '#61e8ff', accent: '#dff9ff', hp: 1, speed: 1, reward: 1 },
+        { name: 'Veteran', color: '#3cff9b', accent: '#d6ffe9', hp: 1.35, speed: 1.08, reward: 1.25 },
+        { name: 'Armored', color: '#ffd76a', accent: '#fff2b8', hp: 1.9, speed: 0.92, reward: 1.55, armor: 0.88 },
+        { name: 'Elite', color: '#ff7bd5', accent: '#ffd6f3', hp: 2.65, speed: 1.12, reward: 2 },
+        { name: 'Royal', color: '#ff5e5e', accent: '#ffe1e1', hp: 3.8, speed: 1.18, reward: 2.8 },
+        { name: 'Void', color: '#9b5cff', accent: '#eadfff', hp: 5.1, speed: 1.2, reward: 3.5, armor: 0.82 },
+        { name: 'Prime', color: '#00f5ff', accent: '#fff0a8', hp: 6.8, speed: 1.24, reward: 4.4, armor: 0.78 },
+        { name: 'Apex', color: '#ffb000', accent: '#fff7d6', hp: 8.6, speed: 1.28, reward: 5.3, armor: 0.74 }
+    ];
+    const BOSS_DEFS = [
+        { name: 'Gatebreaker', color: '#ff4d6d', accent: '#ffd700', hp: 16, speed: 0.72, reward: 14, kind: 'breaker' },
+        { name: 'Azure Baron', color: '#2ed3ff', accent: '#d7f7ff', hp: 22, speed: 0.9, reward: 18, kind: 'baron' },
+        { name: 'Gold Goliath', color: '#ffd45a', accent: '#fff4c8', hp: 30, speed: 0.58, reward: 25, kind: 'goliath' },
+        { name: 'Crimson Regent', color: '#ff3d3d', accent: '#ffd1d1', hp: 42, speed: 0.78, reward: 35, kind: 'regent' },
+        { name: 'Iron Monarch', color: '#b8c4d6', accent: '#ffd700', hp: 54, speed: 0.66, reward: 46, kind: 'monarch' },
+        { name: 'Qamelot Prime', color: '#ffffff', accent: '#00d9ff', hp: 62, speed: 0.62, reward: 55, kind: 'prime', img: towerAssets.qamelotPrime },
+        { name: 'Neon Viper', color: '#00ffaa', accent: '#8bfff0', hp: 76, speed: 1.02, reward: 64, kind: 'viper' },
+        { name: 'Obsidian Hammer', color: '#8f55ff', accent: '#ffd700', hp: 92, speed: 0.55, reward: 78, kind: 'hammer' },
+        { name: 'Storm Tyrant', color: '#55d9ff', accent: '#ffffff', hp: 104, speed: 0.82, reward: 88, kind: 'tyrant' },
+        { name: 'Qamelot Prime Ascendant', color: '#ffffff', accent: '#b100ff', hp: 132, speed: 0.72, reward: 125, kind: 'prime', img: towerAssets.qamelotPrime }
+    ];
+    let state = {
+        gameState: 'menu',
+        lives: 25, gold: 600, wave: 0,
+        isPaused: false, speed: 1,
+        waveActive: false, waveTimer: 0, enemiesSpawned: 0,
+        selectedShopType: null,
+        selectedTower: null,
+        screenShake: 0,
+        shield: 5, maxShield: 5, overdrive: 0, overdriveCooldown: 0, critChance: 0.12, critMult: 1.75, interestRate: 0.04, advancedUnlocked: false, killStreak: 0, waveLeaks: 0
+    };
+
+    let towers = [];
+    let enemies = [];
+    let projectiles = [];
+    let particles = [];
+    let ambientParticles = [];
+    let fcts = [];
+    let effectAnimations = [];
+    let scorchMarks = [];
+    let roadJams = [];
+    let spriteParticles = [];
+
+    for(let i=0; i<30; i++) {
+        ambientParticles.push({
+            x: Math.random() * C_WIDTH, y: Math.random() * C_HEIGHT,
+            vx: (Math.random()-0.5)*0.5, vy: -Math.random()*1,
+            size: Math.random()*2 + 1, alpha: Math.random()*0.5 + 0.1
+        });
+    }
+
+    const pathNodes = [
+        {x: 0, y: 120}, {x: 1150, y: 120}, {x: 1150, y: 620},
+        {x: 100, y: 620}, {x: 100, y: 280}, {x: 900, y: 280},
+        {x: 900, y: 480}, {x: 350, y: 480}, {x: 350, y: 380},
+        {x: 640, y: 380}
+    ];
+    const corePos = { x: 640, y: 380, radius: 65 };
+
+    let audioCtx = null;
+    function getAudioCtx() {
+        if (!audioCtx) {
+            try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } 
+            catch(e) { console.warn("Audio Context blocked."); }
+        }
+        return audioCtx;
+    }
+
+    function playSound(freq, duration, type = 'sine', volume = 0.3) {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        try {
+            if (ctx.state === 'suspended') ctx.resume();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = type;
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(volume, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + duration);
+        } catch(e) {}
+    }
+
+    function playSoundEffect(name) {
+        switch(name) {
+            case 'kill': playSound(800, 0.08, 'sine', 0.2); playSound(1200, 0.12, 'sine', 0.25); break;
+            case 'combo': playSound(1000, 0.1, 'square', 0.3); playSound(1500, 0.15, 'square', 0.25); break;
+            case 'place': playSound(600, 0.1, 'sine', 0.15); playSound(800, 0.15, 'sine', 0.2); break;
+            case 'wave': playSound(400, 0.2, 'sine', 0.25); break;
+            case 'upgrade': playSound(1200, 0.1, 'sine', 0.25); playSound(1500, 0.12, 'sine', 0.2); break;
+        }
+    }
+
+    function drawHomeBase(ctx, scale=1) {
+        ctx.save();
+        ctx.scale(scale, scale);
+
+        ctx.fillStyle = 'rgba(0, 255, 255, 0.18)';
+        ctx.beginPath();
+        ctx.arc(0, 0, 30, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#24334a';
+        ctx.strokeStyle = '#00ffff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-24, -2);
+        ctx.lineTo(0, -24);
+        ctx.lineTo(24, -2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#36506d';
+        ctx.strokeStyle = '#b8f7ff';
+        ctx.beginPath();
+        ctx.roundRect(-19, -2, 38, 28, 4);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#101827';
+        ctx.strokeStyle = '#ffd700';
+        ctx.beginPath();
+        ctx.roundRect(-6, 8, 12, 18, 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#9beeff';
+        ctx.fillRect(-15, 5, 8, 7);
+        ctx.fillRect(7, 5, 8, 7);
+
+        ctx.strokeStyle = 'rgba(0, 255, 255, 0.45)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, 35, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+    }
+    function drawDuckEnemy(context, scale=1, enemy=null) {
+        context.save();
+        context.scale(scale, scale);
+        context.fillStyle = enemy?.color || '#61e8ff';
+        context.beginPath();
+        context.ellipse(0, 4, 18, 13, 0, 0, Math.PI * 2);
+        context.fill();
+        context.fillStyle = enemy?.accent || '#dff9ff';
+        context.beginPath();
+        context.arc(11, -8, 10, 0, Math.PI * 2);
+        context.fill();
+        context.fillStyle = '#ff9b2f';
+        context.beginPath();
+        context.moveTo(19, -8);
+        context.lineTo(31, -3);
+        context.lineTo(19, 1);
+        context.closePath();
+        context.fill();
+        context.fillStyle = '#111';
+        context.beginPath();
+        context.arc(13, -10, 2, 0, Math.PI * 2);
+        context.fill();
+        context.restore();
+    }
+
+    function drawHeavyEnemy(context, scale=1, enemy=null) {
+        context.save();
+        context.scale(scale, scale);
+        context.fillStyle = enemy?.color || '#ffd76a';
+        context.beginPath();
+        context.roundRect(-18, -18, 36, 36, 8);
+        context.fill();
+        context.strokeStyle = enemy?.accent || '#fff2b8';
+        context.lineWidth = 3;
+        context.stroke();
+        context.fillStyle = '#ffffff';
+        context.beginPath();
+        context.arc(-7, -5, 4, 0, Math.PI * 2);
+        context.arc(7, -5, 4, 0, Math.PI * 2);
+        context.fill();
+        context.fillStyle = '#111';
+        context.beginPath();
+        context.arc(-7, -5, 1.7, 0, Math.PI * 2);
+        context.arc(7, -5, 1.7, 0, Math.PI * 2);
+        context.fill();
+        context.restore();
+    }
+
+    function enemyHeading(enemy) {
+        const next = pathNodes[enemy.pathIdx + 1] || pathNodes[enemy.pathIdx] || enemy;
+        return Math.atan2(next.y - enemy.y, next.x - enemy.x);
+    }
+
+    function drawScorpionEnemy(context, scale=1, enemy=null) {
+        const color = enemy?.color || '#61e8ff';
+        const accent = enemy?.accent || '#dff9ff';
+        const pulse = 1 + Math.sin(frameCount / 7 + (enemy?.x || 0) * 0.02) * 0.035;
+        context.save();
+        context.rotate(enemy ? enemyHeading(enemy) : 0);
+        context.scale(scale * pulse, scale * pulse);
+        context.shadowColor = color;
+        context.shadowBlur = enemy?.type === 'boss' ? 26 : 14;
+        context.globalAlpha = 0.42;
+        context.fillStyle = color;
+        context.beginPath();
+        context.ellipse(0, 0, 28, 18, 0, 0, Math.PI * 2);
+        context.fill();
+        context.globalAlpha = 1;
+        if (towerAssets.scorpion && towerAssets.scorpion.complete && towerAssets.scorpion.naturalWidth) {
+            context.filter = 'contrast(1.12) saturate(1.18) drop-shadow(0 0 7px ' + color + ')';
+            drawImageCentered(context, towerAssets.scorpion, 70, 54, 0);
+            context.filter = 'none';
+        } else {
+            context.fillStyle = '#090909';
+            context.strokeStyle = accent;
+            context.lineWidth = 2;
+            context.beginPath();
+            context.ellipse(0, 0, 18, 11, 0, 0, Math.PI * 2);
+            context.fill();
+            context.stroke();
+            context.beginPath();
+            context.arc(17, 0, 9, 0, Math.PI * 2);
+            context.fill();
+            context.stroke();
+            context.strokeStyle = color;
+            context.beginPath();
+            context.moveTo(-15, -8);
+            context.quadraticCurveTo(-28, -32, 2, -34);
+            context.quadraticCurveTo(22, -30, 18, -15);
+            context.stroke();
+        }
+        context.shadowBlur = 0;
+        context.strokeStyle = accent;
+        context.lineWidth = enemy?.type === 'boss' ? 3 : 2;
+        context.globalAlpha = 0.82;
+        context.beginPath();
+        context.arc(0, 0, enemy?.type === 'boss' ? 31 : 24, 0, Math.PI * 2);
+        context.stroke();
+        context.restore();
+    }
+
+    function drawBossEnemy(context, scale=1, enemy=null) {
+        const color = enemy?.color || '#ff3f8f';
+        const accent = enemy?.accent || '#ffd700';
+        const kind = enemy?.bossKind || 'breaker';
+        context.save();
+        context.scale(scale, scale);
+        if (kind === 'prime' && towerAssets.qamelotPrime && towerAssets.qamelotPrime.complete && towerAssets.qamelotPrime.naturalWidth) {
+            context.shadowColor = accent;
+            context.shadowBlur = 14;
+            context.strokeStyle = accent;
+            context.lineWidth = 2;
+            context.beginPath();
+            context.arc(0, 0, 30, 0, Math.PI * 2);
+            context.stroke();
+            drawImageCentered(context, towerAssets.qamelotPrime, 58, 58, 0);
+            context.restore();
+            return;
+        }
+        context.fillStyle = color;
+        context.strokeStyle = accent;
+        context.lineWidth = 3;
+        if (kind === 'goliath') {
+            context.beginPath(); context.roundRect(-18, -18, 36, 36, 6); context.fill(); context.stroke();
+        } else if (kind === 'baron') {
+            context.beginPath(); context.ellipse(0, 0, 22, 15, 0, 0, Math.PI * 2); context.fill(); context.stroke();
+        } else if (kind === 'regent') {
+            context.beginPath(); context.moveTo(0, -23); context.lineTo(21, -4); context.lineTo(12, 20); context.lineTo(-12, 20); context.lineTo(-21, -4); context.closePath(); context.fill(); context.stroke();
+        } else if (kind === 'prime') {
+            context.beginPath(); context.arc(0, 0, 21, 0, Math.PI * 2); context.fill(); context.stroke();
+            context.strokeStyle = '#00d9ff'; context.beginPath(); context.arc(0, 0, 28, 0, Math.PI * 2); context.stroke();
+        } else {
+            context.beginPath(); context.arc(0, 0, 18, 0, Math.PI * 2); context.fill(); context.stroke();
+        }
+        context.fillStyle = accent;
+        context.beginPath();
+        context.moveTo(-14, -18); context.lineTo(-8, -30); context.lineTo(0, -19); context.lineTo(8, -30); context.lineTo(14, -18);
+        context.closePath(); context.fill();
+        context.fillStyle = '#071326';
+        context.fillRect(-8, -4, 5, 5); context.fillRect(3, -4, 5, 5);
+        context.restore();
+    }
+    function drawTowerType(ctx, type, level) {
+        ctx.save();
+        switch(type) {
+            case 0: drawScrapTruck(ctx, 1.2); break;
+            case 1: drawMagicTent(ctx, 1.2); break;
+            case 2: drawKnittingWeb(ctx, 1.2); break;
+            case 3: drawTeslaComputer(ctx, 1.2); break;
+            case 4: drawAlarmBell(ctx, 1.2); break;
+            case 5: drawVikingShip(ctx, 1.2); break;
+            case 6: drawObelisk(ctx, 1.2); break;
+            case 7: drawChickenCoop(ctx, 1.2); break;
+            case 8: drawCryoBuff(ctx, 1.2); break;
+        }
+        ctx.restore();
+    }
+
+    const getPointerPos = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+            x: (clientX - rect.left) * (C_WIDTH / rect.width),
+            y: (clientY - rect.top) * (C_HEIGHT / rect.height)
+        };
+    };
+
+    let pointer = { x: -100, y: -100, active: false };
+    canvas.addEventListener('mousemove', e => pointer = { ...getPointerPos(e), active: true });
+    canvas.addEventListener('touchmove', e => pointer = { ...getPointerPos(e), active: true });
+    canvas.addEventListener('click', e => handleCanvasClick(getPointerPos(e)));
+    canvas.addEventListener('mouseleave', () => pointer = { x: -100, y: -100, active: false });
+
+    function advancedWeaponsUnlocked() {
+        return state.advancedUnlocked || state.wave > 30 || (state.wave === 30 && !state.waveActive);
+    }
+
+    function selectTower(type) {
+        if (!TOWER_DEFS[type]) return;
+        if (type >= 7 && !advancedWeaponsUnlocked()) return;
+        const def = TOWER_DEFS[type];
+        if (state.gold < def.cost) return;
+        pointer = { x: -100, y: -100, active: false };
+        if (def.tactical === 'primeBomb') {
+            state.gold -= def.cost;
+            detonatePrimeBomb(C_WIDTH * 0.5, C_HEIGHT * 0.5, def);
+            deselectAll();
+            updateUI();
+            return;
+        }
+        state.selectedShopType = type;
+        state.selectedTower = null;
+        updateUI();
+    }
+
+    function deselectAll() {
+        state.selectedShopType = null;
+        state.selectedTower = null;
+        updateUI();
+    }
+
+    function handleCanvasClick(pos) {
+        if (state.gameState !== 'playing') return;
+
+        if (state.selectedShopType !== null) {
+            const selectedDef = TOWER_DEFS[state.selectedShopType];
+            if (selectedDef.anywhere) {
+                if (state.gold >= selectedDef.cost) {
+                    state.gold -= selectedDef.cost;
+                    detonatePrimeBomb(pos.x, pos.y, selectedDef);
+                    deselectAll();
+                }
+                return;
+            }
+        }
+
+        let clickedTower = null;
+        for (let t of towers) {
+            if (Math.hypot(t.x - pos.x, t.y - pos.y) < 35) { clickedTower = t; break; }
+        }
+
+        if (clickedTower) {
+            state.selectedTower = clickedTower;
+            state.selectedShopType = null;
+            updateUI();
+            return;
+        }
+
+        if (state.selectedShopType !== null) {
+            const def = TOWER_DEFS[state.selectedShopType];
+            let valid = true;
+            if (!def.anywhere && Math.hypot(pos.x - corePos.x, pos.y - corePos.y) < corePos.radius + 30) valid = false;
+            
+            let pathDistance = Infinity;
+            for(let i=0; i<pathNodes.length-1; i++) {
+                pathDistance = Math.min(pathDistance, distToSegment(pos, pathNodes[i], pathNodes[i+1]));
+            }
+            if (def.pathOnly) {
+                valid = valid && pathDistance < 34;
+            } else if (!def.anywhere && pathDistance < 40) {
+                valid = false;
+            }
+            for (let t of towers) {
+                const spacing = def.pathOnly || TOWER_DEFS[t.type].pathOnly ? 32 : 45;
+                if (!def.anywhere && Math.hypot(t.x - pos.x, t.y - pos.y) < spacing) { valid = false; break; }
+            }
+
+            if (valid && state.gold >= def.cost) {
+                state.gold -= def.cost;
+                towers.push({
+                    x: pos.x, y: pos.y, type: state.selectedShopType,
+                    level: 1, angle: 0, cooldown: 0,
+                    damage: def.damage, range: def.range, fireRate: def.fireRate,
+                    splash: def.splash || 0, jamMult: def.jamMult || 0.35,
+                    targetMode: 0, armed: true
+                });
+                addEffect(pos.x, pos.y, def.pathOnly ? '#ffd700' : '#ffffff', 30, 'nova');
+                playSoundEffect('place');
+                deselectAll();
+            } else {
+                addFCT(pos.x, pos.y, def.pathOnly ? 'PLACE ON PATH' : 'INVALID', '#ff3333');
+            }
+        } else {
+            deselectAll();
+        }
+    }
+
+    function distToSegment(p, v, w) {
+        let l2 = Math.pow(v.x - w.x, 2) + Math.pow(v.y - w.y, 2);
+        if (l2 === 0) return Math.hypot(p.x - v.x, p.y - v.y);
+        let t = Math.max(0, Math.min(1, ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2));
+        return Math.hypot(p.x - (v.x + t * (w.x - v.x)), p.y - (v.y + t * (w.y - v.y)));
+    }
+
+    function updateOverlay() {
+        const overlay = document.getElementById('screen-overlay');
+        const title = document.getElementById('overlay-title');
+        const desc = document.getElementById('overlay-desc');
+        const btn = document.getElementById('overlay-btn');
+        const tutorial = document.getElementById('overlay-tutorial');
+
+        overlay.classList.toggle('victory-matrix', state.gameState === 'victory');
+        title.classList.toggle('rock-title', state.gameState === 'menu');
+        if (tutorial) tutorial.style.display = state.gameState === 'menu' ? 'grid' : 'none';
+
+        if (state.gameState === 'playing') {
+            overlay.style.display = 'none';
+        } else {
+            overlay.style.display = 'flex';
+            if (state.gameState === 'menu') {
+                title.textContent = 'QAMELOT TOWER DEFENSE';
+                desc.textContent = 'Courage Under Fire';
+                btn.textContent = 'INITIALIZE';
+                btn.style.display = 'block';
+            } else if (state.gameState === 'gameover') {
+                title.textContent = 'SYSTEM FAILURE';
+                desc.textContent = `Defenses Breached on Wave ${state.wave}`;
+                btn.textContent = 'REBOOT SEQUENCE';
+                btn.style.display = 'block';
+            } else if (state.gameState === 'victory') {
+                title.textContent = 'VICTORY SECURED';
+                desc.textContent = 'You have been knighted a new member of the Round Table!';
+                btn.textContent = 'PLAY AGAIN';
+                btn.style.display = 'block';
+            }
+        }
+    }
+
+    function updateUI() {
+        document.getElementById('ui-lives').innerText = state.lives;
+        document.getElementById('ui-gold').innerText = Math.floor(state.gold);
+        document.getElementById('ui-wave').innerText = state.wave;
+        const shieldUi = document.getElementById('ui-shield');
+        if (shieldUi) shieldUi.innerText = String(state.shield) + '/' + String(state.maxShield);
+        const overdriveBtn = document.getElementById('btn-overdrive');
+        if (overdriveBtn) {
+            overdriveBtn.disabled = state.overdrive > 0 || state.overdriveCooldown > 0 || state.gameState !== 'playing';
+            overdriveBtn.innerText = state.overdrive > 0 ? ('BOOST ' + Math.ceil(state.overdrive/60)) : (state.overdriveCooldown > 0 ? ('READY ' + Math.ceil(state.overdriveCooldown/60)) : 'OVERDRIVE');
+            overdriveBtn.classList.toggle('active', state.overdrive > 0);
+        }
+
+        const waveBtn = document.getElementById('btn-wave');
+        if (state.waveActive) {
+            let remain = enemies.length + (enemiesToSpawn() - state.enemiesSpawned);
+            waveBtn.innerText = `DEFENDING (${remain})`;
+            waveBtn.disabled = true;
+        } else {
+            waveBtn.innerText = state.wave >= MAX_WAVE ? `FINAL WAVE CLEARED` : `START WAVE ${state.wave + 1}`;
+            waveBtn.disabled = state.wave >= MAX_WAVE;
+        }
+
+        const advancedOpen = advancedWeaponsUnlocked();
+        document.getElementById('advanced-left')?.classList.toggle('unlocked', advancedOpen);
+        document.getElementById('advanced-right')?.classList.toggle('unlocked', advancedOpen);
+        document.getElementById('prime-special')?.classList.toggle('unlocked', advancedOpen);
+        for(let i=0; i<TOWER_COUNT; i++) {
+            let el = document.querySelector(`[data-type="${i}"]`);
+            if(el) {
+                const isAdvanced = i >= 7;
+                el.className = 'shop-btn' + (isAdvanced ? ' advanced' : '');
+                if (isAdvanced && !advancedOpen) el.classList.add('locked');
+                if (state.gold < TOWER_DEFS[i].cost) el.classList.add('disabled');
+                if (state.selectedShopType === i) el.classList.add('selected');
+                const costEl = el.querySelector ? el.querySelector('.shop-cost') : null;
+                if (costEl) costEl.textContent = '$' + TOWER_DEFS[i].cost;
+            }
+        }
+
+        if (state.selectedTower) {
+            document.getElementById('shop-ui').style.display = 'none';
+            document.getElementById('upgrade-ui').style.display = 'flex';
+            
+            let t = state.selectedTower;
+            let def = TOWER_DEFS[t.type];
+            document.getElementById('upg-name').innerText = def.name.toUpperCase();
+            document.getElementById('upg-lvl').innerText = t.level;
+            document.getElementById('upg-dmg').innerText = Math.floor(t.damage);
+            document.getElementById('upg-rng').innerText = Math.floor(t.range);
+            document.getElementById('upg-tgt').innerText = TARGET_MODES[t.targetMode];
+            
+            let upgCost = getUpgradeCost(t);
+            let invested = def.cost;
+            for (let lvl = 1; lvl < t.level; lvl++) invested += getUpgradeCost({ type: t.type, level: lvl });
+            let sellVal = Math.floor(invested * 0.6);
+            document.getElementById('upg-sell').innerText = sellVal;
+            
+            let btnUpg = document.getElementById('btn-d-upg');
+            const maxLevel = def.maxLevel || 3;
+            if (t.level >= maxLevel) {
+                btnUpg.innerText = "MAX LEVEL"; btnUpg.disabled = true;
+            } else {
+                const c4Label = t.type === 7 && t.level === 3 ? 'MEGATON' : (t.type === 7 && t.level === 4 ? 'CRATER FIELD' : 'UPGRADE');
+                btnUpg.innerHTML = `${c4Label}<br/>$${upgCost}`;
+                btnUpg.disabled = state.gold < upgCost;
+            }
+        } else {
+            document.getElementById('shop-ui').style.display = 'flex';
+            document.getElementById('upgrade-ui').style.display = 'none';
+        }
+    }
+    function sellTower() {
+        if (!state.selectedTower) return;
+        let t = state.selectedTower;
+        let def = TOWER_DEFS[t.type];
+        let invested = def.cost;
+        for (let lvl = 1; lvl < t.level; lvl++) invested += getUpgradeCost({ type: t.type, level: lvl });
+        let sellVal = Math.floor(invested * 0.6);
+        state.gold += sellVal;
+        addFCT(t.x, t.y, `+${sellVal}`, "#ffd700");
+        
+        for(let i=0; i<15; i++) {
+            particles.push({
+                x: t.x, y: t.y, vx: (Math.random()-0.5)*10, vy: (Math.random()-0.5)*10 - 2,
+                color: '#ffd700', size: Math.random()*4+2, life: 30 + Math.random()*20
+            });
+        }
+        
+        towers = towers.filter(x => x !== t);
+        deselectAll();
+    }
+
+    function getUpgradeCost(t) {
+        const def = TOWER_DEFS[t.type];
+        return (def.upgradeCosts && def.upgradeCosts[t.level]) || def.cost * t.level;
+    }
+
+    function upgradeTower() {
+        if (!state.selectedTower) return;
+        let t = state.selectedTower;
+        const def = TOWER_DEFS[t.type];
+        const maxLevel = def.maxLevel || 3;
+        if (t.level >= maxLevel) return;
+        let cost = getUpgradeCost(t);
+        if (state.gold >= cost) {
+            state.gold -= cost;
+            t.level++;
+            if (t.type === 7) {
+                if (t.level === 4) {
+                    t.damage *= 3.25;
+                    t.range *= 1.18;
+                    t.splash *= 1.55;
+                    t.jamMult = 0.22;
+                    addFCT(t.x, t.y - 38, 'MEGATON C4', '#ffb347');
+                } else if (t.level === 5) {
+                    t.damage *= 4.25;
+                    t.range *= 1.2;
+                    t.splash *= 1.75;
+                    t.jamMult = 0.12;
+                    addFCT(t.x, t.y - 38, 'CRATER FIELD', '#ffd700');
+                } else {
+                    t.damage *= 1.8;
+                    t.range *= 1.15;
+                    t.splash *= 1.18;
+                }
+            } else {
+                t.damage *= 1.8;
+                t.range *= 1.15;
+                if (t.splash) t.splash *= 1.12;
+                if(t.type !== 4) t.fireRate = Math.max(5, Math.floor(t.fireRate * 0.8));
+            }
+            spriteParticles.push({x: t.x, y: t.y, life: 40, maxLife: 40, type: 'levelup'});
+            playSoundEffect('upgrade');
+            updateUI();
+        }
+    }
+
+    function cycleTarget() {
+        if (!state.selectedTower) return;
+        state.selectedTower.targetMode = (state.selectedTower.targetMode + 1) % TARGET_MODES.length;
+        updateUI();
+    }
+
+    function bossForWave(wave) {
+        if (wave === 30) return BOSS_DEFS[5];
+        if (wave === MAX_WAVE) return BOSS_DEFS[9];
+        const bossStep = Math.floor(wave / 5) - 1;
+        if (wave < 30) return BOSS_DEFS[Math.min(4, bossStep)];
+        return BOSS_DEFS[6 + (Math.floor((wave - 35) / 5) % 3)];
+    }
+
+    function enemiesToSpawn() { return Math.min(90, 9 + Math.floor(state.wave * 2.4)); }
+
+    function createEnemyForWave(spawnIndex) {
+        const tierIndex = Math.min(ENEMY_TIERS.length - 1, Math.floor((state.wave - 1) / 13) + (spawnIndex % 9 === 8 ? 1 : 0));
+        const tier = ENEMY_TIERS[tierIndex];
+        const isHeavy = (spawnIndex % 4 === 3);
+        const isBoss = ((state.wave % 5 === 0 || state.wave === MAX_WAVE) && spawnIndex === enemiesToSpawn() - 1);
+        const hpScale = Math.pow(1.12, Math.min(state.wave, 45)) * Math.pow(1.045, Math.max(0, state.wave - 45));
+        let e = {
+            x: pathNodes[0].x, y: pathNodes[0].y, pathIdx: 0,
+            hp: Math.floor(32 * hpScale * tier.hp), maxHp: Math.floor(32 * hpScale * tier.hp),
+            speed: 1.35 * tier.speed, type: 'light', reward: Math.floor((6 + state.wave) * tier.reward),
+            color: tier.color, accent: tier.accent, tierName: tier.name, armor: tier.armor || 1,
+            animFrame: 0, status: null, statusTimer: 0
+        };
+
+        if (isHeavy) {
+            e.hp = Math.floor(e.hp * 2.6); e.maxHp = e.hp; e.speed *= 0.78; e.type = 'heavy'; e.reward = Math.floor(e.reward * 1.8);
+        }
+        if (isBoss) {
+            const boss = bossForWave(state.wave);
+            e.hp = Math.floor(90 * hpScale * boss.hp); e.maxHp = e.hp; e.speed = boss.speed;
+            e.type = 'boss'; e.reward = Math.floor((12 + state.wave) * boss.reward);
+            e.color = boss.color; e.accent = boss.accent; e.bossName = boss.name; e.bossKind = boss.kind;
+            addFCT(corePos.x, corePos.y - 130, boss.name.toUpperCase(), boss.color);
+        }
+        return e;
+    }
+
+    function startWave() {
+        if (state.waveActive || state.wave >= MAX_WAVE) return;
+        state.wave++;
+        state.waveActive = true;
+        state.waveTimer = 0;
+        state.enemiesSpawned = 0;
+        state.waveLeaks = 0;
+        state.killStreak = 0;
+        const incomingBoss = (state.wave % 5 === 0 || state.wave === MAX_WAVE) ? bossForWave(state.wave) : null;
+        if (incomingBoss) addFCT(corePos.x, corePos.y - 175, 'BOSS INCOMING: ' + incomingBoss.name.toUpperCase(), incomingBoss.color);
+        playSoundEffect('wave');
+        updateUI();
+    }
+
+    function processWaveSpawns(dtFrames) {
+        if (!state.waveActive) return;
+        state.waveTimer -= dtFrames;
+        if (state.enemiesSpawned < enemiesToSpawn() && state.waveTimer <= 0) {
+            enemies.push(createEnemyForWave(state.enemiesSpawned));
+            state.enemiesSpawned++;
+            state.waveTimer = Math.max(18, 48 - Math.floor(state.wave * 0.9));
+            updateUI();
+        }
+
+        if (state.enemiesSpawned >= enemiesToSpawn() && enemies.length === 0) {
+            state.waveActive = false;
+            const clearBonus = 55 + (state.wave * 18);
+            const interest = Math.floor(Math.min(120, state.gold * state.interestRate));
+            const shieldGain = state.wave % 3 === 0 ? 1 : 0;
+            const flawlessBonus = state.waveLeaks === 0 ? 80 + state.wave * 12 : 0;
+            state.gold += clearBonus + interest + flawlessBonus;
+            state.shield = Math.min(state.maxShield, state.shield + shieldGain);
+            addFCT(corePos.x, corePos.y - 100, 'WAVE CLEAR +$' + (clearBonus + interest + flawlessBonus), '#ffd700');
+            if (flawlessBonus > 0) addFCT(corePos.x, corePos.y - 125, 'FLAWLESS +$' + flawlessBonus, '#3cff9b');
+            if (interest > 0) addFCT(corePos.x, corePos.y - 150, 'INTEREST +$' + interest, '#00d9ff');
+            if (shieldGain) addFCT(corePos.x, corePos.y - 175, 'SHIELD +1', '#9beeff');
+            roadJams = [];
+            if (state.wave >= 30 && !state.advancedUnlocked) {
+                state.advancedUnlocked = true;
+                addFCT(corePos.x, corePos.y - 200, 'ADVANCED WEAPONS UNLOCKED', '#b100ff');
+            }
+            if (state.wave >= MAX_WAVE) {
+                state.gameState = 'victory';
+                updateOverlay();
+            }
+            updateUI();
+        }
+    }
+    function damageEnemy(e, amount, color, sourceX, sourceY) {
+        const crit = Math.random() < state.critChance;
+        const armor = e.armor || 1;
+        const finalDamage = Math.max(1, Math.floor(amount * armor * (crit ? state.critMult : 1)));
+        e.hp -= finalDamage;
+        addFCT(e.x, e.y - (crit ? 10 : 0), `${crit ? 'CRIT ' : ''}${finalDamage}`, crit ? '#ffd700' : color);
+        if (crit) addEffect(sourceX || e.x, sourceY || e.y, '#ffd700', 28, 'nova');
+        return finalDamage;
+    }
+    function spawnProjectile(t, target) {
+        const def = TOWER_DEFS[t.type];
+        if (def.tactical) return;
+        
+        if (def.pSpeed === 0) {
+            damageEnemy(target, t.damage, def.color, t.x, t.y);
+            if (def.effect) { target.status = def.effect; target.statusTimer = 60; }
+            const beamAngle = Math.atan2(target.y - t.y, target.x - t.x);
+            const beamStartX = t.x + Math.cos(beamAngle) * (def.muzzle || 28);
+            const beamStartY = t.y + Math.sin(beamAngle) * (def.muzzle || 28);
+            addEffectLine(beamStartX, beamStartY, target.x, target.y, def.color, 'lightning');
+            
+            spriteParticles.push({x: target.x, y: target.y, life: 15, maxLife: 15, type: 'splat'});
+            playSoundEffect('kill');
+            return;
+        }
+
+        let dist = Math.hypot(target.x - t.x, target.y - t.y);
+        let ticksToHit = dist / def.pSpeed;
+        
+        let nextNode = pathNodes[target.pathIdx+1] || target;
+        let eAngle = Math.atan2(nextNode.y - target.y, nextNode.x - target.x);
+        let predX = target.x + Math.cos(eAngle) * target.speed * ticksToHit * 0.7;
+        let predY = target.y + Math.sin(eAngle) * target.speed * ticksToHit * 0.7;
+
+        let baseAngle = Math.atan2(predY - t.y, predX - t.x);
+        const muzzle = def.muzzle || 28;
+        const shotCount = def.pellets || 1;
+        for (let s = 0; s < shotCount; s++) {
+            const spreadOffset = shotCount === 1 ? 0 : (s - (shotCount - 1) / 2) * (def.spread || 0.14);
+            const pAngle = baseAngle + spreadOffset + (Math.random() - 0.5) * (def.spread ? 0.08 : 0);
+            const startX = t.x + Math.cos(pAngle) * muzzle;
+            const startY = t.y + Math.sin(pAngle) * muzzle;
+            const flyDist = Math.hypot(predX-startX, predY-startY);
+            projectiles.push({
+                x: startX, y: startY, targetX: predX, targetY: predY,
+                vx: Math.cos(pAngle) * def.pSpeed, vy: Math.sin(pAngle) * def.pSpeed,
+                damage: t.damage, color: def.color, effect: def.effect,
+                splash: def.splash || 0, level: t.level,
+                totalDist: flyDist, traveled: 0,
+                trail: [], angle: pAngle, projectileImg: def.projectileImg,
+                pierce: def.pierce || 0
+            });
+        }
+    }
+    function detonatePrimeBomb(x, y, def) {
+        state.screenShake = 75;
+        addFCT(x, y - 20, 'QAMELOT PRIME BOMB', '#b100ff');
+        addEffect(x, y, '#b100ff', 420, 'explosion');
+        addEffect(C_WIDTH * 0.5, C_HEIGHT * 0.5, '#ffffff', 760, 'nova');
+        for (let i = 0; i < 14; i++) {
+            const px = 80 + Math.random() * (C_WIDTH - 160);
+            const py = 80 + Math.random() * (C_HEIGHT - 160);
+            addEffect(px, py, i % 2 ? '#00ffff' : '#ffd700', 170 + Math.random() * 110, 'explosion');
+            scorchMarks.push({x: px, y: py, r: 85 + Math.random() * 60, life: 1000});
+        }
+        enemies.forEach(e => {
+            damageEnemy(e, Math.max(def.damage, e.maxHp * 2), def.color, x, y);
+            e.status = 'stun';
+            e.statusTimer = 90;
+        });
+        roadJams = [];
+        playSoundEffect('combo');
+    }
+    function triggerTactical(t, def) {
+        if (!t.armed) return;
+        const triggerRange = t.range || def.range;
+        const victims = enemies.filter(e => Math.hypot(e.x - t.x, e.y - t.y) <= triggerRange);
+        if (victims.length === 0) return;
+        t.armed = false;
+        if (def.tactical === 'c4') {
+            const blast = (t.splash || def.splash) * (1 + Math.max(0, t.level - 1) * 0.2);
+            addEffect(t.x, t.y, def.color, blast, 'explosion');
+            state.screenShake = t.level >= 5 ? 48 : (t.level >= 4 ? 38 : 28);
+            roadJams.push({x: t.x, y: t.y, r: 70 + t.level * 18, life: Infinity, wave: state.wave, persistent: true, slowMult: t.jamMult || 0.35, level: t.level});
+            let hits = 0;
+            enemies.forEach(e => {
+                if (Math.hypot(e.x - t.x, e.y - t.y) <= blast) {
+                    damageEnemy(e, t.damage, def.color, t.x, t.y);
+                    e.status = 'slow';
+                    e.statusTimer = Math.max(e.statusTimer || 0, 210 + t.level * 55);
+                    hits++;
+                }
+            });
+            if (hits >= 8) {
+                const crowdBonus = 40 + hits * 8;
+                state.gold += crowdBonus;
+                addFCT(t.x, t.y - 52, 'CROWD BONUS +$' + crowdBonus, '#ffd700');
+            }
+            addFCT(t.x, t.y - 20, t.level >= 5 ? 'CRATER FIELD' : (t.level >= 4 ? 'MEGATON C4' : 'C4 DETONATED'), '#ffd700');
+        } else if (def.tactical === 'flash') {
+            const burst = (t.splash || def.splash) * (1 + (t.level - 1) * 0.22);
+            addEffect(t.x, t.y, '#ffffff', burst, 'nova');
+            state.screenShake = 14;
+            enemies.forEach(e => {
+                if (Math.hypot(e.x - t.x, e.y - t.y) <= burst) {
+                    damageEnemy(e, t.damage, def.color, t.x, t.y);
+                    e.status = 'reverse';
+                    e.statusTimer = Math.max(e.statusTimer || 0, 190 + t.level * 38);
+                    e.flashBurn = Math.max(e.flashBurn || 0, 70 + t.level * 15);
+                }
+            });
+            addFCT(t.x, t.y - 20, 'FLASHBACK', '#ffffff');
+        }
+        t.consumed = true;
+        playSoundEffect('kill');
+    }
+    function processCombat(dtFrames) {
+        towers.forEach(t => {
+            const def = TOWER_DEFS[t.type];
+            if (def.tactical) { triggerTactical(t, def); return; }
+            if (t.cooldown > 0) t.cooldown -= dtFrames;
+            
+            let validTargets = enemies.filter(e => Math.hypot(e.x - t.x, e.y - t.y) <= t.range);
+            if (validTargets.length === 0) return;
+
+            let target = validTargets[0];
+            if (t.targetMode === 1) target = validTargets[validTargets.length-1];
+            if (t.targetMode === 2) target = validTargets.reduce((a,b) => a.hp > b.hp ? a : b);
+            if (t.targetMode === 3) target = validTargets.reduce((a,b) => Math.hypot(a.x-t.x, a.y-t.y) < Math.hypot(b.x-t.x, b.y-t.y) ? a : b);
+
+            t.angle = -Math.PI / 2; 
+
+            if (t.cooldown <= 0) {
+                t.cooldown = state.overdrive > 0 ? Math.max(4, t.fireRate * 0.45) : t.fireRate;
+                let shots = 1;
+                if (t.type === 1 && t.level >= 2) shots = 2;
+                if (t.type === 1 && t.level === 3) shots = 3;
+                if (t.type === 5 && t.level >= 2) shots = 2;
+                if (t.type === 10 && t.level >= 3) shots = 2;
+                if (t.type === 12 && t.level >= 2) shots = 2;
+                for(let i=0; i<shots; i++) {
+                    setTimeout(() => spawnProjectile(t, target), i * 100);
+                }
+            }
+        });
+
+        towers = towers.filter(t => !t.consumed);
+
+        for (let i = projectiles.length - 1; i >= 0; i--) {
+            let p = projectiles[i];
+            let moveDist = Math.hypot(p.vx * dtFrames, p.vy * dtFrames);
+            p.x += p.vx * dtFrames;
+            p.y += p.vy * dtFrames;
+            p.traveled += moveDist;
+            
+            p.trail.push({x: p.x, y: p.y});
+            if (p.trail.length > 5) p.trail.shift();
+
+            if (p.traveled >= p.totalDist) {
+                if (p.splash > 0) {
+                    let splashRad = p.splash * (1 + (p.level*0.2));
+                    addEffect(p.x, p.y, p.color, splashRad, 'explosion');
+                    state.screenShake = p.level * 4;
+                    scorchMarks.push({x: p.x, y: p.y, r: splashRad*0.8, life: 1000});
+
+                    enemies.forEach(e => {
+                        if (Math.hypot(e.x - p.x, e.y - p.y) < splashRad) {
+                            damageEnemy(e, p.damage, p.color, p.x, p.y);
+                            if (p.effect) { e.status = p.effect; e.statusTimer = 60; }
+                            addFCT(e.x, e.y, Math.floor(p.damage), p.color);
+                            playSoundEffect('kill');
+                        }
+                    });
+                } else {
+                    for (let e of enemies) {
+                        if (Math.hypot(e.x - p.x, e.y - p.y) < 35) {
+                            damageEnemy(e, p.damage, p.color, p.x, p.y);
+                            if (p.effect) { e.status = p.effect; e.statusTimer = 60; }
+                            spriteParticles.push({x: p.x, y: p.y, life: 15, maxLife: 15, type: 'splat'});
+                            break;
+                        }
+                    }
+                }
+                projectiles.splice(i, 1);
+            }
+        }
+
+        for (let i = scorchMarks.length - 1; i >= 0; i--) {
+            scorchMarks[i].life -= dtFrames;
+            if(scorchMarks[i].life <= 0) scorchMarks.splice(i,1);
+        }
+
+        for (let i = roadJams.length - 1; i >= 0; i--) {
+            if (roadJams[i].persistent) {
+                if (!state.waveActive || roadJams[i].wave !== state.wave) roadJams.splice(i,1);
+            } else {
+                roadJams[i].life -= dtFrames;
+                if(roadJams[i].life <= 0) roadJams.splice(i,1);
+            }
+        }
+
+        for (let i = enemies.length - 1; i >= 0; i--) {
+            let e = enemies[i];
+            if (e.flashBurn > 0) {
+                const burn = Math.min(e.flashBurn, dtFrames * 1.2);
+                e.flashBurn -= burn;
+                e.hp -= burn;
+            }
+            if (e.hp <= 0) {
+                state.gold += e.reward;
+                state.killStreak = (state.killStreak || 0) + 1;
+                if (state.killStreak % 10 === 0) {
+                    const streakBonus = 25 + Math.floor(state.wave * 3);
+                    state.gold += streakBonus;
+                    addFCT(e.x, e.y - 24, state.killStreak + ' KO +$' + streakBonus, '#3cff9b');
+                }
+                if (e.type === 'boss') {
+                    const bossBonus = Math.floor(e.reward * 0.5);
+                    state.gold += bossBonus;
+                    state.shield = Math.min(state.maxShield, state.shield + 1);
+                    state.overdriveCooldown = Math.max(0, state.overdriveCooldown - 420);
+                    addFCT(e.x, e.y - 44, 'BOSS BOUNTY +$' + bossBonus, '#ffd700');
+                    addFCT(corePos.x, corePos.y - 150, 'SHIELD RESTORED', '#9beeff');
+                }
+                addFCT(e.x, e.y, `+${e.reward}`, "#ffd700");
+                spriteParticles.push({x: e.x, y: e.y, life: 20, maxLife: 20, type: 'dust'});
+                enemies.splice(i, 1);
+                updateUI();
+                continue;
+            }
+
+            let nextNode = pathNodes[e.pathIdx + 1];
+            if (!nextNode) {
+                state.waveLeaks = (state.waveLeaks || 0) + 1;
+                if (state.shield > 0) {
+                    state.shield--;
+                    addFCT(corePos.x, corePos.y - 80, 'SHIELD HIT', '#9beeff');
+                } else {
+                    state.lives--;
+                }
+                state.screenShake = 15;
+                addEffect(corePos.x, corePos.y, '#ff3366', 150, 'nova');
+                enemies.splice(i, 1);
+                updateUI();
+                if (state.lives <= 0) {
+                    state.gameState = 'gameover';
+                    updateOverlay();
+                }
+                continue;
+            }
+
+            let speedMult = 1;
+            if (e.statusTimer > 0) {
+                e.statusTimer -= dtFrames;
+                if (e.status === 'slow') speedMult = 0.5;
+                if (e.status === 'stun') speedMult = 0;
+                if (e.status === 'freeze') speedMult = 0;
+                if (e.status === 'reverse') speedMult = -0.75;
+                if (e.statusTimer <= 0) e.status = null;
+            }
+
+            for (let jam of roadJams) {
+                if (Math.hypot(e.x - jam.x, e.y - jam.y) < jam.r) speedMult *= (jam.slowMult || 0.35);
+            }
+
+            let angle = Math.atan2(nextNode.y - e.y, nextNode.x - e.x);
+            e.x += Math.cos(angle) * (e.speed * speedMult) * dtFrames;
+            e.y += Math.sin(angle) * (e.speed * speedMult) * dtFrames;
+            e.animFrame++;
+
+            if (Math.hypot(e.x - nextNode.x, e.y - nextNode.y) < Math.max(5, e.speed * dtFrames)) e.pathIdx++;
+        }
+    }
+
+    function addEffect(x, y, color, radius, type) {
+        effectAnimations.push({x, y, color, radius, type, maxLife: 20, life: 20});
+    }
+
+    function addEffectLine(x1, y1, x2, y2, color, type) {
+        effectAnimations.push({x1, y1, x2, y2, color, type, maxLife: 10, life: 10});
+    }
+
+    function addFCT(x, y, text, color) {
+        fcts.push({x, y, text, color, life: 50, maxLife: 50, vy: -0.8});
+    }
+
+    function drawLightning(ctx, x1, y1, x2, y2) {
+        ctx.beginPath(); ctx.moveTo(x1, y1);
+        let segments = 5;
+        let cx = x1, cy = y1;
+        for (let i=0; i<segments; i++) {
+            cx += (x2-x1)/segments + (Math.random()-0.5)*25;
+            cy += (y2-y1)/segments + (Math.random()-0.5)*25;
+            ctx.lineTo(cx, cy);
+        }
+        ctx.stroke();
+    }
+
+    function drawPreviews() {
+        for(let i=0; i<TOWER_COUNT; i++) {
+            const pCanvas = document.getElementById(`prev-${i}`);
+            if(!pCanvas) continue;
+            pCanvas.width = 100;
+            pCanvas.height = 100;
+            const pCtx = pCanvas.getContext('2d');
+            pCtx.clearRect(0,0,100,100);
+            pCtx.save(); 
+            pCtx.translate(50, 50); 
+            pCtx.scale(1.5, 1.5);
+            drawTowerType(pCtx, i, 3);
+            pCtx.restore();
+        }
+    }
+    function drawImageCentered(context, img, maxW, maxH, yOffset = 0, crop = null) {
+        if (!img || !img.complete || !img.naturalWidth) return false;
+        const sourceW = crop ? crop.sw : img.naturalWidth;
+        const sourceH = crop ? crop.sh : img.naturalHeight;
+        const scale = Math.min(maxW / sourceW, maxH / sourceH);
+        const w = sourceW * scale;
+        const h = sourceH * scale;
+        if (crop) {
+            context.drawImage(img, crop.sx, crop.sy, crop.sw, crop.sh, -w / 2, -h / 2 + yOffset, w, h);
+        } else {
+            context.drawImage(img, -w / 2, -h / 2 + yOffset, w, h);
+        }
+        return true;
+    }
+
+    function drawWeaponGlyph(context, type, def, level, levelBoost) {
+        context.save();
+        context.lineWidth = 2;
+        context.strokeStyle = '#d7e8f6';
+        context.fillStyle = '#172233';
+        context.shadowColor = def.color;
+        context.shadowBlur = 8;
+        if (def.tactical === 'primeBomb') {
+            if (!drawImageCentered(context, towerAssets.qamelotPrime, 42 + levelBoost, 42 + levelBoost, 0)) {
+                context.fillStyle = '#111'; context.strokeStyle = '#b100ff';
+                context.beginPath(); context.arc(0, 0, 18, 0, Math.PI * 2); context.fill(); context.stroke();
+                context.fillStyle = '#ffd700'; context.beginPath(); context.arc(10, -10, 5, 0, Math.PI * 2); context.fill();
+            }
+        } else if (def.tactical === 'c4') {
+            context.fillStyle = '#11151d';
+            context.strokeStyle = '#ff9d2e';
+            context.beginPath(); context.roundRect(-18, -14, 36, 28, 5); context.fill(); context.stroke();
+            context.fillStyle = '#ff3333'; context.beginPath(); context.arc(10, -6, 4, 0, Math.PI * 2); context.fill();
+            context.strokeStyle = '#ffd700'; context.beginPath(); context.moveTo(-6, -14); context.quadraticCurveTo(-4, -28, 10, -24); context.stroke();
+        } else if (def.tactical === 'flash') {
+            const g = context.createLinearGradient(-16, -16, 16, 16);
+            g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#9beeff');
+            context.fillStyle = g;
+            context.strokeStyle = '#ffffff';
+            context.beginPath(); context.roundRect(-13, -18, 26, 36, 6); context.fill(); context.stroke();
+            context.strokeStyle = '#ffd700';
+            for (let i = 0; i < 8; i++) {
+                const a = i * Math.PI / 4;
+                context.beginPath(); context.moveTo(Math.cos(a) * 18, Math.sin(a) * 18); context.lineTo(Math.cos(a) * 26, Math.sin(a) * 26); context.stroke();
+            }
+        } else {
+            const bodyW = (def.drawW || 54) + levelBoost;
+            const bodyH = Math.max(12, (def.drawH || 32) * 0.38);
+            context.rotate(-0.05);
+            context.fillStyle = '#2b3546';
+            context.strokeStyle = '#b8c4d6';
+            context.beginPath(); context.roundRect(-bodyW * 0.32, -bodyH / 2, bodyW * 0.56, bodyH, 4); context.fill(); context.stroke();
+            context.fillStyle = def.weapon === 'rifle' ? '#7b4a25' : '#3d4758';
+            context.beginPath(); context.roundRect(-bodyW * 0.2, bodyH * 0.35, bodyW * 0.22, bodyH * 0.85, 3); context.fill();
+            context.strokeStyle = '#d7e8f6';
+            context.lineWidth = def.weapon === 'sniper' ? 5 : 4;
+            context.beginPath(); context.moveTo(bodyW * 0.1, 0); context.lineTo(bodyW * 0.48, 0); context.stroke();
+            if (def.weapon === 'sniper') {
+                context.strokeStyle = '#ffd700'; context.lineWidth = 3;
+                context.beginPath(); context.moveTo(-bodyW * 0.22, -bodyH); context.lineTo(bodyW * 0.08, -bodyH); context.stroke();
+            }
+            if (def.weapon === 'smg') {
+                context.fillStyle = '#111827'; context.beginPath(); context.roundRect(-bodyW * 0.08, -bodyH * 1.15, bodyW * 0.22, bodyH * 0.65, 3); context.fill();
+            }
+            if (def.weapon === 'shotgun') {
+                context.strokeStyle = '#ff9d2e'; context.lineWidth = 2;
+                context.beginPath(); context.moveTo(bodyW * 0.25, -4); context.lineTo(bodyW * 0.46, -4); context.moveTo(bodyW * 0.25, 4); context.lineTo(bodyW * 0.46, 4); context.stroke();
+            }
+            context.fillStyle = def.color;
+            context.beginPath(); context.arc(bodyW * 0.5, 0, 3, 0, Math.PI * 2); context.fill();
+        }
+        context.restore();
+        return true;
+    }
+    function drawTowerType(context, type, level) {
+        const def = TOWER_DEFS[type];
+        if (!def) return;
+        context.save();
+        const pulse = 1 + Math.sin(frameCount / 14) * 0.012;
+        const levelBoost = 0;
+        context.scale(pulse, pulse);
+
+
+        if (def.weapon || def.tactical) {
+            drawWeaponGlyph(context, type, def, level, levelBoost);
+        } else if (!drawImageCentered(context, def.img, (def.drawW || 48) + levelBoost, (def.drawH || 54) + levelBoost, -3, def.crop)) {
+            context.fillStyle = def.color;
+            context.beginPath();
+            context.arc(0, 0, 28, 0, Math.PI * 2);
+            context.fill();
+        }
+        context.restore();
+    }
+    function drawPreviews() {
+        for(let i=0; i<TOWER_COUNT; i++) {
+            const pCanvas = document.getElementById(`prev-${i}`);
+            if(!pCanvas) continue;
+            pCanvas.width = 100;
+            pCanvas.height = 100;
+            const pCtx = pCanvas.getContext('2d');
+            pCtx.clearRect(0,0,100,100);
+            pCtx.save();
+            pCtx.translate(50, 54);
+            drawTowerType(pCtx, i, 3);
+            pCtx.restore();
+        }
+    }
+
+    function drawTowerUnderlay(t) {
+        const def = TOWER_DEFS[t.type];
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.fillStyle = (def?.color || '#00ffff') + '22';
+        ctx.shadowColor = def?.color || '#00ffff';
+        ctx.shadowBlur = 14;
+        ctx.beginPath();
+        ctx.ellipse(t.x, t.y + 18, 24 + t.level * 3, 8 + t.level, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        if (state.selectedTower === t) {
+            ctx.fillStyle = 'rgba(0, 255, 255, 0.08)';
+            ctx.strokeStyle = 'rgba(0, 255, 255, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(t.x, t.y, 34, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+        }
+    }
+
+    function drawTowerSprite(t) {
+        ctx.save(); ctx.translate(t.x, t.y);
+        drawTowerType(ctx, t.type, t.level);
+        ctx.restore();
+    }
+
+    function drawNeonBackground() {
+        const bg = ctx.createRadialGradient(C_WIDTH * 0.5, C_HEIGHT * 0.42, 80, C_WIDTH * 0.5, C_HEIGHT * 0.5, C_WIDTH * 0.72);
+        bg.addColorStop(0, '#122849');
+        bg.addColorStop(0.45, '#071326');
+        bg.addColorStop(1, '#030711');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, C_WIDTH, C_HEIGHT);
+
+        ctx.save();
+        ctx.globalAlpha = 0.16;
+        ctx.strokeStyle = '#00d9ff';
+        ctx.lineWidth = 1;
+        for (let x = (frameCount * 0.18) % 64; x < C_WIDTH; x += 64) {
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, C_HEIGHT); ctx.stroke();
+        }
+        for (let y = (frameCount * 0.12) % 64; y < C_HEIGHT; y += 64) {
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(C_WIDTH, y); ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+        const vignette = ctx.createRadialGradient(C_WIDTH / 2, C_HEIGHT / 2, 160, C_WIDTH / 2, C_HEIGHT / 2, C_WIDTH * 0.72);
+        vignette.addColorStop(0, 'rgba(0,0,0,0)');
+        vignette.addColorStop(1, 'rgba(0,0,0,0.62)');
+        ctx.fillStyle = vignette;
+        ctx.fillRect(0, 0, C_WIDTH, C_HEIGHT);
+        ctx.strokeStyle = 'rgba(177, 0, 255, 0.9)';
+        ctx.shadowColor = '#b100ff';
+        ctx.shadowBlur = 22;
+        ctx.lineWidth = 5;
+        ctx.strokeRect(10, 10, C_WIDTH - 20, C_HEIGHT - 20);
+        ctx.restore();
+    }
+
+    function drawNeonPath() {
+        ctx.save();
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(pathNodes[0].x, pathNodes[0].y);
+        for(let i=1; i<pathNodes.length; i++) ctx.lineTo(pathNodes[i].x, pathNodes[i].y);
+
+        ctx.strokeStyle = 'rgba(177, 0, 255, 0.28)';
+        ctx.shadowColor = '#b100ff';
+        ctx.shadowBlur = 24;
+        ctx.lineWidth = 62;
+        ctx.stroke();
+
+        ctx.strokeStyle = '#16102d';
+        ctx.shadowBlur = 0;
+        ctx.lineWidth = 48;
+        ctx.stroke();
+
+        const rail = ctx.createLinearGradient(0, 0, C_WIDTH, C_HEIGHT);
+        rail.addColorStop(0, '#00ffff');
+        rail.addColorStop(0.5, '#b100ff');
+        rail.addColorStop(1, '#ffd700');
+        ctx.strokeStyle = rail;
+        ctx.lineWidth = 8;
+        ctx.shadowColor = '#00ffff';
+        ctx.shadowBlur = 16;
+        ctx.stroke();
+
+        const offset = (frameCount * 2.25) % 42;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.72)';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([14, 28]);
+        ctx.lineDashOffset = -offset;
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.restore();
+    }
+
+    function drawCoreGlow() {
+        ctx.save();
+        const pulse = 1 + Math.sin(frameCount / 18) * 0.04;
+        ctx.translate(corePos.x, corePos.y);
+        const halo = ctx.createRadialGradient(0, 0, 12, 0, 0, 90);
+        halo.addColorStop(0, 'rgba(0,255,255,0.45)');
+        halo.addColorStop(0.45, 'rgba(177,0,255,0.18)');
+        halo.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.scale(pulse, pulse);
+        ctx.fillStyle = halo;
+        ctx.beginPath(); ctx.arc(0, 0, 90, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+    }
+    function render() {
+        ctx.clearRect(0, 0, C_WIDTH, C_HEIGHT);
+
+        if (state.gameState !== 'playing') {
+            // Draw dark background for menu
+            ctx.fillStyle = 'rgba(5, 3, 10, 0.9)';
+            ctx.fillRect(0, 0, C_WIDTH, C_HEIGHT);
+            
+            // Draw menu text
+            ctx.fillStyle = '#00ffff';
+            ctx.font = 'bold 48px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = '#00d9ff';
+            ctx.shadowBlur = 20;
+            ctx.fillText('QAMELOT TOWER DEFENSE', C_WIDTH/2, C_HEIGHT/2 - 100);
+            
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 24px Segoe UI';
+            ctx.fillText('Courage Under Fire', C_WIDTH/2, C_HEIGHT/2 - 20);
+            
+            ctx.shadowBlur = 0;
+            return; 
+        }
+
+        drawNeonBackground();
+
+        // Draw ambient particles
+        ambientParticles.forEach(p => {
+            p.y += p.vy; p.x += p.vx;
+            if(p.y < 0) p.y = C_HEIGHT;
+            ctx.fillStyle = `rgba(0, 255, 255, ${p.alpha})`;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+        });
+
+        ctx.save();
+        if (state.screenShake > 0) {
+            ctx.translate((Math.random()-0.5)*state.screenShake, (Math.random()-0.5)*state.screenShake);
+            state.screenShake *= 0.9;
+        }
+
+        // Draw scorch marks
+        scorchMarks.forEach(s => {
+            ctx.fillStyle = `rgba(0,0,0,${s.life/1000 * 0.7})`;
+            ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+        });
+
+        drawNeonPath();
+
+        roadJams.forEach(j => {
+            const alpha = j.persistent ? (j.level >= 5 ? 0.42 : (j.level >= 4 ? 0.34 : 0.28)) : Math.max(0.1, j.life / 240 * 0.45);
+            ctx.fillStyle = j.level >= 5 ? 'rgba(177, 0, 255, ' + alpha + ')' : 'rgba(255, 157, 46, ' + alpha + ')';
+            ctx.strokeStyle = 'rgba(255, 215, 0, ' + alpha + ')';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.arc(j.x, j.y, j.r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+            if (j.level >= 4) {
+                ctx.strokeStyle = j.level >= 5 ? 'rgba(255, 215, 0, 0.75)' : 'rgba(255,255,255,0.5)';
+                ctx.setLineDash([10, 8]);
+                ctx.beginPath(); ctx.arc(j.x, j.y, j.r * 0.72, 0, Math.PI * 2); ctx.stroke();
+                ctx.setLineDash([]);
+            }
+        });
+
+        // Draw core
+        drawCoreGlow();
+        ctx.fillStyle = '#102b46'; ctx.strokeStyle = '#00ffff'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(corePos.x, corePos.y, 50, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+        ctx.save(); ctx.translate(corePos.x, corePos.y);
+        drawHomeBase(ctx, 1.35);
+        if (state.shield > 0) {
+            ctx.strokeStyle = 'rgba(155, 238, 255, ' + (0.25 + state.shield/state.maxShield * 0.45) + ')';
+            ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.arc(0, 0, 58 + state.shield * 3, 0, Math.PI*2); ctx.stroke();
+        }
+        ctx.restore();
+
+        // Draw tower placement preview
+        if (state.selectedShopType !== null && pointer.active && pointer.x >= 0 && pointer.y >= 0 && pointer.x <= C_WIDTH && pointer.y <= C_HEIGHT) {
+            let def = TOWER_DEFS[state.selectedShopType];
+            ctx.fillStyle = def.tactical === 'primeBomb' ? 'rgba(177, 0, 255, 0.08)' : (def.pathOnly ? 'rgba(255, 215, 0, 0.08)' : 'rgba(0, 255, 255, 0.08)'); ctx.strokeStyle = def.tactical === 'primeBomb' ? '#b100ff' : (def.pathOnly ? '#ffd700' : '#00ffff');
+            ctx.beginPath(); ctx.arc(pointer.x, pointer.y, def.range, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+            
+            ctx.save(); ctx.translate(pointer.x, pointer.y); ctx.globalAlpha = 0.6;
+            drawTowerType(ctx, state.selectedShopType, 1);
+            ctx.restore();
+        }
+
+        // Draw tower underlays
+        towers.forEach(drawTowerUnderlay);
+
+
+        // Draw enemies
+        enemies.forEach(e => {
+            ctx.save();
+            ctx.translate(e.x, e.y);
+            
+            if (e.type === 'boss' && e.bossKind === 'prime') drawBossEnemy(ctx, 2.5, e);
+            else drawScorpionEnemy(ctx, e.type === 'boss' ? 2.25 : (e.type === 'heavy' ? 1.45 : 1.12), e);
+            
+            ctx.restore();
+
+            // Draw HP bar
+            let s = e.type === 'boss' ? 2.5 : (e.type === 'heavy' ? 1.6 : 1);
+            const barW = e.type === 'boss' ? 58 : 42;
+            const barY = e.y - 35*s;
+            ctx.fillStyle = 'rgba(2, 8, 17, 0.85)';
+            ctx.fillRect(e.x - barW / 2, barY, barW, 6);
+            ctx.shadowColor = e.color || '#00ffff';
+            ctx.shadowBlur = 8;
+            ctx.fillStyle = e.color || (e.type === 'boss' ? '#00d9ff' : '#00ffff');
+            ctx.fillRect(e.x - barW / 2, barY, Math.max(0, barW * (e.hp/e.maxHp)), 6);
+            ctx.shadowBlur = 0;
+        });
+
+        // Draw tower sprites on top
+        towers.forEach(drawTowerSprite);
+
+        // Draw projectiles
+        projectiles.forEach(p => {
+            if (p.projectileImg === towerAssets.electricShot && p.trail && p.trail.length > 1) {
+                ctx.save();
+                ctx.lineCap = 'round';
+                ctx.shadowColor = '#f6ff9a';
+                ctx.shadowBlur = 12;
+                for (let i = 1; i < p.trail.length; i++) {
+                    const a = i / p.trail.length;
+                    ctx.strokeStyle = 'rgba(246, 255, 154, ' + (0.12 + a * 0.42) + ')';
+                    ctx.lineWidth = 1.5 + a * 5;
+                    ctx.beginPath();
+                    ctx.moveTo(p.trail[i - 1].x, p.trail[i - 1].y);
+                    ctx.lineTo(p.trail[i].x, p.trail[i].y);
+                    ctx.stroke();
+                }
+                ctx.strokeStyle = 'rgba(0, 255, 255, 0.45)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(p.trail[0].x, p.trail[0].y);
+                ctx.lineTo(p.x, p.y);
+                ctx.stroke();
+                ctx.restore();
+            }
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle || Math.atan2(p.vy, p.vx));
+            if (p.projectileImg && p.projectileImg.complete && p.projectileImg.naturalWidth) {
+                const size = p.projectileImg === towerAssets.windShot ? 58 : (p.projectileImg === towerAssets.fireShot ? 42 : 34);
+                drawImageCentered(ctx, p.projectileImg, size, size, 0);
+            } else {
+                ctx.fillStyle = p.color; ctx.shadowBlur = 10; ctx.shadowColor = p.color;
+                ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI*2); ctx.fill();
+            }
+            ctx.restore();
+        });
+
+        // Draw effects
+        for(let i=effectAnimations.length-1; i>=0; i--) {
+            let fx = effectAnimations[i]; fx.life--;
+            if (fx.life <= 0) { effectAnimations.splice(i, 1); continue; }
+            ctx.save();
+            let pct = fx.life / fx.maxLife; ctx.globalAlpha = pct;
+            
+            if (fx.type === 'explosion' || fx.type === 'nova') {
+                const r = fx.radius * (1-pct);
+                const glow = ctx.createRadialGradient(fx.x, fx.y, 0, fx.x, fx.y, Math.max(1, r));
+                glow.addColorStop(0, fx.type === 'nova' ? 'rgba(255,255,255,0.9)' : fx.color);
+                glow.addColorStop(0.38, fx.color);
+                glow.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.globalCompositeOperation = 'lighter';
+                ctx.fillStyle = glow;
+                ctx.beginPath(); ctx.arc(fx.x, fx.y, r, 0, Math.PI*2); ctx.fill();
+                ctx.strokeStyle = fx.type === 'nova' ? 'rgba(255,255,255,0.9)' : 'rgba(255,215,0,0.75)';
+                ctx.lineWidth = 2 + pct * 6;
+                ctx.shadowColor = fx.color;
+                ctx.shadowBlur = 18;
+                ctx.beginPath(); ctx.arc(fx.x, fx.y, r * 0.78, 0, Math.PI*2); ctx.stroke();
+            } else if (fx.type === 'lightning') {
+                ctx.globalCompositeOperation = 'lighter';
+                ctx.strokeStyle = fx.color;
+                ctx.lineWidth = 3;
+                ctx.shadowColor = fx.color;
+                ctx.shadowBlur = 14;
+                drawLightning(ctx, fx.x1, fx.y1, fx.x2, fx.y2);
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1;
+                drawLightning(ctx, fx.x1, fx.y1, fx.x2, fx.y2);
+            }
+            ctx.restore();
+        }
+
+        // Draw particles
+        for(let i=particles.length-1; i>=0; i--) {
+            let p = particles[i]; p.life--;
+            if (p.life <= 0) { particles.splice(i,1); continue; }
+            p.x += p.vx; p.y += p.vy;
+            ctx.globalAlpha = p.life/30; ctx.fillStyle = p.color;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+        }
+
+        // Draw floating combat text
+        for(let i=fcts.length-1; i>=0; i--) {
+            let f = fcts[i]; f.life--;
+            if (f.life <= 0) { fcts.splice(i,1); continue; }
+            f.y += f.vy; 
+            ctx.globalAlpha = f.life / f.maxLife;
+            ctx.fillStyle = f.color; ctx.font = "bold 18px 'Segoe UI'"; ctx.textAlign = "center";
+            ctx.shadowBlur = 4; ctx.shadowColor = '#000';
+            ctx.fillText(f.text, f.x, f.y);
+            ctx.shadowBlur = 0;
+        }
+        ctx.globalAlpha = 1.0;
+        ctx.restore();
+    }
+
+    let lastTime = 0;
+    function gameLoop(time) {
+        requestAnimationFrame(gameLoop);
+        if (!lastTime) lastTime = time;
+        let dt = time - lastTime;
+        lastTime = time;
+
+        if (dt > 100) dt = 100;
+        
+        let dtFrames = (dt / 16.66) * state.speed;
+        frameCount += dtFrames;
+
+        if (state.gameState === 'playing' && !state.isPaused) {
+            if (state.overdrive > 0) state.overdrive = Math.max(0, state.overdrive - dtFrames);
+            if (state.overdriveCooldown > 0) state.overdriveCooldown = Math.max(0, state.overdriveCooldown - dtFrames);
+            processWaveSpawns(dtFrames);
+            processCombat(dtFrames);
+        }
+        
+        render();
+    }
+
+    const overdriveControl = document.getElementById('btn-overdrive');
+    if (overdriveControl) overdriveControl.onclick = () => {
+        if (state.gameState !== 'playing' || state.overdrive > 0 || state.overdriveCooldown > 0) return;
+        state.overdrive = 960;
+        state.overdriveCooldown = 1500;
+        addFCT(corePos.x, corePos.y - 120, 'OVERDRIVE', '#ffd700');
+        playSoundEffect('upgrade');
+        updateUI();
+    };
+    document.getElementById('btn-pause').onclick = (e) => { 
+        state.isPaused = !state.isPaused; 
+        e.target.innerText = state.isPaused ? "PLAY" : "PAUSE";
+        e.target.classList.toggle('active');
+    };
+    [1, 2, 4, 8, 16, 32].forEach(s => {
+        const speedBtn = document.getElementById(`btn-spd-${s}`);
+        if (!speedBtn) return;
+        speedBtn.onclick = () => {
+            state.speed = s;
+            [1,2,4,8,16,32].forEach(x => document.getElementById(`btn-spd-${x}`).classList.remove('active'));
+            document.getElementById(`btn-spd-${s}`).classList.add('active');
+        }
+    });
+    if (document.getElementById('btn-spd-1')) document.getElementById('btn-spd-1').classList.add('active');
+
+    function startGame() {
+        if(state.gameState === 'menu' || state.gameState === 'gameover' || state.gameState === 'victory') {
+            state = { ...state, lives: 25, gold: 600, wave: 0, gameState: 'playing', waveActive: false, waveTimer: 0, enemiesSpawned: 0, selectedShopType: null, selectedTower: null, screenShake: 0,
+        shield: 5, maxShield: 5, overdrive: 0, overdriveCooldown: 0, critChance: 0.12, critMult: 1.75, interestRate: 0.04, advancedUnlocked: false, killStreak: 0, waveLeaks: 0
+    };
+            towers = []; enemies = []; projectiles = []; effectAnimations = []; particles = []; fcts = []; scorchMarks = []; roadJams = []; spriteParticles = [];
+            updateOverlay();
+            updateUI();
+        }
+    }
+
+    let imagesLoaded = 0;
+    const initImages = () => {
+        imagesLoaded++;
+        drawPreviews(); // Keep attempting to draw previews as assets trickle in
+    };
+    Object.values(towerAssets).forEach(img => {
+        img.onload = initImages;
+        img.onerror = initImages;
+    });
+
+    window.onload = () => {
+        updateOverlay();
+        updateUI();
+        drawPreviews();
+        requestAnimationFrame(gameLoop);
+    };
+
+
+</script>
+
+</body>
+</html>
+
+
+

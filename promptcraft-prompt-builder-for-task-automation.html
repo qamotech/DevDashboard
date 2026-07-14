@@ -1,0 +1,2699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PromptCraft — Prompt Builder for Task Automation</title>
+<style data-inlined-from="styles.css">
+/* ============ ROOT & RESET ============ */
+:root {
+  --bg-0: #0b0d13;
+  --bg-1: #12151f;
+  --bg-2: #181c28;
+  --bg-3: #1f2432;
+  --bg-4: #262c3d;
+  --border: #2a3145;
+  --border-strong: #3a4260;
+  --text-0: #e8ecf5;
+  --text-1: #b8c0d0;
+  --text-2: #8891a5;
+  --text-3: #5c6478;
+  --accent: #7c5cff;
+  --accent-2: #5b8bff;
+  --accent-glow: rgba(124, 92, 255, 0.35);
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --info: #60a5fa;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  --shadow-glow: 0 0 24px var(--accent-glow);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-0);
+  color: var(--text-0);
+  font-size: 14px;
+  line-height: 1.55;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at top left, rgba(124, 92, 255, 0.08), transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(91, 139, 255, 0.06), transparent 50%),
+    var(--bg-0);
+  display: flex;
+  flex-direction: column;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--bg-4); }
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+.mono, code, pre { font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace; }
+
+/* ============ TOPBAR ============ */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: rgba(18, 21, 31, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  gap: 20px;
+  min-height: 60px;
+  flex-shrink: 0;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; min-width: 220px; }
+.brand-mark {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  box-shadow: var(--shadow-glow);
+}
+.brand-title { font-weight: 700; font-size: 15px; letter-spacing: -0.2px; }
+.brand-sub { font-size: 11px; color: var(--text-2); }
+
+.tabs { display: flex; gap: 4px; flex: 1; justify-content: center; }
+.tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-1);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.tab:hover { background: var(--bg-2); color: var(--text-0); }
+.tab.active {
+  background: var(--bg-3);
+  border-color: var(--border-strong);
+  color: var(--text-0);
+}
+
+.topbar-right { display: flex; gap: 10px; align-items: center; min-width: 220px; justify-content: flex-end; }
+.platform-picker {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* ============ BUTTONS ============ */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 13px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: white;
+  box-shadow: 0 2px 8px rgba(124, 92, 255, 0.3);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124, 92, 255, 0.4); }
+.btn-secondary {
+  background: var(--bg-3);
+  color: var(--text-0);
+  border-color: var(--border-strong);
+}
+.btn-secondary:hover { background: var(--bg-4); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-1);
+  border-color: var(--border);
+}
+.btn-ghost:hover { background: var(--bg-2); color: var(--text-0); }
+.btn-sm { padding: 6px 10px; font-size: 12px; }
+.btn-full { width: 100%; justify-content: center; }
+.btn-danger-ghost { background: transparent; color: var(--danger); border-color: transparent; }
+.btn-danger-ghost:hover { background: rgba(248, 113, 113, 0.12); }
+
+/* ============ APP LAYOUT ============ */
+.app {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.view {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  display: none;
+  padding: 24px 28px;
+}
+.view.active { display: block; }
+.view-studio.active {
+  display: grid;
+  grid-template-columns: 260px 1fr 340px;
+  gap: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ============ WIZARD SIDEBAR ============ */
+.wizard-sidebar {
+  background: var(--bg-1);
+  border-right: 1px solid var(--border);
+  padding: 20px 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.wizard-header { margin-bottom: 16px; }
+.wizard-title { font-weight: 700; font-size: 15px; }
+.wizard-hint { font-size: 12px; color: var(--text-2); margin-top: 4px; line-height: 1.4; }
+
+.steps { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.step {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+}
+.step:hover { background: var(--bg-2); }
+.step.active {
+  background: var(--bg-3);
+  border-color: var(--border-strong);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.step.completed .step-num { background: var(--success); color: #062419; }
+.step-num {
+  width: 24px; height: 24px;
+  background: var(--bg-3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  flex-shrink: 0;
+}
+.step.active .step-num { background: var(--accent); color: white; }
+.step-name { font-size: 13px; font-weight: 600; }
+.step-desc { font-size: 11px; color: var(--text-2); }
+
+.wizard-progress { margin-top: 20px; padding: 0 4px; }
+.progress-bar {
+  height: 5px;
+  background: var(--bg-3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  width: 14.28%;
+  transition: width 0.3s;
+}
+.progress-text { font-size: 11px; color: var(--text-2); margin-top: 6px; text-align: center; }
+
+.wizard-actions-sidebar {
+  margin-top: auto;
+  padding-top: 16px;
+  display: flex;
+  gap: 6px;
+}
+
+/* ============ WIZARD MAIN ============ */
+.wizard-main {
+  overflow-y: auto;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.prompt-meta-row {
+  display: flex; align-items: center; gap: 16px;
+  padding-bottom: 16px; margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.prompt-name-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-0);
+  padding: 4px 0;
+}
+.prompt-name-input::placeholder { color: var(--text-3); }
+.prompt-meta-controls { display: flex; gap: 12px; align-items: center; }
+.prompt-tags-input {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  width: 200px;
+  outline: none;
+}
+.rating { display: flex; gap: 2px; font-size: 18px; color: var(--text-3); cursor: pointer; }
+.rating span { transition: color 0.1s; }
+.rating span.on { color: var(--warning); }
+
+.step-panels { flex: 1; }
+.step-panel { display: none; animation: fadeInUp 0.25s ease; }
+.step-panel.active { display: block; }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.panel-header {
+  display: flex; align-items: flex-start; gap: 16px;
+  margin-bottom: 20px;
+}
+.panel-icon {
+  font-size: 32px;
+  width: 56px; height: 56px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.panel-header h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+.panel-desc { color: var(--text-2); margin-top: 4px; }
+
+.field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  margin-top: 16px;
+}
+.field-label:first-child { margin-top: 0; }
+
+.field {
+  width: 100%;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text-0);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  resize: vertical;
+  font-family: inherit;
+}
+.field:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.15);
+}
+.field.mono { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; }
+.field-sm { padding: 6px 10px; font-size: 12px; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.tip {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: rgba(96, 165, 250, 0.08);
+  border-left: 3px solid var(--info);
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: var(--text-1);
+}
+.tip code { background: var(--bg-3); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--text-1);
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.chip:hover { background: var(--bg-4); color: var(--text-0); border-color: var(--accent); }
+
+/* Instructions list */
+.instructions-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.instruction-item {
+  display: flex; gap: 8px; align-items: flex-start;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+}
+.instr-num {
+  background: var(--accent);
+  color: white;
+  min-width: 26px; height: 26px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.instr-text {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-0);
+  resize: vertical;
+  min-height: 32px;
+  padding: 4px 0;
+  font-family: inherit;
+}
+.instr-del {
+  background: transparent; border: none;
+  color: var(--text-3); cursor: pointer;
+  padding: 4px 8px; border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.instr-del:hover { color: var(--danger); background: rgba(248, 113, 113, 0.1); }
+
+/* Examples list */
+.examples-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+.example-item {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+}
+.example-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.example-title { font-size: 12px; font-weight: 700; color: var(--text-1); text-transform: uppercase; letter-spacing: 0.5px; }
+.example-body { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.example-body label {
+  font-size: 11px; text-transform: uppercase; font-weight: 600; color: var(--text-2); letter-spacing: 0.5px;
+  margin-bottom: 4px; display: block;
+}
+.example-body textarea {
+  width: 100%;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  color: var(--text-0);
+  outline: none;
+  resize: vertical;
+  min-height: 60px;
+  font-size: 12.5px;
+}
+
+/* Format grid */
+.format-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 8px;
+}
+.format-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.format-card:hover { border-color: var(--border-strong); background: var(--bg-3); }
+.format-card input { accent-color: var(--accent); }
+.format-card:has(input:checked) {
+  border-color: var(--accent);
+  background: rgba(124, 92, 255, 0.08);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.format-card b { display: block; font-size: 13px; }
+.format-card small { color: var(--text-2); font-size: 11px; }
+
+/* Variables */
+.variables-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.variable-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr auto;
+  gap: 8px;
+  align-items: center;
+}
+.variable-item input, .variable-item select {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  outline: none;
+  font-size: 13px;
+}
+.variable-item .var-name { font-family: 'JetBrains Mono', monospace; color: var(--accent); }
+
+/* Wizard footer */
+.wizard-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 20px; margin-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.wizard-footer-right { display: flex; gap: 10px; }
+
+/* ============ PREVIEW PANE ============ */
+.preview-pane {
+  background: var(--bg-1);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.preview-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  padding: 4px 4px 0;
+  background: var(--bg-2);
+}
+.ptab {
+  flex: 1;
+  padding: 10px 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-2);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 12.5px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+.ptab:hover { color: var(--text-0); }
+.ptab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.ppanel { display: none; padding: 16px; overflow-y: auto; flex: 1; }
+.ppanel.active { display: flex; flex-direction: column; }
+
+.preview-label { font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--text-2); letter-spacing: 0.5px; margin-bottom: 8px; }
+.preview-output {
+  background: var(--bg-0);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-1);
+  white-space: pre-wrap;
+  word-break: break-word;
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  min-height: 200px;
+}
+.preview-output .ph { color: var(--accent); font-weight: 600; }
+.preview-output .placeholder-var { color: var(--warning); background: rgba(251, 191, 36, 0.1); padding: 1px 4px; border-radius: 3px; }
+
+/* Quality */
+.quality-score-wrap { text-align: center; margin-bottom: 20px; }
+.quality-ring { position: relative; width: 120px; height: 120px; margin: 0 auto; }
+.quality-ring svg { width: 100%; height: 100%; }
+.quality-score-num {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; font-weight: 700;
+}
+.quality-label { color: var(--text-2); font-size: 12px; margin-top: 6px; }
+.quality-checks { display: flex; flex-direction: column; gap: 8px; }
+.qcheck {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  font-size: 12.5px;
+}
+.qcheck-icon {
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  flex-shrink: 0;
+}
+.qcheck.pass .qcheck-icon { background: rgba(52, 211, 153, 0.2); color: var(--success); }
+.qcheck.warn .qcheck-icon { background: rgba(251, 191, 36, 0.2); color: var(--warning); }
+.qcheck.fail .qcheck-icon { background: rgba(248, 113, 113, 0.2); color: var(--danger); }
+.qcheck-body { flex: 1; }
+.qcheck-title { font-weight: 600; }
+.qcheck-desc { color: var(--text-2); font-size: 11.5px; margin-top: 2px; }
+
+/* Stats */
+.stat-row {
+  display: flex; justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.stat-row span { color: var(--text-2); }
+.stat-row b { color: var(--text-0); font-weight: 600; }
+
+/* ============ TEMPLATES VIEW ============ */
+.view-header { margin-bottom: 20px; }
+.view-header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+.view-header p { color: var(--text-2); margin-top: 4px; }
+
+.template-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.filter-chip {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--text-1);
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12.5px;
+  transition: all 0.15s;
+}
+.filter-chip:hover { background: var(--bg-3); }
+.filter-chip.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.templates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.template-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.template-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.template-icon { font-size: 28px; margin-bottom: 8px; }
+.template-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.template-card p { font-size: 12.5px; color: var(--text-2); line-height: 1.5; margin-bottom: 12px; }
+.template-card .tcat {
+  display: inline-block;
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.6px;
+  padding: 3px 8px;
+  background: var(--bg-3);
+  border-radius: 4px;
+  color: var(--text-1);
+  margin-bottom: 8px;
+}
+.template-actions { display: flex; gap: 8px; margin-top: 8px; }
+
+/* ============ LIBRARY VIEW ============ */
+.library-toolbar { display: flex; gap: 10px; margin-bottom: 16px; }
+.search-input {
+  flex: 1;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text-0);
+  outline: none;
+  font-size: 13px;
+}
+.search-input:focus { border-color: var(--accent); }
+.library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.library-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex; flex-direction: column;
+  transition: all 0.2s;
+}
+.library-card:hover { border-color: var(--border-strong); }
+.library-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.library-card .lgoal { color: var(--text-2); font-size: 12.5px; line-height: 1.5; margin-bottom: 10px; flex: 1; }
+.library-card .ltags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+.library-card .ltag {
+  background: var(--bg-3);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  color: var(--text-1);
+}
+.library-card .lmeta {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11px; color: var(--text-3);
+  padding-top: 10px; border-top: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+.library-card .lactions { display: flex; gap: 6px; }
+.library-empty {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-2);
+}
+.library-empty .empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+/* ============ SANDBOX VIEW ============ */
+.sandbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.sandbox-left, .sandbox-right {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex; flex-direction: column;
+  min-height: 500px;
+}
+.section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-2); font-weight: 700; margin-bottom: 10px; }
+.sandbox-bindings { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.sb-binding {
+  display: flex; align-items: center; gap: 8px;
+}
+.sb-binding label {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent);
+  font-size: 12px;
+  min-width: 120px;
+}
+.sb-binding input {
+  flex: 1;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: var(--text-0);
+  outline: none;
+  font-size: 12.5px;
+}
+.sandbox-final {
+  background: var(--bg-0);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-1);
+  white-space: pre-wrap;
+  word-break: break-word;
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  min-height: 200px;
+}
+.sandbox-controls { display: flex; gap: 8px; justify-content: flex-end; }
+.sandbox-response {
+  background: var(--bg-0);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-0);
+  min-height: 200px;
+}
+.sandbox-empty { color: var(--text-3); text-align: center; padding: 40px 20px; }
+.sandbox-metrics {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);
+}
+.sandbox-metrics > div { background: var(--bg-2); border-radius: 8px; padding: 10px; text-align: center; }
+.sandbox-metrics span { display: block; font-size: 11px; color: var(--text-2); text-transform: uppercase; }
+.sandbox-metrics b { display: block; font-size: 15px; margin-top: 2px; }
+
+/* Sandbox typing animation */
+.typing-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 14px;
+  background: var(--accent);
+  margin-left: 2px;
+  animation: blink 1s infinite;
+  vertical-align: middle;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ============ COMPARE VIEW ============ */
+.compare-picker {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.compare-picker h3 { font-size: 13px; text-transform: uppercase; color: var(--text-2); letter-spacing: 0.5px; margin-bottom: 10px; font-weight: 700; }
+.compare-picker-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.compare-pick-item {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12.5px;
+  transition: all 0.15s;
+}
+.compare-pick-item:hover { border-color: var(--border-strong); }
+.compare-pick-item.selected {
+  background: rgba(124, 92, 255, 0.15);
+  border-color: var(--accent);
+  color: var(--text-0);
+}
+.compare-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.compare-col {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.compare-col h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.compare-col .cscore {
+  font-size: 28px; font-weight: 800; margin: 8px 0;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.compare-metrics { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.compare-metrics > div { display: flex; justify-content: space-between; font-size: 12.5px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.compare-metrics > div span { color: var(--text-2); }
+.compare-prompt-preview {
+  background: var(--bg-0);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 11.5px;
+  color: var(--text-1);
+  max-height: 180px;
+  overflow-y: auto;
+  margin-top: 10px;
+  white-space: pre-wrap;
+}
+
+/* ============ EXPORT VIEW ============ */
+.export-format-row { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.export-fmt {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--text-1);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.export-fmt:hover { background: var(--bg-3); }
+.export-fmt.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.export-output {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-0);
+  white-space: pre;
+  overflow: auto;
+  max-height: 60vh;
+  margin-bottom: 12px;
+}
+.export-actions { display: flex; gap: 10px; }
+
+/* ============ TOAST ============ */
+.toast {
+  position: fixed;
+  bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg-3);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 10px 18px;
+  color: var(--text-0);
+  font-size: 13px;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 1000;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: var(--success); }
+.toast.error { border-color: var(--danger); }
+
+/* ============ MODAL ============ */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(6, 8, 15, 0.75);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 999;
+  padding: 20px;
+}
+.modal-backdrop.show { display: flex; }
+.modal {
+  background: var(--bg-1);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 560px;
+  width: 100%;
+  position: relative;
+  box-shadow: var(--shadow);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-close {
+  position: absolute; top: 12px; right: 16px;
+  background: transparent; border: none;
+  color: var(--text-2); font-size: 24px;
+  cursor: pointer;
+  width: 32px; height: 32px;
+  border-radius: 6px;
+}
+.modal-close:hover { background: var(--bg-2); color: var(--text-0); }
+
+.onboarding-hero { text-align: center; margin-bottom: 24px; }
+.onboarding-hero svg { margin-bottom: 12px; }
+.onboarding-hero h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+.onboarding-hero p { color: var(--text-2); margin-top: 4px; }
+.onboarding-concepts {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  margin-bottom: 24px;
+}
+.concept-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 8px;
+  text-align: center;
+}
+.concept-card .c-num { font-size: 22px; margin-bottom: 4px; }
+.concept-card b { display: block; font-size: 13px; }
+.concept-card span { display: block; font-size: 11px; color: var(--text-2); }
+.onboarding-form { margin-bottom: 16px; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1200px) {
+  .view-studio.active { grid-template-columns: 220px 1fr 300px; }
+}
+@media (max-width: 960px) {
+  .view-studio.active { grid-template-columns: 1fr; grid-template-rows: auto auto auto; overflow: auto; }
+  .wizard-sidebar, .preview-pane { border: none; border-bottom: 1px solid var(--border); }
+  .brand-sub { display: none; }
+  .tabs { overflow-x: auto; }
+  .format-grid { grid-template-columns: repeat(2, 1fr); }
+  .sandbox-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .topbar { flex-wrap: wrap; padding: 10px 12px; }
+  .topbar-right { min-width: unset; }
+  .view { padding: 16px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .example-body { grid-template-columns: 1fr; }
+  .variable-item { grid-template-columns: 1fr 1fr; }
+  .onboarding-concepts { grid-template-columns: repeat(2, 1fr); }
+}
+
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ============ TOP NAV ============ -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2 L2 7 L12 12 L22 7 Z"/>
+        <path d="M2 17 L12 22 L22 17"/>
+        <path d="M2 12 L12 17 L22 12"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <div class="brand-title">PromptCraft</div>
+      <div class="brand-sub">Prompt Builder for Task Automation</div>
+    </div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="studio">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Studio
+    </button>
+    <button class="tab" data-tab="templates">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Templates
+    </button>
+    <button class="tab" data-tab="library">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      My Library
+    </button>
+    <button class="tab" data-tab="sandbox">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Sandbox
+    </button>
+    <button class="tab" data-tab="compare">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="8" height="16"/><rect x="13" y="4" width="8" height="16"/></svg>
+      Compare
+    </button>
+    <button class="tab" data-tab="export">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export
+    </button>
+  </nav>
+
+  <div class="topbar-right">
+    <select id="ai-platform" class="platform-picker" title="Target AI platform">
+      <option value="openai">OpenAI (GPT)</option>
+      <option value="anthropic">Anthropic (Claude)</option>
+      <option value="google">Google (Gemini)</option>
+      <option value="cohere">Cohere</option>
+      <option value="generic">Generic</option>
+    </select>
+    <button id="new-prompt-btn" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New Prompt
+    </button>
+  </div>
+</header>
+
+<main class="app">
+
+  <!-- ============ STUDIO (WIZARD) ============ -->
+  <section class="view view-studio active" data-view="studio">
+
+    <!-- Sidebar: Wizard steps -->
+    <aside class="wizard-sidebar">
+      <div class="wizard-header">
+        <div class="wizard-title">Prompt Designer</div>
+        <div class="wizard-hint">Follow the 7-step flow to craft a high-quality prompt.</div>
+      </div>
+      <ol class="steps" id="steps-nav">
+        <li class="step active" data-step="1"><span class="step-num">1</span><div><div class="step-name">Goal</div><div class="step-desc">One-sentence outcome</div></div></li>
+        <li class="step" data-step="2"><span class="step-num">2</span><div><div class="step-name">Context</div><div class="step-desc">Background, data</div></div></li>
+        <li class="step" data-step="3"><span class="step-num">3</span><div><div class="step-name">Constraints</div><div class="step-desc">Tone, format, safety</div></div></li>
+        <li class="step" data-step="4"><span class="step-num">4</span><div><div class="step-name">Instructions</div><div class="step-desc">Ordered steps</div></div></li>
+        <li class="step" data-step="5"><span class="step-num">5</span><div><div class="step-name">Examples</div><div class="step-desc">Input → Output pairs</div></div></li>
+        <li class="step" data-step="6"><span class="step-num">6</span><div><div class="step-name">Output Format</div><div class="step-desc">JSON, list, code…</div></div></li>
+        <li class="step" data-step="7"><span class="step-num">7</span><div><div class="step-name">Variables</div><div class="step-desc">Placeholders & data</div></div></li>
+      </ol>
+
+      <div class="wizard-progress">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="progress-text" id="progress-text">Step 1 of 7</div>
+      </div>
+
+      <div class="wizard-actions-sidebar">
+        <button class="btn btn-ghost btn-sm" id="load-example-btn">Load Example</button>
+        <button class="btn btn-ghost btn-sm" id="clear-form-btn">Clear</button>
+      </div>
+    </aside>
+
+    <!-- Wizard main area -->
+    <div class="wizard-main">
+      <div class="prompt-meta-row">
+        <input type="text" id="prompt-name" class="prompt-name-input" placeholder="Untitled Prompt" />
+        <div class="prompt-meta-controls">
+          <input type="text" id="prompt-tags" class="prompt-tags-input" placeholder="tags (comma-separated)" />
+          <div class="rating" id="prompt-rating" data-value="0">
+            <span data-star="1">★</span><span data-star="2">★</span><span data-star="3">★</span><span data-star="4">★</span><span data-star="5">★</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP PANELS -->
+      <div class="step-panels">
+
+        <!-- STEP 1: GOAL -->
+        <div class="step-panel active" data-panel="1">
+          <div class="panel-header">
+            <div class="panel-icon">🎯</div>
+            <div>
+              <h2>Step 1 · Define the Task Goal</h2>
+              <p class="panel-desc">State the outcome you want in ONE clear sentence. Strong prompts start with a strong goal.</p>
+            </div>
+          </div>
+          <label class="field-label">Task Goal</label>
+          <textarea id="f-goal" class="field" rows="3" placeholder="e.g., Summarize the attached research paper into a 200-word executive brief for a non-technical audience."></textarea>
+          <div class="tip">💡 <b>Tip:</b> Use an action verb (Summarize, Draft, Extract, Translate, Classify, Refactor…).</div>
+        </div>
+
+        <!-- STEP 2: CONTEXT -->
+        <div class="step-panel" data-panel="2">
+          <div class="panel-header">
+            <div class="panel-icon">🧭</div>
+            <div>
+              <h2>Step 2 · Add Context</h2>
+              <p class="panel-desc">Relevant background, data sources, audience, and situational information the AI needs to know.</p>
+            </div>
+          </div>
+          <label class="field-label">Background & Context</label>
+          <textarea id="f-context" class="field" rows="6" placeholder="Who is the audience? What background does the AI need? Any documents, data, or prior conversation?"></textarea>
+          <label class="field-label">Data Sources (optional)</label>
+          <input id="f-sources" type="text" class="field" placeholder="e.g., attached PDF, URL, CSV columns [name, email, date]" />
+        </div>
+
+        <!-- STEP 3: CONSTRAINTS -->
+        <div class="step-panel" data-panel="3">
+          <div class="panel-header">
+            <div class="panel-icon">🛡️</div>
+            <div>
+              <h2>Step 3 · Set Constraints</h2>
+              <p class="panel-desc">Tone, format rules, length limits, and safety guardrails.</p>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div>
+              <label class="field-label">Tone</label>
+              <select id="f-tone" class="field">
+                <option value="">-- select tone --</option>
+                <option>Professional</option><option>Friendly</option><option>Concise</option>
+                <option>Academic</option><option>Persuasive</option><option>Technical</option>
+                <option>Casual</option><option>Empathetic</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">Length</label>
+              <select id="f-length" class="field">
+                <option value="">-- select length --</option>
+                <option>Under 50 words</option>
+                <option>~150 words</option>
+                <option>~300 words</option>
+                <option>~500 words</option>
+                <option>Long-form (1000+ words)</option>
+              </select>
+            </div>
+          </div>
+          <label class="field-label">Additional Constraints & Guardrails</label>
+          <textarea id="f-constraints" class="field" rows="4" placeholder="e.g., Do not include personal opinions. Do not reveal API keys. Cite sources. No profanity."></textarea>
+          <div class="chip-row">
+            <button class="chip" data-chip-target="f-constraints" data-chip="Cite all sources with URLs.">+ Cite sources</button>
+            <button class="chip" data-chip-target="f-constraints" data-chip="Avoid speculation; answer only from provided context.">+ No speculation</button>
+            <button class="chip" data-chip-target="f-constraints" data-chip="Use inclusive, neutral language.">+ Neutral language</button>
+            <button class="chip" data-chip-target="f-constraints" data-chip="Never expose private data or credentials.">+ Privacy guard</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: INSTRUCTIONS -->
+        <div class="step-panel" data-panel="4">
+          <div class="panel-header">
+            <div class="panel-icon">📋</div>
+            <div>
+              <h2>Step 4 · Provide Instructions</h2>
+              <p class="panel-desc">Ordered, atomic steps for the AI to follow. Use the hierarchy to signal priority.</p>
+            </div>
+          </div>
+          <div id="instructions-list" class="instructions-list"></div>
+          <button class="btn btn-ghost btn-sm" id="add-instruction-btn">+ Add Step</button>
+        </div>
+
+        <!-- STEP 5: EXAMPLES -->
+        <div class="step-panel" data-panel="5">
+          <div class="panel-header">
+            <div class="panel-icon">🧪</div>
+            <div>
+              <h2>Step 5 · Include Examples</h2>
+              <p class="panel-desc">Few-shot input/output pairs teach the AI the exact style and shape you want.</p>
+            </div>
+          </div>
+          <div id="examples-list" class="examples-list"></div>
+          <button class="btn btn-ghost btn-sm" id="add-example-btn">+ Add Example</button>
+        </div>
+
+        <!-- STEP 6: OUTPUT FORMAT -->
+        <div class="step-panel" data-panel="6">
+          <div class="panel-header">
+            <div class="panel-icon">📤</div>
+            <div>
+              <h2>Step 6 · Specify Output Format</h2>
+              <p class="panel-desc">Tell the AI the exact shape of the response.</p>
+            </div>
+          </div>
+          <div class="format-grid">
+            <label class="format-card"><input type="radio" name="format" value="Free text"><div><b>Free Text</b><small>Natural paragraphs</small></div></label>
+            <label class="format-card"><input type="radio" name="format" value="Bullet list"><div><b>Bullet List</b><small>Concise points</small></div></label>
+            <label class="format-card"><input type="radio" name="format" value="Numbered list"><div><b>Numbered List</b><small>Ordered steps</small></div></label>
+            <label class="format-card"><input type="radio" name="format" value="JSON"><div><b>JSON</b><small>Machine-readable</small></div></label>
+            <label class="format-card"><input type="radio" name="format" value="Markdown table"><div><b>Table</b><small>Rows & columns</small></div></label>
+            <label class="format-card"><input type="radio" name="format" value="Code block"><div><b>Code</b><small>Programming lang</small></div></label>
+          </div>
+          <label class="field-label">Schema / Additional Format Details (optional)</label>
+          <textarea id="f-format-details" class="field mono" rows="5" placeholder='e.g., { "title": string, "summary": string, "tags": string[] }'></textarea>
+        </div>
+
+        <!-- STEP 7: VARIABLES -->
+        <div class="step-panel" data-panel="7">
+          <div class="panel-header">
+            <div class="panel-icon">🔗</div>
+            <div>
+              <h2>Step 7 · Add Variables</h2>
+              <p class="panel-desc">Define placeholders like <code>{user_name}</code> for reusable, dynamic prompts.</p>
+            </div>
+          </div>
+          <div id="variables-list" class="variables-list"></div>
+          <button class="btn btn-ghost btn-sm" id="add-variable-btn">+ Add Variable</button>
+          <div class="tip">💡 Reference a variable anywhere in your prompt with curly braces, e.g. <code>{deadline}</code>.</div>
+        </div>
+      </div>
+
+      <!-- Wizard footer -->
+      <div class="wizard-footer">
+        <button class="btn btn-ghost" id="prev-step-btn">‹ Back</button>
+        <div class="wizard-footer-right">
+          <button class="btn btn-secondary" id="save-prompt-btn">💾 Save</button>
+          <button class="btn btn-primary" id="next-step-btn">Next ›</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel: live preview + quality -->
+    <aside class="preview-pane">
+      <div class="preview-tabs">
+        <button class="ptab active" data-ptab="preview">Preview</button>
+        <button class="ptab" data-ptab="quality">Quality</button>
+        <button class="ptab" data-ptab="stats">Stats</button>
+      </div>
+
+      <div class="ppanel active" data-ppanel="preview">
+        <div class="preview-label">Assembled Prompt</div>
+        <pre id="preview-output" class="preview-output"></pre>
+        <button class="btn btn-ghost btn-sm btn-full" id="copy-preview-btn">📋 Copy Prompt</button>
+      </div>
+
+      <div class="ppanel" data-ppanel="quality">
+        <div class="quality-score-wrap">
+          <div class="quality-ring">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="52" stroke="#242938" stroke-width="10" fill="none"/>
+              <circle id="quality-ring-fg" cx="60" cy="60" r="52" stroke="#7c5cff" stroke-width="10" fill="none"
+                stroke-dasharray="326.7" stroke-dashoffset="326.7" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="quality-score-num" id="quality-score-num">0</div>
+          </div>
+          <div class="quality-label">Prompt Quality Score</div>
+        </div>
+        <div id="quality-checks" class="quality-checks"></div>
+      </div>
+
+      <div class="ppanel" data-ppanel="stats">
+        <div class="stat-row"><span>Characters</span><b id="stat-chars">0</b></div>
+        <div class="stat-row"><span>Words</span><b id="stat-words">0</b></div>
+        <div class="stat-row"><span>Est. tokens</span><b id="stat-tokens">0</b></div>
+        <div class="stat-row"><span>Est. cost (GPT-4o)</span><b id="stat-cost">$0.0000</b></div>
+        <div class="stat-row"><span>Est. latency</span><b id="stat-latency">~0.0s</b></div>
+        <div class="stat-row"><span>Variables</span><b id="stat-vars">0</b></div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- ============ TEMPLATES ============ -->
+  <section class="view view-templates" data-view="templates">
+    <div class="view-header">
+      <h1>Template Library</h1>
+      <p>Pre-built prompt templates for common tasks. Click "Use" to load into the Studio.</p>
+    </div>
+    <div class="template-filters">
+      <button class="filter-chip active" data-filter="all">All</button>
+      <button class="filter-chip" data-filter="research">Research</button>
+      <button class="filter-chip" data-filter="writing">Writing</button>
+      <button class="filter-chip" data-filter="coding">Coding</button>
+      <button class="filter-chip" data-filter="scheduling">Scheduling</button>
+      <button class="filter-chip" data-filter="extraction">Data Extraction</button>
+      <button class="filter-chip" data-filter="summarization">Summarization</button>
+      <button class="filter-chip" data-filter="translation">Translation</button>
+    </div>
+    <div id="templates-grid" class="templates-grid"></div>
+  </section>
+
+  <!-- ============ LIBRARY ============ -->
+  <section class="view view-library" data-view="library">
+    <div class="view-header">
+      <h1>My Prompt Library</h1>
+      <p>All prompts you've saved. Search, filter, and reuse.</p>
+    </div>
+    <div class="library-toolbar">
+      <input type="text" id="library-search" class="search-input" placeholder="🔍 Search prompts by name, tag, or content..." />
+      <select id="library-sort" class="field field-sm">
+        <option value="updated">Recently updated</option>
+        <option value="created">Recently created</option>
+        <option value="name">Name (A→Z)</option>
+        <option value="rating">Highest rated</option>
+      </select>
+    </div>
+    <div id="library-grid" class="library-grid"></div>
+  </section>
+
+  <!-- ============ SANDBOX ============ -->
+  <section class="view view-sandbox" data-view="sandbox">
+    <div class="view-header">
+      <h1>Sandbox & Testing Environment</h1>
+      <p>Run your prompt against a simulated AI. Bind variables, inspect response, iterate.</p>
+    </div>
+    <div class="sandbox-grid">
+      <div class="sandbox-left">
+        <div class="section-title">Prompt (with variable bindings)</div>
+        <div id="sandbox-bindings" class="sandbox-bindings"></div>
+        <pre id="sandbox-final-prompt" class="sandbox-final"></pre>
+        <div class="sandbox-controls">
+          <select id="sandbox-model" class="field field-sm">
+            <option value="gpt-4o">GPT-4o</option>
+            <option value="gpt-4o-mini">GPT-4o-mini</option>
+            <option value="claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+            <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+          </select>
+          <button class="btn btn-primary" id="run-sandbox-btn">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Run
+          </button>
+        </div>
+      </div>
+      <div class="sandbox-right">
+        <div class="section-title">AI Response (simulated)</div>
+        <div id="sandbox-response" class="sandbox-response">
+          <div class="sandbox-empty">Click <b>Run</b> to see a simulated response.</div>
+        </div>
+        <div id="sandbox-metrics" class="sandbox-metrics" style="display:none">
+          <div><span>Latency</span><b id="sb-latency">–</b></div>
+          <div><span>Tokens in</span><b id="sb-tin">–</b></div>
+          <div><span>Tokens out</span><b id="sb-tout">–</b></div>
+          <div><span>Cost</span><b id="sb-cost">–</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMPARE ============ -->
+  <section class="view view-compare" data-view="compare">
+    <div class="view-header">
+      <h1>Compare Prompt Variants</h1>
+      <p>Pick 2–3 saved prompts and compare their quality metrics side-by-side.</p>
+    </div>
+    <div id="compare-picker" class="compare-picker"></div>
+    <div id="compare-results" class="compare-results"></div>
+  </section>
+
+  <!-- ============ EXPORT ============ -->
+  <section class="view view-export" data-view="export">
+    <div class="view-header">
+      <h1>Export & Deploy</h1>
+      <p>Choose your integration target and generate the final payload for that platform.</p>
+    </div>
+    <div class="export-format-row">
+      <button class="export-fmt active" data-fmt="json">JSON</button>
+      <button class="export-fmt" data-fmt="yaml">YAML</button>
+      <button class="export-fmt" data-fmt="markdown">Markdown</button>
+      <button class="export-fmt" data-fmt="openai">OpenAI API</button>
+      <button class="export-fmt" data-fmt="anthropic">Anthropic API</button>
+      <button class="export-fmt" data-fmt="curl">cURL</button>
+    </div>
+    <pre id="export-output" class="export-output"></pre>
+    <div class="export-actions">
+      <button class="btn btn-secondary" id="copy-export-btn">📋 Copy</button>
+      <button class="btn btn-primary" id="download-export-btn">⬇ Download</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ TOAST ============ -->
+<div id="toast" class="toast"></div>
+
+<!-- ============ ONBOARDING MODAL ============ -->
+<div id="onboarding" class="modal-backdrop">
+  <div class="modal">
+    <button class="modal-close" id="onboarding-close">×</button>
+    <div class="onboarding-content">
+      <div class="onboarding-hero">
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#7c5cff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 L2 7 L12 12 L22 7 Z"/>
+          <path d="M2 17 L12 22 L22 17"/>
+          <path d="M2 12 L12 17 L22 12"/>
+        </svg>
+        <h1>Welcome to PromptCraft</h1>
+        <p>Design clear, effective AI prompts using a guided 7-step flow, then test, refine, and deploy.</p>
+      </div>
+      <div class="onboarding-concepts">
+        <div class="concept-card"><div class="c-num">🎯</div><b>Goal</b><span>The outcome</span></div>
+        <div class="concept-card"><div class="c-num">🧭</div><b>Context</b><span>Background</span></div>
+        <div class="concept-card"><div class="c-num">🛡️</div><b>Constraints</b><span>Rules</span></div>
+        <div class="concept-card"><div class="c-num">📋</div><b>Instructions</b><span>Steps</span></div>
+        <div class="concept-card"><div class="c-num">🧪</div><b>Examples</b><span>Patterns</span></div>
+        <div class="concept-card"><div class="c-num">📤</div><b>Output</b><span>Shape</span></div>
+      </div>
+      <div class="onboarding-form">
+        <label class="field-label">Preferred AI platform</label>
+        <select id="onboarding-platform" class="field">
+          <option value="openai">OpenAI (GPT)</option>
+          <option value="anthropic">Anthropic (Claude)</option>
+          <option value="google">Google (Gemini)</option>
+          <option value="cohere">Cohere</option>
+          <option value="generic">I'll decide later</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-full" id="onboarding-start">Start Crafting →</button>
+    </div>
+  </div>
+</div>
+
+<script data-inlined-from="templates.js">
+// ==================== PRE-BUILT TEMPLATE LIBRARY ====================
+// Covers the categories from the spec:
+//   Research, Writing, Coding, Scheduling, Data Extraction, Summarization, Translation
+// Each template maps directly to the wizard's data schema so "Use Template" instantly
+// populates all 7 steps.
+window.PROMPTCRAFT_TEMPLATES = [
+  {
+    id: 'tpl-research',
+    name: 'Deep Research Brief',
+    category: 'research',
+    icon: '🔬',
+    description: 'Investigate a topic thoroughly with cited sources and a structured executive summary.',
+    prompt: {
+      name: 'Deep Research Brief',
+      tags: ['research', 'analysis'],
+      goal: 'Produce a well-sourced research brief on {topic} for a {audience} audience.',
+      context: 'The reader needs to make an informed decision on {topic}. Focus on primary sources, recent (last 24 months) data, and identify contradicting viewpoints.',
+      sources: 'web search, peer-reviewed papers, official reports',
+      tone: 'Academic',
+      length: '~500 words',
+      constraints: 'Cite every factual claim with a URL. Distinguish facts from opinions. Note where evidence is thin. Do not speculate beyond sources.',
+      instructions: [
+        'Identify the 3–5 most important sub-questions to answer about {topic}.',
+        'Gather evidence from authoritative, recent sources.',
+        'Highlight consensus vs. debate among experts.',
+        'Draft an executive summary (3 bullet points).',
+        'Write the full brief with inline citations.'
+      ],
+      examples: [],
+      format: 'Markdown table',
+      formatDetails: '## Executive Summary\n- ...\n\n## Key Findings\n| Finding | Evidence | Source |\n|--|--|--|\n\n## Open Questions\n- ...',
+      variables: [
+        { name: 'topic', type: 'text', default: 'the impact of remote work on productivity' },
+        { name: 'audience', type: 'text', default: 'executive leadership team' }
+      ]
+    }
+  },
+  {
+    id: 'tpl-writing',
+    name: 'Blog Post Draft',
+    category: 'writing',
+    icon: '✍️',
+    description: 'Draft an engaging, SEO-aware blog post with a clear structure and voice.',
+    prompt: {
+      name: 'Blog Post Draft',
+      tags: ['writing', 'content', 'seo'],
+      goal: 'Write a {word_count}-word blog post titled "{title}" for {audience}.',
+      context: 'The post will be published on our company blog. It should educate readers and gently promote our product without being overly salesy. Voice: warm, expert, honest.',
+      sources: '',
+      tone: 'Friendly',
+      length: '~500 words',
+      constraints: 'No jargon without explanation. Use H2 headings, short paragraphs (≤3 sentences), and include one call-to-action at the end. Avoid superlatives ("best ever", "revolutionary").',
+      instructions: [
+        'Open with a relatable hook or question.',
+        'Introduce the problem the reader faces.',
+        'Provide 3 actionable insights with sub-headings.',
+        'Include one real-world example per insight.',
+        'End with a concise CTA linking to {cta_url}.'
+      ],
+      examples: [
+        {
+          input: 'Title: "5 Ways to Reduce Meeting Fatigue", Audience: knowledge workers',
+          output: '# 5 Ways to Reduce Meeting Fatigue\n\nEver leave a meeting more tired than when you started? You\'re not alone...'
+        }
+      ],
+      format: 'Free text',
+      formatDetails: 'Markdown with H1 title and H2 sub-sections.',
+      variables: [
+        { name: 'title', type: 'text', default: 'How to Ship Faster Without Burning Out' },
+        { name: 'audience', type: 'text', default: 'startup engineering managers' },
+        { name: 'word_count', type: 'number', default: '800' },
+        { name: 'cta_url', type: 'text', default: 'https://example.com/signup' }
+      ]
+    }
+  },
+  {
+    id: 'tpl-coding',
+    name: 'Code Refactor & Review',
+    category: 'coding',
+    icon: '💻',
+    description: 'Refactor a code snippet for readability, performance, and best practices — with rationale.',
+    prompt: {
+      name: 'Code Refactor & Review',
+      tags: ['coding', 'refactor', 'review'],
+      goal: 'Refactor the provided {language} code for readability and performance, and explain your changes.',
+      context: 'The code is part of a production codebase used by {team_size} engineers. Prioritize maintainability over cleverness. Preserve public API behavior.',
+      sources: '',
+      tone: 'Technical',
+      length: '~300 words',
+      constraints: 'Do not change the public API signature. Preserve all existing behavior. Add type hints/annotations where applicable. Explain each non-trivial change.',
+      instructions: [
+        'Identify code smells, duplication, and clarity issues.',
+        'Refactor step by step, preserving behavior.',
+        'Add or improve inline comments where needed.',
+        'Provide a "Changes Summary" bullet list.',
+        'Note any potential regressions or follow-ups.'
+      ],
+      examples: [
+        {
+          input: 'def calc(x,y,z):\n  return x*y+z if x>0 else 0',
+          output: 'def weighted_sum(base: float, factor: float, offset: float) -> float:\n    """Return base * factor + offset, or 0 for non-positive base."""\n    if base <= 0:\n        return 0\n    return base * factor + offset\n\n# Changes:\n# - Renamed params for clarity\n# - Added type hints and docstring\n# - Guard clause instead of ternary'
+        }
+      ],
+      format: 'Code block',
+      formatDetails: 'Refactored code first, then a "## Changes Summary" section with bullet points.',
+      variables: [
+        { name: 'language', type: 'text', default: 'Python' },
+        { name: 'team_size', type: 'number', default: '12' },
+        { name: 'code', type: 'text', default: '// paste code here' }
+      ]
+    }
+  },
+  {
+    id: 'tpl-scheduling',
+    name: 'Meeting Scheduler Assistant',
+    category: 'scheduling',
+    icon: '📅',
+    description: 'Draft polite, timezone-aware scheduling messages with clear options.',
+    prompt: {
+      name: 'Meeting Scheduler Assistant',
+      tags: ['scheduling', 'email'],
+      goal: 'Draft a scheduling email proposing a {duration}-minute meeting with {recipient_name} about {topic}.',
+      context: 'I am in the {my_timezone} timezone. The recipient is in {their_timezone}. Availability: {my_availability}. Meeting purpose: {topic}.',
+      sources: '',
+      tone: 'Professional',
+      length: 'Under 50 words',
+      constraints: 'Offer exactly 3 time options across 2 different days. Include timezone abbreviations for both parties. No corporate fluff. End with an easy escape hatch ("if none of these work…").',
+      instructions: [
+        'Greet by first name.',
+        'State the purpose in one sentence.',
+        'Offer 3 concrete slots with dual-timezone display.',
+        'Provide an alternative if none work.',
+        'Sign off with my name.'
+      ],
+      examples: [],
+      format: 'Free text',
+      formatDetails: 'Plain email body. No subject line.',
+      variables: [
+        { name: 'recipient_name', type: 'text', default: 'Alex' },
+        { name: 'topic', type: 'text', default: 'the Q3 roadmap review' },
+        { name: 'duration', type: 'number', default: '30' },
+        { name: 'my_timezone', type: 'text', default: 'PST' },
+        { name: 'their_timezone', type: 'text', default: 'GMT' },
+        { name: 'my_availability', type: 'text', default: 'Tue/Wed/Thu 9am–5pm PST' }
+      ]
+    }
+  },
+  {
+    id: 'tpl-extraction',
+    name: 'Structured Data Extractor',
+    category: 'extraction',
+    icon: '🗂️',
+    description: 'Pull structured JSON out of unstructured text — names, dates, amounts, entities.',
+    prompt: {
+      name: 'Structured Data Extractor',
+      tags: ['extraction', 'json', 'nlp'],
+      goal: 'Extract structured fields from the provided {document_type} and return them as strict JSON.',
+      context: 'The input text is a {document_type}. Values may be missing, misspelled, or in various formats (dates, currencies, phone numbers). Normalize where possible.',
+      sources: '',
+      tone: 'Technical',
+      length: 'Under 50 words',
+      constraints: 'Return ONLY valid JSON — no prose, no markdown fences. Use null for missing fields. Normalize dates to ISO 8601 (YYYY-MM-DD). Currency amounts as numbers, not strings.',
+      instructions: [
+        'Read the entire input document.',
+        'Map each extracted value to the target schema.',
+        'Normalize dates, phone numbers, and currency.',
+        'Use null for fields not present in the source.',
+        'Output valid JSON only.'
+      ],
+      examples: [
+        {
+          input: 'Invoice #A-2201 from Acme Corp, dated Feb 3rd 2024, total $1,299.50, due in 30 days.',
+          output: '{"invoice_id":"A-2201","vendor":"Acme Corp","date":"2024-02-03","total":1299.50,"currency":"USD","due_days":30}'
+        }
+      ],
+      format: 'JSON',
+      formatDetails: '{\n  "invoice_id": string | null,\n  "vendor": string | null,\n  "date": string | null,   // ISO 8601\n  "total": number | null,\n  "currency": string | null,\n  "due_days": number | null\n}',
+      variables: [
+        { name: 'document_type', type: 'text', default: 'invoice' },
+        { name: 'input_text', type: 'text', default: 'paste unstructured text here' }
+      ]
+    }
+  },
+  {
+    id: 'tpl-summarization',
+    name: 'Executive Summary Generator',
+    category: 'summarization',
+    icon: '📄',
+    description: 'Distill long documents into concise, decision-ready summaries.',
+    prompt: {
+      name: 'Executive Summary Generator',
+      tags: ['summarization', 'briefing'],
+      goal: 'Summarize {input_text} into a {summary_length} executive summary for {audience}.',
+      context: 'The reader has 60 seconds. They need to walk away knowing: (1) what happened, (2) what it means, (3) what to do next.',
+      sources: '',
+      tone: 'Concise',
+      length: '~150 words',
+      constraints: 'No filler phrases ("It is important to note that…"). Preserve any numerical figures exactly. Do not add information not in the source.',
+      instructions: [
+        'Identify the 3–5 most important points.',
+        'Preserve exact figures, dates, and named entities.',
+        'Lead with the single most important takeaway.',
+        'End with a "Recommended action" line.',
+        'Keep total length under the specified word count.'
+      ],
+      examples: [],
+      format: 'Bullet list',
+      formatDetails: '- **TL;DR:** ...\n- Point 1: ...\n- Point 2: ...\n- Point 3: ...\n- **Recommended action:** ...',
+      variables: [
+        { name: 'input_text', type: 'text', default: 'paste the long document here' },
+        { name: 'summary_length', type: 'text', default: '150-word' },
+        { name: 'audience', type: 'text', default: 'C-suite executives' }
+      ]
+    }
+  },
+  {
+    id: 'tpl-translation',
+    name: 'Contextual Translator',
+    category: 'translation',
+    icon: '🌐',
+    description: 'Translate text while preserving tone, cultural nuance, and technical terminology.',
+    prompt: {
+      name: 'Contextual Translator',
+      tags: ['translation', 'localization'],
+      goal: 'Translate the provided {source_lang} text into {target_lang}, preserving tone and technical accuracy.',
+      context: 'This translation will be used in {use_case}. Cultural adaptation is welcome for idioms, but technical terms should be transliterated or kept in the original when there is no accepted local equivalent.',
+      sources: '',
+      tone: 'Professional',
+      length: '',
+      constraints: 'Do not summarize or omit content. Preserve formatting (headings, bullets, code). For idioms, provide the localized version, not a literal translation. Flag ambiguous terms with [?].',
+      instructions: [
+        'Identify the register (formal / informal) of the source.',
+        'Match the register in the target language.',
+        'Translate paragraph by paragraph, preserving structure.',
+        'Localize idioms; keep technical terms accurate.',
+        'Flag ambiguous terms with a [?] marker.'
+      ],
+      examples: [
+        {
+          input: 'EN → JA: "Let\'s ship it."',
+          output: 'JA: 「リリースしよう。」'
+        }
+      ],
+      format: 'Free text',
+      formatDetails: 'Translated text only, preserving original formatting.',
+      variables: [
+        { name: 'source_lang', type: 'text', default: 'English' },
+        { name: 'target_lang', type: 'text', default: 'Japanese' },
+        { name: 'use_case', type: 'text', default: 'product documentation' },
+        { name: 'source_text', type: 'text', default: 'paste text here' }
+      ]
+    }
+  },
+  {
+    id: 'tpl-classification',
+    name: 'Text Classifier',
+    category: 'extraction',
+    icon: '🏷️',
+    description: 'Classify text into predefined categories with confidence scores.',
+    prompt: {
+      name: 'Text Classifier',
+      tags: ['classification', 'nlp'],
+      goal: 'Classify {input_text} into one of these categories: {categories}.',
+      context: 'Input may be short (a tweet) or long (an article). Pick the SINGLE best-fitting category. If none fit well, choose "other" and explain briefly.',
+      sources: '',
+      tone: 'Technical',
+      length: 'Under 50 words',
+      constraints: 'Output valid JSON only. Confidence between 0 and 1. Rationale ≤ 20 words.',
+      instructions: [
+        'Read the input carefully.',
+        'Match against each candidate category.',
+        'Choose the best fit and estimate confidence.',
+        'Write a one-line rationale.',
+        'Return JSON only.'
+      ],
+      examples: [
+        {
+          input: 'Categories: bug/feature/question. Text: "The app crashes when I open Settings."',
+          output: '{"category":"bug","confidence":0.97,"rationale":"Explicit crash description."}'
+        }
+      ],
+      format: 'JSON',
+      formatDetails: '{ "category": string, "confidence": number, "rationale": string }',
+      variables: [
+        { name: 'input_text', type: 'text', default: 'text to classify' },
+        { name: 'categories', type: 'text', default: 'bug, feature, question, other' }
+      ]
+    }
+  }
+];
+
+</script>
+<script data-inlined-from="app.js">
+/* ===================================================================
+   PromptCraft — Main Application Logic
+   All state persists to localStorage. No backend required.
+   =================================================================== */
+
+'use strict';
+
+// -------------------- STATE --------------------
+const STORAGE_KEY = 'promptcraft.v1';
+const store = {
+  prompts: [],        // saved prompts
+  currentId: null,    // id of prompt currently in the editor
+  onboarded: false,
+  platform: 'openai',
+  compareSelection: []
+};
+
+function saveStore() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }
+  catch (e) { console.warn('storage full', e); }
+}
+function loadStore() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) Object.assign(store, JSON.parse(raw));
+  } catch(e) {}
+}
+
+// -------------------- CURRENT PROMPT MODEL --------------------
+function newPrompt() {
+  return {
+    id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+    name: '',
+    tags: [],
+    rating: 0,
+    notes: '',
+    goal: '',
+    context: '',
+    sources: '',
+    tone: '',
+    length: '',
+    constraints: '',
+    instructions: [''],
+    examples: [{ input: '', output: '' }],
+    format: 'Free text',
+    formatDetails: '',
+    variables: [],
+    created_at: Date.now(),
+    updated_at: Date.now(),
+    version_history: [],
+    usage_statistics: { runs: 0, last_run: null }
+  };
+}
+
+let current = newPrompt();
+let currentStep = 1;
+
+// -------------------- INIT --------------------
+document.addEventListener('DOMContentLoaded', () => {
+  loadStore();
+  if (!store.onboarded) {
+    document.getElementById('onboarding').classList.add('show');
+  }
+  if (store.platform) {
+    document.getElementById('ai-platform').value = store.platform;
+  }
+  bindTabs();
+  bindWizardNav();
+  bindFormInputs();
+  bindTopbarActions();
+  bindOnboarding();
+  bindPreviewTabs();
+  bindLibrarySearch();
+  bindExport();
+  bindSandbox();
+  bindCompare();
+  renderInstructions();
+  renderExamples();
+  renderVariables();
+  renderTemplates();
+  renderLibrary();
+  updatePreview();
+  updateStep(1);
+});
+
+// -------------------- TABS --------------------
+function bindTabs() {
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => switchTab(t.dataset.tab));
+  });
+}
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x.dataset.tab === name));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.dataset.view === name));
+  if (name === 'library') renderLibrary();
+  if (name === 'sandbox') renderSandbox();
+  if (name === 'export') renderExport();
+  if (name === 'compare') renderComparePicker();
+}
+
+// -------------------- WIZARD STEP NAV --------------------
+function bindWizardNav() {
+  document.querySelectorAll('.step').forEach(s => {
+    s.addEventListener('click', () => updateStep(parseInt(s.dataset.step, 10)));
+  });
+  document.getElementById('next-step-btn').addEventListener('click', () => updateStep(Math.min(7, currentStep + 1)));
+  document.getElementById('prev-step-btn').addEventListener('click', () => updateStep(Math.max(1, currentStep - 1)));
+  document.getElementById('save-prompt-btn').addEventListener('click', savePrompt);
+  document.getElementById('clear-form-btn').addEventListener('click', () => {
+    if (confirm('Clear the current prompt? Unsaved changes will be lost.')) {
+      current = newPrompt();
+      hydrateFormFromCurrent();
+      updatePreview();
+      updateStep(1);
+      toast('Cleared.', 'success');
+    }
+  });
+  document.getElementById('load-example-btn').addEventListener('click', () => {
+    loadTemplate(window.PROMPTCRAFT_TEMPLATES[1]); // Blog Post Draft
+    toast('Example loaded: Blog Post Draft', 'success');
+  });
+}
+function updateStep(n) {
+  currentStep = n;
+  document.querySelectorAll('.step').forEach(s => {
+    const num = parseInt(s.dataset.step, 10);
+    s.classList.toggle('active', num === n);
+    s.classList.toggle('completed', num < n);
+  });
+  document.querySelectorAll('.step-panel').forEach(p => {
+    p.classList.toggle('active', parseInt(p.dataset.panel, 10) === n);
+  });
+  document.getElementById('progress-fill').style.width = (n / 7 * 100) + '%';
+  document.getElementById('progress-text').textContent = `Step ${n} of 7`;
+  document.getElementById('prev-step-btn').style.visibility = n === 1 ? 'hidden' : 'visible';
+  document.getElementById('next-step-btn').textContent = n === 7 ? 'Finish ✓' : 'Next ›';
+}
+
+// -------------------- FORM BINDING --------------------
+function bindFormInputs() {
+  const map = {
+    'prompt-name': 'name',
+    'f-goal': 'goal',
+    'f-context': 'context',
+    'f-sources': 'sources',
+    'f-tone': 'tone',
+    'f-length': 'length',
+    'f-constraints': 'constraints',
+    'f-format-details': 'formatDetails'
+  };
+  Object.entries(map).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => { current[key] = el.value; onFormChange(); });
+  });
+  document.getElementById('prompt-tags').addEventListener('input', e => {
+    current.tags = e.target.value.split(',').map(x => x.trim()).filter(Boolean);
+    onFormChange();
+  });
+  // format radios
+  document.querySelectorAll('input[name="format"]').forEach(r => {
+    r.addEventListener('change', () => { current.format = r.value; onFormChange(); });
+  });
+  // rating stars
+  const rating = document.getElementById('prompt-rating');
+  rating.querySelectorAll('span').forEach(star => {
+    star.addEventListener('click', () => {
+      const v = parseInt(star.dataset.star, 10);
+      current.rating = current.rating === v ? 0 : v;
+      renderRating();
+      onFormChange();
+    });
+  });
+  // dynamic add buttons
+  document.getElementById('add-instruction-btn').addEventListener('click', () => {
+    current.instructions.push(''); renderInstructions(); onFormChange();
+  });
+  document.getElementById('add-example-btn').addEventListener('click', () => {
+    current.examples.push({ input: '', output: '' }); renderExamples(); onFormChange();
+  });
+  document.getElementById('add-variable-btn').addEventListener('click', () => {
+    current.variables.push({ name: '', type: 'text', default: '' }); renderVariables(); onFormChange();
+  });
+  // chip helpers (append constraint text)
+  document.querySelectorAll('.chip[data-chip]').forEach(c => {
+    c.addEventListener('click', () => {
+      const target = document.getElementById(c.dataset.chipTarget);
+      const add = c.dataset.chip;
+      target.value = target.value ? target.value + '\n' + add : add;
+      target.dispatchEvent(new Event('input'));
+    });
+  });
+  // copy preview
+  document.getElementById('copy-preview-btn').addEventListener('click', () => {
+    navigator.clipboard.writeText(assemblePrompt(current, false));
+    toast('Prompt copied to clipboard', 'success');
+  });
+}
+
+function onFormChange() {
+  current.updated_at = Date.now();
+  updatePreview();
+}
+
+function renderInstructions() {
+  const list = document.getElementById('instructions-list');
+  list.innerHTML = '';
+  current.instructions.forEach((val, idx) => {
+    const row = document.createElement('div');
+    row.className = 'instruction-item';
+    row.innerHTML = `
+      <div class="instr-num">${idx + 1}</div>
+      <textarea class="instr-text" rows="1" placeholder="Step ${idx + 1}: what should the AI do?"></textarea>
+      <button class="instr-del" title="Remove">✕</button>`;
+    const ta = row.querySelector('.instr-text');
+    ta.value = val;
+    ta.addEventListener('input', () => { current.instructions[idx] = ta.value; onFormChange(); autosize(ta); });
+    row.querySelector('.instr-del').addEventListener('click', () => {
+      current.instructions.splice(idx, 1);
+      if (current.instructions.length === 0) current.instructions.push('');
+      renderInstructions(); onFormChange();
+    });
+    list.appendChild(row);
+    autosize(ta);
+  });
+}
+function autosize(ta) { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; }
+
+function renderExamples() {
+  const list = document.getElementById('examples-list');
+  list.innerHTML = '';
+  current.examples.forEach((ex, idx) => {
+    const row = document.createElement('div');
+    row.className = 'example-item';
+    row.innerHTML = `
+      <div class="example-header">
+        <div class="example-title">Example ${idx + 1}</div>
+        <button class="btn btn-danger-ghost btn-sm">Remove</button>
+      </div>
+      <div class="example-body">
+        <div><label>Input</label><textarea class="ex-in" placeholder="Sample input..."></textarea></div>
+        <div><label>Expected Output</label><textarea class="ex-out" placeholder="Desired output..."></textarea></div>
+      </div>`;
+    const inp = row.querySelector('.ex-in');
+    const out = row.querySelector('.ex-out');
+    inp.value = ex.input; out.value = ex.output;
+    inp.addEventListener('input', () => { current.examples[idx].input = inp.value; onFormChange(); });
+    out.addEventListener('input', () => { current.examples[idx].output = out.value; onFormChange(); });
+    row.querySelector('button').addEventListener('click', () => {
+      current.examples.splice(idx, 1);
+      if (current.examples.length === 0) current.examples.push({ input: '', output: '' });
+      renderExamples(); onFormChange();
+    });
+    list.appendChild(row);
+  });
+}
+
+function renderVariables() {
+  const list = document.getElementById('variables-list');
+  list.innerHTML = '';
+  current.variables.forEach((v, idx) => {
+    const row = document.createElement('div');
+    row.className = 'variable-item';
+    row.innerHTML = `
+      <input class="var-name" placeholder="variable_name">
+      <select class="var-type"><option value="text">text</option><option value="number">number</option><option value="url">url</option><option value="date">date</option></select>
+      <input class="var-default" placeholder="default value">
+      <button class="btn btn-danger-ghost btn-sm">✕</button>`;
+    const name = row.querySelector('.var-name');
+    const type = row.querySelector('.var-type');
+    const def = row.querySelector('.var-default');
+    name.value = v.name; type.value = v.type || 'text'; def.value = v.default;
+    name.addEventListener('input', () => { current.variables[idx].name = name.value.replace(/\W/g, '_'); name.value = current.variables[idx].name; onFormChange(); });
+    type.addEventListener('change', () => { current.variables[idx].type = type.value; onFormChange(); });
+    def.addEventListener('input', () => { current.variables[idx].default = def.value; onFormChange(); });
+    row.querySelector('button').addEventListener('click', () => {
+      current.variables.splice(idx, 1); renderVariables(); onFormChange();
+    });
+    list.appendChild(row);
+  });
+}
+
+function renderRating() {
+  document.querySelectorAll('#prompt-rating span').forEach(s => {
+    s.classList.toggle('on', parseInt(s.dataset.star, 10) <= current.rating);
+  });
+}
+
+// -------------------- HYDRATE (load prompt into form) --------------------
+function hydrateFormFromCurrent() {
+  document.getElementById('prompt-name').value = current.name || '';
+  document.getElementById('prompt-tags').value = (current.tags || []).join(', ');
+  document.getElementById('f-goal').value = current.goal || '';
+  document.getElementById('f-context').value = current.context || '';
+  document.getElementById('f-sources').value = current.sources || '';
+  document.getElementById('f-tone').value = current.tone || '';
+  document.getElementById('f-length').value = current.length || '';
+  document.getElementById('f-constraints').value = current.constraints || '';
+  document.getElementById('f-format-details').value = current.formatDetails || '';
+  document.querySelectorAll('input[name="format"]').forEach(r => r.checked = r.value === current.format);
+  renderInstructions();
+  renderExamples();
+  renderVariables();
+  renderRating();
+}
+
+// -------------------- ASSEMBLE PROMPT --------------------
+function assemblePrompt(p, highlightVars = true) {
+  const lines = [];
+  if (p.goal) { lines.push('# GOAL'); lines.push(p.goal); lines.push(''); }
+  if (p.context || p.sources) {
+    lines.push('# CONTEXT');
+    if (p.context) lines.push(p.context);
+    if (p.sources) lines.push('Data sources: ' + p.sources);
+    lines.push('');
+  }
+  const cparts = [];
+  if (p.tone) cparts.push(`Tone: ${p.tone}`);
+  if (p.length) cparts.push(`Length: ${p.length}`);
+  if (p.constraints) cparts.push(p.constraints);
+  if (cparts.length) { lines.push('# CONSTRAINTS'); lines.push(cparts.join('\n')); lines.push(''); }
+  if (p.instructions && p.instructions.filter(x => x.trim()).length) {
+    lines.push('# INSTRUCTIONS');
+    p.instructions.filter(x => x.trim()).forEach((s, i) => lines.push(`${i + 1}. ${s}`));
+    lines.push('');
+  }
+  if (p.examples && p.examples.filter(e => e.input || e.output).length) {
+    lines.push('# EXAMPLES');
+    p.examples.forEach((e, i) => {
+      if (e.input || e.output) {
+        lines.push(`## Example ${i + 1}`);
+        lines.push('INPUT:'); lines.push(e.input || '(none)');
+        lines.push('OUTPUT:'); lines.push(e.output || '(none)');
+        lines.push('');
+      }
+    });
+  }
+  if (p.format || p.formatDetails) {
+    lines.push('# OUTPUT FORMAT');
+    if (p.format) lines.push('Format: ' + p.format);
+    if (p.formatDetails) lines.push(p.formatDetails);
+    lines.push('');
+  }
+  let text = lines.join('\n').trim();
+  return text;
+}
+
+// -------------------- PREVIEW --------------------
+function updatePreview() {
+  const out = document.getElementById('preview-output');
+  let text = assemblePrompt(current);
+  // highlight {vars}
+  const highlighted = escapeHtml(text).replace(/\{(\w+)\}/g, (_, name) => {
+    const defined = current.variables.some(v => v.name === name);
+    const cls = defined ? 'placeholder-var' : 'placeholder-var';
+    const title = defined ? 'Defined variable' : 'Undefined variable — add it in Step 7';
+    return `<span class="${cls}" title="${title}">{${name}}</span>`;
+  });
+  out.innerHTML = highlighted || '<span style="color:var(--text-3)">Fill in the wizard to see your assembled prompt here…</span>';
+  updateStats(text);
+  updateQuality();
+}
+function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+// -------------------- STATS --------------------
+function updateStats(text) {
+  const chars = text.length;
+  const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  const tokens = Math.ceil(chars / 4); // rough approx
+  // GPT-4o pricing sample: $2.50 / 1M input tokens
+  const cost = (tokens / 1_000_000) * 2.50;
+  const latency = Math.max(0.4, tokens / 400).toFixed(1);
+  document.getElementById('stat-chars').textContent = chars.toLocaleString();
+  document.getElementById('stat-words').textContent = words.toLocaleString();
+  document.getElementById('stat-tokens').textContent = tokens.toLocaleString();
+  document.getElementById('stat-cost').textContent = '$' + cost.toFixed(5);
+  document.getElementById('stat-latency').textContent = '~' + latency + 's';
+  document.getElementById('stat-vars').textContent = current.variables.length;
+}
+
+// -------------------- QUALITY CHECKS --------------------
+function updateQuality() {
+  const checks = [];
+  const p = current;
+  const text = assemblePrompt(p);
+
+  // 1. Goal defined
+  checks.push({
+    id: 'goal',
+    pass: !!(p.goal && p.goal.trim().length > 10),
+    warn: p.goal && p.goal.trim().length <= 10,
+    title: 'Clear goal defined',
+    desc: p.goal ? 'A goal statement is present.' : 'Step 1 is empty — every strong prompt needs a goal.'
+  });
+  // 2. Action verb in goal
+  const verbs = /\b(summarize|draft|extract|classify|translate|refactor|write|generate|analyze|explain|list|convert|compare|review|design|find|identify|produce|create)\b/i;
+  checks.push({
+    id: 'verb',
+    pass: verbs.test(p.goal || ''),
+    title: 'Action verb in goal',
+    desc: verbs.test(p.goal || '') ? 'Goal starts with a directive verb.' : 'Consider a clear action verb (Summarize, Extract, Draft…).'
+  });
+  // 3. Constraints present
+  checks.push({
+    id: 'constraints',
+    pass: !!(p.constraints || p.tone || p.length),
+    warn: !p.constraints && (p.tone || p.length),
+    title: 'Constraints specified',
+    desc: (p.constraints || p.tone || p.length) ? 'Constraints guide the response.' : 'Add tone / length / rules to reduce output variance.'
+  });
+  // 4. Instructions ordered
+  const instrCount = (p.instructions || []).filter(x => x.trim()).length;
+  checks.push({
+    id: 'instr',
+    pass: instrCount >= 2,
+    warn: instrCount === 1,
+    title: 'Ordered instructions',
+    desc: instrCount >= 2 ? `${instrCount} instructions provided.` : 'Break the task into 2+ atomic steps.'
+  });
+  // 5. Examples
+  const exCount = (p.examples || []).filter(e => e.input && e.output).length;
+  checks.push({
+    id: 'ex',
+    pass: exCount >= 1,
+    warn: false,
+    title: 'Includes examples',
+    desc: exCount ? `${exCount} example(s) provided (few-shot learning).` : 'Optional but recommended: add 1–2 input/output examples.'
+  });
+  // 6. Output format
+  checks.push({
+    id: 'fmt',
+    pass: !!p.format,
+    title: 'Output format specified',
+    desc: p.format ? `Format: ${p.format}` : 'Choose an output format in Step 6.'
+  });
+  // 7. Undefined variables leakage
+  const usedVars = [...text.matchAll(/\{(\w+)\}/g)].map(m => m[1]);
+  const definedNames = p.variables.map(v => v.name);
+  const undef = [...new Set(usedVars.filter(v => !definedNames.includes(v)))];
+  checks.push({
+    id: 'vars',
+    pass: undef.length === 0,
+    warn: false,
+    title: 'All variables defined',
+    desc: undef.length ? `Undefined: ${undef.map(x => '{' + x + '}').join(', ')}` : 'No dangling placeholders.'
+  });
+  // 8. Sensitive data check (very rough)
+  const sensitive = /\b(?:sk-[a-z0-9]{16,}|api[_-]?key\s*[:=]\s*\S+|password\s*[:=]\s*\S+|-----BEGIN [A-Z ]+PRIVATE KEY-----)\b/i;
+  checks.push({
+    id: 'safety',
+    pass: !sensitive.test(text),
+    title: 'No sensitive data leakage',
+    desc: sensitive.test(text) ? '⚠️ Potential secret / API key detected — remove it.' : 'No obvious secrets detected.'
+  });
+  // 9. Length not too short
+  checks.push({
+    id: 'length',
+    pass: text.length >= 100,
+    warn: text.length >= 50 && text.length < 100,
+    title: 'Sufficient detail',
+    desc: text.length >= 100 ? 'Prompt has enough detail.' : 'Prompt seems too brief — the AI may guess intent.'
+  });
+  // 10. Not overly long
+  checks.push({
+    id: 'notlong',
+    pass: text.length <= 8000,
+    warn: text.length > 4000 && text.length <= 8000,
+    title: 'Not excessively long',
+    desc: text.length <= 4000 ? 'Length is efficient.' : text.length <= 8000 ? 'Getting long — consider splitting into atomic prompts.' : 'Very long — split into multiple prompts.'
+  });
+
+  // Render
+  const passCount = checks.filter(c => c.pass).length;
+  const score = Math.round(passCount / checks.length * 100);
+  const ringLen = 326.7;
+  document.getElementById('quality-ring-fg').setAttribute('stroke-dashoffset', ringLen - (ringLen * score / 100));
+  document.getElementById('quality-score-num').textContent = score;
+  const color = score >= 80 ? '#34d399' : score >= 55 ? '#fbbf24' : '#f87171';
+  document.getElementById('quality-ring-fg').setAttribute('stroke', color);
+
+  const container = document.getElementById('quality-checks');
+  container.innerHTML = '';
+  checks.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'qcheck ' + (c.pass ? 'pass' : c.warn ? 'warn' : 'fail');
+    div.innerHTML = `
+      <div class="qcheck-icon">${c.pass ? '✓' : c.warn ? '!' : '✕'}</div>
+      <div class="qcheck-body">
+        <div class="qcheck-title">${c.title}</div>
+        <div class="qcheck-desc">${c.desc}</div>
+      </div>`;
+    container.appendChild(div);
+  });
+
+  current._score = score;
+}
+
+// -------------------- PREVIEW PANE TABS --------------------
+function bindPreviewTabs() {
+  document.querySelectorAll('.ptab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.ptab').forEach(x => x.classList.toggle('active', x === t));
+      document.querySelectorAll('.ppanel').forEach(p => p.classList.toggle('active', p.dataset.ppanel === t.dataset.ptab));
+    });
+  });
+}
+
+// -------------------- TOPBAR ACTIONS --------------------
+function bindTopbarActions() {
+  document.getElementById('new-prompt-btn').addEventListener('click', () => {
+    current = newPrompt();
+    hydrateFormFromCurrent();
+    updatePreview();
+    updateStep(1);
+    switchTab('studio');
+    toast('New blank prompt.', 'success');
+  });
+  document.getElementById('ai-platform').addEventListener('change', e => {
+    store.platform = e.target.value; saveStore();
+    renderExport();
+  });
+}
+
+// -------------------- SAVE PROMPT --------------------
+function savePrompt() {
+  if (!current.name.trim()) current.name = 'Untitled Prompt ' + new Date().toLocaleString();
+  current.updated_at = Date.now();
+  // upsert
+  const idx = store.prompts.findIndex(p => p.id === current.id);
+  const snapshot = JSON.parse(JSON.stringify(current));
+  if (idx >= 0) {
+    // push previous version
+    snapshot.version_history = (store.prompts[idx].version_history || []).concat([{
+      ts: store.prompts[idx].updated_at,
+      snapshot: { ...store.prompts[idx], version_history: undefined }
+    }]).slice(-10);
+    store.prompts[idx] = snapshot;
+  } else {
+    store.prompts.unshift(snapshot);
+  }
+  current = snapshot;
+  saveStore();
+  toast('✅ Prompt saved to library', 'success');
+  renderLibrary();
+}
+
+// -------------------- ONBOARDING --------------------
+function bindOnboarding() {
+  const close = () => {
+    document.getElementById('onboarding').classList.remove('show');
+    store.onboarded = true;
+    store.platform = document.getElementById('onboarding-platform').value;
+    document.getElementById('ai-platform').value = store.platform;
+    saveStore();
+  };
+  document.getElementById('onboarding-close').addEventListener('click', close);
+  document.getElementById('onboarding-start').addEventListener('click', close);
+}
+
+// -------------------- TEMPLATES VIEW --------------------
+function renderTemplates(filter = 'all') {
+  const grid = document.getElementById('templates-grid');
+  grid.innerHTML = '';
+  window.PROMPTCRAFT_TEMPLATES
+    .filter(t => filter === 'all' || t.category === filter)
+    .forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'template-card';
+      card.innerHTML = `
+        <div class="template-icon">${t.icon}</div>
+        <div class="tcat">${t.category}</div>
+        <h3>${t.name}</h3>
+        <p>${t.description}</p>
+        <div class="template-actions">
+          <button class="btn btn-primary btn-sm">Use Template</button>
+          <button class="btn btn-ghost btn-sm">Preview</button>
+        </div>`;
+      card.querySelectorAll('button')[0].addEventListener('click', (e) => {
+        e.stopPropagation();
+        loadTemplate(t);
+        switchTab('studio');
+        toast(`Loaded template: ${t.name}`, 'success');
+      });
+      card.querySelectorAll('button')[1].addEventListener('click', (e) => {
+        e.stopPropagation();
+        alert(assemblePrompt(templateAsPrompt(t)));
+      });
+      grid.appendChild(card);
+    });
+  document.querySelectorAll('.filter-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.filter === filter);
+    c.onclick = () => renderTemplates(c.dataset.filter);
+  });
+}
+function templateAsPrompt(t) {
+  const base = newPrompt();
+  return Object.assign(base, t.prompt);
+}
+function loadTemplate(t) {
+  current = templateAsPrompt(t);
+  hydrateFormFromCurrent();
+  updatePreview();
+  updateStep(1);
+}
+
+// -------------------- LIBRARY VIEW --------------------
+function bindLibrarySearch() {
+  document.getElementById('library-search').addEventListener('input', renderLibrary);
+  document.getElementById('library-sort').addEventListener('change', renderLibrary);
+}
+function renderLibrary() {
+  const grid = document.getElementById('library-grid');
+  const q = (document.getElementById('library-search').value || '').toLowerCase();
+  const sort = document.getElementById('library-sort').value;
+
+  let items = store.prompts.slice();
+  if (q) {
+    items = items.filter(p =>
+      (p.name || '').toLowerCase().includes(q) ||
+      (p.goal || '').toLowerCase().includes(q) ||
+      (p.tags || []).join(' ').toLowerCase().includes(q)
+    );
+  }
+  items.sort((a, b) => {
+    if (sort === 'name') return (a.name || '').localeCompare(b.name || '');
+    if (sort === 'created') return b.created_at - a.created_at;
+    if (sort === 'rating') return (b.rating || 0) - (a.rating || 0);
+    return b.updated_at - a.updated_at;
+  });
+
+  grid.innerHTML = '';
+  if (items.length === 0) {
+    grid.innerHTML = `<div class="library-empty">
+      <div class="empty-icon">📭</div>
+      <h3>No saved prompts yet</h3>
+      <p>Craft a prompt in the Studio and click Save.</p>
+    </div>`;
+    return;
+  }
+  items.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'library-card';
+    const stars = '★'.repeat(p.rating || 0) + '☆'.repeat(5 - (p.rating || 0));
+    card.innerHTML = `
+      <h3>${escapeHtml(p.name || 'Untitled')}</h3>
+      <div class="lgoal">${escapeHtml((p.goal || '').slice(0, 140)) || '<i style="color:var(--text-3)">No goal set</i>'}</div>
+      <div class="ltags">${(p.tags || []).map(t => `<span class="ltag">${escapeHtml(t)}</span>`).join('')}</div>
+      <div class="lmeta">
+        <span style="color:var(--warning)">${stars}</span>
+        <span>Updated ${timeAgo(p.updated_at)}</span>
+      </div>
+      <div class="lactions">
+        <button class="btn btn-primary btn-sm" data-act="open">Open</button>
+        <button class="btn btn-ghost btn-sm" data-act="dup">Duplicate</button>
+        <button class="btn btn-danger-ghost btn-sm" data-act="del">Delete</button>
+      </div>`;
+    card.querySelector('[data-act="open"]').addEventListener('click', () => {
+      current = JSON.parse(JSON.stringify(p));
+      hydrateFormFromCurrent(); updatePreview(); updateStep(1); switchTab('studio');
+    });
+    card.querySelector('[data-act="dup"]').addEventListener('click', () => {
+      const copy = JSON.parse(JSON.stringify(p));
+      copy.id = 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+      copy.name = (copy.name || 'Untitled') + ' (copy)';
+      copy.created_at = copy.updated_at = Date.now();
+      store.prompts.unshift(copy); saveStore(); renderLibrary();
+      toast('Duplicated.', 'success');
+    });
+    card.querySelector('[data-act="del"]').addEventListener('click', () => {
+      if (confirm(`Delete "${p.name}"?`)) {
+        store.prompts = store.prompts.filter(x => x.id !== p.id);
+        saveStore(); renderLibrary(); toast('Deleted.', 'success');
+      }
+    });
+    grid.appendChild(card);
+  });
+}
+function timeAgo(ts) {
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 60) return 'just now';
+  if (s < 3600) return Math.floor(s / 60) + 'm ago';
+  if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+  return Math.floor(s / 86400) + 'd ago';
+}
+
+// -------------------- SANDBOX --------------------
+function bindSandbox() {
+  document.getElementById('run-sandbox-btn').addEventListener('click', runSandbox);
+}
+function renderSandbox() {
+  const wrap = document.getElementById('sandbox-bindings');
+  wrap.innerHTML = '';
+  if (current.variables.length === 0) {
+    wrap.innerHTML = '<div style="color:var(--text-3);font-size:12px">No variables defined. Add them in Step 7 to enable dynamic bindings.</div>';
+  } else {
+    current.variables.forEach((v, idx) => {
+      const row = document.createElement('div');
+      row.className = 'sb-binding';
+      row.innerHTML = `<label>{${v.name || '?'}}</label><input type="${v.type === 'number' ? 'number' : 'text'}" placeholder="${escapeHtml(v.default || '')}" value="${escapeHtml(v.default || '')}">`;
+      const inp = row.querySelector('input');
+      inp.dataset.varIdx = idx;
+      inp.addEventListener('input', updateSandboxFinal);
+      wrap.appendChild(row);
+    });
+  }
+  updateSandboxFinal();
+}
+function updateSandboxFinal() {
+  let text = assemblePrompt(current);
+  const bindings = {};
+  document.querySelectorAll('#sandbox-bindings input').forEach(inp => {
+    const idx = parseInt(inp.dataset.varIdx, 10);
+    const v = current.variables[idx];
+    if (v && v.name) bindings[v.name] = inp.value;
+  });
+  text = text.replace(/\{(\w+)\}/g, (m, name) => bindings[name] !== undefined && bindings[name] !== '' ? bindings[name] : m);
+  document.getElementById('sandbox-final-prompt').textContent = text;
+}
+
+function runSandbox() {
+  const model = document.getElementById('sandbox-model').value;
+  const finalText = document.getElementById('sandbox-final-prompt').textContent;
+  const respEl = document.getElementById('sandbox-response');
+  const metricsEl = document.getElementById('sandbox-metrics');
+
+  respEl.innerHTML = '<span class="typing-cursor"></span>';
+  metricsEl.style.display = 'none';
+
+  const generated = simulateAIResponse(current, finalText);
+  const start = Date.now();
+  let i = 0;
+  const speed = 8;
+
+  function tick() {
+    respEl.textContent = generated.slice(0, i);
+    respEl.innerHTML = escapeHtml(respEl.textContent) + '<span class="typing-cursor"></span>';
+    i += speed;
+    if (i < generated.length) {
+      requestAnimationFrame(tick);
+    } else {
+      respEl.innerHTML = escapeHtml(generated);
+      const latency = ((Date.now() - start) / 1000 + 0.4).toFixed(2);
+      const tIn = Math.ceil(finalText.length / 4);
+      const tOut = Math.ceil(generated.length / 4);
+      const priceMap = {
+        'gpt-4o': [2.5, 10],
+        'gpt-4o-mini': [0.15, 0.6],
+        'claude-3.5-sonnet': [3, 15],
+        'gemini-1.5-pro': [1.25, 5]
+      };
+      const [pIn, pOut] = priceMap[model] || [2.5, 10];
+      const cost = (tIn * pIn + tOut * pOut) / 1_000_000;
+      document.getElementById('sb-latency').textContent = latency + 's';
+      document.getElementById('sb-tin').textContent = tIn.toLocaleString();
+      document.getElementById('sb-tout').textContent = tOut.toLocaleString();
+      document.getElementById('sb-cost').textContent = '$' + cost.toFixed(5);
+      metricsEl.style.display = 'grid';
+      // usage stats
+      current.usage_statistics.runs = (current.usage_statistics.runs || 0) + 1;
+      current.usage_statistics.last_run = Date.now();
+    }
+  }
+  tick();
+}
+
+// Rule-based simulator: pretends to obey the prompt's format.
+function simulateAIResponse(p, finalText) {
+  const goal = (p.goal || '').replace(/\{(\w+)\}/g, (m, n) => {
+    const v = p.variables.find(v => v.name === n);
+    return v ? (v.default || m) : m;
+  });
+  const fmt = p.format || 'Free text';
+
+  if (fmt === 'JSON') {
+    // Try to echo a shape from formatDetails if it looks like schema
+    return `{
+  "status": "ok",
+  "goal_understood": ${JSON.stringify(goal.slice(0, 80))},
+  "summary": "This is a simulated JSON response following your specified schema.",
+  "items": [
+    { "id": 1, "value": "example-1" },
+    { "id": 2, "value": "example-2" }
+  ],
+  "confidence": 0.92
+}`;
+  }
+  if (fmt === 'Bullet list') {
+    return `- **TL;DR:** ${goal || 'Task acknowledged.'}
+- Key point 1: The instructions were parsed successfully.
+- Key point 2: Constraints (tone: ${p.tone || 'default'}, length: ${p.length || 'default'}) applied.
+- Key point 3: ${p.examples.length ? 'Examples used for style guidance.' : 'No few-shot examples provided.'}
+- **Recommended action:** Review output and refine prompt if needed.`;
+  }
+  if (fmt === 'Numbered list') {
+    const instr = (p.instructions || []).filter(x => x.trim());
+    return instr.length
+      ? instr.map((s, i) => `${i + 1}. ✅ ${s.slice(0, 90)}`).join('\n')
+      : '1. ✅ Understood the goal.\n2. ✅ Applied constraints.\n3. ✅ Produced structured output.';
+  }
+  if (fmt === 'Markdown table') {
+    return `| # | Aspect | Result |
+|---|---|---|
+| 1 | Goal understood | ✅ Yes |
+| 2 | Tone applied | ${p.tone || 'default'} |
+| 3 | Length target | ${p.length || 'default'} |
+| 4 | Variables filled | ${p.variables.length} |
+| 5 | Confidence | 0.92 |`;
+  }
+  if (fmt === 'Code block') {
+    return "```" + (p.variables.find(v => v.name === 'language')?.default || 'python') + "\n"
+      + "# Simulated code output — the AI would produce actual code here.\n"
+      + "def solution():\n    \"\"\"" + (goal || 'Solve the task.').slice(0, 60) + "\"\"\"\n    return {'status': 'ok'}\n\n"
+      + "print(solution())\n```";
+  }
+  // Free text default
+  return `Here is a simulated response to your prompt.
+
+**Goal understood:** ${goal || '(none provided)'}
+**Tone:** ${p.tone || 'neutral'} · **Length target:** ${p.length || 'unspecified'}
+
+In a real API call, the model would now produce a full response following your instructions and constraints. This sandbox response is deterministic and generated locally for iteration purposes.
+
+${p.examples.length ? `The ${p.examples.length} example(s) you provided help the model match your desired style.` : 'Add few-shot examples to improve style consistency.'}
+
+— End of simulated response —`;
+}
+
+// -------------------- COMPARE --------------------
+function bindCompare() {}
+function renderComparePicker() {
+  const pick = document.getElementById('compare-picker');
+  pick.innerHTML = '<h3>Select 2–3 prompts to compare</h3><div class="compare-picker-list"></div>';
+  const list = pick.querySelector('.compare-picker-list');
+  if (store.prompts.length === 0) {
+    list.innerHTML = '<span style="color:var(--text-3)">Save some prompts first.</span>';
+    return;
+  }
+  store.prompts.forEach(p => {
+    const item = document.createElement('div');
+    item.className = 'compare-pick-item';
+    if (store.compareSelection.includes(p.id)) item.classList.add('selected');
+    item.textContent = p.name;
+    item.addEventListener('click', () => {
+      const i = store.compareSelection.indexOf(p.id);
+      if (i >= 0) store.compareSelection.splice(i, 1);
+      else if (store.compareSelection.length < 3) store.compareSelection.push(p.id);
+      saveStore();
+      renderComparePicker();
+      renderCompareResults();
+    });
+    list.appendChild(item);
+  });
+  renderCompareResults();
+}
+function renderCompareResults() {
+  const box = document.getElementById('compare-results');
+  box.innerHTML = '';
+  const sel = store.compareSelection.map(id => store.prompts.find(p => p.id === id)).filter(Boolean);
+  if (sel.length < 2) {
+    box.innerHTML = '<div style="color:var(--text-3);text-align:center;padding:40px">Select at least 2 prompts above.</div>';
+    return;
+  }
+  sel.forEach(p => {
+    const score = scorePrompt(p);
+    const text = assemblePrompt(p);
+    const col = document.createElement('div');
+    col.className = 'compare-col';
+    col.innerHTML = `
+      <h4>${escapeHtml(p.name)}</h4>
+      <div class="cscore">${score}%</div>
+      <div class="compare-metrics">
+        <div><span>Words</span><b>${text.trim().split(/\s+/).length}</b></div>
+        <div><span>Est. tokens</span><b>${Math.ceil(text.length / 4)}</b></div>
+        <div><span>Instructions</span><b>${(p.instructions || []).filter(x => x.trim()).length}</b></div>
+        <div><span>Examples</span><b>${(p.examples || []).filter(e => e.input && e.output).length}</b></div>
+        <div><span>Variables</span><b>${(p.variables || []).length}</b></div>
+        <div><span>Rating</span><b>${'★'.repeat(p.rating || 0) || '—'}</b></div>
+      </div>
+      <div class="compare-prompt-preview">${escapeHtml(text.slice(0, 500))}${text.length > 500 ? '…' : ''}</div>`;
+    box.appendChild(col);
+  });
+}
+function scorePrompt(p) {
+  const saved = current;
+  current = p;
+  const t = assemblePrompt(p);
+  updateQualityForScore();
+  const s = p._score || 0;
+  current = saved;
+  return s;
+}
+function updateQualityForScore() {
+  // Lightweight re-use: just run updateQuality against `current`; it writes to current._score
+  updateQuality();
+}
+
+// -------------------- EXPORT --------------------
+let exportFmt = 'json';
+function bindExport() {
+  document.querySelectorAll('.export-fmt').forEach(b => {
+    b.addEventListener('click', () => {
+      exportFmt = b.dataset.fmt;
+      document.querySelectorAll('.export-fmt').forEach(x => x.classList.toggle('active', x === b));
+      renderExport();
+    });
+  });
+  document.getElementById('copy-export-btn').addEventListener('click', () => {
+    navigator.clipboard.writeText(document.getElementById('export-output').textContent);
+    toast('Exported payload copied.', 'success');
+  });
+  document.getElementById('download-export-btn').addEventListener('click', () => {
+    const text = document.getElementById('export-output').textContent;
+    const extMap = { json: 'json', yaml: 'yaml', markdown: 'md', openai: 'json', anthropic: 'json', curl: 'sh' };
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (current.name || 'prompt').replace(/\W+/g, '_') + '.' + (extMap[exportFmt] || 'txt');
+    a.click();
+  });
+}
+function renderExport() {
+  const out = document.getElementById('export-output');
+  const p = current;
+  let text = '';
+  if (exportFmt === 'json') {
+    text = JSON.stringify({
+      id: p.id, name: p.name, tags: p.tags, goal: p.goal, context: p.context,
+      constraints: p.constraints, tone: p.tone, length: p.length,
+      instructions: p.instructions, examples: p.examples,
+      output_format: p.format, format_details: p.formatDetails,
+      variables: p.variables, assembled_prompt: assemblePrompt(p),
+      version: 1, created_at: p.created_at, updated_at: p.updated_at
+    }, null, 2);
+  } else if (exportFmt === 'yaml') {
+    text = toYaml({
+      name: p.name, tags: p.tags, goal: p.goal, context: p.context,
+      constraints: p.constraints, tone: p.tone, length: p.length,
+      instructions: p.instructions, examples: p.examples,
+      output_format: p.format, format_details: p.formatDetails,
+      variables: p.variables
+    });
+  } else if (exportFmt === 'markdown') {
+    text = `# ${p.name || 'Untitled Prompt'}\n\n${p.tags.length ? '**Tags:** ' + p.tags.join(', ') + '\n\n' : ''}${assemblePrompt(p)}`;
+  } else if (exportFmt === 'openai') {
+    text = JSON.stringify({
+      model: 'gpt-4o',
+      messages: [
+        { role: 'system', content: 'You are a helpful assistant.' },
+        { role: 'user', content: assemblePrompt(p) }
+      ],
+      temperature: 0.7
+    }, null, 2);
+  } else if (exportFmt === 'anthropic') {
+    text = JSON.stringify({
+      model: 'claude-3-5-sonnet-20241022',
+      max_tokens: 1024,
+      messages: [
+        { role: 'user', content: assemblePrompt(p) }
+      ]
+    }, null, 2);
+  } else if (exportFmt === 'curl') {
+    const body = {
+      model: 'gpt-4o',
+      messages: [{ role: 'user', content: assemblePrompt(p) }]
+    };
+    text = `curl https://api.openai.com/v1/chat/completions \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer $OPENAI_API_KEY" \\
+  -d '${JSON.stringify(body).replace(/'/g, "'\\''")}'`;
+  }
+  out.textContent = text;
+}
+function toYaml(obj, indent = 0) {
+  const pad = ' '.repeat(indent);
+  if (Array.isArray(obj)) {
+    if (obj.length === 0) return '[]';
+    return obj.map(it => {
+      if (typeof it === 'object' && it !== null) {
+        const inner = toYaml(it, indent + 2);
+        return pad + '- ' + inner.trimStart();
+      }
+      return pad + '- ' + yamlScalar(it);
+    }).join('\n');
+  }
+  if (obj && typeof obj === 'object') {
+    return Object.entries(obj).map(([k, v]) => {
+      if (Array.isArray(v) || (v && typeof v === 'object')) {
+        return pad + k + ':\n' + toYaml(v, indent + 2);
+      }
+      return pad + k + ': ' + yamlScalar(v);
+    }).join('\n');
+  }
+  return pad + yamlScalar(obj);
+}
+function yamlScalar(v) {
+  if (v === null || v === undefined) return '~';
+  if (typeof v === 'string') {
+    if (v.includes('\n')) return '|\n' + v.split('\n').map(l => '  ' + l).join('\n');
+    if (/[:#\-?&*!|>'"%@`]/.test(v) || v === '') return JSON.stringify(v);
+    return v;
+  }
+  return String(v);
+}
+
+// -------------------- TOAST --------------------
+let toastTimer;
+function toast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+</script>
+</body>
+</html>
