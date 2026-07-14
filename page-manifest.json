@@ -3,392 +3,306 @@
     "number": 1,
     "title": "ACAI // Adaptive Cyber Analysis Interface",
     "file": "acai-adaptive-cyber-analysis-interface.html",
-    "category": "Experiments & Archives",
-    "source": "apps/ACAI.html"
+    "category": "Experiments & Archives"
   },
   {
     "number": 2,
     "title": "Interactive Nebula",
     "file": "interactive-nebula.html",
-    "category": "Experiments & Archives",
-    "source": "apps/awesome.html"
+    "category": "Experiments & Archives"
   },
   {
     "number": 3,
     "title": "BPTKA: Tactical Defense",
     "file": "bptka-tactical-defense.html",
-    "category": "Games & Simulations",
-    "source": "apps/bptka_TD.html"
+    "category": "Games & Simulations"
   },
   {
     "number": 4,
     "title": "Bruce Lee Interactive Studio",
     "file": "bruce-lee-interactive-studio.html",
-    "category": "Experiments & Archives",
-    "source": "apps/BruceLeeStyle/Index.html"
+    "category": "Experiments & Archives"
   },
   {
     "number": 5,
     "title": "WHO//ROAD — Neon Conversation Lab",
-    "file": "who-road-neon-conversation-lab.html",
-    "category": "Experiments & Archives",
-    "source": "apps/BruceLeeStyle/who-road.html"
+    "file": "who-road-convo-lab.html",
+    "category": "Experiments & Archives"
   },
   {
     "number": 6,
     "title": "Blood & Gold: Panther Arena",
     "file": "blood-and-gold-panther-arena.html",
-    "category": "Games & Simulations",
-    "source": "apps/C4N8.htm"
+    "category": "Games & Simulations"
   },
   {
     "number": 7,
     "title": "CYBER-COUNT CALCUN8R // EDISON HWY",
     "file": "cyber-count-calcun8r-edison-hwy.html",
-    "category": "Experiments & Archives",
-    "source": "apps/CalcuN8r.html"
+    "category": "Experiments & Archives"
   },
   {
     "number": 8,
     "title": "Social Footer",
     "file": "social-footer.html",
-    "category": "Experiments & Archives",
-    "source": "apps/CFPsimpleFooter.html"
+    "category": "Experiments & Archives"
   },
   {
     "number": 9,
     "title": "CYBER-DATA // MULTI-TEAM LOGISTICS ENGINE",
     "file": "cyber-data-multi-team-logistics-engine.html",
-    "category": "Experiments & Archives",
-    "source": "apps/conference_helper.html"
+    "category": "Experiments & Archives"
   },
   {
     "number": 10,
     "title": "Contractor Tool Belt - Tactical Utility Engine",
     "file": "contractor-tool-belt-tactical-utility-engine.html",
-    "category": "Tools & Productivity",
-    "source": "apps/contractor-toolbelt/index.html"
+    "category": "Tools & Productivity"
   },
   {
     "number": 11,
     "title": "Qamelot Tower Defense: Courage Under Fire",
-    "file": "qamelot-tower-defense-courage-under-fire.html",
-    "category": "Games & Simulations",
-    "source": "apps/courage-td/index.html"
+    "file": "qtd-courage-under-fire.html",
+    "category": "Games & Simulations"
   },
   {
     "number": 12,
     "title": "CSS Visuals Library (40)",
     "file": "css-visuals-library-40.html",
-    "category": "Tools & Productivity",
-    "source": "apps/CssVisualsLibrary.html"
+    "category": "Tools & Productivity"
   },
   {
     "number": 13,
     "title": "DevDashboard Hub",
     "file": "devdashboard-hub.html",
-    "category": "Developer Studios",
-    "source": "apps/DevDash/bkgRmvr.html"
+    "category": "Developer Studios"
   },
   {
     "number": 14,
     "title": "Blob Bash Royale",
     "file": "blob-bash-royale.html",
-    "category": "Developer Studios",
-    "source": "apps/DevDash/blob-fighter.html"
+    "category": "Developer Studios"
   },
   {
     "number": 15,
     "title": "⚡ Web App Dev Dashboard",
     "file": "web-app-dev-dashboard.html",
-    "category": "Developer Studios",
-    "source": "apps/DevDash/DevDashV1.html"
+    "category": "Developer Studios"
   },
   {
     "number": 16,
     "title": "DevDash",
     "file": "devdash.html",
-    "category": "Developer Studios",
-    "source": "apps/DevDash/index.html"
+    "category": "Developer Studios"
   },
   {
     "number": 17,
     "title": "DevDash Pages",
     "file": "devdash-pages.html",
-    "category": "Developer Studios",
-    "source": "apps/DevDash/Pages/index.html"
+    "category": "Developer Studios"
   },
   {
     "number": 18,
     "title": "Push Complete",
     "file": "push-complete.html",
-    "category": "Developer Studios",
-    "source": "apps/DevDash/push-complete.html"
+    "category": "Developer Studios"
   },
   {
     "number": 19,
     "title": "Qamelot Conquest: Super Arcade Edition",
     "file": "qamelot-conquest-super-arcade-edition.html",
-    "category": "Games & Simulations",
-    "source": "apps/DevDash/QamelotConquest.html"
+    "category": "Games & Simulations"
   },
   {
     "number": 20,
     "title": "BPTKA: Tactical Defense - Sprite Version",
     "file": "bptka-tactical-defense-sprite-version.html",
-    "category": "Games & Simulations",
-    "source": "apps/DevDash/QamelotTacticalDefensev1.html"
+    "category": "Games & Simulations"
   },
   {
     "number": 21,
     "title": "DevDash SVG Studio",
     "file": "devdash-svg-studio.html",
-    "category": "Developer Studios",
-    "source": "apps/DevDash/svg-studio.html"
+    "category": "Developer Studios"
   },
   {
     "number": 22,
     "title": "SVG Sandbox Studio",
     "file": "svg-sandbox-studio.html",
-    "category": "Developer Studios",
-    "source": "apps/DevDash/SVGStudio/sandbox.html"
+    "category": "Developer Studios"
   },
   {
     "number": 23,
     "title": "EcoTechComm // Secure PTT Link",
     "file": "ecotechcomm-secure-ptt-link.html",
-    "category": "Featured Sites",
-    "source": "apps/EcoTechComm/EcoTechComm-upgraded.html"
+    "category": "Featured Sites"
   },
   {
     "number": 24,
     "title": "EcoTechComm | Secure Frequency",
     "file": "ecotechcomm-secure-frequency.html",
-    "category": "Featured Sites",
-    "source": "apps/EcoTechComm/index.html"
+    "category": "Featured Sites"
   },
   {
     "number": 25,
     "title": "DevDashboard Home",
     "file": "devdashboard-home.html",
-    "category": "Experiments & Archives",
-    "source": "apps/Home.html"
+    "category": "Experiments & Archives"
   },
   {
     "number": 26,
     "title": "HomeHub — Command Your Day. Build Your Future.",
-    "file": "homehub-command-your-day-build-your-future.html",
-    "category": "Experiments & Archives",
-    "source": "apps/HomeHub.html"
+    "file": "homehub.html",
+    "category": "Experiments & Archives"
   },
   {
     "number": 27,
-    "title": "Mecha Strike: Overdrive",
-    "file": "mecha-strike-overdrive.html",
-    "category": "Games & Simulations",
-    "source": "apps/index.html"
+    "title": "Mecha Strike: Transformer Protocol v5",
+    "file": "mecha-strike.html",
+    "category": "Games & Simulations"
   },
   {
     "number": 28,
     "title": "Lattice — The AI Context Lab",
     "file": "lattice-the-ai-context-lab.html",
-    "category": "Experiments & Archives",
-    "source": "apps/Lattice/index.html"
+    "category": "Experiments & Archives"
   },
   {
     "number": 29,
     "title": "Lattice â€” The AI Context Lab",
     "file": "lattice-a-the-ai-context-lab.html",
-    "category": "Experiments & Archives",
-    "source": "apps/Lattice/Lattice-Master-Expanded.html"
+    "category": "Experiments & Archives"
   },
   {
     "number": 30,
     "title": "Loc Me In | Premium Braids & Locs Artistry Edgewood",
-    "file": "loc-me-in-premium-braids-and-locs-artistry-edgewood.html",
-    "category": "Featured Sites",
-    "source": "apps/locmein/index.html"
+    "file": "loc-me-in-llc.html",
+    "category": "Featured Sites"
   },
   {
     "number": 31,
-    "title": "Mecha Strike: Transformer Protocol",
-    "file": "mecha-strike-transformer-protocol.html",
-    "category": "Games & Simulations",
-    "source": "apps/MechaStrike.html"
+    "title": "Eco-Tech Motion Library",
+    "file": "eco-tech-motion-library.html",
+    "category": "Tools & Productivity"
   },
   {
     "number": 32,
-    "title": "Mecha Strike: Transformer Protocol v5",
-    "file": "mecha-strike-transformer-protocol-v5.html",
-    "category": "Games & Simulations",
-    "source": "apps/MechaStrike_v3.html"
+    "title": "PromptCraft — Prompt Builder for Task Automation",
+    "file": "n9Prompt.html",
+    "category": "Tools & Productivity"
   },
   {
     "number": 33,
-    "title": "Eco-Tech Motion Library",
-    "file": "eco-tech-motion-library.html",
-    "category": "Tools & Productivity",
-    "source": "apps/MotionDynamicsLibrary.htm"
+    "title": "Neon Pong",
+    "file": "neon-pong.html",
+    "category": "Games & Simulations"
   },
   {
     "number": 34,
-    "title": "PromptCraft — Prompt Builder for Task Automation",
-    "file": "promptcraft-prompt-builder-for-task-automation.html",
-    "category": "Tools & Productivity",
-    "source": "apps/N8Prompt/index.html"
+    "title": "New Perspective Painting LLC",
+    "file": "new-perspective-painting-llc.html",
+    "category": "Featured Sites"
   },
   {
     "number": 35,
-    "title": "Neon Pong",
-    "file": "neon-pong.html",
-    "category": "Games & Simulations",
-    "source": "apps/NeonPong.htm"
+    "title": "Pulse // Productivity & Biorhythm Studio",
+    "file": "pulse-productivity-and-biorhythm-studio.html",
+    "category": "Tools & Productivity"
   },
   {
     "number": 36,
-    "title": "New Perspective Painting LLC",
-    "file": "new-perspective-painting-llc.html",
-    "category": "Featured Sites",
-    "source": "apps/perspective-painting/index.html"
+    "title": "Qamelot Menu — Every Webpage",
+    "file": "index.html",
+    "category": "Experiments & Archives"
   },
   {
     "number": 37,
-    "title": "Pulse // Productivity & Biorhythm Studio",
-    "file": "pulse-productivity-and-biorhythm-studio.html",
-    "category": "Tools & Productivity",
-    "source": "apps/pulse-productivity-studio/index.html"
+    "title": "BPTKA: Tactical Defense",
+    "file": "bptka-tactical-defense-qamelottacticaldefensev1.html",
+    "category": "Games & Simulations"
   },
   {
     "number": 38,
-    "title": "Qamelot Conquest: Super Arcade Edition",
-    "file": "qamelot-conquest-super-arcade-edition-qamelotconquest.html",
-    "category": "Games & Simulations",
-    "source": "apps/QamelotConquest.html"
+    "title": "TRI-NEXUS: GRAIL MATRIX",
+    "file": "tri-nexus-grail-matrix.html",
+    "category": "Games & Simulations"
   },
   {
     "number": 39,
-    "title": "Qamelot Menu — Every Webpage",
-    "file": "index.html",
-    "category": "Experiments & Archives",
-    "source": "apps/QamelotMenu.html"
+    "title": "QamoMathCore // SCI-FI_NEXUS",
+    "file": "qamomathcore-sci-fi-nexus.html",
+    "category": "Games & Simulations"
   },
   {
     "number": 40,
-    "title": "BPTKA: Tactical Defense",
-    "file": "bptka-tactical-defense-qamelottacticaldefensev1.html",
-    "category": "Games & Simulations",
-    "source": "apps/QamelotTacticalDefensev1.htm"
+    "title": "QamoMathCore",
+    "file": "qamomathcore.html",
+    "category": "Tools & Productivity"
   },
   {
     "number": 41,
-    "title": "TRI-NEXUS: GRAIL MATRIX",
-    "file": "tri-nexus-grail-matrix.html",
-    "category": "Games & Simulations",
-    "source": "apps/QamelotTriNexusV1.htm"
+    "title": "QamoMathCore // SCI-FI_NEXUS",
+    "file": "qamomathcore-sci-fi-nexus-qamomath.html",
+    "category": "Games & Simulations"
   },
   {
     "number": 42,
-    "title": "QamoMathCore // SCI-FI_NEXUS",
-    "file": "qamomathcore-sci-fi-nexus.html",
-    "category": "Games & Simulations",
-    "source": "apps/QamoMATH.html"
+    "title": "QAMELOT // MATH_CORE",
+    "file": "qamelot-math-core.html",
+    "category": "Tools & Productivity"
   },
   {
     "number": 43,
-    "title": "QamoMathCore",
-    "file": "qamomathcore.html",
-    "category": "Tools & Productivity",
-    "source": "apps/QamoMATH/Index.html"
+    "title": "Qamelot Media Component",
+    "file": "qamelot-media-1.html",
+    "category": "Experiments & Archives"
   },
   {
     "number": 44,
-    "title": "QamoMathCore // SCI-FI_NEXUS",
-    "file": "qamomathcore-sci-fi-nexus-qamomath.html",
-    "category": "Games & Simulations",
-    "source": "apps/QamoMATH/QamoMATH.html"
+    "title": "Qamelot Media Component",
+    "file": "qamelot-media-2.html",
+    "category": "Experiments & Archives"
   },
   {
     "number": 45,
-    "title": "QAMELOT // MATH_CORE",
-    "file": "qamelot-math-core.html",
-    "category": "Tools & Productivity",
-    "source": "apps/qmathcore.html"
+    "title": "Qamelot Media - Forward Flick Edition",
+    "file": "qamelot-media-3.html",
+    "category": "Experiments & Archives"
   },
   {
     "number": 46,
-    "title": "Qamelot Media Component",
-    "file": "qamelot-media-component.html",
-    "category": "Experiments & Archives",
-    "source": "apps/QMedia001.html"
+    "title": "Interactive Nebula",
+    "file": "interactive-nebula-screensaver.html",
+    "category": "Experiments & Archives"
   },
   {
     "number": 47,
-    "title": "Qamelot Media Component",
-    "file": "qamelot-media-component-qmedia002.html",
-    "category": "Experiments & Archives",
-    "source": "apps/QMedia002.html"
+    "title": "SpriteForge Studio",
+    "file": "spriteforge-studio.html",
+    "category": "Experiments & Archives"
   },
   {
     "number": 48,
-    "title": "Qamelot Media - Forward Flick Edition",
-    "file": "qamelot-media-forward-flick-edition.html",
-    "category": "Experiments & Archives",
-    "source": "apps/QMedia003.html"
+    "title": "Stix Stax Stonz: Cyber Camelot",
+    "file": "stix-stax-stonz.html",
+    "category": "Games & Simulations"
   },
   {
     "number": 49,
-    "title": "Interactive Nebula",
-    "file": "interactive-nebula-screensaver.html",
-    "category": "Experiments & Archives",
-    "source": "apps/screensaver.html"
+    "title": "Task Forge",
+    "file": "task-forge.html",
+    "category": "Experiments & Archives"
   },
   {
     "number": 50,
-    "title": "SpriteForge Studio",
-    "file": "spriteforge-studio.html",
-    "category": "Experiments & Archives",
-    "source": "apps/sprite-forge/index.html"
+    "title": "N8 Tools — Your browser workbench",
+    "file": "n8-tools-your-browser-workbench.html",
+    "category": "Tools & Productivity"
   },
   {
     "number": 51,
-    "title": "SpriteForge Studio",
-    "file": "spriteforge-studio-sprite-forge.html",
-    "category": "Experiments & Archives",
-    "source": "apps/sprite-forge/SpriteForge-Studio.html"
-  },
-  {
-    "number": 52,
-    "title": "Stix Stax Stonz: Cyber Camelot",
-    "file": "stix-stax-stonz-cyber-camelot.html",
-    "category": "Games & Simulations",
-    "source": "apps/StixStaxStonzV1.htm"
-  },
-  {
-    "number": 53,
-    "title": "Task Forge",
-    "file": "task-forge.html",
-    "category": "Experiments & Archives",
-    "source": "apps/task-forge/index.html"
-  },
-  {
-    "number": 54,
-    "title": "N8 Tools — Your browser workbench",
-    "file": "n8-tools-your-browser-workbench.html",
-    "category": "Tools & Productivity",
-    "source": "apps/WebToolsResources.html"
-  },
-  {
-    "number": 55,
-    "title": "WHO//ROAD — Neon Conversation Lab",
-    "file": "who-road-neon-conversation-lab-who-road.html",
-    "category": "Experiments & Archives",
-    "source": "apps/who-road.html"
-  },
-  {
-    "number": 56,
     "title": "DevDashboard Hub",
     "file": "devdashboard-hub-index.html",
-    "category": "Experiments & Archives",
-    "source": "index.html"
+    "category": "Experiments & Archives"
   }
 ]
