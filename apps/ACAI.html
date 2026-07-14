@@ -1,96 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <style>
-        :root {
-            --neon-blue: #00f2ff;
-            --dark-metal: #1a1a1a;
-            --border-glow: 0 0 10px var(--neon-blue);
-        }
-
-        body {
-            background: #000;
-            color: var(--neon-blue);
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        /* Space Background */
-        .stars {
-            position: absolute;
-            width: 100%; height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/stardust.png');
-            z-index: -1;
-        }
-
-        /* Electricity Border */
-        .container {
-            padding: 20px;
-            border: 3px solid var(--neon-blue);
-            box-shadow: var(--border-glow), inset var(--border-glow);
-            background: var(--dark-metal);
-            animation: flicker 3s infinite alternate;
-        }
-
-        @keyframes flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { border-color: var(--neon-blue); }
-            20%, 22%, 24%, 55% { border-color: #fff; }
-        }
-
-        button {
-            background: transparent;
-            color: var(--neon-blue);
-            border: 1px solid var(--neon-blue);
-            padding: 10px 20px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            box-shadow: 0 0 20px var(--neon-blue);
-            text-shadow: 0 0 5px #fff;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="ACAI is an experimental on-device AI writing and analysis console with reliable local tools.">
+  <title>ACAI // Adaptive Cyber Analysis Interface</title>
+  <style>
+    :root{--cyan:#5ff7ff;--cyan2:#00b7ff;--violet:#a57bff;--lime:#b8ff67;--danger:#ff6584;--ink:#e9fdff;--muted:#86a8b0;--bg:#03070c;--panel:rgba(7,16,24,.86);--line:rgba(95,247,255,.2);--shadow:0 24px 80px rgba(0,0,0,.55);--radius:18px;color-scheme:dark}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{min-height:100vh;margin:0;color:var(--ink);background:radial-gradient(circle at 18% 12%,rgba(0,183,255,.14),transparent 28rem),radial-gradient(circle at 82% 88%,rgba(165,123,255,.12),transparent 30rem),var(--bg);font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(95,247,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(95,247,255,.035) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
+    .aurora{position:fixed;inset:-40%;pointer-events:none;background:conic-gradient(from 220deg,transparent,rgba(0,183,255,.09),transparent 24%,rgba(165,123,255,.08),transparent 48%);animation:orbit 24s linear infinite}
+    .shell{position:relative;width:min(1180px,calc(100% - 28px));margin:auto;padding:22px 0 38px}.topbar,.panel,.stat{border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(20px) saturate(1.25);box-shadow:var(--shadow)}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:14px 18px;border-radius:var(--radius);position:sticky;top:12px;z-index:10}.brand{display:flex;align-items:center;gap:12px}.mark{width:38px;aspect-ratio:1;border-radius:11px;background:conic-gradient(from 45deg,var(--cyan),var(--violet),var(--cyan2),var(--cyan));box-shadow:0 0 24px rgba(95,247,255,.4);position:relative}.mark:after{content:"";position:absolute;inset:7px;border-radius:7px;background:var(--bg)}.brand strong{display:block;letter-spacing:.16em}.brand small,.status-note{color:var(--muted)}.live{display:flex;align-items:center;gap:8px;font-size:.76rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.live i{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 14px var(--lime);animation:pulse 1.8s ease-in-out infinite}.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:18px;padding:64px 6px 26px;align-items:end}.kicker{margin:0 0 12px;color:var(--cyan);font-size:.76rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase}.hero h1{max-width:800px;margin:0;font-family:system-ui,sans-serif;font-size:clamp(2.7rem,7vw,6.6rem);line-height:.88;letter-spacing:-.075em}.hero h1 span{color:transparent;background:linear-gradient(90deg,var(--cyan),#fff 48%,var(--violet));background-clip:text;-webkit-background-clip:text}.hero-copy{max-width:620px;margin:22px 0 0;color:var(--muted);font-family:system-ui,sans-serif;font-size:1.05rem;line-height:1.65}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{padding:16px;border-radius:14px}.stat b,.stat span{display:block}.stat b{color:var(--cyan);font-size:1.3rem}.stat span{margin-top:5px;color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}
+    .workspace{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);gap:18px}.panel{border-radius:var(--radius);overflow:hidden}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.025)}.panel-head h2{margin:0;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase}.counter{color:var(--muted);font-size:.72rem}.editor{padding:18px}textarea{width:100%;min-height:330px;resize:vertical;border:1px solid rgba(95,247,255,.16);border-radius:14px;padding:18px;color:var(--ink);background:rgba(0,0,0,.3);font:500 .98rem/1.65 ui-monospace,monospace;outline:none;transition:.2s}textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 4px rgba(95,247,255,.08)}textarea::placeholder{color:#53727a}.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.chip,.button{border:1px solid var(--line);color:var(--ink);background:rgba(95,247,255,.06);font:700 .78rem ui-monospace,monospace;cursor:pointer;transition:transform .2s,background .2s,border-color .2s,box-shadow .2s}.chip{min-height:34px;padding:7px 11px;border-radius:999px}.chip:hover{border-color:var(--cyan);background:rgba(95,247,255,.12)}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.button{min-height:50px;padding:12px 16px;border-radius:12px}.button.primary{border-color:transparent;color:#021115;background:linear-gradient(135deg,var(--cyan),#93fcff);box-shadow:0 10px 30px rgba(0,210,255,.2)}.button.secondary{border-color:rgba(165,123,255,.42);background:linear-gradient(135deg,rgba(165,123,255,.18),rgba(0,183,255,.08))}.button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 34px rgba(0,210,255,.18)}button:disabled{cursor:not-allowed;opacity:.5}.output-body{min-height:330px;padding:22px;font:500 .96rem/1.72 system-ui,sans-serif;white-space:pre-wrap}.empty{display:grid;min-height:286px;place-items:center;text-align:center;color:var(--muted)}.empty-symbol{display:block;margin:auto auto 14px;width:62px;height:62px;border:1px solid var(--line);border-radius:50%;background:radial-gradient(circle,rgba(95,247,255,.16),transparent 62%);box-shadow:0 0 36px rgba(95,247,255,.1)}.output-tools{display:flex;gap:8px}.icon-btn{min-height:34px;border:1px solid var(--line);border-radius:9px;padding:7px 10px;color:var(--muted);background:transparent;cursor:pointer}.icon-btn:hover{color:var(--cyan);border-color:var(--cyan)}.meter{height:3px;background:rgba(255,255,255,.05);overflow:hidden}.meter i{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--cyan2),var(--cyan),var(--violet));box-shadow:0 0 12px var(--cyan);transition:width .25s}.meter.working i{width:76%;animation:scan 1.2s ease-in-out infinite}.notice{display:flex;gap:10px;align-items:flex-start;margin-top:18px;padding:14px 16px;border:1px solid rgba(184,255,103,.18);border-radius:13px;color:var(--muted);background:rgba(184,255,103,.04);font-size:.78rem;line-height:1.55}.notice b{color:var(--lime)}.toast{position:fixed;right:20px;bottom:20px;z-index:20;transform:translateY(30px);opacity:0;padding:12px 16px;border:1px solid var(--line);border-radius:12px;color:var(--ink);background:#0a1820;box-shadow:var(--shadow);transition:.3s}.toast.show{transform:none;opacity:1}
+    @keyframes orbit{to{transform:rotate(360deg)}}@keyframes pulse{50%{opacity:.35;transform:scale(.7)}}@keyframes scan{50%{transform:translateX(32%);width:62%}}@media(max-width:820px){.hero,.workspace{grid-template-columns:1fr}.hero{padding-top:44px}.stats{grid-template-columns:repeat(4,1fr)}}@media(max-width:560px){.shell{width:min(100% - 18px,1180px)}.topbar{top:7px}.brand small{display:none}.live span{display:none}.hero{padding-top:36px}.stats{grid-template-columns:1fr 1fr}.actions{grid-template-columns:1fr}.panel-head{align-items:flex-start}.output-tools{flex-wrap:wrap}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+  </style>
 </head>
 <body>
-    <div class="stars"></div>
-    <div class="container">
-        <h1>N8 CYBER-CORE</h1>
-        <textarea id="input" placeholder="Enter data..."></textarea>
-        <br>
-        <button id="promptBtn">GENERATE (Prompt API)</button>
-        <button id="summaryBtn">ANALYZE (Summarizer API)</button>
-        <div id="output"></div>
-    </div>
-
-    <script>
-        // Check for Chrome AI support
-        async function initAI() {
-            // Prompt API Check
-            if ('LanguageModel' in self) {
-                const session = await LanguageModel.create();
-                document.getElementById('promptBtn').onclick = async () => {
-                    const res = await session.prompt(document.getElementById('input').value);
-                    document.getElementById('output').innerText = res;
-                };
-            }
-
-            // Summarizer API Check
-            if ('Summarizer' in self) {
-                const summarizer = await Summarizer.create({type: 'tl;dr'});
-                document.getElementById('summaryBtn').onclick = async () => {
-                    const sum = await summarizer.summarize(document.getElementById('input').value);
-                    document.getElementById('output').innerText = sum;
-                };
-            }
-        }
-        initAI();
-    </script>
+  <div class="aurora" aria-hidden="true"></div>
+  <main class="shell">
+    <header class="topbar"><div class="brand"><i class="mark" aria-hidden="true"></i><div><strong>ACAI</strong><small>Adaptive Cyber Analysis Interface</small></div></div><div class="live"><i aria-hidden="true"></i><span id="engineLabel">Detecting engine</span></div></header>
+    <section class="hero"><div><p class="kicker">N8 CyberDev // Neural workspace</p><h1>Turn raw text into <span>clear signal.</span></h1><p class="hero-copy">Generate, summarize, and inspect writing in a focused console. Uses compatible on-device browser AI when available, with instant local analysis everywhere else.</p></div><div class="stats" aria-label="Text statistics"><div class="stat"><b id="wordStat">0</b><span>Words</span></div><div class="stat"><b id="readStat">0m</b><span>Read time</span></div><div class="stat"><b id="sentenceStat">0</b><span>Sentences</span></div><div class="stat"><b id="charStat">0</b><span>Characters</span></div></div></section>
+    <section class="workspace">
+      <article class="panel"><div class="panel-head"><h2>01 // Input stream</h2><span class="counter" id="counter">0 / 12,000</span></div><div class="editor"><label for="input" class="status-note">Prompt or source text</label><textarea id="input" maxlength="12000" placeholder="Paste a document to analyze, or describe what you want to generate..."></textarea><div class="presets" aria-label="Example prompts"><button class="chip" data-preset="Summarize the key ideas in this project update and list the next actions: ">Project brief</button><button class="chip" data-preset="Rewrite this message to sound concise, confident, and professional: ">Rewrite</button><button class="chip" data-preset="Generate five creative concepts for: ">Ideate</button><button class="chip" data-preset="Analyze the tone, clarity, and structure of this text: ">Critique</button></div><div class="actions"><button class="button primary" id="promptBtn">Generate response</button><button class="button secondary" id="summaryBtn">Analyze & summarize</button></div><div class="notice"><b>Private by design</b><span>Local analysis never sends text anywhere. Experimental browser AI, when available, runs through your browser's built-in model.</span></div></div></article>
+      <article class="panel"><div class="panel-head"><h2>02 // Processed signal</h2><div class="output-tools"><button class="icon-btn" id="copyBtn" disabled>Copy</button><button class="icon-btn" id="clearBtn">Clear</button></div></div><div class="meter" id="meter"><i></i></div><div class="output-body" id="output" aria-live="polite"><div class="empty"><div><i class="empty-symbol" aria-hidden="true"></i><b>Awaiting input</b><p>Choose an operation to begin.</p></div></div></div></article>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+  <script>
+    const $=s=>document.querySelector(s), input=$('#input'), output=$('#output'), meter=$('#meter'), promptBtn=$('#promptBtn'), summaryBtn=$('#summaryBtn'), copyBtn=$('#copyBtn');
+    let promptSession=null,summarizerSession=null,engine='local';
+    const escapeHtml=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    function stats(){const text=input.value.trim(),words=text?text.split(/\s+/).length:0,sentences=text?(text.match(/[.!?]+(?=\s|$)/g)||[]).length:0;$('#counter').textContent=`${input.value.length.toLocaleString()} / 12,000`;$('#wordStat').textContent=words;$('#readStat').textContent=`${words?Math.max(1,Math.ceil(words/220)):0}m`;$('#sentenceStat').textContent=sentences;$('#charStat').textContent=input.value.length.toLocaleString()}
+    function toast(message){const t=$('#toast');t.textContent=message;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),2200)}
+    function busy(on,label='Processing signal…'){promptBtn.disabled=summaryBtn.disabled=on;meter.classList.toggle('working',on);if(on){output.textContent=label;copyBtn.disabled=true}}
+    function show(text,title='Result'){output.innerHTML=`<p class="kicker">${escapeHtml(title)}</p>${escapeHtml(text)}`;copyBtn.disabled=!text;meter.classList.remove('working');meter.querySelector('i').style.width='100%';setTimeout(()=>meter.querySelector('i').style.width='0',700)}
+    function localSummary(text){const clean=text.replace(/\s+/g,' ').trim();const parts=clean.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[];const words=clean.toLowerCase().match(/[a-z0-9']+/g)||[];const stop=new Set('the a an and or but of to in for on with is are was were be been being this that it as at by from you your we our they their'.split(' '));const freq={};words.forEach(w=>{if(w.length>3&&!stop.has(w))freq[w]=(freq[w]||0)+1});const keys=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,6).map(x=>x[0]);const scored=parts.map((s,i)=>({s:s.trim(),i,score:keys.reduce((n,k)=>n+(s.toLowerCase().includes(k)?freq[k]:0),0)})).sort((a,b)=>b.score-a.score||a.i-b.i).slice(0,Math.min(4,Math.max(1,Math.ceil(parts.length*.3)))).sort((a,b)=>a.i-b.i);return `SUMMARY\n${scored.map(x=>x.s).join(' ')}\n\nSIGNALS\n• ${words.length} words across ${parts.length} sentence${parts.length===1?'':'s'}\n• Key terms: ${keys.length?keys.join(', '):'not enough text'}\n• Reading time: ${Math.max(1,Math.ceil(words.length/220))} minute${words.length>220?'s':''}`}
+    function localGenerate(text){const lower=text.toLowerCase();if(lower.includes('rewrite'))return `REFINED VERSION\n\n${text.replace(/^.*?rewrite[^:]*:\s*/i,'').replace(/\s+/g,' ').trim()}\n\nTip: add the intended audience and desired tone for a more targeted revision.`;if(lower.includes('five')||lower.includes('ideat')){const topic=text.split(':').slice(1).join(':').trim()||'your concept';return `CONCEPT DIRECTIONS\n\n1. Simplify ${topic} into one memorable promise.\n2. Reframe it around the user's strongest pain point.\n3. Create a premium, high-trust version.\n4. Build a playful, unexpected interpretation.\n5. Turn it into a repeatable system or series.`}return `LOCAL RESPONSE\n\n${localSummary(text)}\n\nNext step: refine your prompt with an audience, goal, tone, and output format. Compatible on-device browser AI will provide a generative response automatically when available.`}
+    async function run(type){const text=input.value.trim();if(!text){toast('Add some text first.');input.focus();return}busy(true,type==='summary'?'Analyzing structure and meaning…':'Generating response…');try{let result;if(type==='summary'&&summarizerSession)result=await summarizerSession.summarize(text);else if(type==='prompt'&&promptSession)result=await promptSession.prompt(text);else result=type==='summary'?localSummary(text):localGenerate(text);show(result,type==='summary'?'Analysis complete':'Generated response')}catch(error){show(type==='summary'?localSummary(text):localGenerate(text),'Local fallback result');toast('Browser AI was unavailable; local tools completed the task.')}finally{busy(false)}}
+    async function initAI(){const label=$('#engineLabel');try{if('LanguageModel'in self)promptSession=await self.LanguageModel.create();if('Summarizer'in self)summarizerSession=await self.Summarizer.create({type:'tl;dr'});if(promptSession||summarizerSession){engine='browser-ai';label.textContent='Browser AI + local fallback'}else label.textContent='Local analysis ready'}catch(e){label.textContent='Local analysis ready'}}
+    input.addEventListener('input',stats);document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.preset;stats();input.focus()}));promptBtn.addEventListener('click',()=>run('prompt'));summaryBtn.addEventListener('click',()=>run('summary'));$('#clearBtn').addEventListener('click',()=>{input.value='';stats();output.innerHTML='<div class="empty"><div><i class="empty-symbol" aria-hidden="true"></i><b>Awaiting input</b><p>Choose an operation to begin.</p></div></div>';copyBtn.disabled=true;input.focus()});copyBtn.addEventListener('click',async()=>{await navigator.clipboard.writeText(output.innerText);toast('Result copied.')} );input.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();run(e.shiftKey?'summary':'prompt')}});stats();initAI();
+  </script>
 </body>
 </html>

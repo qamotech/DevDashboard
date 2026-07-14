@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevDashboard Hub</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #060608;
+            --bg-sidebar: #0b0b0f;
+            --bg-card: rgba(18, 18, 24, 0.65);
+            --border-color: rgba(63, 63, 70, 0.25);
+            --border-active: rgba(99, 102, 241, 0.4);
+            --text-primary: #f4f4f5;
+            --text-secondary: #9ca3af;
+            --accent-purple: #8b5cf6;
+            --accent-indigo: #6366f1;
+            --accent-cyan: #06b6d4;
+            --accent-glow-purple: rgba(139, 92, 246, 0.25);
+            --accent-glow-cyan: rgba(6, 182, 212, 0.2);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            
+            --font-main: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            height: 100vh;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 290px 1fr;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.06) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.05) 0px, transparent 50%);
+        }
+
+        /* Sidebar Styling */
+        aside {
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            z-index: 10;
+            height: 100vh;
+            min-height: 0;
+            overflow-y: auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(63, 63, 70, 0.2);
+            margin-bottom: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-indigo) 0%, var(--accent-purple) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 0 20px var(--accent-glow-purple);
+        }
+
+        .brand-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-primary) 30%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(156, 163, 175, 0.4);
+            margin-left: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.65rem 0.85rem;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--text-primary);
+            background: rgba(99, 102, 241, 0.08);
+            border-color: var(--border-active);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.05);
+        }
+
+        .nav-item svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+            transition: var(--transition-smooth);
+            flex-shrink: 0;
+        }
+
+        .nav-item.active svg {
+            color: var(--accent-indigo);
+            opacity: 1;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            border-top: 1px solid rgba(63, 63, 70, 0.2);
+            padding-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success-color);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--success-color);
+        }
+
+        /* Main Workspace */
+        main {
+            padding: 2.2rem;
+            overflow-y: auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .workspace-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-shrink: 0;
+        }
+
+        .workspace-title {
+            font-size: 1.65rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .workspace-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Views */
+        .view-content {
+            display: none;
+            flex: 1;
+            animation: viewFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .view-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes viewFadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .panel-heading {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.75rem;
+        }
+
+        .link-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .step-list {
+            margin-left: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .step-item {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .step-item strong {
+            color: var(--text-primary);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-indigo) 0%, var(--accent-purple) 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 0.9rem 1.5rem;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.15);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        /* Iframe App Deck View */
+        .app-viewer-container {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .app-viewer-bar {
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .app-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .app-active-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--accent-cyan);
+            box-shadow: 0 0 6px var(--accent-cyan);
+        }
+
+        .app-active-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .app-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .app-control-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .app-control-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--text-secondary);
+        }
+
+        .iframe-wrapper {
+            flex: 1;
+            width: 100%;
+            background: #ffffff;
+            position: relative;
+        }
+
+        .app-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside>
+        <div class="brand">
+            <div class="brand-icon">D</div>
+            <div class="brand-name">DevDashboard Hub</div>
+        </div>
+
+        <!-- Utilities Section -->
+        <div class="nav-section">
+            <div class="nav-section-title">Utilities</div>
+            <a class="nav-item active" id="nav-remover" onclick="showRemoverView()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 18V6"/><path d="M6 12h12"/></svg>
+                Background Remover
+            </a>
+        </div>
+
+        <!-- Applications Section -->
+        <div class="nav-section">
+            <div class="nav-section-title">Applications</div>
+            <a class="nav-item" id="nav-app-calc" onclick="launchApp('CalcuN8r', '../CalcuN8r.html', 'nav-app-calc')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+                CalcuN8r
+            </a>
+            <a class="nav-item" id="nav-app-math" onclick="launchApp('QamoMATH', '../QamoMATH/QamoMATH.html', 'nav-app-math')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+                QamoMATH
+            </a>
+            <a class="nav-item" id="nav-app-toolbelt" onclick="launchApp('Contractor Tool Belt', '../ContractorToolBelt.html', 'nav-app-toolbelt')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                Tool Belt
+            </a>
+        </div>
+
+        <!-- Games Section -->
+        <div class="nav-section">
+            <div class="nav-section-title">Games</div>
+            <a class="nav-item" id="nav-game-c4" onclick="launchApp('Connect 4 (C4N8)', 'C4N8.htm', 'nav-game-c4')">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg>
+                Connect 4 (C4N8)
+            </a>
+            <a class="nav-item" id="nav-game-td1" onclick="launchApp('Qamelot Tactical Defense', 'QamelotTacticalDefensev1.htm', 'nav-game-td1')">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg>
+                Qamelot Tactical Defense
+            </a>
+            <a class="nav-item" id="nav-game-tn" onclick="launchApp('Qamelot TriNexus', 'QamelotTriNexusV1.htm', 'nav-game-tn')">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg>
+                Qamelot TriNexus
+            </a>
+            <a class="nav-item" id="nav-game-ss" onclick="launchApp('Stix Stax Stonz v1', 'StixStaxStonzV1.htm', 'nav-game-ss')">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg>
+                Stix Stax Stonz v1
+            </a>
+            <a class="nav-item" id="nav-game-td2" onclick="launchApp('BPTKA Tactical Defense', '../bptka_TD.html', 'nav-game-td2')">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><circle cx="15" cy="12" r="1"/><circle cx="18" cy="12" r="1"/></svg>
+                BPTKA Tactical Defense
+            </a>
+        </div>
+
+        <!-- Miscellaneous Section -->
+        <div class="nav-section">
+            <div class="nav-section-title">Miscellaneous</div>
+            <a class="nav-item" id="nav-misc-menu" onclick="launchApp('Qamelot Menu', '../QamelotMenu.html', 'nav-misc-menu')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                Qamelot Menu
+            </a>
+            <a class="nav-item" id="nav-misc-home" onclick="launchApp('Qamelot Home', '../Home.html', 'nav-misc-home')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Home Outline
+            </a>
+            <a class="nav-item" id="nav-misc-code" onclick="launchApp('Gemini Utility', '../gemini-code-1782079525974.html', 'nav-misc-code')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                Gemini Utility
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span>Environment: Static/Web</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Workspace -->
+    <main>
+        <div class="workspace-title-row">
+            <div>
+                <h1 class="workspace-title" id="view-title">AI Background Remover</h1>
+                <p class="workspace-subtitle" id="view-subtitle">Remove backgrounds instantly using Adobe Express AI</p>
+            </div>
+        </div>
+
+        <!-- VIEW 1: Background Remover Landing -->
+        <div class="view-content active" id="view-remover">
+            <div class="panel">
+                <div class="panel-heading">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-purple)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 18V6"/><path d="M6 12h12"/></svg>
+                    Adobe Express Background Remover
+                </div>
+                
+                <p class="link-desc">
+                    To bypass login, local automation bottlenecks, and browser session limits, you can open and run Adobe's official utility directly. It is completely free, secure, and utilizes Adobe's top-tier Firefly AI to isolate subjects instantly.
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <div class="input-label">How to use:</div>
+                    <ol class="step-list">
+                        <li class="step-item">Click the <strong>Open Adobe Remover</strong> button below to open the tool in a new tab.</li>
+                        <li class="step-item">Drag & drop or upload your PNG, JPG, or WEBP image.</li>
+                        <li class="step-item">Adobe will remove the background automatically.</li>
+                        <li class="step-item">Log in with a free Adobe account to download your high-resolution transparent PNG.</li>
+                    </ol>
+                </div>
+
+                <a href="https://www.adobe.com/express/feature/image/remove-background" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-top: 1rem;">
+                    Open Adobe Background Remover
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- VIEW 2: Embedded App Deck Viewer -->
+        <div class="view-content" id="view-app-viewer">
+            <div class="app-viewer-container">
+                <div class="app-viewer-bar">
+                    <div class="app-title-wrapper">
+                        <span class="app-active-dot"></span>
+                        <span class="app-active-title" id="active-app-title">Loading Application...</span>
+                    </div>
+                    <div class="app-controls">
+                        <button class="app-control-btn" onclick="reloadActiveApp()">
+                            ðŸ”„ Reload
+                        </button>
+                        <button class="app-control-btn" onclick="toggleIframeFullscreen()">
+                            ðŸŽµ Fullscreen
+                        </button>
+                        <button class="app-control-btn" onclick="showRemoverView()" style="border-color: rgba(239, 68, 68, 0.3); color: #fca5a5;">
+                            ðŸšª Close App
+                        </button>
+                    </div>
+                </div>
+                <div class="iframe-wrapper">
+                    <iframe src="" class="app-iframe" id="app-iframe"></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Switch view to Background Remover Panel
+        function showRemoverView() {
+            // Unactivate nav items
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            // Activate remover button
+            document.getElementById("nav-remover").classList.add('active');
+
+            // Toggle view panels
+            document.getElementById("view-app-viewer").classList.remove("active");
+            document.getElementById("view-remover").classList.add("active");
+
+            // Reset Titles
+            document.getElementById("view-title").innerText = "AI Background Remover";
+            document.getElementById("view-subtitle").innerText = "Remove backgrounds instantly using Adobe Express AI";
+            
+            // Clear iframe
+            document.getElementById("app-iframe").src = '';
+        }
+
+        // Launch selected app inside Iframe Deck
+        function launchApp(title, path, navId) {
+            // Unactivate all items
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            // Activate selected item
+            const activeItem = document.getElementById(navId);
+            if (activeItem) activeItem.classList.add('active');
+
+            // Hide remover view, show app viewer
+            document.getElementById("view-remover").classList.remove("active");
+            document.getElementById("view-app-viewer").classList.add("active");
+
+            // Update title row
+            document.getElementById("view-title").innerText = title;
+            document.getElementById("view-subtitle").innerText = `Local Application Deck: ${path}`;
+
+            // Load in iframe
+            document.getElementById("active-app-title").innerText = title;
+            const iframe = document.getElementById("app-iframe");
+            iframe.src = path;
+        }
+
+        function reloadActiveApp() {
+            const iframe = document.getElementById("app-iframe");
+            if (iframe.src) {
+                iframe.src = iframe.src;
+            }
+        }
+
+        function toggleIframeFullscreen() {
+            const wrapper = document.querySelector('.iframe-wrapper');
+            if (!document.fullscreenElement) {
+                wrapper.requestFullscreen().catch(err => {
+                    alert(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
+

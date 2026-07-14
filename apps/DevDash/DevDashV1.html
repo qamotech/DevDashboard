@@ -775,7 +775,7 @@
                 
                 let bookmarksHTML = items.map(item => `
                     <li class="bookmark-item">
-                        <a href="${item.url}" target="_blank" title="${item.url}">
+                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" title="${item.url}">
                             <span>${item.name}</span>
                         </a>
                     </li>

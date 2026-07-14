@@ -20,6 +20,9 @@
     <meta name="twitter:image" content="assets/booksy/inspiration-1.jpg">
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link rel="apple-touch-icon" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,800;1,400&family=Inter:wght@400;500;600&display=swap">
     <script type="application/ld+json">
     {
       "@context":"https://schema.org",
@@ -96,15 +99,61 @@
             text-shadow: 0 0 8px var(--accent-purple);
         }
 
+        nav { display: flex; align-items: center; }
         nav a {
             color: var(--text-light);
             text-decoration: none;
             margin-left: 1.5rem;
-            font-size: 0.85rem;
-            font-family: 'Segoe UI', sans-serif;
+            font-size: 0.78rem;
+            font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+            font-weight: 600;
             letter-spacing: 1.5px;
-            transition: color 0.3s;
+            text-transform: uppercase;
+            transition: color 0.28s;
+            position: relative;
+            padding-bottom: 2px;
         }
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0;
+            width: 0; height: 2px;
+            background: var(--accent-pink);
+            transition: width 0.28s;
+            border-radius: 1px;
+        }
+        nav a.active, nav a:hover { color: var(--accent-pink); }
+        nav a.active::after, nav a:hover::after { width: 100%; }
+        nav a.booksy-nav {
+            color: var(--accent-pink);
+            font-weight: 700;
+            border: 1px solid rgba(236,72,153,.5);
+            border-radius: 999px;
+            padding: .45rem .9rem;
+            margin-left: 1.8rem;
+        }
+        nav a.booksy-nav:hover { background: rgba(236,72,153,.12); }
+        nav a.booksy-nav::after { display: none; }
+        /* ─── Mobile hamburger ─── */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+            background: none;
+            border: none;
+        }
+        .nav-toggle span {
+            display: block;
+            width: 24px; height: 2px;
+            background: var(--text-light);
+            border-radius: 2px;
+            transition: 0.28s ease;
+        }
+        .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .nav-toggle.open span:nth-child(2) { opacity: 0; }
+        .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         nav a:hover {
             color: var(--accent-pink);
@@ -373,6 +422,82 @@
             background: rgba(236, 72, 153, 0.08);
         }
 
+        /* Calendar today ring — stays visible even after clicking another day */
+        .calendar-cell.today {
+            box-shadow: 0 0 0 2px var(--accent-purple);
+            font-weight: 700;
+        }
+        /* Sunday column tint to match the SU header label */
+        .calendar-cell.sunday:not(.selected) {
+            color: var(--accent-pink);
+        }
+        /* ─── Lightbox ─── */
+        #lightbox {
+            position: fixed; inset: 0; z-index: 500;
+            background: rgba(5,2,12,.96);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 1rem;
+            opacity: 0; pointer-events: none;
+            transition: opacity .3s ease;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        #lightbox.open { opacity: 1; pointer-events: all; }
+        #lightbox-img {
+            max-width: min(92vw, 900px);
+            max-height: 78vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 0 60px rgba(168,85,247,.25);
+        }
+        #lightbox-caption { color: var(--text-muted); font-size: .9rem; letter-spacing: .04em; }
+        #lightbox-close {
+            position: absolute; top: 1.25rem; right: 1.5rem;
+            background: none; border: none;
+            color: var(--text-muted); font-size: 1.8rem;
+            cursor: pointer; line-height: 1;
+            transition: color .28s;
+        }
+        #lightbox-close:hover { color: var(--accent-pink); }
+        /* ─── Style visualizer full preview ─── */
+        .style-preview-wrap {
+            position: relative; width: 100%;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            background: #0d0720;
+        }
+        #style-preview {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: opacity .25s ease;
+        }
+        .style-summary {
+            padding: .9rem 1rem;
+            display: flex; flex-wrap: wrap;
+            gap: .5rem 1.5rem; align-items: flex-start;
+        }
+        .style-summary-meta { flex: 1; min-width: 160px; }
+        .style-summary-meta h4 { color: #fff; font-size: .95rem; margin-bottom: .25rem; }
+        #style-description { font-size: .8rem; color: var(--text-muted); margin: 0; }
+        .style-summary-nums { text-align: right; font-size: .82rem; color: var(--text-muted); white-space: nowrap; }
+        .style-summary-nums strong { color: var(--accent-pink); font-size: 1rem; }
+        .style-disclaimer { font-size: .7rem; color: var(--text-muted); padding: 0 1rem .8rem; line-height: 1.4; }
+        /* ─── Footer social buttons ─── */
+        .footer-socials { display: flex; justify-content: center; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
+        .footer-social-btn {
+            display: inline-flex; align-items: center; gap: .4rem;
+            padding: .5rem 1rem;
+            border: 1px solid rgba(168,85,247,.35);
+            border-radius: 999px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: .78rem; font-weight: 600;
+            transition: background .28s, border-color .28s;
+        }
+        .footer-social-btn:hover { background: rgba(168,85,247,.14); border-color: var(--accent-pink); color: var(--accent-pink); }
+
         .gallery-block {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -481,9 +606,25 @@
         @keyframes logo-breathe { 0%,100% { transform:scale(1); box-shadow:0 0 18px rgba(236,72,153,.3); } 50% { transform:scale(1.045); box-shadow:0 0 28px rgba(168,85,247,.55); } }
         @keyframes card-reveal { from { opacity:0; transform:translateY(22px) scale(.985); } to { opacity:1; transform:none; } }
         @keyframes button-shine { 0%,72% { transform:translateX(-120%); } 88%,100% { transform:translateX(120%); } }
-        @media (max-width:900px) { .feature-strip { grid-template-columns:1fr 1fr; } nav { display:none; } }
-        @media (max-width:900px) { .review-grid { grid-template-columns:1fr 1fr; } }
-        @media (max-width:560px) { header { padding:.75rem 1rem; } .feature-strip,.review-grid { grid-template-columns:1fr; } .hero-banner h1 { font-size:2.5rem; } .main-wrapper { padding:1rem; } }
+        @media (max-width:1024px) { .feature-strip { grid-template-columns:1fr 1fr; } }
+        @media (max-width:900px) {
+            .review-grid { grid-template-columns:1fr 1fr; }
+            nav.main-nav {
+                display: none;
+                position: fixed; inset: 0 0 0 30%;
+                flex-direction: column; gap: 0;
+                background: rgba(8,4,16,.97);
+                backdrop-filter: blur(16px);
+                padding: 5rem 2rem 2rem;
+                z-index: 190;
+                border-left: 1px solid rgba(168,85,247,.25);
+            }
+            nav.main-nav.open { display: flex; }
+            nav.main-nav a { margin: 0; padding: .85rem 0; border-bottom: 1px solid rgba(255,255,255,.06); font-size: 1rem; }
+            nav.main-nav a.booksy-nav { margin-top: 1rem; border: 1px solid rgba(236,72,153,.5); border-radius: 999px; padding: .75rem 1.5rem; text-align: center; }
+            .nav-toggle { display: flex; z-index: 210; }
+        }
+        @media (max-width:560px) { header { padding:.75rem 1rem; } .feature-strip,.review-grid { grid-template-columns:1fr; } .hero-banner h1 { font-size:2.5rem; } .main-wrapper { padding:1rem; } .footer-socials { flex-direction: column; align-items: center; } }
         @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
     </style>
 </head>
@@ -491,17 +632,21 @@
 
     <header>
         <div class="logo-area">
-            <a class="brand-link" href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood" target="_blank" rel="noopener" aria-label="Open Loc Me In on Booksy">
-                <img class="brand-logo" src="logo.png" alt="Loc Me In logo">
+            <a class="brand-link" href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood" target="_blank" rel="noopener noreferrer" aria-label="Open Loc Me In on Booksy">
+                <img class="brand-logo" src="logo.png" alt="Loc Me In logo" width="48" height="48">
                 <span class="logo-title">LOC ME IN</span>
             </a>
         </div>
-        <nav>
-            <a href="#designer">STYLE VISUALIZER</a>
-            <a href="#menu">SERVICES</a>
-            <a href="#booking">APPOINTMENTS</a>
-            <a href="#care">HAIR CARE</a>
-            <a href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood" target="_blank" style="color:var(--accent-pink); font-weight:bold;">BOOK ON BOOKSY</a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+            <a href="#designer">Style Visualizer</a>
+            <a href="#menu">Services</a>
+            <a href="#booking">Appointments</a>
+            <a href="#care">Hair Care</a>
+            <a href="#gallery">Gallery</a>
+            <a href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood" target="_blank" rel="noopener noreferrer" class="booksy-nav">Book on Booksy ↗</a>
         </nav>
     </header>
 
@@ -535,7 +680,7 @@
             <article class="feature-card">
                 <span class="icon" aria-hidden="true">↗</span><h3>Directions</h3>
                 <p>Open the Edgewood studio location in Google Maps.</p>
-                <a class="mini-action" href="https://www.google.com/maps/search/?api=1&query=1928+Pulaski+Hwy+Suite+5+Edgewood+MD+21040" target="_blank" rel="noopener">Open map</a>
+                <a class="mini-action" href="https://www.google.com/maps/search/?api=1&query=1928+Pulaski+Hwy+Suite+5+Edgewood+MD+21040" target="_blank" rel="noopener noreferrer">Open map</a>
                 <div class="mini-output">1928 Pulaski Hwy, Suite 5</div>
             </article>
         </section>
@@ -548,14 +693,14 @@
                 
                 <form class="form-layout">
                     <div class="input-block">
-                        <label>Loc Count / Density</label>
+                        <label for="density-select">Loc Count / Density</label>
                         <select id="density-select">
                             <option value="100">100 Locs or Fewer (≤100)</option>
                             <option value="101">More than 100 Locs (&gt;100)</option>
                         </select>
                     </div>
                     <div class="input-block">
-                        <label>Desired Styling Profile</label>
+                        <label for="profile-select">Desired Styling Profile</label>
                         <select id="profile-select">
                             <option>Two-Strand Twist Flow</option>
                             <option>Criss-Cross Barrel Braids</option>
@@ -565,7 +710,7 @@
                         </select>
                     </div>
                     <div class="input-block">
-                        <label>Current Hair Length</label>
+                        <label for="length-select">Current Hair Length</label>
                         <select id="length-select">
                             <option>Shoulder Length or Shorter</option>
                             <option>Past Shoulder up to Mid-Back</option>
@@ -573,28 +718,31 @@
                         </select>
                     </div>
                     <div class="input-block">
-                        <label>Premium Accent Overlays</label>
+                        <label for="accents-select">Premium Accent Overlays</label>
                         <select id="accents-select">
-                            <option>No Accessories</option>
-                            <option>Adjustable Metallic Gold Cuffs</option>
-                            <option>Natural Organic Cowry Shells</option>
-                            <option>Linen Accent Thread Wraps</option>
+                            <option>No Accessories (+$0)</option>
+                            <option>Adjustable Metallic Gold Cuffs (+$15)</option>
+                            <option>Natural Organic Cowry Shells (+$20)</option>
+                            <option>Linen Accent Thread Wraps (+$15)</option>
                         </select>
                     </div>
                 </form>
 
-                <div class="style-showcase">
-                    <img class="style-image" id="style-preview" src="assets/two_strand_less.png" alt="Two-strand twist style preview">
-                    <div>
-                        <h4 style="margin:0 0 5px 0; color:#fff;">Live Configuration Summary</h4>
-                        <p style="margin:0; font-size:0.85rem; color:var(--text-muted); font-family:'Segoe UI', sans-serif;">
-                            Estimated Service Window: <strong id="estimate-time" style="color:var(--accent-pink)">3h 0m</strong><br>
-                            Base Estimate: <strong id="estimate-price" style="color:var(--accent-pink)">$125.00+</strong>
-                        </p>
-                        <p style="margin:8px 0 0 0; font-size:0.75rem; color:var(--text-muted); font-family:'Segoe UI', sans-serif; line-height: 1.3;">
-                            *Final evaluation of length, parting lines, and hair density will be accurately mapped out in-chair during your consultation.
-                        </p>
+                <div class="style-showcase" style="margin-top:1.5rem;border:1px dashed rgba(168,85,247,.3);border-radius:10px;overflow:hidden;background:rgba(0,0,0,.25);">
+                    <div class="style-preview-wrap">
+                        <img id="style-preview" src="assets/booksy/two-strand-1.jpg" alt="Two-strand twist style preview">
                     </div>
+                    <div class="style-summary">
+                        <div class="style-summary-meta">
+                            <h4>Live Configuration Summary</h4>
+                            <p id="style-description">Two-strand twists pair individual locs into rope-like sections.</p>
+                        </div>
+                        <div class="style-summary-nums">
+                            Duration: <strong id="estimate-time">3h 0m</strong><br>
+                            Estimate: <strong id="estimate-price">$125.00+</strong>
+                        </div>
+                    </div>
+                    <p class="style-disclaimer">*Final evaluation of length, parting lines, and density will be mapped in-chair during consultation.</p>
                 </div>
             </div>
 
@@ -693,19 +841,14 @@
                 <span class="section-tag">Plan, then confirm on Booksy</span>
                 <h2>Appointment Booking Portal</h2>
                 <div style="margin-top: 1rem;">
-                    <label>Selected Calendar Window: July 2026</label>
-                    <div class="calendar-wrap">
+                    <label id="cal-label">Selected Calendar Window: July 2026</label>
+                    <div class="calendar-wrap" id="cal-wrap">
                         <span style="color:var(--accent-pink)">SU</span><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span>
-                        <div class="calendar-cell">1</div><div class="calendar-cell">2</div><div class="calendar-cell">3</div><div class="calendar-cell">4</div>
-                        <div class="calendar-cell">5</div><div class="calendar-cell">6</div><div class="calendar-cell">7</div><div class="calendar-cell">8</div>
-                        <div class="calendar-cell">9</div><div class="calendar-cell">10</div><div class="calendar-cell">11</div><div class="calendar-cell">12</div>
-                        <div class="calendar-cell selected">13</div><div class="calendar-cell">14</div><div class="calendar-cell">15</div><div class="calendar-cell">16</div>
-                        <div class="calendar-cell">17</div><div class="calendar-cell">18</div><div class="calendar-cell">19</div><div class="calendar-cell">20</div>
                     </div>
                 </div>
                 
                 <div class="time-row">
-                    <div class="time-box">09:00 AM</div>
+                    <div class="time-box selected">09:00 AM</div>
                     <div class="time-box">11:30 AM</div>
                     <div class="time-box">02:00 PM</div>
                     <div class="time-box">04:30 PM</div>
@@ -713,7 +856,7 @@
 
                 <div class="form-layout">
                     <div class="input-block"><p class="status-note">Choose a preferred date above for planning. Booksy displays the authoritative live schedule and securely collects your appointment details.</p></div>
-                    <a class="btn-premium" style="display:block; width:100%; border-radius:6px; box-sizing:border-box; text-align:center; text-decoration:none;" href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood" target="_blank" rel="noopener">CHECK LIVE AVAILABILITY ON BOOKSY ↗</a>
+                    <a class="btn-premium" style="display:block; width:100%; border-radius:6px; box-sizing:border-box; text-align:center; text-decoration:none;" href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood" target="_blank" rel="noopener noreferrer">CHECK LIVE AVAILABILITY ON BOOKSY ↗</a>
                 </div>
             </div>
 
@@ -721,16 +864,16 @@
                 <span class="section-tag">Between-visit support</span>
                 <h2>Hair Care & Maintenance Routine</h2>
                 <div class="input-block" style="margin-top:1.2rem;">
-                    <label>Loc Development Stage</label>
-                    <select>
+                    <label for="care-stage">Loc Development Stage</label>
+                    <select id="care-stage">
                         <option>Starter / Baby Locs (0-6 months)</option>
                         <option>Teen / Budding Stage (6-18 months)</option>
                         <option selected>Mature Traditional Locs (18+ months)</option>
                     </select>
                 </div>
                 <div class="input-block">
-                    <label>Scalp Hydration Profile</label>
-                    <select>
+                    <label for="care-scalp">Scalp Hydration Profile</label>
+                    <select id="care-scalp">
                         <option>Normal / Balanced Flora</option>
                         <option>Dry / Flaky Protective Needs</option>
                         <option>Oily Surface Moisture Type</option>
@@ -748,7 +891,7 @@
             </div>
         </div>
 
-        <div class="card-panel" style="margin-bottom: 4rem;">
+        <div class="card-panel" id="gallery" style="margin-bottom:4rem;">
             <span class="section-tag">Official Booksy photography</span>
             <h2>Signature Portfolio Gallery</h2>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-top:-5px; font-family:'Segoe UI', sans-serif;">Authentic Loc Me In service photography sourced from the official Booksy portfolio.</p>
@@ -834,17 +977,42 @@
                     <figure class="review-card"><blockquote>More than two years of consistently great experiences.</blockquote><footer><strong>Tracy</strong> • Loc Model • Jan 26, 2024</footer></figure>
                     <figure class="review-card"><blockquote>Professional, skilled care for both parent and daughter.</blockquote><footer><strong>Tamika</strong> • Kids Loc Maintenance • Jan 24, 2024</footer></figure>
                 </div>
-                <p class="status-note">Review text is summarized from verified Booksy feedback. <a href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood#reviews-section" target="_blank" rel="noopener">Read the source reviews on Booksy.</a></p>
+                <p class="status-note">Review text is summarized from verified Booksy feedback. <a href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood#reviews-section" target="_blank" rel="noopener noreferrer">Read the source reviews on Booksy.</a></p>
             </details>
         </div>
     </div>
 
-    <footer>
-        <p>Loc Me In Salon Systems © 2026. Salon Location: <a href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood" target="_blank" rel="noopener">1928 Pulaski Hwy, Suite 5, Edgewood, MD 21040</a>.</p>
-        <p style="font-size:0.75rem; margin-top:0.4rem; color:rgba(255,255,255,0.25)">All schedule coordinates maps and service item data sets are integrated directly with live active listings.</p>
+    <footer style="text-align:center;padding:3.5rem 2rem;border-top:1px solid rgba(255,255,255,.07);color:var(--text-muted);font-size:.85rem;background:rgba(5,2,10,.6);">
+        <div style="max-width:680px;margin:0 auto;">
+            <div style="font-family:'Playfair Display',Georgia,serif;font-size:1.35rem;font-weight:800;letter-spacing:3px;color:#fff;text-shadow:0 0 10px var(--accent-purple);margin-bottom:.5rem;">LOC ME IN</div>
+            <p style="color:var(--text-muted);font-size:.82rem;margin-bottom:1.5rem;">Premium Braids &amp; Locs Artistry · Edgewood, Maryland</p>
+            <div class="footer-socials">
+                <a class="footer-social-btn" href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood" target="_blank" rel="noopener noreferrer">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 3a7 7 0 110 14A7 7 0 0112 5zm0 2a5 5 0 100 10A5 5 0 0012 7z"/></svg>
+                    Book on Booksy
+                </a>
+                <a class="footer-social-btn" href="https://www.instagram.com/_locmein/" target="_blank" rel="noopener noreferrer">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+                    @_locmein
+                </a>
+                <a class="footer-social-btn" href="https://www.google.com/maps/search/?api=1&amp;query=1928+Pulaski+Hwy+Suite+5+Edgewood+MD+21040" target="_blank" rel="noopener noreferrer">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2C8.134 2 5 5.134 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.866-3.134-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                    Get Directions
+                </a>
+            </div>
+            <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:.8rem;">Studio: <a href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood" target="_blank" rel="noopener noreferrer" style="color:var(--accent-pink);">1928 Pulaski Hwy, Suite 5 · Edgewood, MD 21040</a></p>
+            <p style="font-size:.72rem;color:rgba(255,255,255,.22);">© 2026 Loc Me In. All pricing is subject to in-chair consultation. Schedule coordinates are synced with live Booksy listings.</p>
+        </div>
     </footer>
 
-    <a class="booksy-float" href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood" target="_blank" rel="noopener">Book on Booksy ↗</a>
+    <a class="booksy-float" href="https://booksy.com/en-us/822984_locmein_braids-locs_22742_edgewood" target="_blank" rel="noopener noreferrer" aria-label="Book appointment on Booksy">Book on Booksy ↗</a>
+
+    <!-- Gallery Lightbox -->
+    <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox">
+        <button id="lightbox-close" aria-label="Close lightbox">✕</button>
+        <img id="lightbox-img" src="" alt="">
+        <p id="lightbox-caption"></p>
+    </div>
 
     <script>
       const toolCopy = {
@@ -860,53 +1028,137 @@
         });
       });
 
-      // Style visualizer: every selection updates the preview, estimate, and accessible description.
+      // Style visualizer
       const styleMap = {
-        'Two-Strand Twist Flow': ['assets/booksy/two-strand-1.jpg', 125, '3h 0m', 'Two-strand twists pair individual locs into rope-like sections.'],
-        'Criss-Cross Barrel Braids': ['assets/booksy/criss-cross-2.jpg', 85, '3h 0m', 'Sculptural sections cross, barrel, or cornrow across the crown.'],
-        'Sleek Double French Braids': ['assets/booksy/french-braids-2.jpg', 100, '3h 30m', 'Two continuous braided tracks sweep the locs from front to back.'],
-        'Classic Updo Bun': ['assets/booksy/loc-bun-1.jpg', 100, '3h 0m', 'Locs gather into a polished elevated bun.'],
-        'Individual Textured Bob': ['assets/bob_less.png', 150, '4h 0m', 'Individual twists are shaped into a compact bob silhouette.']
+        'Two-Strand Twist Flow':     ['assets/booksy/two-strand-1.jpg',  125, '3h 0m',  'Two-strand twists pair individual locs into rope-like sections for a defined, textured look.'],
+        'Criss-Cross Barrel Braids': ['assets/booksy/criss-cross-2.jpg', 125, '3h 30m', 'Sculptural sections cross, barrel, or cornrow across the crown for bold geometric structure.'],
+        'Sleek Double French Braids':['assets/booksy/french-braids-2.jpg',100, '3h 30m', 'Two continuous braided tracks sweep the locs from front to back in elegant sleek lines.'],
+        'Classic Updo Bun':          ['assets/booksy/loc-bun-1.jpg',     125, '3h 0m',  'Locs gather into a polished elevated bun — timeless, protective, and refined.'],
+        'Individual Textured Bob':   ['assets/bob_less.png',             175, '4h 30m', 'Individual twists shaped into a compact bob silhouette with texture and body.']
       };
+      const accentCosts = [0, 15, 20, 15];
       const configInputs = ['density-select','profile-select','length-select','accents-select'].map(id => document.getElementById(id));
       function updateStylePreview() {
         const profile = configInputs[1].value;
-        const [image, base, time, description] = styleMap[profile];
-        const dense = configInputs[0].value === '101';
+        const [image, base, time, desc] = styleMap[profile];
+        const dense     = configInputs[0].value === '101';
         const lengthAdd = configInputs[2].selectedIndex * 25;
-        const accentAdd = configInputs[3].selectedIndex ? 15 : 0;
-        const preview = document.getElementById('style-preview');
-        preview.src = image;
-        preview.alt = `${profile} preview for ${dense ? 'more than 100' : '100 or fewer'} locs`;
+        const accentAdd = accentCosts[configInputs[3].selectedIndex] ?? 0;
+        const preview   = document.getElementById('style-preview');
+        preview.style.opacity = '0.15';
+        setTimeout(() => {
+          preview.src   = image;
+          preview.alt   = `${profile} preview for ${dense ? 'more than 100' : '100 or fewer'} locs`;
+          preview.title = desc;
+          preview.style.opacity = '1';
+        }, 160);
+        const descEl = document.getElementById('style-description');
+        if (descEl) descEl.textContent = desc;
         document.getElementById('estimate-price').textContent = `$${base + (dense ? 25 : 0) + lengthAdd + accentAdd}.00+`;
-        document.getElementById('estimate-time').textContent = time;
-        preview.title = description;
+        document.getElementById('estimate-time').textContent  = time;
       }
       configInputs.forEach(input => input.addEventListener('change', updateStylePreview));
       updateStylePreview();
 
-      
 
-      // Calendar planning selection.
-      document.querySelectorAll('.calendar-cell').forEach(cell => cell.addEventListener('click', () => {
-        document.querySelectorAll('.calendar-cell').forEach(item => item.classList.remove('selected'));
-        cell.classList.add('selected');
-      }));
-      document.querySelectorAll('.time-box').forEach(box => box.addEventListener('click', () => {
-        document.querySelectorAll('.time-box').forEach(item => item.classList.remove('selected'));
-        box.classList.add('selected');
-      }));
+      // Calendar planning — dynamically build current month.
+      (function buildCalendar() {
+        const now = new Date();
+        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const month = now.getMonth();
+        const year  = now.getFullYear();
+        const today = now.getDate();
+        document.getElementById('cal-label').textContent = `Selected Calendar Window: ${monthNames[month]} ${year}`;
+        const wrap = document.getElementById('cal-wrap');
+        const firstDay   = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        // Blank spacers so day 1 lands on the correct weekday column
+        for (let i = 0; i < firstDay; i++) {
+          wrap.appendChild(document.createElement('div'));
+        }
+        for (let d = 1; d <= daysInMonth; d++) {
+          const cell = document.createElement('div');
+          const dayOfWeek = (firstDay + d - 1) % 7; // 0 = Sunday
+          const classes   = ['calendar-cell'];
+          if (d === today) classes.push('selected', 'today');
+          if (dayOfWeek === 0) classes.push('sunday');
+          cell.className   = classes.join(' ');
+          cell.textContent = d;
+          cell.addEventListener('click', () => {
+            document.querySelectorAll('.calendar-cell').forEach(c => c.classList.remove('selected'));
+            cell.classList.add('selected');
+          });
+          wrap.appendChild(cell);
+        }
+      })();
 
-      // Personalized care guidance.
-      document.getElementById('routine-button').addEventListener('click', () => {
-        const panel = document.getElementById('care');
-        const selects = panel.querySelectorAll('select');
-        const stage = selects[0].selectedIndex;
-        const scalp = selects[1].selectedIndex;
-        const cadence = ['Keep manipulation low and ask your loctician before changing your wash cadence.', 'Separate roots gently and protect your locs nightly with satin.', 'Plan regular cleansing, hydration, and maintenance every 4–8 weeks as advised.'][stage];
-        const hydration = ['Use a light water-based mist and avoid buildup.', 'Use a light mist plus a small amount of oil on the scalp.', 'Favor lightweight hydration and clarify only when needed.'][scalp];
-        document.getElementById('routine-output').textContent = `${cadence} ${hydration}`;
+      // Time box — click & keyboard
+      document.querySelectorAll('.time-box').forEach(box => {
+        const sel = () => {
+          document.querySelectorAll('.time-box').forEach(b => b.classList.remove('selected'));
+          box.classList.add('selected');
+        };
+        box.addEventListener('click', sel);
+        box.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sel(); } });
       });
+
+      // Care routine generator
+      document.getElementById('routine-button').addEventListener('click', () => {
+        const stage = document.getElementById('care-stage').selectedIndex;
+        const scalp = document.getElementById('care-scalp').selectedIndex;
+        const cadences   = ['Keep manipulation low and ask your loctician before changing your wash cadence.', 'Separate roots gently and protect your locs nightly with a satin wrap or bonnet.', 'Plan regular cleansing, hydration, and maintenance every 4–8 weeks as advised.'];
+        const hydrations = ['Use a light water-based mist and avoid buildup.', 'Use a light mist plus a small amount of oil on the scalp.', 'Favor lightweight hydration and clarify only when needed.'];
+        document.getElementById('routine-output').textContent = `${cadences[stage]} ${hydrations[scalp]}`;
+      });
+
+      // Gallery lightbox
+      const lb     = document.getElementById('lightbox');
+      const lbImg  = document.getElementById('lightbox-img');
+      const lbCap  = document.getElementById('lightbox-caption');
+      const lbX    = document.getElementById('lightbox-close');
+      function openLB(src, alt, cap) { lbImg.src = src; lbImg.alt = alt; lbCap.textContent = cap; lb.classList.add('open'); document.body.style.overflow = 'hidden'; lbX.focus(); }
+      function closeLB()             { lb.classList.remove('open'); document.body.style.overflow = ''; }
+      document.querySelectorAll('.gallery-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const img = card.querySelector('img');
+          openLB(img.src, img.alt, card.dataset.caption || card.querySelector('.gallery-title').textContent);
+        });
+      });
+      lbX.addEventListener('click', closeLB);
+      lb.addEventListener('click', e => { if (e.target === lb) closeLB(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLB(); });
+
+      // Mobile nav toggle
+      const navToggle = document.getElementById('nav-toggle');
+      const mainNav   = document.getElementById('main-nav');
+      navToggle.addEventListener('click', () => {
+        const open = mainNav.classList.toggle('open');
+        navToggle.classList.toggle('open', open);
+        navToggle.setAttribute('aria-expanded', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      });
+      mainNav.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          mainNav.classList.remove('open');
+          navToggle.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+        });
+      });
+
+      // Active nav highlighting via IntersectionObserver
+      const navLinks = document.querySelectorAll('nav.main-nav a[href^="#"]');
+      const ioOpts   = { rootMargin: '-38% 0px -55% 0px' };
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            navLinks.forEach(l => l.classList.remove('active'));
+            const active = document.querySelector(`nav.main-nav a[href="#${entry.target.id}"]`);
+            if (active) active.classList.add('active');
+          }
+        });
+      }, ioOpts);
+      document.querySelectorAll('[id]').forEach(s => io.observe(s));
     </script>
 
 </body>
