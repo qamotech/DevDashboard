@@ -5,7 +5,7 @@
   "scripts": {
     "check": "python quality_check.py",
     "check:links": "python scan_links.py",
-    "build": "npm run check"
+    "build": "npm run check && node build-site.mjs"
   },
   "devDependencies": {
     "cssnano": "^8.0.2",
