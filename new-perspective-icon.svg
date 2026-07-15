@@ -1,14 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="New Perspective Painting placeholder logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="New Perspective Painting logo">
   <defs>
-    <linearGradient id="g" x1="20" y1="18" x2="108" y2="112" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f7d36b"/>
-      <stop offset=".45" stop-color="#58c7b4"/>
-      <stop offset="1" stop-color="#4057a8"/>
+    <linearGradient id="background" x1="16" y1="12" x2="112" y2="116" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#17213a"/>
+      <stop offset="1" stop-color="#0a1020"/>
+    </linearGradient>
+    <linearGradient id="perspective" x1="45" y1="28" x2="108" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4f80f4"/>
+      <stop offset="1" stop-color="#235ad6"/>
     </linearGradient>
   </defs>
-  <rect width="128" height="128" rx="28" fill="#111827"/>
-  <path d="M26 86 L64 30 L102 86 Z" fill="none" stroke="url(#g)" stroke-width="10" stroke-linejoin="round"/>
-  <path d="M40 86 H88" stroke="#fcf9f2" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="64" cy="65" r="11" fill="url(#g)"/>
-  <path d="M29 99 C48 89 77 109 99 95" fill="none" stroke="#fcf9f2" stroke-width="7" stroke-linecap="round"/>
+
+  <rect width="128" height="128" rx="28" fill="url(#background)"/>
+  <path d="M64 18 110 40v48L64 110Z" fill="url(#perspective)" opacity=".72"/>
+  <path d="M31 89V39l66 50V39" fill="none" stroke="#fffaf0" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M27 105h58" fill="none" stroke="#ff6338" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="101" cy="103" r="7" fill="#f3b83f"/>
 </svg>

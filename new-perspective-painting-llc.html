@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/svg+xml" sizes="any" href="new-perspective-icon.svg">
-  <link rel="shortcut icon" href="new-perspective-icon.svg">
-  <link rel="apple-touch-icon" href="new-perspective-icon.svg">
+  <link rel="icon" type="image/svg+xml" sizes="any" href="new-perspective-icon.svg?v=20260715">
+  <link rel="shortcut icon" href="new-perspective-icon.svg?v=20260715">
+  <link rel="apple-touch-icon" href="new-perspective-icon.svg?v=20260715">
   <meta name="description"
     content="New Perspective Painting LLC provides interior, exterior, commercial, cabinet, mural, and color consultation services.">
   <title>New Perspective Painting LLC</title>
@@ -947,6 +947,209 @@ footer {
   }
 }
 
+/* 2026 studio redesign */
+:root {
+  --ink: #17213a;
+  --muted: #66708a;
+  --paper: #f3f4ef;
+  --panel: #ffffff;
+  --field: #f8f9f5;
+  --line: rgba(23, 33, 58, 0.13);
+  --charcoal: #111a31;
+  --green: #235ad6;
+  --green-2: #7d91c9;
+  --clay: #ff6338;
+  --gold: #f3b83f;
+  --cream: #e9edff;
+  --shadow: 0 24px 70px rgba(23, 33, 58, 0.12);
+  --radius: 22px;
+}
+
+body.dark-mode {
+  --ink: #f5f7ff;
+  --muted: #b8c0d6;
+  --paper: #0c1120;
+  --panel: #141b2f;
+  --field: #10172a;
+  --line: rgba(235, 239, 255, 0.14);
+  --charcoal: #080d1a;
+  --green: #86a9ff;
+  --green-2: #4f6fbf;
+  --clay: #ff7d57;
+  --cream: #18213b;
+}
+
+body {
+  background-image:
+    radial-gradient(circle at 4% 10%, rgba(255, 99, 56, 0.09), transparent 24rem),
+    radial-gradient(circle at 90% 34%, rgba(35, 90, 214, 0.09), transparent 28rem);
+}
+
+.site-header {
+  inset: 18px clamp(14px, 3vw, 44px) auto;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 18px;
+  padding: 10px 12px 10px 18px;
+  background: rgba(14, 23, 44, 0.78);
+  box-shadow: 0 16px 45px rgba(8, 14, 30, 0.18);
+}
+
+.brand-logo { width: 38px; height: 38px; }
+.brand span { letter-spacing: -0.035em; }
+.nav-links a { border-radius: 12px; }
+.theme-switch { border-radius: 13px; }
+.theme-switch span { border-radius: 9px; }
+
+.hero {
+  min-height: 96vh;
+  padding: 160px clamp(22px, 8vw, 112px) 82px;
+  border-radius: 0 0 54px 54px;
+}
+
+.hero-image { filter: saturate(.78) contrast(1.06); }
+.hero-shade {
+  background:
+    linear-gradient(90deg, rgba(9, 17, 37, .94) 0%, rgba(9, 17, 37, .7) 44%, rgba(9, 17, 37, .14) 82%),
+    linear-gradient(0deg, rgba(9, 17, 37, .72), transparent 56%);
+}
+.hero-content { max-width: 940px; }
+.eyebrow { letter-spacing: .14em; }
+h1, h2 { letter-spacing: -.055em; }
+h1 { max-width: 900px; font-size: clamp(3.15rem, 7.7vw, 7rem); }
+.hero-copy { max-width: 720px; }
+.button, button { border-radius: 14px; }
+.primary, button { background: var(--clay); }
+.secondary { backdrop-filter: blur(8px); }
+
+.trust-strip {
+  width: min(1180px, calc(100% - 36px));
+  margin: -30px auto 0;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+}
+.trust-strip strong { color: var(--clay); }
+
+.section { max-width: 1440px; margin-inline: auto; }
+.intro { padding-bottom: 54px; }
+.intro h2 { max-width: 720px; }
+.services { padding-top: 0; grid-template-columns: repeat(4, 1fr); }
+.services article {
+  min-height: 290px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 24px;
+  background: #182443 !important;
+}
+.services article::after {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -62px;
+  bottom: -64px;
+  border: 28px solid color-mix(in srgb, var(--clay) 75%, transparent);
+  border-radius: 50%;
+  opacity: calc(.18 + var(--card-index, .1));
+}
+.services article:nth-child(3n + 2) { --clay: #4f80f4; }
+.services article:nth-child(3n) { --clay: #f3b83f; }
+
+.showcase {
+  max-width: none;
+  grid-template-columns: minmax(260px, .72fr) minmax(0, 1.28fr);
+  border-radius: 42px;
+  margin: 24px clamp(14px, 3vw, 44px);
+}
+.gallery { gap: 20px; }
+figure { border-radius: 26px; }
+figure img { transition: transform .6s ease; }
+figure:hover img { transform: scale(1.025); }
+
+.ai-tool {
+  max-width: none;
+  margin: 24px clamp(14px, 3vw, 44px);
+  border-radius: 42px;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(68, 112, 224, .34), transparent 28rem),
+    #111a31;
+}
+.visualizer { border-radius: 28px; background: rgba(255,255,255,.09); }
+.tool-controls { grid-template-columns: minmax(160px,.75fr) minmax(220px,1.2fr) auto; }
+.file-drop, .canvas-wrap, .zone-picker span { border-radius: 16px; }
+.canvas-wrap { min-height: 240px; }
+.canvas-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  align-content: center;
+  color: white;
+  background: rgba(8, 13, 26, .68);
+  backdrop-filter: blur(7px);
+}
+.canvas-loading[hidden] { display: none; }
+.spinner { width: 38px; height: 38px; border: 4px solid rgba(255,255,255,.25); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.tool-hint {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 14px;
+  color: rgba(255,255,255,.78);
+  background: rgba(255,255,255,.06);
+  font-size: .88rem;
+  line-height: 1.55;
+}
+.tool-hint strong { color: #fff; }
+.visualizer-options { display: grid; grid-template-columns: repeat(4, minmax(120px,1fr)); gap: 12px; margin: 14px 0; }
+.visualizer-options label { color: rgba(255,255,255,.75); }
+.visualizer-options input, .visualizer-options select { color: white; background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); }
+.visualizer-options select option { color: #17213a; }
+.blend-control { display: grid; grid-template-columns: auto 48px; align-items: end; gap: 10px; }
+.blend-control input[type="checkbox"] { width: 18px; height: 18px; align-self: center; }
+.blend-control input[type="color"] { padding: 5px; }
+.wall-controls { grid-template-columns: minmax(0,1.15fr) minmax(0,.9fr) minmax(88px,.38fr) minmax(118px,.55fr); }
+.swatches button { border-radius: 50%; }
+.tool-actions { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: flex-end; }
+.status-message { min-height: 22px; margin: 10px 0 0; color: #ffd6c8; font-size: .86rem; }
+
+.portfolio { padding-top: 96px; }
+.feature-grid article, .project-list article { border-radius: 22px; }
+.feature-grid article { transition: transform .2s ease, border-color .2s ease; }
+.feature-grid article:hover { transform: translateY(-5px); border-color: rgba(35,90,214,.35); }
+.project-wall { max-width: none; margin: 20px clamp(14px, 3vw, 44px); border-radius: 42px; }
+.proof { max-width: none; margin: 20px clamp(14px, 3vw, 44px); border-radius: 42px; }
+.proof-card, .proof-metrics { border-radius: 24px; }
+.process { max-width: none; margin: 20px clamp(14px, 3vw, 44px); border-radius: 42px; background: #235ad6; }
+.steps { border-radius: 22px; }
+.quote { max-width: none; margin: 20px clamp(14px, 3vw, 44px) 44px; border-radius: 42px; padding: clamp(42px, 7vw, 92px); }
+form { border-radius: 24px; }
+footer { margin: 0 14px 14px; border-radius: 22px; }
+
+@media (max-width: 1000px) {
+  .services { grid-template-columns: repeat(2, 1fr); }
+  .visualizer-options { grid-template-columns: repeat(2, 1fr); }
+  .wall-controls { grid-template-columns: 1fr 1fr; }
+  .tool-actions { grid-column: 1 / -1; }
+}
+@media (max-width: 620px) {
+  .site-header { inset: 10px 10px auto; }
+  .hero { padding-top: 130px; border-radius: 0 0 30px 30px; }
+  .trust-strip { margin-top: -18px; }
+  .services, .visualizer-options, .wall-controls { grid-template-columns: 1fr; }
+  .tool-actions { grid-column: auto; }
+  .ai-tool, .showcase, .project-wall, .proof, .process, .quote { margin-inline: 10px; border-radius: 26px; }
+  .tool-actions { justify-content: stretch; }
+  .tool-actions button { flex: 1; }
+}
+
 </style>
 </head>
 
@@ -1058,6 +1261,7 @@ footer {
         </div>
       </div>
       <div class="visualizer" aria-label="AI wall color preview tool">
+        <p class="tool-hint"><strong>How the zones work:</strong> the dashed guide divides your photo into three perspective-shaped wall areas. Choose a zone, then apply a color. These boundaries are a quick planning aid—not automatic wall detection.</p>
         <div class="tool-controls">
           <label class="file-drop">
             <input id="roomUpload" type="file" accept="image/*">
@@ -1069,9 +1273,35 @@ footer {
           </label>
           <button class="tool-button" type="button" id="loadDriveImage">Load Link</button>
         </div>
+        <p class="status-message" id="toolStatus" role="status" aria-live="polite"></p>
         <div class="canvas-wrap">
           <canvas id="wallCanvas" width="1200" height="760" aria-label="Room color preview canvas"></canvas>
           <div class="canvas-empty" id="canvasEmpty">Upload a room photo to begin</div>
+          <div class="canvas-loading" id="canvasLoading" hidden>
+            <span class="spinner" aria-hidden="true"></span>
+            <span>Preparing your room preview…</span>
+          </div>
+        </div>
+        <div class="visualizer-options">
+          <label>Photo fit
+            <select id="imageFit">
+              <option value="cover">Fill frame</option>
+              <option value="contain">Show full photo</option>
+            </select>
+          </label>
+          <label>Paint finish
+            <select id="paintFinish">
+              <option value="matte">Matte</option>
+              <option value="eggshell" selected>Eggshell</option>
+              <option value="satin">Satin</option>
+            </select>
+          </label>
+          <label>Color strength
+            <input id="paintStrength" type="range" min="20" max="75" value="48">
+          </label>
+          <label>Ambient shade
+            <input id="ambientShade" type="range" min="0" max="35" value="8">
+          </label>
         </div>
         <div class="wall-controls">
           <fieldset class="zone-picker">
@@ -1088,10 +1318,17 @@ footer {
             <button type="button" data-color="#3c4141" aria-label="Soft charcoal"></button>
           </div>
           <label class="custom-color">
-            Custom
+            Main color
             <input id="customColor" type="color" value="#1f6266">
           </label>
-          <button class="tool-button ghost" type="button" id="clearColors">Clear Colors</button>
+          <label class="blend-control">Blend color
+            <input id="blendColor" type="color" value="#f1c27d">
+            <input id="useBlend" type="checkbox" aria-label="Use a second blended color in the selected wall zone">
+          </label>
+          <div class="tool-actions">
+            <button class="tool-button ghost" type="button" id="clearColors">Clear</button>
+            <button class="tool-button" type="button" id="savePreview">Save PNG</button>
+          </div>
         </div>
       </div>
     </section>
@@ -1184,11 +1421,30 @@ footer {
     const canvas = document.getElementById('wallCanvas');
     const ctx = canvas.getContext('2d');
     const emptyState = document.getElementById('canvasEmpty');
+    const loadingState = document.getElementById('canvasLoading');
+    const toolStatus = document.getElementById('toolStatus');
     const uploadInput = document.getElementById('roomUpload');
     const driveInput = document.getElementById('driveLink');
+    const customColor = document.getElementById('customColor');
+    const blendColor = document.getElementById('blendColor');
+    const useBlend = document.getElementById('useBlend');
+    const imageFit = document.getElementById('imageFit');
+    const paintFinish = document.getElementById('paintFinish');
+    const paintStrength = document.getElementById('paintStrength');
+    const ambientShade = document.getElementById('ambientShade');
     const activeZones = { left: null, center: null, right: null };
     const roomImage = new Image();
     let hasRoomImage = false;
+    let localObjectUrl = null;
+
+    const restyledImages = {
+      'Freshly painted storefront exterior with clean geometric facade': 'npp-hero-studio.webp',
+      'Freshly painted interior room with a perspective mural accent wall': 'npp-interior-studio.webp',
+      'Paint brushes and color swatches near a freshly painted wall': 'npp-color-studio.webp'
+    };
+    document.querySelectorAll('img[alt]').forEach((image) => {
+      if (restyledImages[image.alt]) image.src = restyledImages[image.alt];
+    });
 
     if (savedTheme === 'dark') {
       document.body.classList.add('dark-mode');
@@ -1207,9 +1463,21 @@ footer {
       return document.querySelector('input[name="wallZone"]:checked').value;
     }
 
-    function driveDirectUrl(url) {
-      const match = url.match(/\/d\/([^/]+)/) || url.match(/[?&]id=([^&]+)/);
-      return match ? `https://drive.google.com/uc?export=view&id=${match[1]}` : url;
+    function parseImageUrl(value) {
+      let url;
+      try {
+        url = new URL(value);
+      } catch {
+        throw new Error('Enter a complete image link beginning with https://');
+      }
+      if (url.protocol !== 'https:') throw new Error('For your security, only HTTPS image links are supported.');
+
+      if (url.hostname === 'drive.google.com' || url.hostname === 'docs.google.com') {
+        const match = url.pathname.match(/\/d\/([^/]+)/) || url.search.match(/[?&]id=([^&]+)/);
+        if (!match) throw new Error('That Google Drive link does not include a recognizable file ID.');
+        return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+      }
+      return url.href;
     }
 
     function drawPlaceholder() {
@@ -1237,48 +1505,108 @@ footer {
       return shapes[zone];
     }
 
-    function fillWall(zone, color) {
+    function fillWall(zone, paint) {
       const points = wallShape(zone);
+      const alpha = Number(paintStrength.value) / 100;
+      const finishLight = { matte: 0.05, eggshell: 0.13, satin: 0.22 }[paintFinish.value];
       ctx.save();
       ctx.beginPath();
       points.forEach(([x, y], index) => index ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
       ctx.closePath();
       ctx.globalCompositeOperation = 'multiply';
-      ctx.fillStyle = color;
-      ctx.globalAlpha = 0.48;
+      if (paint.blend) {
+        const gradient = ctx.createLinearGradient(points[0][0], points[0][1], points[2][0], points[2][1]);
+        gradient.addColorStop(0, paint.color);
+        gradient.addColorStop(1, paint.blend);
+        ctx.fillStyle = gradient;
+      } else {
+        ctx.fillStyle = paint.color;
+      }
+      ctx.globalAlpha = alpha;
       ctx.fill();
       ctx.globalCompositeOperation = 'screen';
-      ctx.globalAlpha = 0.16;
+      ctx.globalAlpha = finishLight;
       ctx.fill();
+      if (paintFinish.value === 'satin') {
+        const sheen = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        sheen.addColorStop(0, 'rgba(255,255,255,0)');
+        sheen.addColorStop(.48, 'rgba(255,255,255,.28)');
+        sheen.addColorStop(.62, 'rgba(255,255,255,0)');
+        ctx.globalCompositeOperation = 'screen';
+        ctx.globalAlpha = .35;
+        ctx.fillStyle = sheen;
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function drawZoneGuide() {
+      const zone = selectedZone();
+      const points = wallShape(zone);
+      ctx.save();
+      ctx.beginPath();
+      points.forEach(([x, y], index) => index ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+      ctx.closePath();
+      ctx.setLineDash([14, 10]);
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = 'rgba(255,255,255,.92)';
+      ctx.shadowColor = 'rgba(0,0,0,.55)';
+      ctx.shadowBlur = 8;
+      ctx.stroke();
       ctx.restore();
     }
 
     function renderPreview() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (hasRoomImage) {
-        const scale = Math.max(canvas.width / roomImage.width, canvas.height / roomImage.height);
+        const scaleMethod = imageFit.value === 'contain' ? Math.min : Math.max;
+        const scale = scaleMethod(canvas.width / roomImage.width, canvas.height / roomImage.height);
         const width = roomImage.width * scale;
         const height = roomImage.height * scale;
+        ctx.fillStyle = '#101522';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(roomImage, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
       } else {
         drawPlaceholder();
       }
 
-      Object.entries(activeZones).forEach(([zone, color]) => {
-        if (color) fillWall(zone, color);
+      Object.entries(activeZones).forEach(([zone, paint]) => {
+        if (paint) fillWall(zone, paint);
       });
+      if (hasRoomImage && Number(ambientShade.value)) {
+        const shade = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        shade.addColorStop(0, 'rgba(6,12,25,0)');
+        shade.addColorStop(1, `rgba(6,12,25,${Number(ambientShade.value) / 100})`);
+        ctx.fillStyle = shade;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      if (hasRoomImage) drawZoneGuide();
     }
 
-    function setImageSource(src) {
+    function setLoading(isLoading) {
+      loadingState.hidden = !isLoading;
+      uploadInput.disabled = isLoading;
+      document.getElementById('loadDriveImage').disabled = isLoading;
+    }
+
+    function setImageSource(src, isLocal = false) {
+      setLoading(true);
+      toolStatus.textContent = '';
       roomImage.crossOrigin = 'anonymous';
       roomImage.onload = () => {
         hasRoomImage = true;
         emptyState.hidden = true;
+        setLoading(false);
+        toolStatus.textContent = 'Preview ready. The dashed outline shows the active wall zone.';
         renderPreview();
       };
       roomImage.onerror = () => {
+        setLoading(false);
         emptyState.hidden = false;
-        emptyState.textContent = 'Could not load that image link. Try a public image or local upload.';
+        emptyState.textContent = 'Image unavailable';
+        toolStatus.textContent = isLocal
+          ? 'That file could not be read as an image. Try PNG, JPEG, or WebP.'
+          : 'We could not access that image. Confirm the Drive file is shared with “Anyone with the link” or use a direct public image URL.';
       };
       roomImage.src = src;
     }
@@ -1286,33 +1614,83 @@ footer {
     uploadInput.addEventListener('change', () => {
       const file = uploadInput.files[0];
       if (!file) return;
-      setImageSource(URL.createObjectURL(file));
+      if (!file.type.startsWith('image/')) {
+        toolStatus.textContent = 'Choose a PNG, JPEG, WebP, or another image file.';
+        return;
+      }
+      if (localObjectUrl) URL.revokeObjectURL(localObjectUrl);
+      localObjectUrl = URL.createObjectURL(file);
+      setImageSource(localObjectUrl, true);
     });
 
     document.getElementById('loadDriveImage').addEventListener('click', () => {
-      if (!driveInput.value.trim()) return;
-      setImageSource(driveDirectUrl(driveInput.value.trim()));
+      if (!driveInput.value.trim()) {
+        toolStatus.textContent = 'Paste a public Google Drive or HTTPS image link first.';
+        driveInput.focus();
+        return;
+      }
+      try {
+        setImageSource(parseImageUrl(driveInput.value.trim()));
+      } catch (error) {
+        toolStatus.textContent = error.message;
+      }
     });
 
     document.querySelectorAll('.swatches button').forEach((button) => {
       button.style.setProperty('--swatch', button.dataset.color);
       button.addEventListener('click', () => {
-        activeZones[selectedZone()] = button.dataset.color;
-        document.getElementById('customColor').value = button.dataset.color;
+        customColor.value = button.dataset.color;
+        activeZones[selectedZone()] = { color: button.dataset.color, blend: useBlend.checked ? blendColor.value : null };
         renderPreview();
       });
     });
 
-    document.getElementById('customColor').addEventListener('input', (event) => {
-      activeZones[selectedZone()] = event.target.value;
+    customColor.addEventListener('input', (event) => {
+      activeZones[selectedZone()] = { color: event.target.value, blend: useBlend.checked ? blendColor.value : null };
       renderPreview();
     });
+
+    function updateSelectedBlend() {
+      activeZones[selectedZone()] = { color: customColor.value, blend: useBlend.checked ? blendColor.value : null };
+      renderPreview();
+    }
+    blendColor.addEventListener('input', updateSelectedBlend);
+    useBlend.addEventListener('change', updateSelectedBlend);
+    document.querySelectorAll('input[name="wallZone"]').forEach((radio) => radio.addEventListener('change', () => {
+      const paint = activeZones[selectedZone()];
+      if (paint) {
+        customColor.value = paint.color;
+        if (paint.blend) blendColor.value = paint.blend;
+        useBlend.checked = Boolean(paint.blend);
+      }
+      renderPreview();
+    }));
+    [imageFit, paintFinish, paintStrength, ambientShade].forEach((control) => control.addEventListener('input', renderPreview));
 
     document.getElementById('clearColors').addEventListener('click', () => {
       activeZones.left = null;
       activeZones.center = null;
       activeZones.right = null;
+      useBlend.checked = false;
+      toolStatus.textContent = 'All wall colors cleared.';
       renderPreview();
+    });
+
+    document.getElementById('savePreview').addEventListener('click', () => {
+      if (!hasRoomImage) {
+        toolStatus.textContent = 'Upload a room photo before saving a preview.';
+        return;
+      }
+      try {
+        renderPreview();
+        const link = document.createElement('a');
+        link.download = `new-perspective-paint-preview-${new Date().toISOString().slice(0, 10)}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        toolStatus.textContent = 'Preview saved as a PNG.';
+      } catch {
+        toolStatus.textContent = 'This remote image blocks exporting. Download it first, then upload the local file to save your preview.';
+      }
     });
 
     renderPreview();
