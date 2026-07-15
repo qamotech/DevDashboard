@@ -17,7 +17,7 @@ SERVER.mkdir(parents=True)
 
 for page in ROOT.glob("*.html"):
     shutil.copy2(page, CLIENT / page.name)
-for extension in ("*.mp3", "*.png", "*.ico", "*.svg"):
+for extension in ("*.mp3", "*.png", "*.webp", "*.ico", "*.svg"):
     for asset in ROOT.glob(extension):
         shutil.copy2(asset, CLIENT / asset.name)
 shutil.copy2(ROOT / "page-manifest.json", CLIENT / "page-manifest.json")
