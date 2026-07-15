@@ -33,6 +33,18 @@ class Audit(HTMLParser):
         for name in ("href", "src", "poster", "data"):
             if values.get(name):
                 self.refs.append((name, values[name], self.getpos()[0]))
+        if tag == "meta":
+            meta_name = (values.get("property") or values.get("name", "")).lower()
+            if meta_name in {"og:image", "twitter:image"} and values.get("content"):
+                self.refs.append(("content", values["content"], self.getpos()[0]))
+            if values.get("http-equiv", "").lower() == "refresh":
+                match = re.search(r"\burl\s*=\s*(.+)$", values.get("content", ""), re.I)
+                if match:
+                    self.refs.append(("content", match.group(1).strip(" \t'\""), self.getpos()[0]))
+        onclick = values.get("onclick", "")
+        match = re.search(r"launchApp\(\s*['\"][^'\"]*['\"]\s*,\s*['\"]([^'\"]+)", onclick)
+        if match:
+            self.refs.append(("onclick", match.group(1), self.getpos()[0]))
         if values.get("target", "").lower() == "_blank":
             rel = set(values.get("rel", "").lower().split())
             if not {"noopener", "noreferrer"}.issubset(rel):

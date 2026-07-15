@@ -5,14 +5,12 @@
   "scripts": {
     "check": "python quality_check.py",
     "check:links": "python scan_links.py",
-    "build": "npm run check && python build_site.py",
-    "lhci": "lhci autorun"
+    "build": "npm run check"
   },
   "devDependencies": {
-    "esbuild": "^0.18.0",
-    "postcss": "^8.4.24",
-    "postcss-cli": "^10.1.0",
-    "cssnano": "^5.1.14",
-    "@lhci/cli": "^0.15.1"
+    "cssnano": "^8.0.2",
+    "esbuild": "^0.28.1",
+    "postcss": "^8.5.19",
+    "postcss-cli": "^11.0.1"
   }
 }

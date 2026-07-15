@@ -363,30 +363,18 @@ const canvas = document.getElementById('game-canvas');
     canvas.width = C_WIDTH;
     canvas.height = C_HEIGHT;
 
-    function loadSprite(src, onLoad) {
-        const img = new Image();
-        if (onLoad) img.onload = () => setTimeout(onLoad, 0);
-        img.src = src;
-        return img;
+    // Keep distinct image slots so the procedural artwork remains the fallback
+    // without requesting legacy asset files that are no longer shipped.
+    function createSpriteSlot() {
+        return new Image();
     }
 
-    const towerAssetBase = 'assets/';
     const towerAssets = {
-        electric: loadSprite(towerAssetBase + 'elec.png', () => drawPreviews()),
-        fire: loadSprite(towerAssetBase + 'fire.png', () => drawPreviews()),
-        rock: loadSprite(towerAssetBase + 'rock.png', () => drawPreviews()),
-        water: loadSprite(towerAssetBase + 'h2o.png', () => drawPreviews()),
-        ice: loadSprite(towerAssetBase + 'ice.png', () => drawPreviews()),
-        wind: loadSprite(towerAssetBase + 'wind.png', () => drawPreviews()),
-        magnet: loadSprite(towerAssetBase + 'mags.svg', () => drawPreviews()),
-        qamelotPrime: loadSprite(towerAssetBase + 'qamelot-prime.png', () => drawPreviews()),
-        scorpion: loadSprite(towerAssetBase + 'scorpion.png'),
-        electricShot: loadSprite(towerAssetBase + 'selec.png'),
-        fireShot: loadSprite(towerAssetBase + 'sfire.svg'),
-        rockShot: loadSprite(towerAssetBase + 'srock.png'),
-        waterShot: loadSprite(towerAssetBase + 'swater.png'),
-        windShot: loadSprite(towerAssetBase + 'swind.png'),
-        magnetShot: loadSprite(towerAssetBase + 'smag.svg')
+        electric: createSpriteSlot(), fire: createSpriteSlot(), rock: createSpriteSlot(),
+        water: createSpriteSlot(), ice: createSpriteSlot(), wind: createSpriteSlot(),
+        magnet: createSpriteSlot(), qamelotPrime: createSpriteSlot(), scorpion: createSpriteSlot(),
+        electricShot: createSpriteSlot(), fireShot: createSpriteSlot(), rockShot: createSpriteSlot(),
+        waterShot: createSpriteSlot(), windShot: createSpriteSlot(), magnetShot: createSpriteSlot()
     };
 
     let frameCount = 0;
@@ -1917,6 +1905,5 @@ const canvas = document.getElementById('game-canvas');
 
 </body>
 </html>
-
 
 

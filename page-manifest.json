@@ -6,18 +6,6 @@
     "category": "Experiments & Archives"
   },
   {
-    "number": 2,
-    "title": "BPTKA: Tactical Defense",
-    "file": "bptka-tactical-defense.html",
-    "category": "Games & Simulations"
-  },
-  {
-    "number": 3,
-    "title": "Bruce Lee Interactive Studio",
-    "file": "bruce-lee-interactive-studio.html",
-    "category": "Experiments & Archives"
-  },
-  {
     "number": 4,
     "title": "WHO//ROAD — Neon Conversation Lab",
     "file": "who-road-convo-lab.html",
@@ -84,18 +72,6 @@
     "category": "Developer Studios"
   },
   {
-    "number": 15,
-    "title": "DevDash",
-    "file": "devdash.html",
-    "category": "Developer Studios"
-  },
-  {
-    "number": 16,
-    "title": "DevDash Pages",
-    "file": "devdash-pages.html",
-    "category": "Developer Studios"
-  },
-  {
     "number": 17,
     "title": "Push Complete",
     "file": "push-complete.html",
@@ -105,12 +81,6 @@
     "number": 18,
     "title": "Qamelot Conquest: Super Arcade Edition",
     "file": "qamelot-conquest-super-arcade-edition.html",
-    "category": "Games & Simulations"
-  },
-  {
-    "number": 19,
-    "title": "BPTKA: Tactical Defense - Sprite Version",
-    "file": "bptka-tactical-defense-sprite-version.html",
     "category": "Games & Simulations"
   },
   {
@@ -154,12 +124,6 @@
     "title": "Mecha Strike: Transformer Protocol v5",
     "file": "mecha-strike.html",
     "category": "Games & Simulations"
-  },
-  {
-    "number": 27,
-    "title": "Lattice — The AI Context Lab",
-    "file": "lattice-the-ai-context-lab.html",
-    "category": "Experiments & Archives"
   },
   {
     "number": 28,
@@ -208,12 +172,6 @@
     "title": "Qamelot Menu — Every Webpage",
     "file": "index.html",
     "category": "Experiments & Archives"
-  },
-  {
-    "number": 36,
-    "title": "BPTKA: Tactical Defense",
-    "file": "bptka-tactical-defense-qamelottacticaldefensev1.html",
-    "category": "Games & Simulations"
   },
   {
     "number": 37,
