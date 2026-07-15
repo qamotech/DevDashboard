@@ -18,7 +18,7 @@ class Audit(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.refs: list[tuple[str, str, int]] = []
-        self.title = self.lang = self.charset = self.viewport = False
+        self.title = self.lang = self.charset = self.viewport = self.favicon = False
         self.unsafe_blank: list[int] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
@@ -29,6 +29,7 @@ class Audit(HTMLParser):
             "charset" in values or values.get("http-equiv", "").lower() == "content-type"
         )
         self.viewport |= tag == "meta" and values.get("name", "").lower() == "viewport"
+        self.favicon |= tag == "link" and "icon" in values.get("rel", "").lower().split()
         for name in ("href", "src", "poster", "data"):
             if values.get(name):
                 self.refs.append((name, values[name], self.getpos()[0]))
@@ -54,6 +55,8 @@ for page in PAGES:
     ):
         if not present:
             warnings.append(f"{page.name}: missing {label}")
+    if not audit.favicon:
+        errors.append(f"{page.name}: missing favicon")
     for line in audit.unsafe_blank:
         errors.append(f'{page.name}:{line}: target="_blank" needs rel="noopener noreferrer"')
     for _, raw, line in audit.refs:

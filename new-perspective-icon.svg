@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="New Perspective Painting placeholder logo">
+  <defs>
+    <linearGradient id="g" x1="20" y1="18" x2="108" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f7d36b"/>
+      <stop offset=".45" stop-color="#58c7b4"/>
+      <stop offset="1" stop-color="#4057a8"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="#111827"/>
+  <path d="M26 86 L64 30 L102 86 Z" fill="none" stroke="url(#g)" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M40 86 H88" stroke="#fcf9f2" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="64" cy="65" r="11" fill="url(#g)"/>
+  <path d="M29 99 C48 89 77 109 99 95" fill="none" stroke="#fcf9f2" stroke-width="7" stroke-linecap="round"/>
+</svg>
