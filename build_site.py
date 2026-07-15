@@ -17,6 +17,8 @@ SERVER.mkdir(parents=True)
 
 for page in ROOT.glob("*.html"):
     shutil.copy2(page, CLIENT / page.name)
+for audio in ROOT.glob("*.mp3"):
+    shutil.copy2(audio, CLIENT / audio.name)
 shutil.copy2(ROOT / "page-manifest.json", CLIENT / "page-manifest.json")
 
 (SERVER / "index.js").write_text(

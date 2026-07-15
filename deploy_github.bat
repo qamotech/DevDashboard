@@ -36,7 +36,7 @@ if not errorlevel 1 if exist "package.json" (
 echo [3/7] Preparing the complete flat site collection...
 git add -u || call :fail "Tracked changes could not be staged."
 if errorlevel 1 exit /b 1
-git add -- "*.html" "*.json" "*.py" "*.md" "*.bat" ".gitignore" || call :fail "Deployable files could not be staged."
+git add -- "*.html" "*.mp3" "*.json" "*.py" "*.md" "*.bat" ".gitignore" || call :fail "Deployable files could not be staged."
 if errorlevel 1 exit /b 1
 
 git diff --cached --quiet
@@ -99,6 +99,12 @@ echo  ==========================================================
 echo    Repository: %ORIGIN_URL%
 echo    Branch: main / root
 echo.
+if exist "push-complete.html" (
+  echo    Launching push celebration...
+  start "N8 Push Complete" "%CD%\push-complete.html"
+) else (
+  echo    Celebration page not found: push-complete.html
+)
 if "%NO_PAUSE%"=="0" pause
 exit /b 0
 
