@@ -82,15 +82,42 @@ manifest_path = ROOT / "page-manifest.json"
 if not manifest_path.exists():
     errors.append("page-manifest.json is missing")
 else:
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    listed = {item["file"] for item in manifest}
-    actual = {page.name for page in PAGES}
-    if listed != actual:
-        errors.append(f"menu manifest mismatch: missing={sorted(actual-listed)} extra={sorted(listed-actual)}")
-    menu = (ROOT / "index.html").read_text(encoding="utf-8")
-    for filename in sorted(actual):
-        if filename not in menu:
-            errors.append(f"index.html does not link {filename}")
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        errors.append(f"page-manifest.json could not be read: {exc}")
+        manifest = None
+
+    if not isinstance(manifest, list):
+        if manifest is not None:
+            errors.append("page-manifest.json must contain a list of page records")
+    else:
+        filenames: list[str] = []
+        for index, item in enumerate(manifest):
+            if not isinstance(item, dict) or not isinstance(item.get("file"), str):
+                errors.append(f'page-manifest.json item {index} needs a string "file" value')
+                continue
+            filenames.append(item["file"])
+
+        duplicates = sorted({name for name in filenames if filenames.count(name) > 1})
+        if duplicates:
+            errors.append(f"page-manifest.json has duplicate files: {duplicates}")
+
+        listed = set(filenames)
+        actual = {page.name for page in PAGES}
+        if listed != actual:
+            errors.append(
+                f"menu manifest mismatch: missing={sorted(actual-listed)} "
+                f"extra={sorted(listed-actual)}"
+            )
+        menu_path = ROOT / "index.html"
+        if not menu_path.exists():
+            errors.append("index.html is missing")
+        else:
+            menu = menu_path.read_text(encoding="utf-8", errors="replace")
+            for filename in sorted(actual):
+                if filename not in menu:
+                    errors.append(f"index.html does not link {filename}")
 
 print(f"Checked {len(PAGES)} standalone HTML pages: {len(errors)} error(s), {len(warnings)} warning(s).")
 for item in warnings:

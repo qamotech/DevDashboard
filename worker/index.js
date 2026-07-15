@@ -5,7 +5,7 @@ const worker = {
       url.pathname = "/n8Prompt.html";
       return env.ASSETS.fetch(new Request(url, request));
     }
-    if (url.pathname === "/funpromptz") {
+    if (url.pathname === "/funpromptz" || url.pathname === "/funpromptz/") {
       url.pathname = "/funPromptz.html";
       return env.ASSETS.fetch(new Request(url, request));
     }
