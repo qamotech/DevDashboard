@@ -244,5 +244,11 @@
     "title": "DevDashboard Hub",
     "file": "devdashboard-hub-index.html",
     "category": "Experiments & Archives"
+  },
+  {
+    "number": 49,
+    "title": "funPromptz — Creative Media Prompt Arcade",
+    "file": "funPromptz.html",
+    "category": "Tools & Productivity"
   }
 ]
