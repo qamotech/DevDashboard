@@ -9,6 +9,10 @@ const worker = {
       url.pathname = "/funPromptz.html";
       return env.ASSETS.fetch(new Request(url, request));
     }
+    if (url.pathname === "/masterprompt" || url.pathname === "/masterprompt/") {
+      url.pathname = "/masterPrompt.html";
+      return env.ASSETS.fetch(new Request(url, request));
+    }
     return env.ASSETS.fetch(request);
   }
 };

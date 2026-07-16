@@ -250,5 +250,11 @@
     "title": "funPromptz — Creative Media Prompt Arcade",
     "file": "funPromptz.html",
     "category": "Tools & Productivity"
+  },
+  {
+    "number": 50,
+    "title": "masterPrompt — Animated AI Webbuilding Command Deck",
+    "file": "masterPrompt.html",
+    "category": "Tools & Productivity"
   }
 ]
