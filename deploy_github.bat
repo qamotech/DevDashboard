@@ -33,10 +33,8 @@ if not errorlevel 1 if exist "package.json" (
   echo       npm is unavailable; continuing with the static files.
 )
 
-echo [3/7] Preparing the complete flat site collection...
-git add -u || call :fail "Tracked changes could not be staged."
-if errorlevel 1 exit /b 1
-git add -- "*.html" "*.mp3" "*.png" "*.webp" "*.ico" "*.svg" "*.json" "*.js" "*.mjs" "*.py" "*.md" "*.bat" ".gitignore" || call :fail "Deployable files could not be staged."
+echo [3/7] Staging all repository changes...
+git add --all || call :fail "All changes could not be staged."
 if errorlevel 1 exit /b 1
 
 git diff --cached --quiet
