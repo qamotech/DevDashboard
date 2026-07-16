@@ -70,7 +70,7 @@
       display: grid;
       place-items: center;
       background: #000;
-      animation: introFade 3s ease forwards;
+      animation: introFade 3.6s ease forwards;
       pointer-events: none;
     }
 
@@ -115,6 +115,8 @@
       mix-blend-mode: normal;
     }
 
+    .intro-card { text-align: center; }
+
     .intro h1 {
       margin: 0;
       padding: .48em .74em;
@@ -132,18 +134,26 @@
       background-clip: text;
       clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
       filter: drop-shadow(0 0 24px rgba(255,255,255,.18)) drop-shadow(0 10px 0 rgba(0,0,0,.9));
-      animation: logoPop 3s ease forwards;
+      animation: logoPop 3.6s ease forwards;
+    }
+
+    .intro p {
+      margin: 1.25rem 0 0;
+      color: rgba(255,255,255,.72);
+      font-weight: 900;
+      letter-spacing: .34em;
+      text-transform: uppercase;
+      animation: logoPop 3.6s ease forwards;
     }
 
     @keyframes introFade {
-      0% { opacity: 0; }
-      18%, 64% { opacity: 1; }
+      0%, 72% { opacity: 1; }
       100% { opacity: 0; visibility: hidden; }
     }
 
     @keyframes logoPop {
       0% { transform: scale(.82); opacity: 0; }
-      18%, 64% { transform: scale(1); opacity: 1; }
+      14%, 72% { transform: scale(1); opacity: 1; }
       100% { transform: scale(1.08); opacity: 0; }
     }
 
@@ -699,7 +709,7 @@
 <body>
   <div id="crt-frame" aria-hidden="true"></div>
   <div class="gemma-fade" aria-hidden="true"></div>
-  <div class="intro" aria-hidden="true"><h1>Qamelot</h1></div>
+  <div class="intro" aria-hidden="true"><div class="intro-card"><h1>Qamelot</h1><p>N8 Combat Systems</p></div></div>
   <div class="clouds" aria-hidden="true">
     <i class="cloud" style="--w: 18rem; --top: 8%; --d: 54s; --delay: -14s; --o: .55"></i>
     <i class="cloud" style="--w: 28rem; --top: 21%; --d: 76s; --delay: -42s; --o: .38"></i>
@@ -713,7 +723,7 @@
         <div class="mark" aria-hidden="true"></div>
         <div>
           <h1>Blob Bash Royale</h1>
-          <p>Expanded arena fighter: color classes, weapons, charge smashes, pickups, and GameCube-style controller support.</p>
+          <p>Weight-based arena combat with class weapons, directional throws, stamina, recovery, and precise controller support.</p>
         </div>
       </div>
       <div class="theme-box" aria-label="Theme selector">
@@ -784,16 +794,18 @@
           <div class="fighter-card">
             <strong id="p1Name">P1 Bubblegum</strong>
             <div class="bars">
-              <div class="bar"><i id="p1Damage" style="--w:0%;--c:#ff2f73"></i></div>
-              <div class="bar"><i id="p1Shield" style="--w:100%;--c:#42eac4"></i></div>
+               <div class="bar"><i id="p1Damage" style="--w:0%;--c:#ff2f73"></i></div>
+               <div class="bar"><i id="p1Shield" style="--w:100%;--c:#42eac4"></i></div>
+               <div class="bar"><i id="p1Stamina" style="--w:100%;--c:#ffd84d"></i></div>
             </div>
             <p id="p1Stats">0% damage | 3 stocks</p>
           </div>
           <div class="fighter-card right">
             <strong id="p2Name">CPU Grape</strong>
             <div class="bars">
-              <div class="bar"><i id="p2Damage" style="--w:0%;--c:#9a5cff"></i></div>
-              <div class="bar"><i id="p2Shield" style="--w:100%;--c:#42eac4"></i></div>
+               <div class="bar"><i id="p2Damage" style="--w:0%;--c:#9a5cff"></i></div>
+               <div class="bar"><i id="p2Shield" style="--w:100%;--c:#42eac4"></i></div>
+               <div class="bar"><i id="p2Stamina" style="--w:100%;--c:#ffd84d"></i></div>
             </div>
             <p id="p2Stats">0% damage | 3 stocks</p>
           </div>
@@ -810,6 +822,7 @@
             <button data-touch="jump">Jump</button>
             <button data-touch="shield">Shield</button>
             <button data-touch="grab">Grab</button>
+            <button data-touch="dodge">Dodge</button>
           </div>
         </div>
       </section>
@@ -828,6 +841,8 @@
           <div class="move"><span class="key">X / Y</span><span>Two jump buttons</span></div>
           <div class="move"><span class="key">L / R</span><span>Two shield buttons</span></div>
           <div class="move"><span class="key">Z / ZL</span><span>Two grab buttons</span></div>
+          <div class="move"><span class="key">Z + Stick</span><span>Directional throw; opponents can mash free</span></div>
+          <div class="move"><span class="key">I / R3</span><span>Stamina dodge or airborne recovery burst</span></div>
           <div class="move"><span class="key">Shield</span><span>Time with an incoming hit to parry-counter</span></div>
           <div class="move"><span class="key">Start / P</span><span>Pause or resume</span></div>
           <div class="move"><span class="key">M</span><span>Switch board layout</span></div>
@@ -839,9 +854,9 @@
           <div class="power-row"><i class="dot" style="--c:#4e7cff"></i>Azure Guardian: hammer and shield aura</div>
           <div class="power-row"><i class="dot" style="--c:#ffd84d"></i>Gold Alchemist: wand sparks and stun traps</div>
           <div class="power-row"><i class="dot" style="--c:#9a5cff"></i>Violet Warlock: gravity scythe and pull smash</div>
-          <div class="power-row"><i class="dot" style="--c:#ff4f4f"></i>Med kits lower damage</div>
-          <div class="power-row"><i class="dot" style="--c:#ffffff"></i>Weapon upgrades boost range and knockback</div>
-          <div class="power-row"><i class="dot" style="--c:#78f7ff"></i>Dash orbs refill jumps</div>
+          <div class="power-row"><i class="dot" style="--c:#ff4f4f"></i>Rare med kits recover moderate damage</div>
+          <div class="power-row"><i class="dot" style="--c:#ffffff"></i>Weapon kits repair temporary upgrade durability</div>
+          <div class="power-row"><i class="dot" style="--c:#78f7ff"></i>Rare recovery orbs restore air options</div>
         </div>
       </aside>
     </main>
@@ -957,13 +972,12 @@
     ];
     let platforms = boards[boardIndex].platforms;
     const colors = [
-      { id: "red", name: "Crimson Knight", weapon: "Lance", hex: "#ff2f73", punch: 1.22, speed: 1, shield: 1.08, stun: 0, gravity: 0, range: 1.16, trail: "#ffb0ca" },
-      { id: "green", name: "Mint Ninja", weapon: "Twin Sais", hex: "#42eac4", punch: .96, speed: 1.24, shield: .95, stun: 0, gravity: 0, range: .98, trail: "#c8fff2" },
-      { id: "blue", name: "Azure Guardian", weapon: "Star Hammer", hex: "#4e7cff", punch: .93, speed: .98, shield: 1.36, stun: 0, gravity: 0, range: 1.08, trail: "#c6d5ff" },
-      { id: "gold", name: "Gold Alchemist", weapon: "Spark Wand", hex: "#ffd84d", punch: 1, speed: 1, shield: 1, stun: 24, gravity: 0, range: 1.03, trail: "#fff2a8" },
-      { id: "purple", name: "Violet Warlock", weapon: "Gravity Scythe", hex: "#9a5cff", punch: 1, speed: .95, shield: 1, stun: 0, gravity: 1, range: 1.18, trail: "#dec8ff" }
+      { id: "red", name: "Crimson Knight", weapon: "Lance", role: "Vanguard", hex: "#ff2f73", punch: 1.18, speed: 1, shield: 1.08, stun: 0, gravity: 0, range: 1.16, weight: 1.08, traction: 1, stamina: 1, trail: "#ffb0ca" },
+      { id: "green", name: "Mint Ninja", weapon: "Twin Sais", role: "Skirmisher", hex: "#42eac4", punch: .94, speed: 1.22, shield: .93, stun: 0, gravity: 0, range: .96, weight: .88, traction: 1.18, stamina: 1.16, trail: "#c8fff2" },
+      { id: "blue", name: "Azure Guardian", weapon: "Star Hammer", role: "Tank", hex: "#4e7cff", punch: 1.02, speed: .9, shield: 1.34, stun: 0, gravity: 0, range: 1.07, weight: 1.24, traction: .92, stamina: .92, trail: "#c6d5ff" },
+      { id: "gold", name: "Gold Alchemist", weapon: "Spark Wand", role: "Controller", hex: "#ffd84d", punch: .96, speed: 1.03, shield: 1, stun: 18, gravity: 0, range: 1.04, weight: .96, traction: 1.04, stamina: 1.06, trail: "#fff2a8" },
+      { id: "purple", name: "Violet Warlock", weapon: "Gravity Scythe", role: "Disruptor", hex: "#9a5cff", punch: 1.04, speed: .94, shield: 1, stun: 0, gravity: 1, range: 1.17, weight: 1.04, traction: .96, stamina: .98, trail: "#dec8ff" }
     ];
-    const pickupKinds = ["med", "weapon", "jump", "shield", "bomb", "med", "weapon", "jump", "shield", "class"];
     const stockChoices = [1, 2, 3, 5];
     const cpuChoices = [
       { id: "easy", label: "Easy", speed: .7, attack: .72, shield: .7 },
@@ -971,9 +985,9 @@
       { id: "spicy", label: "Spicy", speed: 1, attack: 1.34, shield: 1.28 }
     ];
     const pickupChoices = [
-      { id: "low", label: "Low", count: 4 },
-      { id: "normal", label: "Normal", count: 7 },
-      { id: "wild", label: "Wild", count: 11 }
+      { id: "scarce", label: "Scarce", count: 1 },
+      { id: "low", label: "Low", count: 2 },
+      { id: "arcade", label: "Arcade", count: 4 }
     ];
     const hazardChoices = [
       { id: "off", label: "Off" },
@@ -981,8 +995,8 @@
     ];
     let selectedStocks = 3;
     let selectedCpu = "normal";
-    let selectedPickups = "normal";
-    let hazardsEnabled = true;
+    let selectedPickups = "low";
+    let hazardsEnabled = false;
     let pickups = Array.from({ length: pickupCount() }, makePickup);
     let last = performance.now();
     let shake = 0;
@@ -993,6 +1007,9 @@
     let gameMode = "cpu";
     let p1Choice = 0;
     let p2Choice = 4;
+    let countdown = 0;
+    let matchWinner = "";
+    let matchFrames = 0;
 
     const p1 = makeFighter("P1 Bubblegum", 470, 500, colors[p1Choice], false);
     const p2 = makeFighter("CPU Grape", 1130, 500, colors[p2Choice], true);
@@ -1001,8 +1018,8 @@
       return {
         name, x, y, vx: 0, vy: 0, r: 42, color, cpu,
         face: cpu ? -1 : 1, ground: false, jumps: 2, damage: 0, stocks: selectedStocks,
-        shield: 100, shieldHeld: false, justShield: 0, counter: 0, hurt: 0, stun: 0, attack: null, charge: null, slam: null,
-        weaponLevel: 1, combo: 0, comboTimer: 0, dashTrail: 0, damageDealt: 0, specialCount: 0, grab: 0, invuln: 60, squash: 0, aiTimer: 0, input: {}
+        shield: 100, stamina: 100, shieldHeld: false, justShield: 0, counter: 0, hurt: 0, stun: 0, recovery: 0, attack: null, charge: null, slam: null,
+        weaponLevel: 1, weaponDurability: 0, combo: 0, comboTimer: 0, dashTrail: 0, dodge: 0, dodgeCooldown: 0, landingLag: 0, coyote: 0, jumpBuffer: 0, staleMoves: [], damageDealt: 0, specialCount: 0, grab: 0, invuln: 60, squash: 0, aiTimer: 0, input: {}, prev: {}
       };
     }
 
@@ -1062,7 +1079,7 @@
         btn.type = "button";
         btn.className = `character-card${i === selected ? " active" : ""}`;
         btn.style.setProperty("--c", color.hex);
-        btn.innerHTML = `<strong>${color.name}</strong><span>${color.weapon}</span>`;
+        btn.innerHTML = `<strong>${color.name}</strong><span>${color.role} · ${color.weapon}</span>`;
         btn.addEventListener("click", () => onPick(i));
         root.appendChild(btn);
       });
@@ -1072,6 +1089,9 @@
       matchStarted = true;
       fightLive = true;
       paused = false;
+      countdown = 180;
+      matchWinner = "";
+      matchFrames = 0;
       document.querySelector("#selectScreen").classList.add("hidden");
       resetFighter(p1, 470, colors[p1Choice], false);
       resetFighter(p2, 1130, colors[p2Choice], gameMode === "cpu");
@@ -1094,28 +1114,37 @@
       f.damage = 0;
       f.stocks = selectedStocks;
       f.shield = 100;
+      f.stamina = 100;
       f.shieldHeld = false;
       f.justShield = 0;
       f.counter = 0;
       f.hurt = 0;
       f.stun = 0;
+      f.recovery = 0;
       f.attack = null;
       f.charge = null;
       f.slam = null;
       f.weaponLevel = 1;
+      f.weaponDurability = 0;
       f.combo = 0;
       f.comboTimer = 0;
       f.damageDealt = 0;
       f.specialCount = 0;
+      f.dodge = 0;
+      f.dodgeCooldown = 0;
+      f.landingLag = 0;
+      f.coyote = 0;
+      f.jumpBuffer = 0;
+      f.staleMoves = [];
       f.invuln = 100;
       f.prev = {};
     }
 
     function makePickup() {
-      const availableKinds = hazardsEnabled ? pickupKinds : pickupKinds.filter(kind => kind !== "bomb");
-      const kind = availableKinds[Math.floor(Math.random() * availableKinds.length)];
+      const roll = Math.random();
+      const kind = hazardsEnabled && roll < .08 ? "bomb" : roll < .30 ? "med" : roll < .50 ? "weapon" : roll < .72 ? "jump" : "shield";
       const color = colors[Math.floor(Math.random() * colors.length)];
-      return { x: 180 + Math.random() * 1240, y: 90 + Math.random() * 330, vy: 0, kind, color, pulse: Math.random() * 9, scale: kind === "class" ? .68 : 1 };
+      return { x: 180 + Math.random() * 1240, y: -40 - Math.random() * 180, vy: 0, kind, color, pulse: Math.random() * 9, scale: 1, active: true, life: 1200 + Math.random() * 600, respawn: 0 };
     }
 
     function pickupCount() {
@@ -1141,7 +1170,7 @@
     function readControls(player = 0) {
       const gps = navigator.getGamepads ? [...navigator.getGamepads()].filter(Boolean) : [];
       const gp = gps[player];
-      const input = { x: 0, y: 0, jump: false, punch: false, melee: false, smash: false, shield: false, grab: false };
+      const input = { x: 0, y: 0, jump: false, punch: false, melee: false, smash: false, shield: false, grab: false, dodge: false };
       if (gp) {
         gamepadName = gp.id;
         input.x = dead(gp.axes[0] || 0);
@@ -1153,6 +1182,7 @@
         input.jump = pressed(b, 2) || pressed(b, 3) || pressed(b, 12);
         input.shield = pressed(b, 4) || pressed(b, 5) || pressed(b, 6) || pressed(b, 7);
         input.grab = pressed(b, 8) || pressed(b, 10);
+        input.dodge = pressed(b, 11);
         input.pause = pressed(b, 9);
       }
       if (player === 0) {
@@ -1166,6 +1196,7 @@
         input.smash = input.smash || keys.has("KeyL") || touch.has("smash");
         input.shield = input.shield || keys.has("ShiftLeft") || keys.has("ShiftRight") || touch.has("shield");
         input.grab = input.grab || keys.has("KeyU") || touch.has("grab");
+        input.dodge = input.dodge || keys.has("KeyI") || touch.has("dodge");
       } else {
         input.x += (keys.has("ArrowRight") ? 1 : 0);
         input.x -= (keys.has("ArrowLeft") ? 1 : 0);
@@ -1177,6 +1208,7 @@
         input.smash = input.smash || keys.has("Numpad3");
         input.shield = input.shield || keys.has("Numpad4");
         input.grab = input.grab || keys.has("Numpad5");
+        input.dodge = input.dodge || keys.has("Numpad6");
       }
       input.pause = input.pause || keys.has("KeyP") || keys.has("Enter");
       input.x = Math.max(-1, Math.min(1, input.x));
@@ -1197,6 +1229,7 @@
       const dx = other.x - self.x;
       const close = Math.abs(dx) < 145 && Math.abs(other.y - self.y) < 95;
       const far = Math.abs(dx) > 185;
+      const threatened = close && other.attack;
       return {
         x: Math.sign(dx) * (far ? cpu.speed : .28),
         y: self.y > other.y + 90 ? -1 : 0,
@@ -1204,14 +1237,20 @@
         punch: close && Math.random() < .035 * cpu.attack,
         melee: close && Math.random() < .03 * cpu.attack,
         smash: close && self.damage < 160 && Math.random() < .016 * cpu.attack,
-        shield: close && other.attack && Math.random() < .32 * cpu.shield,
-        grab: close && Math.random() < .014 * cpu.attack
+        shield: threatened && Math.random() < .32 * cpu.shield,
+        grab: close && Math.random() < .014 * cpu.attack,
+        dodge: threatened && self.dodgeCooldown <= 0 && Math.random() < .06 * cpu.shield
       };
     }
 
     function updateFighter(f, other, input) {
       f.input = input;
+      const wasGrounded = f.ground;
       if (f.invuln > 0) f.invuln--;
+      if (f.dodge > 0) f.dodge--;
+      if (f.dodgeCooldown > 0) f.dodgeCooldown--;
+      if (f.landingLag > 0) f.landingLag--;
+      if (f.recovery > 0) f.recovery--;
       if (f.comboTimer > 0) f.comboTimer--;
       else f.combo = 0;
       if (f.dashTrail > 0) f.dashTrail--;
@@ -1226,31 +1265,57 @@
         if (f.attack.life <= 0) f.attack = null;
       }
       const shieldWasHeld = f.shieldHeld;
-      f.shieldHeld = input.shield && f.shield > 2 && f.stun <= 0;
-      if (f.shieldHeld && !shieldWasHeld) f.justShield = 10;
-      if (f.shieldHeld) f.shield = Math.max(0, f.shield - .58 / f.color.shield);
-      else f.shield = Math.min(100, f.shield + .24 * f.color.shield);
+      f.shieldHeld = input.shield && f.shield > 2 && f.stun <= 0 && f.recovery <= 0;
+      if (f.shieldHeld && !shieldWasHeld) f.justShield = 7;
+      if (f.shieldHeld) f.shield = Math.max(0, f.shield - .72 / f.color.shield);
+      else f.shield = Math.min(100, f.shield + .2 * f.color.shield);
+      if (f.shield <= 0 && f.shieldHeld) {
+        f.shieldHeld = false;
+        f.stun = 90;
+        f.hurt = 30;
+        floatText(f.x, f.y - 86, "GUARD BROKEN", "#ff4f4f");
+        pop(f.x, f.y, "#77fff0", 64, 12);
+      }
+      const activeCost = f.shieldHeld || Math.abs(input.x) > .86;
+      f.stamina = Math.max(0, Math.min(100, f.stamina + (activeCost ? -.08 : .18) * f.color.stamina));
+      if (pressedOnce(f, "dodge", input.dodge) && f.dodgeCooldown <= 0 && f.stamina >= 24 && f.stun <= 0 && f.hurt <= 0 && !f.slam) {
+        f.stamina -= 24;
+        f.dodge = 15;
+        f.dodgeCooldown = 44;
+        f.invuln = Math.max(f.invuln, 14);
+        f.recovery = 10;
+        f.vx = (Math.sign(input.x) || -f.face) * (f.ground ? 14 : 10);
+        if (!f.ground) f.vy = Math.min(f.vy, -5);
+        afterImages.push({ x: f.x, y: f.y, r: f.r, color: f.color.hex, face: f.face, life: .7 });
+      }
 
-      if (f.stun <= 0 && f.hurt <= 0 && !f.shieldHeld && !f.slam) {
+      if (f.stun <= 0 && f.hurt <= 0 && f.recovery <= 0 && f.landingLag <= 0 && !f.shieldHeld && !f.slam) {
         const speed = 1.08 * f.color.speed;
-        f.vx += input.x * speed;
-        f.vx *= f.ground ? .82 : .94;
+        f.vx += input.x * speed * (f.stamina > 0 ? 1 : .65);
+        f.vx *= f.ground ? (.8 + (1 - f.color.traction) * .05) : .945;
         if (Math.abs(input.x) > .08 && !f.attack && !f.charge) f.face = Math.sign(input.x);
         if (Math.abs(input.x) > .85 && Math.abs(f.vx) > 8 && f.dashTrail <= 0) {
           afterImages.push({ x: f.x, y: f.y, r: f.r, color: f.color.hex, face: f.face, life: .42 });
           f.dashTrail = 5;
         }
-        if (pressedOnce(f, "jump", input.jump) && f.jumps > 0) {
-          f.vy = f.jumps === 2 ? -20.15 : -17.55;
-          f.jumps--;
+        if (pressedOnce(f, "jump", input.jump)) f.jumpBuffer = 7;
+        if (f.jumpBuffer > 0 && (f.jumps > 0 || f.coyote > 0)) {
+          const groundedJump = f.ground || f.coyote > 0;
+          f.vy = groundedJump ? -19.4 : -16.8;
+          if (!groundedJump) f.jumps--;
+          else f.jumps = 1;
+          f.jumpBuffer = 0;
+          f.coyote = 0;
           f.ground = false;
           pop(f.x, f.y + f.r * .7, "#ffffff", 16, 5);
         }
+        if (!input.jump && f.vy < -7) f.vy *= .88;
+        if (f.jumpBuffer > 0) f.jumpBuffer--;
         if (input.y > .6 && !f.ground) f.vy += .45;
-        if (pressedOnce(f, "punch", input.punch)) startAttack(f, "punch");
+        if (!f.attack && pressedOnce(f, "punch", input.punch)) startAttack(f, "punch");
         handleMeleeAndCharge(f, input);
-        if (pressedOnce(f, "smash", input.smash)) startAttack(f, "smash", Math.sign(input.x) || f.face, input.y, .35);
-        if (pressedOnce(f, "grab", input.grab)) startAttack(f, "grab");
+        if (!f.attack && pressedOnce(f, "smash", input.smash)) startAttack(f, "smash", Math.sign(input.x) || f.face, input.y, .35);
+        if (!f.attack && pressedOnce(f, "grab", input.grab)) startAttack(f, "grab", Math.sign(input.x) || f.face, input.y);
       } else {
         f.vx *= .96;
       }
@@ -1265,13 +1330,18 @@
       platforms.forEach(p => {
         const wasAbove = f.y + f.r - f.vy <= p.y + 8;
         const within = f.x > p.x - f.r * .65 && f.x < p.x + p.w + f.r * .65;
-        if (wasAbove && within && f.y + f.r >= p.y && f.y + f.r <= p.y + p.h + 22 && f.vy >= 0) {
+        if (wasAbove && within && f.y + f.r >= p.y && f.y + f.r <= p.y + p.h + 22 && f.vy >= 0 && input.y < .72) {
+          const impact = f.vy;
           f.y = p.y - f.r;
           f.vy = 0;
           f.ground = true;
           f.jumps = 2;
+          f.coyote = 6;
+          if (!wasGrounded && impact > 13) f.landingLag = Math.min(16, Math.floor(impact * .55));
         }
       });
+      if (!f.ground && wasGrounded && f.vy >= 0) f.coyote = 6;
+      else if (!f.ground && f.coyote > 0) f.coyote--;
 
       if (f.x < -220 || f.x > stage.w + 220 || f.y > stage.h + 230) respawn(f);
       f.x = Math.max(-260, Math.min(stage.w + 260, f.x));
@@ -1283,6 +1353,7 @@
     }
 
     function handleMeleeAndCharge(f, input) {
+      if (f.attack) return;
       const committed = Math.abs(input.x) > .45 || Math.abs(input.y) > .45;
       if (pressedOnce(f, "melee", input.melee)) {
         if (committed) {
@@ -1308,22 +1379,32 @@
     }
 
     function rememberButtons(f, input) {
-      f.prev = { jump: input.jump, punch: input.punch, melee: input.melee, smash: input.smash, grab: input.grab, pause: input.pause };
+      f.prev = { jump: input.jump, punch: input.punch, melee: input.melee, smash: input.smash, grab: input.grab, dodge: input.dodge, pause: input.pause };
     }
 
     function startAttack(f, type, dx = f.face, dy = 0, charge = 0) {
-      const level = 1 + (f.weaponLevel - 1) * .16;
+      const upgraded = f.weaponDurability > 0 ? f.weaponLevel - 1 : 0;
+      const level = 1 + upgraded * .12;
       const range = f.color.range * level;
       const charged = 1 + charge * .85;
+      const staleCount = f.staleMoves.filter(move => move === type).length;
+      const freshness = Math.max(.76, 1 - staleCount * .07);
       const data = {
-        punch: { life: 12, total: 12, active: 8, size: 54 * range, damage: 5 * level, kb: 8 * level, color: "#ffffff" },
-        melee: { life: 20, total: 20, active: 13, size: 76 * range, damage: 9 * level, kb: 12 * level, color: f.color.hex },
-        smash: { life: 34, total: 34, active: 19, size: 98 * range * charged, damage: 15 * level * charged, kb: 19 * level * charged, color: f.color.hex },
-        grab: { life: 17, total: 17, active: 11, size: 70 * range, damage: 3, kb: 5, color: "#1b2038", grab: true }
+        punch: { life: 13, total: 13, active: 7, recovery: 4, size: 52 * range, damage: 4.5 * level * freshness, kb: 7 * level, color: "#ffffff" },
+        melee: { life: 22, total: 22, active: 12, recovery: 8, size: 74 * range, damage: 8.5 * level * freshness, kb: 11 * level, color: f.color.hex },
+        smash: { life: 38, total: 38, active: 17, recovery: 15, size: 94 * range * charged, damage: 14 * level * charged * freshness, kb: 18 * level * charged, color: f.color.hex },
+        grab: { life: 19, total: 19, active: 10, recovery: 10, size: 66 * range, damage: 2, kb: 4, color: "#1b2038", grab: true }
       }[type];
       const lockedDx = dx || f.face;
       f.face = lockedDx;
       f.attack = { type, hit: false, dx: lockedDx, dy, charge, ...data };
+      f.recovery = data.recovery + data.total;
+      f.staleMoves.push(type);
+      if (f.staleMoves.length > 6) f.staleMoves.shift();
+      if (type !== "punch" && f.weaponDurability > 0) {
+        f.weaponDurability = Math.max(0, f.weaponDurability - (type === "smash" ? 8 : 4));
+        if (f.weaponDurability === 0) f.weaponLevel = 1;
+      }
       f.squash = type === "smash" ? .28 : .16;
       if (type === "smash") shake = Math.max(shake, 5);
     }
@@ -1364,14 +1445,14 @@
         return;
       }
       if (attacker.attack.grab) {
-        startSlam(attacker, target);
+        startSlam(attacker, target, attacker.attack.dx, attacker.attack.dy);
         return;
       }
       const power = attacker.color;
       const dmg = attacker.attack.damage * power.punch;
       target.damage += dmg;
       addDealtDamage(attacker, dmg);
-      const kb = attacker.attack.kb * (1 + target.damage / 145);
+      const kb = Math.min(42, attacker.attack.kb * (1 + target.damage / 165) / target.color.weight);
       target.vx = attacker.attack.dx * kb;
       target.vy = (attacker.attack.dy * kb * .48) - kb * .52 - (power.gravity ? 4 : 0);
       target.hurt = 15;
@@ -1408,9 +1489,10 @@
       pop(f.x, f.y - 20, f.color.hex, 110, 16);
     }
 
-    function startSlam(attacker, target) {
+    function startSlam(attacker, target, throwX = attacker.face, throwY = 0) {
       attacker.attack = null;
-      attacker.slam = { target, phase: 0, t: 0, dir: attacker.face, startX: attacker.x, startY: attacker.y };
+      const vertical = Math.abs(throwY) > .45;
+      attacker.slam = { target, phase: 0, t: 0, dir: Math.sign(throwX) || attacker.face, throwY: vertical ? Math.sign(throwY) : 0, escape: 0, startX: attacker.x, startY: attacker.y };
       target.slam = { carried: true };
       target.hurt = 44;
       target.stun = 44;
@@ -1432,6 +1514,18 @@
         return;
       }
       s.t++;
+      const mash = ["jump", "punch", "melee", "smash", "grab", "dodge"].reduce((n, key) => n + (victim.input?.[key] && !victim.prev?.[key] ? 1 : 0), 0);
+      s.escape += mash * 2.4 + Math.abs(victim.input?.x || 0) * .08;
+      if (s.escape > Math.max(7, 15 - victim.damage * .035)) {
+        victim.slam = null;
+        victim.invuln = 18;
+        victim.vx = -s.dir * 7;
+        victim.vy = -8;
+        attacker.slam = null;
+        attacker.recovery = 18;
+        floatText(victim.x, victim.y - 70, "ESCAPE", "#ffffff");
+        return;
+      }
       attacker.face = s.dir;
       attacker.vx = 0;
       attacker.vy = 0;
@@ -1447,15 +1541,16 @@
         attacker.squash = .18;
       } else if (s.t <= 42) {
         const p = (s.t - 30) / 12;
-        victim.x = attacker.x + s.dir * 92;
-        victim.y = attacker.y - 110 + p * 150;
+        victim.x = attacker.x + s.dir * (s.throwY ? 54 : 92);
+        victim.y = attacker.y - 110 + p * (s.throwY < 0 ? -70 : s.throwY > 0 ? 185 : 150);
       } else {
         victim.slam = null;
         const slamDamage = 16 + attacker.weaponLevel * 2;
         victim.damage += slamDamage;
         addDealtDamage(attacker, slamDamage);
-        victim.vx = s.dir * (15 + attacker.weaponLevel * 2);
-        victim.vy = -17;
+        const throwPower = Math.min(30, (14 + attacker.weaponLevel * 1.5) * (1 + victim.damage / 230) / victim.color.weight);
+        victim.vx = s.throwY ? s.dir * 5 : s.dir * throwPower;
+        victim.vy = s.throwY < 0 ? -throwPower : s.throwY > 0 ? 8 : -13;
         victim.hurt = 24;
         victim.stun = 12;
         victim.squash = .5;
@@ -1470,6 +1565,7 @@
     }
 
     function pickupCheck(f, pickup, i) {
+      if (!pickup.active) return;
       const dx = f.x - pickup.x;
       const dy = f.y - pickup.y;
       if (Math.hypot(dx, dy) < f.r + 30) {
@@ -1478,18 +1574,30 @@
           f.shield = Math.min(100, f.shield + 18);
           floatText(f.x, f.y - 76, f.color.name, f.color.hex);
         }
-        if (pickup.kind === "med") f.damage = Math.max(0, f.damage - 34);
-        if (pickup.kind === "weapon") f.weaponLevel = Math.min(5, f.weaponLevel + 1);
-        if (pickup.kind === "jump") f.jumps = Math.max(f.jumps, 3);
-        if (pickup.kind === "shield") f.shield = 100;
+        if (pickup.kind === "med") f.damage = Math.max(0, f.damage - 18);
+        if (pickup.kind === "weapon") {
+          f.weaponLevel = Math.min(3, f.weaponLevel + 1);
+          f.weaponDurability = Math.min(100, f.weaponDurability + 55);
+        }
+        if (pickup.kind === "jump") { f.jumps = Math.max(f.jumps, 2); f.stamina = Math.min(100, f.stamina + 35); }
+        if (pickup.kind === "shield") f.shield = Math.min(100, f.shield + 45);
         if (pickup.kind === "bomb") {
           f.damage += 7;
           f.vx += (Math.random() - .5) * 22;
+          const rival = f === p1 ? p2 : p1;
+          const blast = Math.hypot(rival.x - pickup.x, rival.y - pickup.y);
+          if (blast < 190 && rival.invuln <= 0) {
+            rival.damage += 5;
+            rival.vx += Math.sign(rival.x - pickup.x || 1) * (18 - blast * .05);
+            rival.vy = -9;
+            rival.hurt = 12;
+          }
           shake = 12;
         }
         f.squash = .35;
         pop(pickup.x, pickup.y, pickupColor(pickup), 62, 10);
-        pickups[i] = makePickup();
+        pickup.active = false;
+        pickup.respawn = 720 + Math.random() * 720;
       }
     }
 
@@ -1500,23 +1608,36 @@
       f.y = 500;
       f.vx = 0;
       f.vy = 0;
-      f.damage = Math.max(0, f.damage * .15);
+      f.damage = 0;
       f.damageDealt = 0;
       f.specialCount = 0;
       f.shield = 100;
       f.invuln = 120;
       f.stun = 0;
       f.hurt = 0;
-      if (f.stocks < 0) {
-        f.stocks = selectedStocks;
-        f.damage = 0;
-        f.color = f.cpu ? colors[4] : colors[0];
+      if (f.stocks <= 0) {
+        f.stocks = 0;
+        fightLive = false;
+        matchWinner = f === p1 ? (p2.cpu ? "CPU" : "PLAYER 2") : "PLAYER 1";
+        paused = false;
+        floatText(stage.w / 2, 250, `${matchWinner} WINS`, "#ffffff");
       }
       shake = 18;
     }
 
     function updatePickups() {
       pickups.forEach((pickup, i) => {
+        if (!pickup.active) {
+          pickup.respawn--;
+          if (pickup.respawn <= 0) pickups[i] = makePickup();
+          return;
+        }
+        pickup.life--;
+        if (pickup.life <= 0) {
+          pickup.active = false;
+          pickup.respawn = 600 + Math.random() * 600;
+          return;
+        }
         pickup.pulse += .08;
         pickup.vy += .18;
         pickup.y += pickup.vy;
@@ -1780,6 +1901,7 @@
     }
 
     function drawPickup(pickup) {
+      if (!pickup.active) return;
       const bob = Math.sin(pickup.pulse) * 7;
       const isRound = pickup.kind === "med" || pickup.kind === "weapon";
       const s = pickup.scale || 1;
@@ -1908,7 +2030,7 @@
     }
 
     function drawAttack(f) {
-      const progress = f.attack.life / ({ punch: 12, melee: 20, smash: 34, grab: 17 }[f.attack.type]);
+      const progress = f.attack.life / f.attack.total;
       const hx = f.x + f.attack.dx * (f.r + f.attack.size * .42);
       const hy = f.y - 6 + f.attack.dy * f.attack.size * .34;
       ctx.save();
@@ -2042,6 +2164,7 @@
       drawFighter(p2);
       ctx.restore();
       if (paused) drawPauseOverlay(view);
+      if (matchStarted && (countdown > 0 || !fightLive)) drawMatchOverlay(view);
       drawSpecialBursts(view);
       if (shake > 0) shake *= .86;
     }
@@ -2085,17 +2208,36 @@
       ctx.restore();
     }
 
+    function drawMatchOverlay(view) {
+      ctx.save();
+      ctx.fillStyle = !fightLive ? "rgba(8, 10, 24, .7)" : "rgba(8, 10, 24, .18)";
+      ctx.fillRect(0, 0, view.rect.width, view.rect.height);
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.font = "1000 64px Baloo 2";
+      const cue = !fightLive ? `${matchWinner} WINS` : countdown > 120 ? "3" : countdown > 60 ? "2" : "1";
+      ctx.fillText(cue, view.rect.width / 2, view.rect.height / 2 - 18);
+      if (!fightLive) {
+        ctx.font = "900 18px Nunito";
+        ctx.fillText("Press Enter or Start for a rematch · Escape for fighter select", view.rect.width / 2, view.rect.height / 2 + 36);
+      }
+      ctx.restore();
+    }
+
     function updateHud() {
       document.querySelector("#p1Damage").style.setProperty("--w", `${Math.min(100, p1.damage)}%`);
       document.querySelector("#p2Damage").style.setProperty("--w", `${Math.min(100, p2.damage)}%`);
       document.querySelector("#p1Shield").style.setProperty("--w", `${p1.shield}%`);
       document.querySelector("#p2Shield").style.setProperty("--w", `${p2.shield}%`);
+      document.querySelector("#p1Stamina").style.setProperty("--w", `${p1.stamina}%`);
+      document.querySelector("#p2Stamina").style.setProperty("--w", `${p2.stamina}%`);
       document.querySelector("#p1Damage").style.setProperty("--c", p1.color.hex);
       document.querySelector("#p2Damage").style.setProperty("--c", p2.color.hex);
       document.querySelector("#p1Name").textContent = `P1 ${p1.color.name}`;
-      document.querySelector("#p2Name").textContent = `CPU ${p2.color.name}`;
-      document.querySelector("#p1Stats").textContent = `${Math.round(p1.damage)}% damage | ${p1.stocks} stocks | special ${Math.floor(p1.damageDealt)}/150`;
-      document.querySelector("#p2Stats").textContent = `${Math.round(p2.damage)}% damage | ${p2.stocks} stocks | special ${Math.floor(p2.damageDealt)}/150`;
+      document.querySelector("#p2Name").textContent = `${p2.cpu ? "CPU" : "P2"} ${p2.color.name}`;
+      document.querySelector("#p1Stats").textContent = `${Math.round(p1.damage)}% · ${p1.stocks} stock · ${Math.round(p1.stamina)} stamina · W${p1.weaponLevel}`;
+      document.querySelector("#p2Stats").textContent = `${Math.round(p2.damage)}% · ${p2.stocks} stock · ${Math.round(p2.stamina)} stamina · W${p2.weaponLevel}`;
       const padText = gamepadName ? gamepadName.slice(0, 34) : "Press a controller button";
       document.querySelector("#padStatus").textContent = `${padText} | ${boards[boardIndex].name}`;
     }
@@ -2109,14 +2251,21 @@
         if (!matchStarted) {
           if (controls.pause && !p1.prev?.pause) startMatch();
           p1.prev = { ...(p1.prev || {}), pause: controls.pause };
+        } else if (!fightLive) {
+          if (controls.pause && !p1.prev?.pause) startMatch();
+          p1.prev = { ...(p1.prev || {}), pause: controls.pause };
         } else if (fightLive) {
           if (controls.pause && !p1.prev?.pause) paused = !paused;
           p1.prev = { ...(p1.prev || {}), pause: controls.pause };
           if (!paused) {
-            updateFighter(p1, p2, controls);
-            updateFighter(p2, p1, p2.cpu ? cpuInput(p2, p1) : readControls(1));
-            updatePickups();
-            updateCamera();
+            if (countdown > 0) countdown--;
+            else {
+              matchFrames++;
+              updateFighter(p1, p2, controls);
+              updateFighter(p2, p1, p2.cpu ? cpuInput(p2, p1) : readControls(1));
+              updatePickups();
+              updateCamera();
+            }
           }
         }
         if (!paused) updateParticles();
@@ -2130,7 +2279,13 @@
     window.addEventListener("keydown", e => {
       keys.add(e.code);
       if (e.code === "KeyM" && !e.repeat) switchBoard();
-      if ((e.code === "Enter" || e.code === "NumpadEnter") && !e.repeat && !matchStarted) startMatch();
+      if ((e.code === "Enter" || e.code === "NumpadEnter") && !e.repeat && (!matchStarted || !fightLive)) startMatch();
+      if (e.code === "Escape" && !e.repeat && matchStarted) {
+        matchStarted = false;
+        fightLive = false;
+        paused = false;
+        document.querySelector("#selectScreen").classList.remove("hidden");
+      }
     });
     window.addEventListener("keyup", e => keys.delete(e.code));
     window.addEventListener("gamepadconnected", e => {
