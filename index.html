@@ -59,13 +59,13 @@
         <div class="core" aria-label="Animated N8 Nexus energy core"><canvas class="core-field" id="coreField" aria-hidden="true"></canvas><div class="core-haze" aria-hidden="true"></div><div class="core-scan" aria-hidden="true"></div><div class="core-ring ring-one" aria-hidden="true"></div><div class="core-ring ring-two" aria-hidden="true"></div><div class="orbit" aria-hidden="true"><i></i></div><span class="core-data data-a">SIG 88.4</span><span class="core-data data-b">LINK 12/12</span><span class="core-data data-c">QAM-08</span><div class="core-center"><b>N8 // ONLINE</b></div></div>
       </section>
 
-      <div class="metrics" aria-label="Hub summary"><div class="metric"><small>Local sites</small><strong id="siteCount">51</strong></div><div class="metric"><small>Connected portals</small><strong>12</strong></div><div class="metric"><small>Mission shortcuts</small><strong>6</strong></div><div class="metric"><small>Core status</small><strong><em>Online</em></strong></div></div>
+      <div class="metrics" aria-label="Hub summary"><div class="metric"><small>Local sites</small><strong id="siteCount">42</strong></div><div class="metric"><small>Connected portals</small><strong id="portalCount">12</strong></div><div class="metric"><small>Mission shortcuts</small><strong id="flowCount">66</strong></div><div class="metric"><small>Core status</small><strong><em>Online</em></strong></div></div>
 
       <section id="services"><div class="section-head"><div><span class="section-code">01 // Portal matrix</span><h2>Connected services</h2><p>Direct launch lanes into your core workspaces.</p></div><span class="section-code">12 active portals</span></div><div class="service-grid" id="serviceGrid"></div></section>
 
       <section id="tools"><div class="section-head"><div><span class="section-code">02 // Tactical utilities</span><h2>Command tools</h2><p>High-frequency actions that turn the hub into a working control surface.</p></div><span class="section-code">Local-first / no tracking</span></div><div class="tool-grid" id="toolGrid"></div></section>
 
-      <section id="sites"><div class="section-head"><div><span class="section-code">03 // Site fleet</span><h2>All deployments</h2><p>Every standalone N8 experience, searchable from one grid.</p></div><span class="section-code"><span id="visibleCount">51</span> visible</span></div>
+      <section id="sites"><div class="section-head"><div><span class="section-code">03 // Site fleet</span><h2>All deployments</h2><p>Every standalone N8 experience, searchable from one grid.</p></div><span class="section-code"><span id="visibleCount">42</span> visible</span></div>
         <div class="launcher"><div class="search-wrap"><label class="sr-only" for="search">Search sites and services</label><input id="search" type="search" autocomplete="off" placeholder="Search sites, tools, games, and portals…"><span class="shortcut-key">/</span></div><div class="filters" aria-label="Filter sites"><button class="filter" data-filter="All" aria-pressed="true">All</button><button class="filter" data-filter="Developer Studios" aria-pressed="false">Build</button><button class="filter" data-filter="Tools & Productivity" aria-pressed="false">Tools</button><button class="filter" data-filter="Games & Simulations" aria-pressed="false">Games</button><button class="filter" data-filter="Featured Sites" aria-pressed="false">Featured</button></div></div>
         <div class="page-grid" id="pageGrid"></div><div class="empty" id="empty">No systems match that signal. Press Esc to reset the grid.</div>
       </section>
@@ -133,18 +133,391 @@
     ];
 
     const flows=[
-      {title:"Ship a new site",desc:"From concept to a verified GitHub Pages deployment.",path:["Codex","Browser QA","GitHub","Pages"],prompt:"Create a new self-contained site for the N8 CyberDev fleet. Use the established Nexus visual language, add it to the hub and page manifest, run every check, then prepare a GitHub Pages deployment."},{title:"Daily command brief",desc:"Turn communication and calendar signals into one action plan.",path:["Calendar","Gmail","Slack","Codex"],prompt:"Create my daily command brief from Google Calendar, Gmail, and Slack. Prioritize urgent items, meetings, required replies, blockers, and protected focus time."},{title:"Research to deliverable",desc:"Collect source material and turn it into a polished artifact.",path:["Drive","Docs","Sheets","Slides"],prompt:"Find the relevant source material in Google Drive, analyze any supporting data, and turn it into a concise polished document plus a presentation-ready summary."},{title:"Release health check",desc:"Inspect the repository, deployment, and visual experience.",path:["GitHub","Pages","Browser","Report"],prompt:"Review the current GitHub repository and Pages deployment. Check build health, broken routes, responsive layout, accessibility, and visual regressions. Return a prioritized release report and fix verified issues."},{title:"Inbox to execution",desc:"Convert incoming requests into scheduled, trackable work.",path:["Gmail","Slack","Calendar","Task Forge"],prompt:"Triage recent Gmail and Slack requests, extract actionable tasks, identify deadlines and owners, and propose calendar blocks for the highest-priority work."},{title:"Content production line",desc:"Build reusable assets across documents and media formats.",path:["Templates","Docs","PDF","Slides"],prompt:"Create a reusable content package from the source materials: a polished document, a presentation outline, and a print-ready PDF structure using consistent branding."}
+      {title:"Ship a new site",desc:"From concept to a verified GitHub Pages deployment.",path:["Codex","Browser QA","GitHub","Pages"],prompt:"Create a new self-contained site for the N8 CyberDev fleet. Use the established Nexus visual language, add it to the hub and page manifest, run every check, then prepare a GitHub Pages deployment."},{title:"Daily command brief",desc:"Turn communication and calendar signals into one action plan.",path:["Calendar","Gmail","Slack","Codex"],prompt:"Create my daily command brief from Google Calendar, Gmail, and Slack. Prioritize urgent items, meetings, required replies, blockers, and protected focus time."},{title:"Research to deliverable",desc:"Collect source material and turn it into a polished artifact.",path:["Drive","Docs","Sheets","Slides"],prompt:"Find the relevant source material in Google Drive, analyze any supporting data, and turn it into a concise polished document plus a presentation-ready summary."},{title:"Release health check",desc:"Inspect the repository, deployment, and visual experience.",path:["GitHub","Pages","Browser","Report"],prompt:"Review the current GitHub repository and Pages deployment. Check build health, broken routes, responsive layout, accessibility, and visual regressions. Return a prioritized release report and fix verified issues."},{title:"Inbox to execution",desc:"Convert incoming requests into scheduled, trackable work.",path:["Gmail","Slack","Calendar","Task Forge"],prompt:"Triage recent Gmail and Slack requests, extract actionable tasks, identify deadlines and owners, and propose calendar blocks for the highest-priority work."},{title:"Content production line",desc:"Build reusable assets across documents and media formats.",path:["Templates","Docs","PDF","Slides"],prompt:"Create a reusable content package from the source materials: a polished document, a presentation outline, and a print-ready PDF structure using consistent branding."},
+          // 01 - 10: Contracting & Project Management
+  {
+    title: "Project Estimate Generator",
+    desc: "Draft a comprehensive client estimate from raw dimensions.",
+    path: ["Drive", "Sheets", "Docs"],
+    prompt: "Draft a client estimate for Clark Family Projects LLC. Include a breakdown of material costs, labor for multi-room layouts, and specific line items for prep work like scraping and patching."
+  },
+  {
+    title: "Client Receipt Builder",
+    desc: "Generate a detailed project receipt outlining the exact scope of work.",
+    path: ["Gmail", "Docs", "Codex"],
+    prompt: "Generate a detailed project receipt. Detail the exact scope of work performed (e.g., scraping chipped paint, applying two coats to walls and floor) and format it for immediate client email delivery."
+  },
+  {
+    title: "Baltimore Building Code Check",
+    desc: "Search local zoning and building codes for specific projects.",
+    path: ["Search", "Codex", "Docs"],
+    prompt: "Search current Baltimore County and Rosedale local building codes. Summarize permit requirements and compliance regulations for [insert specific home improvement project]."
+  },
+  {
+    title: "Mounting Hardware Specs",
+    desc: "Calculate anchor types and weight capacities for heavy installations.",
+    path: ["Codex", "Sheets"],
+    prompt: "List the exact weight capacities and optimal anchor types for mounting [insert item] on drywall versus masonry. I specialize in mounting any and all items, so prioritize heavy-duty and secure solutions."
+  },
+  {
+    title: "Material Takeoff Breakdown",
+    desc: "Calculate material requirements and current pricing.",
+    path: ["Sheets", "Codex"],
+    prompt: "Calculate material requirements for [Project Name]. Break down dimensions, square footage, and estimate current local pricing for materials."
+  },
+  {
+    title: "Subcontractor Agreement",
+    desc: "Draft a standard sub-agreement for specialized site work.",
+    path: ["Docs", "Codex"],
+    prompt: "Draft a standard subcontractor agreement outlining scope of work, payment terms, and liability for a localized home improvement project."
+  },
+  {
+    title: "Site Inspection Checklist",
+    desc: "Generate a room-by-room site inspection list.",
+    path: ["Sheets", "Mobile"],
+    prompt: "Generate a room-by-room site inspection checklist for a multi-level residential renovation, ensuring all prep work and finishing details are logged."
+  },
+  {
+    title: "Ryobi Tool Integration",
+    desc: "Cross-reference power tool specs and battery compatibility.",
+    path: ["Search", "Codex"],
+    prompt: "Pull the latest specifications for Ryobi ONE+ 18V tools and outline compatibility or known performance metrics for [insert specific tool]."
+  },
+  {
+    title: "Invoice Follow-up",
+    desc: "Draft a polite, firm follow-up for outstanding payments.",
+    path: ["Gmail", "Codex"],
+    prompt: "Draft a professional but firm follow-up email for an overdue invoice, offering a link for immediate digital payment."
+  },
+  {
+    title: "Project Milestone Tracker",
+    desc: "Set up a tracking sheet with automated status updates.",
+    path: ["Sheets", "Apps Script"],
+    prompt: "Set up a project milestone tracking framework in Google Sheets to monitor phase completions across basement, first floor, and second floor layouts."
+  },
+
+  // 11 - 20: Amway Independent Business Owner (IBO)
+  {
+    title: "IBO Marketing Flyer",
+    desc: "Draft compliant copy for a marketing flyer.",
+    path: ["Slides", "Docs"],
+    prompt: "Draft copy for a marketing flyer highlighting systemic growth. Ensure the text complies with IBO guidelines and prominently features Nathan and Jishawna."
+  },
+  {
+    title: "Compliance Rule Check",
+    desc: "Review promotional text against marketing guidelines.",
+    path: ["Codex", "Search"],
+    prompt: "Review this promotional text against current Amway marketing guidelines and compliance rules to ensure absolute adherence before publication."
+  },
+  {
+    title: "Product Metric Analysis",
+    desc: "Analyze sales metrics to highlight top categories.",
+    path: ["Sheets", "Codex"],
+    prompt: "Analyze these raw product sales metrics and generate a summary highlighting the top performing categories and growth trends."
+  },
+  {
+    title: "Lead Follow-up Sequence",
+    desc: "Create a multi-part email sequence for prospects.",
+    path: ["Gmail", "Docs"],
+    prompt: "Create a 3-part email follow-up sequence for new business prospects, focusing on product value and business opportunity."
+  },
+  {
+    title: "Monthly Sales Framework",
+    desc: "Track monthly Independent Business Owner targets.",
+    path: ["Sheets", "Codex"],
+    prompt: "Build a spreadsheet framework to track monthly sales targets, personal volume, and customer volume metrics."
+  },
+  {
+    title: "Social Media Campaign",
+    desc: "Draft compliant social media posts.",
+    path: ["Codex", "Docs"],
+    prompt: "Draft a week's worth of compliant, engaging social media posts for [insert product category], including relevant hashtags."
+  },
+  {
+    title: "Team Training Agenda",
+    desc: "Outline a training agenda for new recruits.",
+    path: ["Docs", "Slides"],
+    prompt: "Outline a 45-minute training agenda for new recruits, covering product basics, marketing rules, and initial goal setting."
+  },
+  {
+    title: "Customer Retention Script",
+    desc: "Phone script for checking in on product satisfaction.",
+    path: ["Docs", "Codex"],
+    prompt: "Draft a natural-sounding phone script for checking in with existing customers on their recent orders and overall product satisfaction."
+  },
+  {
+    title: "Dream Board Visualizer",
+    desc: "Generate prompt ideas for family dream board assets.",
+    path: ["Codex", "Search"],
+    prompt: "Generate specific visual asset prompts for a dream board, focusing on business success, family goals, and finding a new large residential property."
+  },
+  {
+    title: "Cross-Selling Matrix",
+    desc: "Link primary products with cross-sell recommendations.",
+    path: ["Sheets", "Codex"],
+    prompt: "Create a matrix linking core products with their most logical and beneficial cross-sell recommendations for customers."
+  },
+
+  // 21 - 30: Programming, Scripts & Automation
+  {
+    title: "Expense Parser Script",
+    desc: "Parse transaction details from emails into Sheets.",
+    path: ["Apps Script", "Gmail", "Sheets"],
+    prompt: "Write a Google Apps Script to parse transaction details and amounts from incoming receipt emails and log them directly into a tax tracking spreadsheet."
+  },
+  {
+    title: "Standalone Code Editor Boilerplate",
+    desc: "Generate HTML/JS boilerplate for mobile development.",
+    path: ["Code Editor", "Codex"],
+    prompt: "Generate a lightweight, standalone HTML/JS boilerplate optimized for coding directly in a mobile Code Editor app, avoiding heavy frameworks."
+  },
+  {
+    title: "Data Extraction to Sheet",
+    desc: "Append data starting at specific cell blocks.",
+    path: ["Apps Script", "Sheets"],
+    prompt: "Write a script or formula to append extracted table data into a Google Sheet, ensuring the insertion begins exactly at cell B6."
+  },
+  {
+    title: "App Script Debugger",
+    desc: "Review scripts for syntax errors and execution time.",
+    path: ["Codex", "Apps Script"],
+    prompt: "Review this Google Apps Script for syntax errors, execution limits, and optimize it for faster data processing."
+  },
+  {
+    title: "Tax Prep Categorization",
+    desc: "Auto-categorize business expenses.",
+    path: ["Sheets", "Codex"],
+    prompt: "Write an advanced Excel/Sheets formula to automatically categorize business expenses based on specific text strings in the vendor name."
+  },
+  {
+    title: "JS Event Listener Debug",
+    desc: "Troubleshoot mobile touch event firing.",
+    path: ["Code Editor", "Codex"],
+    prompt: "Troubleshoot this JavaScript event listener to figure out why it is firing multiple times on a mobile touch interface."
+  },
+  {
+    title: "Dashboard UI Refresh",
+    desc: "Update CSS variables for new contrast modes.",
+    path: ["CSS", "Codex"],
+    prompt: "Update these CSS variables to introduce a high-contrast dark mode palette suitable for viewing on mobile screens outdoors."
+  },
+  {
+    title: "Regex Data Validator",
+    desc: "Create regular expressions to extract specific formats.",
+    path: ["Codex", "RegEx"],
+    prompt: "Create a regular expression to strictly validate and extract specific data formats (like phone numbers or part codes) from a raw string."
+  },
+  {
+    title: "Python Image Data Extractor",
+    desc: "Extract tabular data from an image.",
+    path: ["Python", "Codex"],
+    prompt: "Write a Python script using OCR libraries to extract tabular data from an image and export it cleanly to a CSV format."
+  },
+  {
+    title: "API Integration Test",
+    desc: "Write a boilerplate fetch request.",
+    path: ["Codex", "JS"],
+    prompt: "Write a boilerplate JavaScript fetch request to test authentication headers and payload delivery to a standard REST API."
+  },
+
+  // 31 - 40: Inventory & Warehouse Operations
+  {
+    title: "Cycle Count Tally",
+    desc: "Spreadsheet to log manual tally marks for small items.",
+    path: ["Sheets", "Codex"],
+    prompt: "Create a spreadsheet structure designed to log manual tally marks and specific item quantities for high-volume, small-item cycle counts."
+  },
+  {
+    title: "Counting Scale Calibration SOP",
+    desc: "Standard operating procedure for counting scales.",
+    path: ["Docs", "Codex"],
+    prompt: "Draft a concise standard operating procedure for zeroing and calibrating a highly sensitive counting scale for accurate inventory measurement."
+  },
+  {
+    title: "Warehouse Layout Optimization",
+    desc: "Optimize facility layouts to reduce picking time.",
+    path: ["Docs", "Codex"],
+    prompt: "Draft a proposal for optimizing a beverage facility warehouse layout to minimize forklift travel and reduce overall picking time."
+  },
+  {
+    title: "Inventory Discrepancy Report",
+    desc: "Report template for resolving count errors.",
+    path: ["Docs", "Sheets"],
+    prompt: "Generate a report template for investigating and resolving discrepancies between physical counts and system inventory records."
+  },
+  {
+    title: "Automated SKU Generator",
+    desc: "Formulas to generate standardized SKUs.",
+    path: ["Sheets", "Codex"],
+    prompt: "Write a spreadsheet formula to automatically generate standardized SKUs by combining product category codes with specific item attributes."
+  },
+  {
+    title: "Restock Alert Automation",
+    desc: "Trigger email alerts for low inventory.",
+    path: ["Apps Script", "Gmail"],
+    prompt: "Create a script that monitors a specific inventory column and triggers an email alert when a quantity drops below its minimum threshold."
+  },
+  {
+    title: "Clean Inventory View",
+    desc: "Filter out pending items and status columns.",
+    path: ["Sheets", "Codex"],
+    prompt: "Write a macro or filter view instruction to instantly hide all pending items and status tracking columns for a clean counting view."
+  },
+  {
+    title: "Incoming Shipment Log",
+    desc: "Track incoming vendor shipments.",
+    path: ["Sheets", "Forms"],
+    prompt: "Design a spreadsheet layout to track incoming vendor shipments, verify expected quantities against received items, and flag shortages."
+  },
+  {
+    title: "Inventory KPIs Definitions",
+    desc: "Define top inventory management metrics.",
+    path: ["Codex", "Docs"],
+    prompt: "Define the top essential inventory management metrics (like inventory turnover and accuracy rates) and explain how to calculate them."
+  },
+  {
+    title: "Narrow-Aisle Routing",
+    desc: "Suggest safety routing for warehouse navigation.",
+    path: ["Codex", "Docs"],
+    prompt: "Suggest standard safety and efficiency routing protocols for operating machinery in narrow-aisle warehouse environments."
+  },
+
+  // 41 - 50: Personal, Household & Hardware
+  {
+    title: "7-Bed Property Hunt",
+    desc: "Compile requirements for a large residential relocation.",
+    path: ["Search", "Sheets"],
+    prompt: "Outline the criteria and compile a tracking sheet for finding a residential property in the Baltimore area with at least 7 bedrooms and 3 bathrooms."
+  },
+  {
+    title: "Household of 8 Master Tracker",
+    desc: "Master sheet for chores, groceries, and tracking.",
+    path: ["Sheets", "Codex"],
+    prompt: "Create a master household tracking sheet optimized for a family of 8, including sections for groceries, appointments, and shared tasks."
+  },
+  {
+    title: "Relocation Timeline & Prep",
+    desc: "3-month checklist for moving a large household.",
+    path: ["Docs", "Calendar"],
+    prompt: "Draft a detailed 3-month timeline and execution checklist for packing and moving a large family household into a new property."
+  },
+  {
+    title: "Weekly Meal Planner (Scaled)",
+    desc: "Meal planning template scaled for 8 servings.",
+    path: ["Sheets", "Codex"],
+    prompt: "Generate a weekly meal planning template that includes automated columns to scale standard recipes up to 8 full servings."
+  },
+  {
+    title: "Note 20 Ultra Hardware Check",
+    desc: "Pull hardware specs and limitations for mobile dev.",
+    path: ["Search", "Codex"],
+    prompt: "Summarize the specific hardware capabilities and browser rendering limitations of the Samsung Galaxy Note 20 Ultra 5G for mobile web development."
+  },
+  {
+    title: "Latitude 7420 Brainstorming",
+    desc: "Generate naming conventions and asset tags.",
+    path: ["Codex", "Docs"],
+    prompt: "Brainstorm a list of creative, cyber-themed system names and asset tags specifically for a Dell Latitude 7420 laptop."
+  },
+  {
+    title: "3D Print Mount Specs",
+    desc: "Draft specs for functional job site 3D prints.",
+    path: ["Codex", "Search"],
+    prompt: "Recommend optimal slicer settings and structural designs for 3D printing custom, load-bearing tool mounts for contracting job sites."
+  },
+  {
+    title: "StarCraft 2 Strategy Hub",
+    desc: "Compile SC2 hotkeys and strategic unit data.",
+    path: ["Sheets", "Codex"],
+    prompt: "Compile a comprehensive spreadsheet layout detailing essential StarCraft 2 keyboard shortcuts, build times, and strategic unit counters."
+  },
+  {
+    title: "SC2 Build Order Optimizer",
+    desc: "Outline an optimized opening build order.",
+    path: ["Codex", "Docs"],
+    prompt: "Outline a highly optimized, step-by-step opening build order for [Insert Race] based on current competitive meta."
+  },
+  {
+    title: "Middle 12 Roulette Simulation",
+    desc: "Simulate a progressive betting scheme.",
+    path: ["Python", "Codex"],
+    prompt: "Write a Python script to run a high-volume simulation of a progressive recovery betting strategy that exclusively targets the middle 12 numbers on a roulette wheel."
+  },
+
+  // 51 - 60: General Developer & Productivity
+  {
+    title: "Meeting Minutes Summarizer",
+    desc: "Extract action items from transcripts.",
+    path: ["Codex", "Docs"],
+    prompt: "Extract action items, key decisions, and assigned owners from this raw meeting transcript, formatting it into a clean summary document."
+  },
+  {
+    title: "Code Refactoring",
+    desc: "Refactor code to improve readability.",
+    path: ["Codex", "Code Editor"],
+    prompt: "Refactor this block of code to improve readability, optimize performance, and ensure it adheres strictly to DRY (Don't Repeat Yourself) principles."
+  },
+  {
+    title: "SEO Metadata Audit",
+    desc: "Suggest improvements for meta descriptions.",
+    path: ["Codex", "HTML"],
+    prompt: "Review this HTML document and suggest improvements for meta descriptions, title tags, and Open Graph attributes for better indexing."
+  },
+  {
+    title: "Conflict Resolution Email",
+    desc: "Draft a diplomatic email to de-escalate issues.",
+    path: ["Gmail", "Codex"],
+    prompt: "Draft a diplomatic, solutions-oriented email to de-escalate a miscommunication with a client or vendor and propose a clear path forward."
+  },
+  {
+    title: "Daily Standup Prep",
+    desc: "Format commits and messages into a concise update.",
+    path: ["Docs", "Slack"],
+    prompt: "Format my recent tasks, blockers, and completed items into a concise, professional daily standup update."
+  },
+  {
+    title: "Markdown Table Generator",
+    desc: "Convert unstructured text into a MD table.",
+    path: ["Codex", "Docs"],
+    prompt: "Convert this raw, unstructured list of data into a clean, properly aligned Markdown table."
+  },
+  {
+    title: "Cross-Browser Compatibility Check",
+    desc: "Check CSS for rendering issues.",
+    path: ["Codex", "CSS"],
+    prompt: "Check this CSS block for potential rendering issues across different modern browsers and suggest standard fallbacks if necessary."
+  },
+  {
+    title: "System Error Log Analysis",
+    desc: "Identify the root cause of crashes.",
+    path: ["Codex", "Terminal"],
+    prompt: "Analyze this raw stack trace, identify the probable root cause of the error, and propose a step-by-step patch."
+  },
+  {
+    title: "Git Commit Message Generator",
+    desc: "Generate conventional commit messages.",
+    path: ["Codex", "GitHub"],
+    prompt: "Review these code changes and generate a clear, concise Git commit message following Conventional Commits formatting."
+  },
+  {
+    title: "Focus Time Block Scheduler",
+    desc: "Analyze tasks and suggest calendar blocks.",
+    path: ["Calendar", "Codex"],
+    prompt: "Analyze my list of open tasks and suggest an optimized calendar blocking schedule to ensure uninterrupted focus time for deep work."
+  }
+      
     ];
 
     const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
     const accentColor=color=>color==="#ff746e"?"#ff9a3d":color;
+    const readFavorites=()=>{try{const value=JSON.parse(localStorage.getItem("n8-favorites")||"[]");return Array.isArray(value)?value.filter(Number.isInteger):[]}catch{return []}};
     const toast=message=>{const el=$("#toast");el.textContent=message;el.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.remove("show"),2200)};
     const copy=async value=>{try{await navigator.clipboard.writeText(value);toast("Copied to command buffer")}catch{const t=document.createElement("textarea");t.value=value;document.body.append(t);t.select();document.execCommand("copy");t.remove();toast("Copied to command buffer")}};
     const openSafe=url=>window.open(url,"_blank","noopener,noreferrer");
     let activeFilter="All";
 
     function renderServices(){$("#serviceGrid").innerHTML=services.map(s=>`<a class="service" style="--accent:${accentColor(s.color)}" href="${s.url}" target="_blank" rel="noopener noreferrer"><span class="service-mark">${s.mark}</span><h3>${s.name}</h3><p>${s.desc}</p><small>${s.status}</small></a>`).join("")}
-    function renderTools(){const favorites=JSON.parse(localStorage.getItem("n8-favorites")||"[]");$("#toolGrid").innerHTML=tools.map((t,i)=>`<article class="tool-card" style="--accent:${accentColor(t.color)}"><div class="tool-top"><span class="tool-tag">${String(i+1).padStart(2,"0")} // ${t.tag}</span></div><h3>${t.title}</h3><p>${t.desc}</p><div class="tool-actions"><button class="mini run-tool" data-index="${i}" type="button">Execute</button><button class="mini star" data-favorite="${i}" type="button" aria-label="Favorite ${t.title}" aria-pressed="${favorites.includes(i)}">★</button></div></article>`).join("")}
+    function renderTools(){const favorites=readFavorites();$("#toolGrid").innerHTML=tools.map((t,i)=>`<article class="tool-card" style="--accent:${accentColor(t.color)}"><div class="tool-top"><span class="tool-tag">${String(i+1).padStart(2,"0")} // ${t.tag}</span></div><h3>${t.title}</h3><p>${t.desc}</p><div class="tool-actions"><button class="mini run-tool" data-index="${i}" type="button">Execute</button><button class="mini star" data-favorite="${i}" type="button" aria-label="Favorite ${t.title}" aria-pressed="${favorites.includes(i)}">★</button></div></article>`).join("")}
     function renderPages(){const q=$("#search").value.trim().toLowerCase();const list=pages.filter(p=>(activeFilter==="All"||p.category===activeFilter)&&(!q||`${p.title} ${p.file} ${p.category}`.toLowerCase().includes(q)));$("#pageGrid").innerHTML=list.map(p=>`<a class="page-card" href="${p.file}"><span class="page-meta"><span>${String(p.number).padStart(2,"0")}</span><span>${p.category.replace(" & Simulations","").replace(" & Productivity","").replace("Experiments & Archives","Archive")}</span></span><h3>${p.title}</h3><span class="page-file">${p.file}</span></a>`).join("");$("#visibleCount").textContent=list.length;$("#empty").style.display=list.length?"none":"block";$$('.page-card').forEach(card=>card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect();card.style.setProperty('--x',`${e.clientX-r.left}px`);card.style.setProperty('--y',`${e.clientY-r.top}px`)}))}
     function renderFlows(){$("#flowGrid").innerHTML=flows.map((f,i)=>`<article class="flow"><span class="flow-num">FLOW ${String(i+1).padStart(2,"0")}</span><h3>${f.title}</h3><p>${f.desc}</p><div class="flow-path">${f.path.map((x,n)=>`${n?'<i>›</i>':''}<b>${x}</b>`).join("")}</div><button class="mini copy-flow" data-flow="${i}" type="button" style="margin-top:22px">Copy mission</button></article>`).join("")}
     function executeTool(i){const t=tools[i];if(t.action==="copy")copy(t.payload);if(t.action==="open")openSafe(t.payload);if(t.action==="random")location.href=pages[Math.floor(Math.random()*pages.length)].file}
@@ -154,8 +527,8 @@
     function closePalette(){$("#palette").classList.remove("open")}
 
     renderServices();renderTools();renderPages();renderFlows();renderCommands();
-    $("#siteCount").textContent=pages.length;$("#search").addEventListener("input",renderPages);$$('.filter').forEach(b=>b.addEventListener('click',()=>{activeFilter=b.dataset.filter;$$('.filter').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderPages()}));
-    $("#toolGrid").addEventListener("click",e=>{const run=e.target.closest(".run-tool"),star=e.target.closest(".star");if(run)executeTool(Number(run.dataset.index));if(star){const i=Number(star.dataset.favorite),f=JSON.parse(localStorage.getItem("n8-favorites")||"[]"),next=f.includes(i)?f.filter(x=>x!==i):[...f,i];localStorage.setItem("n8-favorites",JSON.stringify(next));star.setAttribute("aria-pressed",String(next.includes(i)));toast(next.includes(i)?"Added to favorites":"Removed from favorites")}});
+    $("#siteCount").textContent=pages.length;$("#portalCount").textContent=services.length;$("#flowCount").textContent=flows.length;$("#search").addEventListener("input",renderPages);$$('.filter').forEach(b=>b.addEventListener('click',()=>{activeFilter=b.dataset.filter;$$('.filter').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderPages()}));
+    $("#toolGrid").addEventListener("click",e=>{const run=e.target.closest(".run-tool"),star=e.target.closest(".star");if(run)executeTool(Number(run.dataset.index));if(star){const i=Number(star.dataset.favorite),f=readFavorites(),next=f.includes(i)?f.filter(x=>x!==i):[...f,i];localStorage.setItem("n8-favorites",JSON.stringify(next));star.setAttribute("aria-pressed",String(next.includes(i)));toast(next.includes(i)?"Added to favorites":"Removed from favorites")}});
     $("#flowGrid").addEventListener("click",e=>{const b=e.target.closest(".copy-flow");if(b)copy(flows[Number(b.dataset.flow)].prompt)});$("#paletteButton").addEventListener("click",openPalette);$("#openPalette").addEventListener("click",openPalette);$("#commandSearch").addEventListener("input",renderCommands);$("#commandList").addEventListener("click",e=>{const b=e.target.closest(".command");if(b){window.visibleCommands[Number(b.dataset.command)].run();closePalette()}});$("#palette").addEventListener("click",e=>{if(e.target===$("#palette"))closePalette()});
     document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openPalette()}else if(e.key==="Escape"){if($("#palette").classList.contains("open"))closePalette();else{$("#search").value="";activeFilter="All";$$('.filter').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===0)));renderPages()}}else if(e.key==="/"&&!/input|textarea|select/i.test(document.activeElement.tagName)){e.preventDefault();$("#search").focus()}});
     setInterval(()=>$("#clock").textContent=new Date().toLocaleTimeString([], {hour12:false}),1000);$("#clock").textContent=new Date().toLocaleTimeString([], {hour12:false});document.addEventListener("pointermove",e=>{document.documentElement.style.setProperty("--mx",`${e.clientX/innerWidth*100}%`);document.documentElement.style.setProperty("--my",`${e.clientY/innerHeight*100}%`)},{passive:true});
