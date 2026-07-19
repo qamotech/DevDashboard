@@ -250,12 +250,6 @@
         <pre class="prompt-output" id="promptOutput"></pre>
         <div class="modal-actions">
           <button class="action-button secondary" id="copyAgain" type="button">Copy prompt again</button>
-          <button class="action-button primary" id="executePrompt" type="button">Simulate AI execution →</button>
-        </div>
-        <div class="run-panel" id="runPanel" aria-live="polite">
-          <div class="run-label"><span id="runStatus">Preparing request payload</span><span id="runPercent">0%</span></div>
-          <div class="loader"><i></i></div>
-          <p class="run-result" id="runResult">This placeholder is ready to be replaced with your AI API request.</p>
         </div>
       </div>
     </div>
@@ -337,8 +331,6 @@
     const resultCount = document.getElementById("resultCount");
     const modal = document.getElementById("promptModal");
     const promptOutput = document.getElementById("promptOutput");
-    const executeButton = document.getElementById("executePrompt");
-    const runPanel = document.getElementById("runPanel");
     const toast = document.getElementById("toast");
     let activeCategory = "All";
     let activePrompt = null;
@@ -422,9 +414,6 @@
       document.getElementById("modalTitle").textContent = item.title;
       document.getElementById("copyState").textContent = copied ? "Copied to clipboard" : "Prompt ready — copy manually";
       promptOutput.textContent = item.prompt;
-      runPanel.className = "run-panel";
-      executeButton.disabled = false;
-      executeButton.textContent = "Simulate AI execution →";
       modal.classList.add("open");
       document.body.classList.add("modal-open");
       document.getElementById("closeModal").focus();
@@ -462,35 +451,6 @@
       if (!activePrompt) return;
       const copied = await copyText(activePrompt.prompt);
       showToast(copied ? "Copied again" : "Select the prompt text to copy");
-    });
-
-    executeButton.addEventListener("click", () => {
-      if (!activePrompt || executeButton.disabled) return;
-      executeButton.disabled = true;
-      executeButton.textContent = "Executing…";
-      runPanel.className = "run-panel active";
-      const statuses = [
-        [18, "Preparing request payload"],
-        [43, "Sending prompt to AI endpoint"],
-        [72, "Streaming response tokens"],
-        [100, "Simulation complete"]
-      ];
-      let index = 0;
-      const step = () => {
-        const [percent, label] = statuses[index];
-        document.getElementById("runPercent").textContent = `${percent}%`;
-        document.getElementById("runStatus").textContent = label;
-        index += 1;
-        if (index < statuses.length) {
-          setTimeout(step, 520);
-        } else {
-          runPanel.classList.add("success");
-          document.getElementById("runResult").textContent = "Success. The execution hook completed. Replace simulateExecution() with your secure server-side AI endpoint when you are ready to connect a live model.";
-          executeButton.textContent = "Simulation complete ✓";
-          showToast("Execution complete");
-        }
-      };
-      step();
     });
 
     document.getElementById("jsonSource").textContent = JSON.stringify(prompts, null, 2);

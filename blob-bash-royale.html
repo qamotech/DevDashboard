@@ -716,12 +716,110 @@
       .pick-panels { grid-template-columns: 1fr; }
       .character-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
+  
+    @keyframes startBtnPulse {
+      0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 47, 115, 0.4); }
+      100% { transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 47, 115, 0.85); }
+    }
+    .start-call {
+      animation: startBtnPulse 1.6s infinite alternate !important;
+      border: 2px solid #ff2f73 !important;
+    }
+    
+
+    /* --- NEW BLOB BASH LOGO SEQUENCE --- */
+    .intro-logo2 {
+      position: fixed; inset: 0; z-index: 21; display: grid; place-items: center; background: #000;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      /* Waits exactly 2.6s for Qamelot to finish, then runs for 1.5s */
+      animation: logo2Sequence 1.5s ease 2.6s forwards;
+    }
+    .intro-logo2 svg {
+      width: 80vw; max-width: 600px;
+      /* Slight zoom-in effect while the logo is visible */
+      animation: logo2Zoom 1.5s ease-out 2.6s forwards;
+    }
+    @keyframes logo2Sequence {
+      0% { opacity: 0; visibility: visible; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+    @keyframes logo2Zoom {
+      0% { transform: scale(0.85); }
+      100% { transform: scale(1.05); }
+    }
+    
   </style>
 </head>
 <body>
   <div id="crt-frame" aria-hidden="true"></div>
   <div class="gemma-fade" aria-hidden="true"></div>
   <div class="intro" aria-hidden="true"><div class="intro-card"><h1>Qamelot</h1><p>N8 Combat Systems</p></div></div>
+
+  <div class="intro-logo2" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+      <defs>
+        <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#42eac4" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#172038" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="crimsonGrad" cx="30%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="30%" stop-color="#ff2f73"/>
+          <stop offset="100%" stop-color="#7f1739"/>
+        </radialGradient>
+        <radialGradient id="violetGrad" cx="70%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="30%" stop-color="#9a5cff"/>
+          <stop offset="100%" stop-color="#4d2e7f"/>
+        </radialGradient>
+        <linearGradient id="textGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="50%" stop-color="#f0f5ff"/>
+          <stop offset="100%" stop-color="#a8b2c4"/>
+        </linearGradient>
+        <filter id="neonDrop" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+        </filter>
+        <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="15" result="blur"/>
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+      </defs>
+      <style>
+        .title { font-family: 'Baloo 2', system-ui, sans-serif; font-weight: 800; font-size: 110px; text-anchor: middle; }
+        .subtitle { font-family: 'Nunito', system-ui, sans-serif; font-weight: 900; font-size: 32px; letter-spacing: 16px; text-anchor: middle; }
+      </style>
+      <rect width="100%" height="100%" fill="none"/>
+      <circle cx="400" cy="220" r="300" fill="url(#bgGlow)" />
+      <path d="M 200 80 L 600 80 L 680 240 L 400 450 L 120 240 Z" fill="#172038" stroke="rgba(255,255,255,0.15)" stroke-width="4" filter="url(#neonDrop)"/>
+      <circle cx="400" cy="220" r="180" fill="none" stroke="#42eac4" stroke-width="3" stroke-dasharray="15 15" opacity="0.4" />
+      <circle cx="400" cy="220" r="220" fill="none" stroke="#ff2f73" stroke-width="2" opacity="0.2" />
+      <path d="M 400 60 L 420 180 L 540 200 L 420 220 L 400 340 L 380 220 L 260 200 L 380 180 Z" fill="#ffd84d" filter="url(#glow)"/>
+      <g transform="translate(270, 200) rotate(15)" filter="url(#neonDrop)">
+        <ellipse cx="0" cy="0" rx="80" ry="70" fill="url(#crimsonGrad)" />
+        <ellipse cx="0" cy="0" rx="92" ry="82" fill="none" stroke="#ffb0ca" stroke-width="6" opacity="0.8" />
+        <circle cx="15" cy="-5" r="7" fill="#10162d" />
+        <circle cx="45" cy="-5" r="7" fill="#10162d" />
+        <line x1="25" y1="5" x2="35" y2="5" stroke="#10162d" stroke-width="5" stroke-linecap="round"/>
+        <path d="M -50 -30 Q -60 -40 -70 -30" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+      </g>
+      <g transform="translate(530, 200) rotate(-15)" filter="url(#neonDrop)">
+        <ellipse cx="0" cy="0" rx="80" ry="70" fill="url(#violetGrad)" />
+        <ellipse cx="0" cy="0" rx="92" ry="82" fill="none" stroke="#dec8ff" stroke-width="6" opacity="0.8" />
+        <circle cx="-45" cy="-5" r="7" fill="#10162d" />
+        <circle cx="-15" cy="-5" r="7" fill="#10162d" />
+        <line x1="-35" y1="5" x2="-25" y2="5" stroke="#10162d" stroke-width="5" stroke-linecap="round"/>
+      </g>
+      <path d="M 400 140 L 410 190 L 460 200 L 410 210 L 400 260 L 390 210 L 340 200 L 390 190 Z" fill="#ffffff" filter="url(#glow)"/>
+      <text x="400" y="380" class="title" fill="none" stroke="#000000" stroke-width="24" stroke-linejoin="round">BLOB BASH</text>
+      <text x="400" y="380" class="title" fill="none" stroke="#172038" stroke-width="16" stroke-linejoin="round">BLOB BASH</text>
+      <text x="400" y="380" class="title" fill="url(#textGrad)">BLOB BASH</text>
+      <text x="400" y="440" class="subtitle" fill="#000000" stroke="#000000" stroke-width="6" stroke-linejoin="round" filter="url(#neonDrop)">ROYALE</text>
+      <text x="400" y="440" class="subtitle" fill="#ffd84d">ROYALE</text>
+    </svg>
+  </div>
   <div class="clouds" aria-hidden="true">
     <i class="cloud" style="--w: 18rem; --top: 8%; --d: 54s; --delay: -14s; --o: .55"></i>
     <i class="cloud" style="--w: 28rem; --top: 21%; --d: 76s; --delay: -42s; --o: .38"></i>
@@ -1015,7 +1113,65 @@
       };
     }
 
-    function renderSelect() {
+    
+function setupMenu() {
+  // Render match options dynamically
+  const stocksBox = document.getElementById("stockOptions");
+  if (stocksBox && stocksBox.children.length === 0) {
+    stockChoices.forEach(val => {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = val;
+      b.className = val === selectedStocks ? "active" : "";
+      b.onclick = () => { selectedStocks = val; renderSelect(); };
+      stocksBox.appendChild(b);
+    });
+  }
+
+  const cpuBox = document.getElementById("cpuOptions");
+  if (cpuBox && cpuBox.children.length === 0) {
+    cpuChoices.forEach(choice => {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = choice.label;
+      b.className = choice.id === selectedCpu ? "active" : "";
+      b.onclick = () => { selectedCpu = choice.id; renderSelect(); };
+      cpuBox.appendChild(b);
+    });
+  }
+
+  const pickupBox = document.getElementById("pickupOptions");
+  if (pickupBox && pickupBox.children.length === 0) {
+    pickupChoices.forEach(choice => {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = choice.label;
+      b.className = choice.id === selectedPickups ? "active" : "";
+      b.onclick = () => { selectedPickups = choice.id; renderSelect(); };
+      pickupBox.appendChild(b);
+    });
+  }
+
+  const hazardBox = document.getElementById("hazardOptions");
+  if (hazardBox && hazardBox.children.length === 0) {
+    hazardChoices.forEach(choice => {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = choice.label;
+      b.className = (choice.id === "on" ? hazardsEnabled : !hazardsEnabled) ? "active" : "";
+      b.onclick = () => { hazardsEnabled = (choice.id === "on"); renderSelect(); };
+      hazardBox.appendChild(b);
+    });
+  }
+
+  const boardsBox = document.getElementById("boardOptions");
+  if (boardsBox && boardsBox.children.length === 0) {
+    boards.forEach((bData, i) => {
+      const btn = document.createElement("button"); btn.type = "button"; btn.className = `board-card ${i === boardIndex ? "active" : ""}`;
+      btn.style.setProperty("--a", bData.vibe[0]); btn.style.setProperty("--b", bData.vibe[1]); btn.style.setProperty("--c", bData.vibe[2]);
+      btn.innerHTML = `<strong>${bData.name}</strong><span>${bData.subtitle}</span>`;
+      btn.onclick = () => { boardIndex = i; platforms = boards[boardIndex].platforms; renderSelect(); };
+      boardsBox.appendChild(btn);
+    });
+  }
+
+  renderSelect();
+  document.getElementById("startGame").onclick = startMatch;
+}
+
+function renderSelect() {
       renderChoices("p1Choices", p1Choice, i => { p1Choice = i; renderSelect(); }, "p1");
       renderChoices("p2Choices", p2Choice, i => { p2Choice = i; renderSelect(); }, "p2");
       renderOptions();
