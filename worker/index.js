@@ -13,6 +13,10 @@ const worker = {
       url.pathname = "/masterPrompt.html";
       return env.ASSETS.fetch(new Request(url, request));
     }
+    if (url.pathname === "/locmein" || url.pathname === "/locmein/") {
+      url.pathname = "/loc-me-in-llc.html";
+      return env.ASSETS.fetch(new Request(url, request));
+    }
     return env.ASSETS.fetch(request);
   }
 };

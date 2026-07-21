@@ -1,0 +1,11 @@
+{
+  "name": "Loc Me In — Premium Braids & Locs Artistry",
+  "short_name": "Loc Me In",
+  "description": "Style planning, loc care, portfolio inspiration, and appointment request tools for Loc Me In in Edgewood, Maryland.",
+  "start_url": "/locmein",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07030c",
+  "theme_color": "#a855f7",
+  "icons": [{ "src": "loc-me-in-icon.png", "sizes": "128x128", "type": "image/png", "purpose": "any maskable" }]
+}
