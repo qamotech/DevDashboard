@@ -30,7 +30,7 @@ async function sendLocMeInContact(request, url, env) {
   try {
     delivery = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(destination)}`, {
       method: "POST",
-      headers: { "content-type": "application/json", "accept": "application/json" },
+      headers: { "content-type": "application/json", "accept": "application/json", "origin": url.origin, "referer": `${url.origin}/locmein` },
       body: JSON.stringify({
         _subject: `New Loc Me In inquiry from ${name.replace(/[\r\n]/g, " ")}`,
         _template: "table",
@@ -45,6 +45,10 @@ async function sendLocMeInContact(request, url, env) {
     });
   } catch { return json({ error: "Message delivery is temporarily unavailable. Please try again shortly." }, 502); }
   if (!delivery.ok) return json({ error: "Message delivery is temporarily unavailable. Please try again shortly." }, 502);
+  const result = await delivery.json().catch(() => ({}));
+  const delivered = result.success === true || String(result.success).toLowerCase() === "true";
+  if (!delivered && /activat/i.test(String(result.message || ""))) return json({ error: "Studio email delivery is awaiting one-time activation." }, 503);
+  if (!delivered) return json({ error: "Message delivery is temporarily unavailable. Please try again shortly." }, 502);
   return json({ ok: true });
 }
 
