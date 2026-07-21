@@ -44,7 +44,7 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="n8-improvement-count" content="40">
   <meta name="n8-feature-count" content="10">
-  <link rel="canonical" href="https://qamotech.github.io/DevDashboard/">
+  <link rel="canonical" href="https://qamotech.github.io/DevDashboard/QamelotMenu.html">
   <link rel="icon" type="image/png" sizes="128x128" href="n8-icon.png">
   <link rel="shortcut icon" type="image/png" href="n8-icon.png">
   <link rel="apple-touch-icon" href="n8-icon.png">
@@ -54,7 +54,7 @@
   <meta property="og:locale" content="en_US">
   <meta property="og:title" content="N8 // Hub">
   <meta property="og:description" content="Explore N8 // Hub, an interactive web experiment in the N8 CyberDev collection.">
-  <meta property="og:url" content="https://qamotech.github.io/DevDashboard/">
+  <meta property="og:url" content="https://qamotech.github.io/DevDashboard/QamelotMenu.html">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="N8 // Hub">
   <meta name="twitter:description" content="Explore N8 // Hub, an interactive web experiment in the N8 CyberDev collection.">
@@ -98,8 +98,8 @@
     <nav id="n8x-dock" aria-label="Quick page controls">
       <a class="n8x-link n8x-primary" href="index.html" aria-label="Open Qamelot home" title="Home (Alt+H)">⌂</a>
       <button class="n8x-btn" id="n8x-open" type="button" aria-expanded="false" aria-controls="n8x-panel" aria-label="Browse every page" title="All pages (Alt+M)">☰</button>
-      <a class="n8x-link" href="pulse-productivity-and-biorhythm-studio.html" aria-label="Previous page: Pulse // Productivity &amp; Biorhythm Studio" title="Previous page">←</a>
-      <a class="n8x-link" href="tri-nexus-grail-matrix.html" aria-label="Next page: TRI-NEXUS: GRAIL MATRIX" title="Next page">→</a>
+      <a class="n8x-link" href="masterPrompt.html" aria-label="Previous page: masterPrompt — Animated AI Webbuilding Command Deck" title="Previous page">←</a>
+      <a class="n8x-link" href="acai-adaptive-cyber-analysis-interface.html" aria-label="Next page: ACAI // Adaptive Cyber Analysis Interface" title="Next page">→</a>
       <button class="n8x-btn" id="n8x-random" type="button" aria-label="Open a random page" title="Random page (Alt+R)">⚄</button>
       <button class="n8x-btn" id="n8x-share" type="button" aria-label="Share or copy this page link" title="Share page">↗</button>
       <button class="n8x-btn" id="n8x-calm" type="button" aria-pressed="false" aria-label="Toggle calm viewing mode" title="Calm mode">◐</button>
@@ -117,7 +117,7 @@
     open.addEventListener('click',()=>setMenu(panel.getAttribute('aria-hidden')==='true'));
     document.getElementById('n8x-close').addEventListener('click',()=>setMenu(false));
     search.addEventListener('input',()=>{const query=search.value.trim().toLowerCase();let shown=0;list.querySelectorAll('.n8x-page').forEach(link=>{const match=!query||link.dataset.search.includes(query);link.hidden=!match;if(match)shown++});document.getElementById('n8x-count').textContent=shown+' page'+(shown===1?'':'s')});
-    document.getElementById('n8x-random').addEventListener('click',()=>{const choices=pages.filter(file=>file!=="index.html");location.href=choices[Math.floor(Math.random()*choices.length)]||'index.html'});
+    document.getElementById('n8x-random').addEventListener('click',()=>{const choices=pages.filter(file=>file!=="QamelotMenu.html");location.href=choices[Math.floor(Math.random()*choices.length)]||'index.html'});
     document.getElementById('n8x-share').addEventListener('click',async()=>{const data={title:document.title,text:'Explore '+document.title,url:location.href};try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(location.href);showToast('Live page link copied')}}catch(error){if(error.name!=='AbortError')showToast('Use the address bar to copy this link')}});
     const calm=document.getElementById('n8x-calm');const saved=localStorage.getItem('n8x-calm')==='true';document.documentElement.dataset.n8xCalm=String(saved);calm.setAttribute('aria-pressed',String(saved));calm.addEventListener('click',()=>{const active=document.documentElement.dataset.n8xCalm!=='true';document.documentElement.dataset.n8xCalm=String(active);calm.setAttribute('aria-pressed',String(active));localStorage.setItem('n8x-calm',String(active));showToast(active?'Calm mode on':'Calm mode off')});
     document.getElementById('n8x-full').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(error){showToast('Fullscreen is unavailable here')}});

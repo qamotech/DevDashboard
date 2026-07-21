@@ -280,5 +280,11 @@
     "title": "masterPrompt — Animated AI Webbuilding Command Deck",
     "file": "masterPrompt.html",
     "category": "Tools & Productivity"
+  },
+  {
+    "number": 51,
+    "title": "Qamelot Menu — Compatibility Directory",
+    "file": "QamelotMenu.html",
+    "category": "Experiments & Archives"
   }
 ]
