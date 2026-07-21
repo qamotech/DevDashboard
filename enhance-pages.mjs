@@ -31,7 +31,7 @@ function removeBlock(text, start, end) {
 }
 
 function removeManagedHeadTags(text) {
-  const managedMeta = /<meta\b(?=[^>]*(?:name|property)=["'](?:description|keywords|author|creator|publisher|robots|referrer|theme-color|color-scheme|application-name|format-detection|n8-improvement-count|n8-feature-count|og:type|og:site_name|og:locale|og:title|og:description|og:url|twitter:card|twitter:title|twitter:description)["'])[^>]*>\s*/gi;
+  const managedMeta = /<meta\b(?=[^>]*(?:name|property)=["'](?:description|keywords|author|creator|publisher|robots|referrer|theme-color|color-scheme|application-name|format-detection|n8-improvement-count|n8-feature-count|devdashboard-preview-count|og:type|og:site_name|og:locale|og:title|og:description|og:url|twitter:card|twitter:title|twitter:description)["'])[^>]*>\s*/gi;
   const managedLink = /<link\b(?=[^>]*rel=["'][^"']*(?:canonical|icon|apple-touch-icon|manifest)[^"']*["'])[^>]*>\s*/gi;
   const legacyFaviconTail = /<polygon\b[^>]*\/><\/svg>">\s*/gi;
   const deadStylesheet = /<link\b[^>]*cssanimation\.css\/1\.0\.3\/cssanimation\.min\.css[^>]*>\s*/gi;
@@ -73,7 +73,7 @@ function headEnhancements(page, title, description) {
   <meta name="format-detection" content="telephone=no">
   <meta name="n8-improvement-count" content="40">
   <meta name="n8-feature-count" content="10">
-  <link rel="canonical" href="${escapeHtml(url)}">
+${page.file === "index.html" || page.file === "QamelotMenu.html" ? '  <meta name="devdashboard-preview-count" content="48">\n' : ""}  <link rel="canonical" href="${escapeHtml(url)}">
   <link rel="icon" type="image/png" sizes="128x128" href="n8-icon.png">
   <link rel="shortcut icon" type="image/png" href="n8-icon.png">
   <link rel="apple-touch-icon" href="n8-icon.png">
@@ -92,13 +92,20 @@ function headEnhancements(page, title, description) {
     #n8x-skip{position:fixed;left:12px;top:10px;z-index:2147483647;transform:translateY(-160%);padding:10px 14px;border-radius:9px;color:#031017;background:var(--n8x-cyan);font:800 13px/1.2 system-ui,sans-serif;text-decoration:none;transition:transform .18s}
     #n8x-skip:focus{transform:none}
     #n8x-shell,#n8x-shell *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-    #n8x-shell{position:fixed;right:14px;bottom:14px;z-index:2147483000;color:var(--n8x-ink);line-height:1.4}
-    #n8x-dock{display:flex;align-items:center;gap:6px;padding:7px;border:1px solid var(--n8x-line);border-radius:16px;background:var(--n8x-bg);box-shadow:var(--n8x-shadow);backdrop-filter:blur(18px) saturate(1.25)}
+    #n8x-shell{position:fixed;right:14px;bottom:14px;z-index:2147483000;color:var(--n8x-ink);line-height:1.4;touch-action:manipulation}
+    #n8x-shell[data-n8x-side="left"]{left:14px;right:auto}
+    #n8x-dock{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:5px;max-width:250px;padding:6px;border:1px solid var(--n8x-line);border-radius:15px;background:var(--n8x-bg);box-shadow:var(--n8x-shadow);backdrop-filter:blur(18px) saturate(1.25);transition:.18s}
+    #n8x-shell:not([data-n8x-expanded="true"]) .n8x-secondary{display:none}
+    #n8x-shell[data-n8x-hidden="true"] #n8x-dock,#n8x-shell[data-n8x-hidden="true"] #n8x-panel{display:none}
+    #n8x-restore{display:none;place-items:center;width:34px;height:44px;border:1px solid var(--n8x-line);border-right:0;border-radius:12px 0 0 12px;color:var(--n8x-cyan);background:var(--n8x-bg);box-shadow:var(--n8x-shadow);font:900 10px/1 ui-monospace,monospace;letter-spacing:-.04em;cursor:pointer}
+    #n8x-shell[data-n8x-side="left"] #n8x-restore{border:1px solid var(--n8x-line);border-left:0;border-radius:0 12px 12px 0}
+    #n8x-shell[data-n8x-hidden="true"] #n8x-restore{display:grid}
     .n8x-btn,.n8x-link{min-width:42px;min-height:42px;display:grid;place-items:center;border:1px solid transparent;border-radius:11px;padding:7px;color:var(--n8x-ink);background:transparent;text-decoration:none;cursor:pointer;font-size:18px;line-height:1;transition:background .18s,border-color .18s,transform .18s}
     .n8x-btn:hover,.n8x-btn:focus-visible,.n8x-link:hover,.n8x-link:focus-visible{outline:0;border-color:var(--n8x-line);background:rgba(102,231,255,.12);transform:translateY(-2px)}
     .n8x-primary{color:#041017;background:linear-gradient(135deg,var(--n8x-cyan),#a8f3ff)}
     #n8x-progress{position:fixed;left:0;top:0;z-index:2147483646;width:0;height:3px;background:linear-gradient(90deg,var(--n8x-cyan),var(--n8x-violet));box-shadow:0 0 12px var(--n8x-cyan);pointer-events:none}
-    #n8x-panel{position:fixed;right:14px;bottom:72px;width:min(440px,calc(100vw - 28px));max-height:min(680px,calc(100vh - 100px));display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;border:1px solid var(--n8x-line);border-radius:20px;background:var(--n8x-bg);box-shadow:var(--n8x-shadow);backdrop-filter:blur(22px) saturate(1.3);overflow:hidden;opacity:0;transform:translateY(18px) scale(.98);pointer-events:none;transition:.2s}
+    #n8x-panel{position:fixed;right:14px;bottom:70px;width:min(400px,calc(100vw - 28px));max-height:min(620px,calc(100vh - 96px));display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;border:1px solid var(--n8x-line);border-radius:18px;background:var(--n8x-bg);box-shadow:var(--n8x-shadow);backdrop-filter:blur(22px) saturate(1.3);overflow:hidden;opacity:0;transform:translateY(18px) scale(.98);pointer-events:none;transition:.2s}
+    #n8x-shell[data-n8x-side="left"] #n8x-panel{left:14px;right:auto}
     #n8x-panel[aria-hidden="false"]{opacity:1;transform:none;pointer-events:auto}
     .n8x-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 17px 12px}.n8x-head strong{font-size:14px;letter-spacing:.08em;text-transform:uppercase}.n8x-head small{display:block;margin-top:3px;color:var(--n8x-muted);font-size:11px}
     #n8x-search{width:calc(100% - 28px);min-height:44px;margin:0 14px 10px;border:1px solid var(--n8x-line);border-radius:11px;padding:0 13px;color:var(--n8x-ink);background:rgba(255,255,255,.055);font-size:14px;outline:0}#n8x-search:focus{border-color:var(--n8x-cyan);box-shadow:0 0 0 3px rgba(102,231,255,.1)}
@@ -108,7 +115,8 @@ function headEnhancements(page, title, description) {
     html[data-n8x-calm="true"] body>*:not(#n8x-shell):not(#n8x-progress):not(#n8x-toast):not(#n8x-skip){filter:saturate(.72) brightness(.86)}
     html[data-n8x-calm="true"]{scroll-behavior:auto!important}
     :focus-visible{outline:2px solid var(--n8x-cyan,#66e7ff);outline-offset:3px}
-    @media(max-width:620px){#n8x-shell{right:8px;bottom:8px}#n8x-dock{gap:2px;padding:5px}.n8x-btn,.n8x-link{min-width:38px;min-height:38px;font-size:16px}#n8x-panel{right:8px;bottom:60px;width:calc(100vw - 16px);max-height:calc(100vh - 76px)}}
+    @media(max-width:620px){#n8x-shell{right:0;bottom:max(8px,env(safe-area-inset-bottom))}#n8x-shell[data-n8x-side="left"]{left:0;right:auto}#n8x-dock{display:grid;grid-template-columns:36px;gap:3px;max-width:none;padding:4px;border-radius:14px 0 0 14px}#n8x-shell[data-n8x-side="left"] #n8x-dock{border-radius:0 14px 14px 0}#n8x-shell[data-n8x-expanded="true"] #n8x-dock{grid-template-columns:repeat(2,36px)}.n8x-btn,.n8x-link{min-width:36px;min-height:36px;padding:5px;font-size:15px}#n8x-panel{right:46px;bottom:0;width:min(360px,calc(100vw - 54px));max-height:min(560px,calc(100dvh - 16px));border-radius:16px}#n8x-shell[data-n8x-side="left"] #n8x-panel{left:46px;right:auto}.n8x-head{padding:12px 13px 9px}#n8x-search{width:calc(100% - 20px);min-height:40px;margin:0 10px 7px}#n8x-list{padding:3px 7px 9px}.n8x-page{grid-template-columns:31px 1fr auto;gap:7px;min-height:44px;padding:5px}.n8x-num{width:28px;height:28px}.n8x-foot{padding:8px 11px}.n8x-foot span:last-child{display:none}}
+    @media(max-width:380px){#n8x-panel{width:calc(100vw - 50px);right:42px}#n8x-shell[data-n8x-side="left"] #n8x-panel{left:42px;right:auto}.n8x-copy span{display:none}}
     @media(prefers-reduced-motion:reduce){#n8x-shell *,#n8x-skip,#n8x-toast{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
     @media print{#n8x-shell,#n8x-progress,#n8x-toast,#n8x-skip{display:none!important}}
   </style>
@@ -135,24 +143,36 @@ function bodyEnhancements(page, pages) {
     <nav id="n8x-dock" aria-label="Quick page controls">
       <a class="n8x-link n8x-primary" href="index.html" aria-label="Open Qamelot home" title="Home (Alt+H)">⌂</a>
       <button class="n8x-btn" id="n8x-open" type="button" aria-expanded="false" aria-controls="n8x-panel" aria-label="Browse every page" title="All pages (Alt+M)">☰</button>
-      <a class="n8x-link" href="${escapeHtml(previous.file)}" aria-label="Previous page: ${escapeHtml(previous.title)}" title="Previous page">←</a>
-      <a class="n8x-link" href="${escapeHtml(next.file)}" aria-label="Next page: ${escapeHtml(next.title)}" title="Next page">→</a>
-      <button class="n8x-btn" id="n8x-random" type="button" aria-label="Open a random page" title="Random page (Alt+R)">⚄</button>
-      <button class="n8x-btn" id="n8x-share" type="button" aria-label="Share or copy this page link" title="Share page">↗</button>
-      <button class="n8x-btn" id="n8x-calm" type="button" aria-pressed="false" aria-label="Toggle calm viewing mode" title="Calm mode">◐</button>
-      <button class="n8x-btn" id="n8x-full" type="button" aria-label="Toggle fullscreen" title="Fullscreen">⛶</button>
-      <button class="n8x-btn" id="n8x-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+      <a class="n8x-link n8x-secondary" href="${escapeHtml(previous.file)}" aria-label="Previous page: ${escapeHtml(previous.title)}" title="Previous page">←</a>
+      <a class="n8x-link n8x-secondary" href="${escapeHtml(next.file)}" aria-label="Next page: ${escapeHtml(next.title)}" title="Next page">→</a>
+      <button class="n8x-btn n8x-secondary" id="n8x-random" type="button" aria-label="Open a random page" title="Random page (Alt+R)">⚄</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-share" type="button" aria-label="Share or copy this page link" title="Share page">↗</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-calm" type="button" aria-pressed="false" aria-label="Toggle calm viewing mode" title="Calm mode">◐</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-full" type="button" aria-label="Toggle fullscreen" title="Fullscreen">⛶</button>
+      <button class="n8x-btn n8x-secondary" id="n8x-top" type="button" aria-label="Back to top" title="Back to top">↑</button>
+      <button class="n8x-btn" id="n8x-more" type="button" aria-expanded="false" aria-label="Show more controls" title="More controls">•••</button>
+      <button class="n8x-btn" id="n8x-move" type="button" aria-label="Move controls to the other side" title="Move controls">⇆</button>
+      <button class="n8x-btn" id="n8x-hide" type="button" aria-label="Hide floating controls" title="Hide controls">−</button>
     </nav>
+    <button id="n8x-restore" type="button" aria-label="Show N8 controls" title="Show controls">N8</button>
   </aside>
   <div id="n8x-toast" role="status" aria-live="polite"></div>
   <script id="n8x-script">
   (()=>{
     const pages=${filenames};
-    const panel=document.getElementById('n8x-panel'),open=document.getElementById('n8x-open'),search=document.getElementById('n8x-search'),list=document.getElementById('n8x-list'),toast=document.getElementById('n8x-toast');
+    const shell=document.getElementById('n8x-shell'),panel=document.getElementById('n8x-panel'),open=document.getElementById('n8x-open'),search=document.getElementById('n8x-search'),list=document.getElementById('n8x-list'),toast=document.getElementById('n8x-toast'),more=document.getElementById('n8x-more');
+    const readSetting=(key,fallback)=>{try{return localStorage.getItem(key)??fallback}catch{return fallback}},writeSetting=(key,value)=>{try{localStorage.setItem(key,value)}catch{}};
+    shell.dataset.n8xSide=readSetting('n8x-side','right')==='left'?'left':'right';shell.dataset.n8xHidden=String(readSetting('n8x-hidden','false')==='true');shell.dataset.n8xExpanded='false';
     const showToast=(message)=>{toast.textContent=message;toast.classList.add('n8x-show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('n8x-show'),2200)};
-    const setMenu=(visible)=>{panel.setAttribute('aria-hidden',String(!visible));open.setAttribute('aria-expanded',String(visible));if(visible){search.focus();search.select()}else open.focus()};
+    const setExpanded=(active)=>{shell.dataset.n8xExpanded=String(active);more.setAttribute('aria-expanded',String(active));more.setAttribute('aria-label',active?'Show fewer controls':'Show more controls')};
+    const setMenu=(visible,returnFocus=true)=>{if(visible){shell.dataset.n8xHidden='false';writeSetting('n8x-hidden','false');setExpanded(false)}panel.setAttribute('aria-hidden',String(!visible));open.setAttribute('aria-expanded',String(visible));if(visible){search.focus();search.select()}else if(returnFocus&&shell.dataset.n8xHidden!=='true')open.focus()};
+    const setHidden=(hidden)=>{setMenu(false,false);shell.dataset.n8xHidden=String(hidden);writeSetting('n8x-hidden',String(hidden));if(!hidden)open.focus()};
     open.addEventListener('click',()=>setMenu(panel.getAttribute('aria-hidden')==='true'));
     document.getElementById('n8x-close').addEventListener('click',()=>setMenu(false));
+    more.addEventListener('click',()=>setExpanded(shell.dataset.n8xExpanded!=='true'));
+    document.getElementById('n8x-move').addEventListener('click',()=>{const side=shell.dataset.n8xSide==='left'?'right':'left';shell.dataset.n8xSide=side;writeSetting('n8x-side',side);showToast('Controls moved '+side)});
+    document.getElementById('n8x-hide').addEventListener('click',()=>setHidden(true));
+    document.getElementById('n8x-restore').addEventListener('click',()=>setHidden(false));
     search.addEventListener('input',()=>{const query=search.value.trim().toLowerCase();let shown=0;list.querySelectorAll('.n8x-page').forEach(link=>{const match=!query||link.dataset.search.includes(query);link.hidden=!match;if(match)shown++});document.getElementById('n8x-count').textContent=shown+' page'+(shown===1?'':'s')});
     document.getElementById('n8x-random').addEventListener('click',()=>{const choices=pages.filter(file=>file!==${JSON.stringify(page.file)});location.href=choices[Math.floor(Math.random()*choices.length)]||'index.html'});
     document.getElementById('n8x-share').addEventListener('click',async()=>{const data={title:document.title,text:'Explore '+document.title,url:location.href};try{if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(location.href);showToast('Live page link copied')}}catch(error){if(error.name!=='AbortError')showToast('Use the address bar to copy this link')}});
@@ -160,6 +180,7 @@ function bodyEnhancements(page, pages) {
     document.getElementById('n8x-full').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(error){showToast('Fullscreen is unavailable here')}});
     document.getElementById('n8x-top').addEventListener('click',()=>scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
     const progress=document.getElementById('n8x-progress');const updateProgress=()=>{const max=document.documentElement.scrollHeight-innerHeight;progress.style.width=(max>0?Math.min(100,scrollY/max*100):0)+'%'};addEventListener('scroll',updateProgress,{passive:true});addEventListener('resize',updateProgress,{passive:true});updateProgress();
+    document.addEventListener('pointerdown',event=>{if(panel.getAttribute('aria-hidden')==='false'&&!shell.contains(event.target))setMenu(false,false)},{capture:true});
     document.addEventListener('keydown',event=>{const typing=/input|textarea|select/i.test(document.activeElement?.tagName||'');if(event.key==='Escape'&&panel.getAttribute('aria-hidden')==='false'){event.preventDefault();setMenu(false)}else if(event.key==='/'&&!typing){event.preventDefault();setMenu(true)}else if(event.altKey&&event.key.toLowerCase()==='m'){event.preventDefault();setMenu(panel.getAttribute('aria-hidden')==='true')}else if(event.altKey&&event.key.toLowerCase()==='h'){event.preventDefault();location.href='index.html'}else if(event.altKey&&event.key.toLowerCase()==='r'){event.preventDefault();document.getElementById('n8x-random').click()}});
     document.querySelectorAll('a[target="_blank"]').forEach(link=>{const rel=new Set((link.rel||'').split(/\s+/).filter(Boolean));rel.add('noopener');rel.add('noreferrer');link.rel=[...rel].join(' ')});
   })();
