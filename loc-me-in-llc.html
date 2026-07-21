@@ -775,7 +775,7 @@
             <a href="#care">Hair Care</a>
             <a href="#lmi-lab">Client Studio</a>
             <a href="#gallery">Gallery</a>
-            <a href="#booking" class="contact-nav">Plan a Visit</a>
+            <a href="#contact" class="contact-nav">Contact Studio</a>
         </nav>
     </header>
 
@@ -1198,6 +1198,36 @@
                     <div class="lmi-output" id="lmi-kit-output" role="status" aria-live="polite">Build your style and appointment selections, then export the complete kit.</div>
                 </article>
             </div>
+        </section>
+
+        <section class="card-panel lmi-contact" id="contact" aria-labelledby="lmi-contact-title">
+            <div class="lmi-contact-copy">
+                <span class="section-tag">Private studio inquiry</span>
+                <h2 id="lmi-contact-title">Let’s Plan Your Next Look</h2>
+                <p>Send your questions, preferred service, or appointment details directly to the Loc Me In studio. Your reply address stays private and is used only to respond to your request.</p>
+                <div class="lmi-contact-points" aria-label="What happens next">
+                    <span><b>01</b> Share your vision</span>
+                    <span><b>02</b> Studio reviews details</span>
+                    <span><b>03</b> Receive a direct reply</span>
+                </div>
+            </div>
+            <form class="lmi-contact-form" id="lmi-contact-form" novalidate>
+                <input class="lmi-honeypot" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <input type="hidden" name="startedAt" id="lmi-contact-started">
+                <div class="lmi-contact-row">
+                    <div><label for="lmi-contact-name">Your name</label><input id="lmi-contact-name" name="name" type="text" autocomplete="name" maxlength="80" required placeholder="How should we address you?"></div>
+                    <div><label for="lmi-contact-reply">Reply email</label><input id="lmi-contact-reply" name="email" type="email" autocomplete="email" inputmode="email" maxlength="160" required placeholder="Where should we reply?"></div>
+                </div>
+                <div class="lmi-contact-row">
+                    <div><label for="lmi-contact-phone">Phone <span>(optional)</span></label><input id="lmi-contact-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="Best callback number"></div>
+                    <div><label for="lmi-contact-service">Service interest</label><select id="lmi-contact-service" name="service"><option>Not sure — help me choose</option><option>Retwist Only</option><option>Two-Strand Twist</option><option>Barrel / Criss-Cross Braids</option><option>Two French Braids</option><option>Loc’d Bun / Updo</option><option>Shampoo & Hydration</option><option>Starter Loc Consultation</option><option>Other</option></select></div>
+                </div>
+                <label for="lmi-contact-message">Tell us about your hair and goals</label>
+                <textarea id="lmi-contact-message" name="message" rows="6" minlength="10" maxlength="1800" required placeholder="Include your current loc stage, preferred dates, inspiration, or questions…"></textarea>
+                <label class="lmi-consent"><input id="lmi-contact-consent" type="checkbox" required> <span>I consent to a direct response about this inquiry.</span></label>
+                <button class="btn-premium lmi-contact-submit" id="lmi-contact-submit" type="submit"><span>SEND PRIVATE INQUIRY</span><i aria-hidden="true">↗</i></button>
+                <p class="lmi-contact-status" id="lmi-contact-status" role="status" aria-live="polite">Messages are delivered privately to the studio.</p>
+            </form>
         </section>
     </div>
 
