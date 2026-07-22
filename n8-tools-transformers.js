@@ -6,7 +6,9 @@
     pinned: "n8t-pinned",
     position: "n8t-position",
     clipboard: "n8t-clipboard",
-    notes: "n8t-notes"
+    notes: "n8t-notes",
+    botHistory: "n8t-pathfinder-history",
+    botTimer: "n8t-pathfinder-timer"
   };
   var MODES = ["calm", "dark", "light", "cyber", "transformers"];
   var state = {
@@ -16,7 +18,11 @@
     contextTimer: 0,
     toastTimer: 0,
     ruler: false,
-    lastFocus: null
+    lastFocus: null,
+    botHistory: [],
+    commandHistory: [],
+    commandIndex: 0,
+    timerInterval: 0
   };
 
   function safeGet(key, fallback) {
@@ -131,12 +137,29 @@
       '      <span class="n8t-status">Systems online</span>',
       '    </header>',
       '    <div class="n8t-tabs" role="tablist" aria-label="N8 Tool sections">',
-      '      <button class="n8t-tab" id="n8t-tab-features" role="tab" aria-selected="true" aria-controls="n8t-view-features" data-tab="features">Features</button>',
+      '      <button class="n8t-tab" id="n8t-tab-bot" role="tab" aria-selected="true" aria-controls="n8t-view-bot" data-tab="bot">Pathfinder</button>',
+      '      <button class="n8t-tab" id="n8t-tab-features" role="tab" aria-selected="false" aria-controls="n8t-view-features" data-tab="features">Features</button>',
       '      <button class="n8t-tab" id="n8t-tab-fleet" role="tab" aria-selected="false" aria-controls="n8t-view-fleet" data-tab="fleet">Fleet</button>',
       '      <button class="n8t-tab" id="n8t-tab-modes" role="tab" aria-selected="false" aria-controls="n8t-view-modes" data-tab="modes">Modes</button>',
       '    </div>',
       '    <div class="n8t-stage">',
-      '      <section class="n8t-view" id="n8t-view-features" role="tabpanel" aria-labelledby="n8t-tab-features">',
+      '      <section class="n8t-view n8t-bot" id="n8t-view-bot" role="tabpanel" aria-labelledby="n8t-tab-bot">',
+      '        <div class="n8t-bot-identity"><span class="n8t-bot-core" aria-hidden="true"><i></i></span><span><b>N8 PATHFINDER</b><small>Private on-device command brain</small></span><span class="n8t-bot-online">READY</span></div>',
+      '        <div class="n8t-bot-timer" id="n8t-bot-timer" hidden><span>FOCUS TIMER</span><strong id="n8t-bot-timer-value">00:00</strong><button type="button" id="n8t-bot-timer-cancel">CANCEL</button></div>',
+      '        <div class="n8t-bot-log" id="n8t-bot-log" role="log" aria-live="polite" aria-label="Pathfinder conversation"></div>',
+      '        <div class="n8t-bot-chips" aria-label="Pathfinder shortcuts">',
+      '          <button type="button" data-bot-quick="suggest">Suggest</button>',
+      '          <button type="button" data-bot-quick="summarize page">Page intel</button>',
+      '          <button type="button" data-bot-quick="focus 25">Focus 25</button>',
+      '          <button type="button" data-bot-quick="help">Commands</button>',
+      '        </div>',
+      '        <form class="n8t-bot-compose" id="n8t-bot-form">',
+      '          <input id="n8t-bot-input" type="text" autocomplete="off" maxlength="240" aria-label="Message N8 Pathfinder" placeholder="Ask, find, open, note, time, focus…">',
+      '          <button class="n8t-bot-mic" id="n8t-bot-mic" type="button" aria-label="Speak to Pathfinder" title="Voice input">◎</button>',
+      '          <button class="n8t-bot-send" type="submit" aria-label="Send to Pathfinder">GO</button>',
+      '        </form>',
+      '      </section>',
+      '      <section class="n8t-view" id="n8t-view-features" role="tabpanel" aria-labelledby="n8t-tab-features" hidden>',
       '        <div class="n8t-grid">',
       '          <button class="n8t-card" data-feature="clipboard"><span class="n8t-card-icon">▣</span><b>Clipboard View</b><span>Reveal the latest copied text in a private popup note.</span></button>',
       '          <button class="n8t-card" data-feature="notes"><span class="n8t-card-icon">✦</span><b>Quick Notes</b><span>Keep an autosaved scratchpad on this browser.</span></button>',
@@ -160,10 +183,10 @@
       '        </div>',
       '      </section>',
       '    </div>',
-      '    <footer class="n8t-foot"><span>Right-click keeps the browser menu + N8 actions</span><code>ALT+N</code></footer>',
+      '    <footer class="n8t-foot"><span>Pathfinder works privately in your browser</span><code>ALT+B</code></footer>',
       '  </div>',
       '  <div class="n8t-dock">',
-      '    <button class="n8t-btn n8t-brand" id="n8t-toggle" aria-expanded="false" aria-controls="n8t-panel"><span class="n8t-mark">N8</span><span class="n8t-brand-copy"><strong>N8 TOOLS</strong><small>Transform system</small></span></button>',
+      '    <button class="n8t-btn n8t-brand" id="n8t-toggle" aria-expanded="false" aria-controls="n8t-panel"><span class="n8t-mark">N8</span><span class="n8t-brand-copy"><strong>PATHFINDER</strong><small>Command brain online</small></span></button>',
       '    <button class="n8t-btn n8t-icon-btn" id="n8t-clipboard-button" title="Clipboard view" aria-label="Open clipboard view">▣</button>',
       '    <button class="n8t-btn n8t-icon-btn" id="n8t-mode-button" title="Cycle visual mode" aria-label="Cycle visual mode">◈</button>',
       '    <button class="n8t-btn n8t-icon-btn" id="n8t-pin" title="Pin N8 Tools" aria-label="Pin N8 Tools" aria-pressed="true">⌖</button>',
@@ -185,6 +208,7 @@
       contextItem("top", "Back to top", "11"),
       contextItem("fullscreen", "Toggle fullscreen", "12"),
       contextItem("print", "Print page", "13"),
+      contextItem("pathfinder", "Ask N8 Pathfinder", "14"),
       '</div>',
       overlayMarkup("n8t-clipboard", "Clipboard View", "n8t-clipboard-text", "Refresh", "Copy", "Clear"),
       overlayMarkup("n8t-modal", "N8 Utility", "n8t-modal-content", "", "", ""),
@@ -218,6 +242,7 @@
     document.body.insertAdjacentHTML("beforeend", shellMarkup());
     bind();
     renderFleet("");
+    initPathfinder();
     var storedMode = safeGet(STORAGE.mode, "transformers");
     setMode(MODES.indexOf(storedMode) > -1 ? storedMode : "transformers", false);
     state.pinned = safeGet(STORAGE.pinned, "true") !== "false";
@@ -244,6 +269,20 @@
     document.getElementById("n8t-search").addEventListener("input", function (event) {
       renderFleet(event.target.value);
     });
+    document.getElementById("n8t-bot-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      var input = document.getElementById("n8t-bot-input");
+      var command = input.value.trim();
+      if (!command) return;
+      input.value = "";
+      runPathfinder(command);
+    });
+    document.getElementById("n8t-bot-input").addEventListener("keydown", botHistoryKeys);
+    document.querySelectorAll("[data-bot-quick]").forEach(function (button) {
+      button.addEventListener("click", function () { runPathfinder(button.dataset.botQuick); });
+    });
+    document.getElementById("n8t-bot-mic").addEventListener("click", startVoiceInput);
+    document.getElementById("n8t-bot-timer-cancel").addEventListener("click", cancelFocusTimer);
     document.querySelectorAll(".n8t-card").forEach(function (card) {
       card.addEventListener("click", function () { runFeature(card.dataset.feature); });
     });
@@ -327,6 +366,313 @@
       empty.textContent = "No fleet pages match that search.";
       fleet.appendChild(empty);
     }
+  }
+
+  function initPathfinder() {
+    try {
+      var saved = JSON.parse(safeGet(STORAGE.botHistory, "[]"));
+      if (Array.isArray(saved)) {
+        state.botHistory = saved.filter(function (item) {
+          return item && (item.role === "bot" || item.role === "user") && typeof item.text === "string";
+        }).slice(-32);
+      }
+    } catch (error) {
+      state.botHistory = [];
+    }
+    if (!state.botHistory.length) {
+      state.botHistory.push({
+        role: "bot",
+        text: "Pathfinder online. I mapped " + state.pages.length + " N8 destinations and analyzed this page. Ask me to suggest, find, open, note, focus, summarize, scan, copy, or change mode.",
+        time: Date.now()
+      });
+    }
+    renderBotHistory();
+    var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    document.getElementById("n8t-bot-mic").hidden = !SpeechRecognition;
+    resumeFocusTimer();
+  }
+
+  function botSay(role, text) {
+    state.botHistory.push({ role: role, text: String(text), time: Date.now() });
+    state.botHistory = state.botHistory.slice(-32);
+    safeSet(STORAGE.botHistory, JSON.stringify(state.botHistory));
+    renderBotHistory();
+  }
+
+  function renderBotHistory() {
+    var log = document.getElementById("n8t-bot-log");
+    if (!log) return;
+    log.replaceChildren();
+    state.botHistory.forEach(function (item) {
+      var message = document.createElement("article");
+      var label = document.createElement("span");
+      var copy = document.createElement("p");
+      message.className = "n8t-bot-message n8t-bot-" + item.role;
+      label.textContent = item.role === "user" ? "YOU" : "PATHFINDER";
+      copy.textContent = item.text;
+      message.append(label, copy);
+      log.appendChild(message);
+    });
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function pageIntel() {
+    var clone = document.body.cloneNode(true);
+    clone.querySelectorAll("#n8t-shell,#n8t-context,#n8t-clipboard,#n8t-modal,#n8t-ruler,#n8t-toast,#n8t-mode-layer,#n8x-skip,#n8x-progress").forEach(function (node) {
+      node.remove();
+    });
+    var words = (clone.textContent || "").trim().split(/\s+/).filter(Boolean).length;
+    var headings = Array.from(document.querySelectorAll("h1,h2,h3")).filter(function (node) {
+      return !node.closest("#n8t-shell");
+    });
+    return {
+      title: document.title || "Untitled page",
+      heading: headings.length ? headings[0].textContent.trim() : "No primary heading",
+      words: words,
+      minutes: Math.max(1, Math.ceil(words / 220)),
+      links: document.querySelectorAll("a[href]").length,
+      buttons: Array.from(document.querySelectorAll("button")).filter(function (node) { return !node.closest("#n8t-shell,#n8t-context,#n8t-modal,#n8t-clipboard"); }).length,
+      fields: Array.from(document.querySelectorAll("input,textarea,select")).filter(function (node) { return !node.closest("#n8t-shell,#n8t-modal,#n8t-clipboard"); }).length,
+      canvases: document.querySelectorAll("canvas").length
+    };
+  }
+
+  function pageSummary() {
+    var intel = pageIntel();
+    return [
+      "PAGE INTEL — " + intel.title,
+      "Primary heading: " + intel.heading,
+      intel.words + " words · about " + intel.minutes + " min read",
+      intel.links + " links · " + intel.buttons + " buttons · " + intel.fields + " fields · " + intel.canvases + " canvases"
+    ].join("\n");
+  }
+
+  function pathfinderSuggestions() {
+    var intel = pageIntel();
+    var ideas = [];
+    if (intel.canvases) ideas.push('This is an interactive canvas page—try "fullscreen" or "scan".');
+    if (intel.fields) ideas.push('There are ' + intel.fields + ' input fields—try "summarize page" before entering data.');
+    if (intel.words > 900) ideas.push('This page is text-heavy—turn on the Reading Ruler from Features.');
+    if (intel.buttons > 12) ideas.push('There are ' + intel.buttons + ' controls—run "scan" for a quick interface check.');
+    if (state.pages.length > 5) ideas.push('I can jump across all ' + state.pages.length + ' destinations: type "open" plus a page name.');
+    ideas.push('Start a protected work sprint with "focus 25".');
+    ideas.push('Capture an idea instantly with "note" followed by your thought.');
+    return "BEST NEXT MOVES\n" + ideas.slice(0, 3).map(function (idea, index) {
+      return (index + 1) + ". " + idea;
+    }).join("\n");
+  }
+
+  function findOnPage(query) {
+    var needle = query.toLowerCase();
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    var node;
+    while ((node = walker.nextNode())) {
+      if (!node.parentElement || node.parentElement.closest("#n8t-shell,#n8t-context,#n8t-modal,#n8t-clipboard,script,style")) continue;
+      var index = node.nodeValue.toLowerCase().indexOf(needle);
+      if (index < 0) continue;
+      var range = document.createRange();
+      range.setStart(node, index);
+      range.setEnd(node, index + query.length);
+      var selection = getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      node.parentElement.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+      return true;
+    }
+    return false;
+  }
+
+  function fleetMatch(query) {
+    var needle = query.toLowerCase().trim();
+    var terms = needle.split(/\s+/).filter(Boolean);
+    return state.pages.map(function (page) {
+      var title = page.title.toLowerCase();
+      var haystack = (page.title + " " + page.category + " " + page.href).toLowerCase();
+      var score = title === needle ? 100 : title.startsWith(needle) ? 80 : title.indexOf(needle) > -1 ? 65 : terms.every(function (term) { return haystack.indexOf(term) > -1; }) ? 45 : terms.filter(function (term) { return haystack.indexOf(term) > -1; }).length * 10;
+      return { page: page, score: score };
+    }).filter(function (item) { return item.score > 0; }).sort(function (a, b) {
+      return b.score - a.score || a.page.title.localeCompare(b.page.title);
+    });
+  }
+
+  function runPathfinder(rawCommand) {
+    var command = String(rawCommand || "").trim();
+    if (!command) return;
+    state.commandHistory.push(command);
+    state.commandHistory = state.commandHistory.slice(-20);
+    state.commandIndex = state.commandHistory.length;
+    botSay("user", command);
+    var lower = command.toLowerCase().replace(/^\/+/, "");
+    var match;
+
+    if (/^(help|commands|what can you do|\?)$/.test(lower)) {
+      botSay("bot", 'COMMAND MAP\nsuggest · summarize page · find <text> · open <site>\nnote <idea> · show notes · focus <minutes> · cancel timer\nmode <name> · copy url/title/selection · clipboard\nscan · links · random · top · bottom · time · clear chat');
+    } else if (/^(suggest|recommend|what next|next)$/.test(lower)) {
+      botSay("bot", pathfinderSuggestions());
+    } else if (/^(summarize|summarise|summarize page|page intel|analyze page|analyse page|status)$/.test(lower)) {
+      botSay("bot", pageSummary());
+    } else if ((match = lower.match(/^(?:find|locate|search page for)\s+(.+)/))) {
+      var found = findOnPage(match[1]);
+      botSay("bot", found ? 'Found and selected “' + match[1] + '” on this page.' : 'I could not find “' + match[1] + '” on this page.');
+    } else if ((match = lower.match(/^(?:open|go to|navigate to|launch)\s+(.+)/))) {
+      var matches = fleetMatch(match[1]);
+      if (!matches.length) {
+        botSay("bot", 'No fleet destination matched “' + match[1] + '”. Try the Fleet tab.');
+      } else {
+        botSay("bot", "Opening " + matches[0].page.title + "…");
+        setTimeout(function () { location.href = matches[0].page.href; }, 420);
+      }
+    } else if ((match = command.match(/^(?:note|remember|capture)\s+(.+)/i))) {
+      var stamp = new Date().toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+      var existing = safeGet(STORAGE.notes, "");
+      safeSet(STORAGE.notes, (existing ? existing + "\n" : "") + "• " + match[1].trim() + "  [" + stamp + "]");
+      botSay("bot", "Captured in Quick Notes: " + match[1].trim());
+    } else if (/^(show|open)\s+notes?$/.test(lower)) {
+      openNotes();
+      botSay("bot", "Quick Notes opened.");
+    } else if ((match = lower.match(/^(?:focus|timer)(?:\s+for)?\s+(\d+(?:\.\d+)?)\s*(?:m|min|mins|minutes?)?$/))) {
+      startFocusTimer(Number(match[1]));
+    } else if (/^(?:cancel|stop|clear)\s+(?:focus|timer)$/.test(lower)) {
+      cancelFocusTimer();
+    } else if ((match = lower.match(/^(?:mode|theme)\s+(calm|dark|light|cyber|transformers?)$/))) {
+      setMode(match[1] === "transformer" ? "transformers" : match[1], true);
+      botSay("bot", "Visual system changed to " + state.mode + " mode.");
+    } else if (/^copy\s+(?:url|link|page link)$/.test(lower)) {
+      copyText(location.href, "Page URL copied");
+      botSay("bot", "Page URL copied.");
+    } else if (/^copy\s+(?:title|page title)$/.test(lower)) {
+      copyText(document.title, "Page title copied");
+      botSay("bot", "Page title copied.");
+    } else if (/^copy\s+selection$/.test(lower)) {
+      var selected = String(getSelection ? getSelection() : "").trim();
+      if (selected) {
+        copyText(selected, "Selection copied");
+        botSay("bot", "Selected text copied.");
+      } else {
+        botSay("bot", "Select some page text first, then ask again.");
+      }
+    } else if (/^(clipboard|open clipboard|clipboard view)$/.test(lower)) {
+      openClipboard();
+      botSay("bot", "Clipboard View opened.");
+    } else if (/^(scan|diagnose|diagnostic|transformer scan)$/.test(lower)) {
+      transformerScan();
+      botSay("bot", "Transformer scan running.");
+    } else if (/^(fullscreen|full screen|toggle fullscreen)$/.test(lower)) {
+      toggleFullscreen();
+      botSay("bot", "Fullscreen toggled.");
+    } else if (/^(links|inspect links|link inspector)$/.test(lower)) {
+      inspectLinks();
+      botSay("bot", "Link Inspector opened.");
+    } else if (/^(random|surprise me|random page)$/.test(lower)) {
+      var choices = state.pages.filter(function (page) { return !location.pathname.endsWith(page.href); });
+      var choice = choices[Math.floor(Math.random() * choices.length)];
+      if (choice) {
+        botSay("bot", "Surprise route selected: " + choice.title + "…");
+        setTimeout(function () { location.href = choice.href; }, 420);
+      }
+    } else if (/^(top|back to top)$/.test(lower)) {
+      scrollTo({ top: 0, behavior: "smooth" });
+      botSay("bot", "Moving to the top.");
+    } else if (/^(bottom|go to bottom)$/.test(lower)) {
+      scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+      botSay("bot", "Moving to the bottom.");
+    } else if (/^(time|date|today|what time is it)$/.test(lower)) {
+      botSay("bot", new Date().toLocaleString([], { dateStyle: "full", timeStyle: "short" }));
+    } else if (/^(clear|clear chat|reset chat)$/.test(lower)) {
+      state.botHistory = [];
+      safeSet(STORAGE.botHistory, "[]");
+      botSay("bot", "Conversation cleared. Pathfinder is ready.");
+    } else if (/^(who are you|what are you|about)$/.test(lower)) {
+      botSay("bot", "I’m N8 Pathfinder: a private browser-side operator. I use the page already in front of you—no account, server, or conversation upload required.");
+    } else {
+      var suggestions = fleetMatch(lower).slice(0, 3);
+      if (findOnPage(command)) {
+        botSay("bot", 'I found “' + command + '” on this page and selected it. For fleet navigation, say "open ' + command + '".');
+      } else if (suggestions.length) {
+        botSay("bot", "Possible fleet matches:\n" + suggestions.map(function (item) { return "• " + item.page.title; }).join("\n") + '\nSay "open" plus a title to launch one.');
+      } else {
+        botSay("bot", 'I did not recognize that yet. Try "suggest" or "help" for my command map.');
+      }
+    }
+  }
+
+  function botHistoryKeys(event) {
+    if (!state.commandHistory.length || (event.key !== "ArrowUp" && event.key !== "ArrowDown")) return;
+    event.preventDefault();
+    state.commandIndex += event.key === "ArrowUp" ? -1 : 1;
+    state.commandIndex = Math.max(0, Math.min(state.commandHistory.length, state.commandIndex));
+    event.currentTarget.value = state.commandIndex === state.commandHistory.length ? "" : state.commandHistory[state.commandIndex];
+  }
+
+  function startVoiceInput() {
+    var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast("Voice input is unavailable in this browser");
+      return;
+    }
+    var recognition = new SpeechRecognition();
+    var button = document.getElementById("n8t-bot-mic");
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    button.dataset.listening = "true";
+    recognition.onresult = function (event) {
+      var spoken = event.results[0][0].transcript;
+      document.getElementById("n8t-bot-input").value = spoken;
+      runPathfinder(spoken);
+    };
+    recognition.onerror = function () { toast("I could not hear that command"); };
+    recognition.onend = function () { button.dataset.listening = "false"; };
+    recognition.start();
+  }
+
+  function startFocusTimer(minutes) {
+    minutes = Math.max(.1, Math.min(180, Number(minutes) || 25));
+    var timer = { end: Date.now() + Math.round(minutes * 60000), minutes: minutes };
+    safeSet(STORAGE.botTimer, JSON.stringify(timer));
+    activateFocusTimer(timer);
+    botSay("bot", "Focus shield engaged for " + minutes + " minute" + (minutes === 1 ? "" : "s") + ". I’ll keep the countdown visible across pages.");
+  }
+
+  function resumeFocusTimer() {
+    try {
+      var timer = JSON.parse(safeGet(STORAGE.botTimer, "null"));
+      if (timer && Number(timer.end) > Date.now()) activateFocusTimer(timer);
+      else safeSet(STORAGE.botTimer, "");
+    } catch (error) {
+      safeSet(STORAGE.botTimer, "");
+    }
+  }
+
+  function activateFocusTimer(timer) {
+    clearInterval(state.timerInterval);
+    var panel = document.getElementById("n8t-bot-timer");
+    var value = document.getElementById("n8t-bot-timer-value");
+    panel.hidden = false;
+    function tick() {
+      var remaining = Math.max(0, Number(timer.end) - Date.now());
+      var seconds = Math.ceil(remaining / 1000);
+      var mins = Math.floor(seconds / 60);
+      var secs = seconds % 60;
+      value.textContent = String(mins).padStart(2, "0") + ":" + String(secs).padStart(2, "0");
+      if (remaining <= 0) {
+        clearInterval(state.timerInterval);
+        panel.hidden = true;
+        safeSet(STORAGE.botTimer, "");
+        toast("Focus mission complete");
+        botSay("bot", "Focus mission complete. Take a breath, save your work, and choose the next move.");
+      }
+    }
+    tick();
+    state.timerInterval = setInterval(tick, 1000);
+  }
+
+  function cancelFocusTimer() {
+    clearInterval(state.timerInterval);
+    var panel = document.getElementById("n8t-bot-timer");
+    if (panel) panel.hidden = true;
+    safeSet(STORAGE.botTimer, "");
+    botSay("bot", "Focus timer cancelled.");
   }
 
   function setMode(mode, announce) {
@@ -656,6 +1002,11 @@
     else if (action === "top") scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     else if (action === "fullscreen") toggleFullscreen();
     else if (action === "print") print();
+    else if (action === "pathfinder") {
+      setOpen(true);
+      setTab("bot");
+      document.getElementById("n8t-bot-input").focus();
+    }
   }
 
   function toggleFullscreen() {
@@ -679,6 +1030,11 @@
     } else if (event.altKey && event.key.toLowerCase() === "n") {
       event.preventDefault();
       setOpen(document.getElementById("n8t-shell").dataset.open !== "true");
+    } else if (event.altKey && event.key.toLowerCase() === "b") {
+      event.preventDefault();
+      setOpen(true);
+      setTab("bot");
+      document.getElementById("n8t-bot-input").focus();
     } else if (event.altKey && event.key.toLowerCase() === "c" && !typing) {
       event.preventDefault();
       openClipboard();
