@@ -74,7 +74,7 @@ function headEnhancements(page, title, description) {
   <meta name="format-detection" content="telephone=no">
   <meta name="n8-improvement-count" content="80">
   <meta name="n8-feature-count" content="16">
-${page.file === "index.html" || page.file === "QamelotMenu.html" ? '  <meta name="devdashboard-preview-count" content="48">\n' : ""}  <link rel="canonical" href="${escapeHtml(url)}">
+${page.file === "index.html" || page.file === "QamelotMenu.html" ? `  <meta name="devdashboard-preview-count" content="${manifest.length}">\n` : ""}  <link rel="canonical" href="${escapeHtml(url)}">
   <link rel="icon" type="image/png" sizes="128x128" href="n8-icon.png">
   <link rel="shortcut icon" type="image/png" href="n8-icon.png">
   <link rel="apple-touch-icon" href="n8-icon.png">
