@@ -33,9 +33,10 @@ function removeBlock(text, start, end) {
 function removeManagedHeadTags(text) {
   const managedMeta = /<meta\b(?=[^>]*(?:name|property)=["'](?:description|keywords|author|creator|publisher|robots|referrer|theme-color|color-scheme|application-name|format-detection|n8-improvement-count|n8-feature-count|devdashboard-preview-count|og:type|og:site_name|og:locale|og:title|og:description|og:url|twitter:card|twitter:title|twitter:description)["'])[^>]*>\s*/gi;
   const managedLink = /<link\b(?=[^>]*rel=["'][^"']*(?:canonical|icon|apple-touch-icon|manifest)[^"']*["'])[^>]*>\s*/gi;
+  const managedN8Assets = /<(?:link|script)\b[^>]*(?:n8-tools-transformers\.(?:css|js))[^>]*>(?:<\/script>)?\s*/gi;
   const legacyFaviconTail = /<polygon\b[^>]*\/><\/svg>">\s*/gi;
   const deadStylesheet = /<link\b[^>]*cssanimation\.css\/1\.0\.3\/cssanimation\.min\.css[^>]*>\s*/gi;
-  return text.replace(legacyFaviconTail, "").replace(deadStylesheet, "").replace(managedMeta, "").replace(managedLink, "");
+  return text.replace(legacyFaviconTail, "").replace(deadStylesheet, "").replace(managedMeta, "").replace(managedLink, "").replace(managedN8Assets, "");
 }
 function titleFromHtml(html, fallback) {
   const match = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
@@ -71,13 +72,15 @@ function headEnhancements(page, title, description) {
   <meta name="color-scheme" content="dark light">
   <meta name="application-name" content="N8 CyberDev">
   <meta name="format-detection" content="telephone=no">
-  <meta name="n8-improvement-count" content="40">
-  <meta name="n8-feature-count" content="10">
+  <meta name="n8-improvement-count" content="80">
+  <meta name="n8-feature-count" content="16">
 ${page.file === "index.html" || page.file === "QamelotMenu.html" ? '  <meta name="devdashboard-preview-count" content="48">\n' : ""}  <link rel="canonical" href="${escapeHtml(url)}">
   <link rel="icon" type="image/png" sizes="128x128" href="n8-icon.png">
   <link rel="shortcut icon" type="image/png" href="n8-icon.png">
   <link rel="apple-touch-icon" href="n8-icon.png">
   <link rel="manifest" href="qamelot-media-assets/site.webmanifest">
+  <link rel="stylesheet" href="n8-tools-transformers.css">
+  <script defer src="n8-tools-transformers.js"></script>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="N8 CyberDev">
   <meta property="og:locale" content="en_US">
@@ -196,9 +199,16 @@ if (!manifest.some((page) => page.file === "QamelotMenu.html")) {
 
 await copyFile(join(ROOT, "index.html"), join(ROOT, "QamelotMenu.html"));
 
+let enhancedCount = 0;
 for (const page of manifest) {
   const path = join(ROOT, page.file);
-  let html = await readFile(path, "utf8");
+  let html;
+  try {
+    html = await readFile(path, "utf8");
+  } catch (error) {
+    if (error.code === "ENOENT") continue;
+    throw error;
+  }
   html = removeBlock(html, START_HEAD, END_HEAD);
   html = removeBlock(html, START_BODY, END_BODY);
   const title = titleFromHtml(html, page.title);
@@ -210,6 +220,7 @@ for (const page of manifest) {
   html = html.replace(/<\/head>/i, `${head}\n</head>`);
   html = html.replace(/<\/body>/i, `${body}\n</body>`);
   await writeFile(path, html, "utf8");
+  enhancedCount += 1;
 }
 
-console.log(`Enhanced ${manifest.length} standalone HTML pages with 40-point metadata, navigation, accessibility, safety, and usability coverage.`);
+console.log(`Enhanced ${enhancedCount} standalone HTML pages with 80-point metadata, navigation, accessibility, safety, and usability coverage.`);
