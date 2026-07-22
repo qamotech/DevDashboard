@@ -110,6 +110,129 @@
     return pages;
   }
 
+  var ICON_RULES = [
+    { test: /\b(home|homepage|dashboard|hub)\b/i, icon: "🏠", tone: "gold" },
+    { test: /\b(play|game|arcade|battle|arena)\b/i, icon: "🎮", tone: "red" },
+    { test: /\b(save|store|keep)\b/i, icon: "💾", tone: "cyan" },
+    { test: /\b(download|export|get file)\b/i, icon: "📥", tone: "blue" },
+    { test: /\b(upload|import|choose file)\b/i, icon: "📤", tone: "violet" },
+    { test: /\b(copy|clipboard|duplicate)\b/i, icon: "📋", tone: "gold" },
+    { test: /\b(search|find|locate|discover)\b/i, icon: "🔎", tone: "cyan" },
+    { test: /\b(settings?|configure|configuration|options?|preferences?)\b/i, icon: "⚙️", tone: "slate" },
+    { test: /\b(tool|studio|editor|workshop|forge)\b/i, icon: "🛠️", tone: "orange" },
+    { test: /\b(email|contact|message|send|reply)\b/i, icon: "✉️", tone: "violet" },
+    { test: /\b(location|map|direction|navigate|fleet|directory)\b/i, icon: "🧭", tone: "green" },
+    { test: /\b(time|timer|focus|clock|schedule|calendar)\b/i, icon: "⏱️", tone: "gold" },
+    { test: /\b(task|check|done|complete|finish|approve)\b/i, icon: "✅", tone: "green" },
+    { test: /\b(add|new|create|generate|build|make)\b/i, icon: "➕", tone: "cyan" },
+    { test: /\b(delete|remove|clear|reset|trash)\b/i, icon: "🗑️", tone: "red" },
+    { test: /\b(edit|note|write|compose|rename)\b/i, icon: "✏️", tone: "gold" },
+    { test: /\b(share|link|connect|network)\b/i, icon: "🔗", tone: "blue" },
+    { test: /\b(back|previous|return|undo)\b/i, icon: "◀", tone: "blue" },
+    { test: /\b(next|continue|forward|redo)\b/i, icon: "▶", tone: "cyan" },
+    { test: /\b(random|surprise|shuffle|roll)\b/i, icon: "🎲", tone: "violet" },
+    { test: /\b(fullscreen|maximize|expand|zoom)\b/i, icon: "⛶", tone: "cyan" },
+    { test: /\b(music|audio|sound|listen)\b/i, icon: "🎵", tone: "violet" },
+    { test: /\b(video|watch|movie|media)\b/i, icon: "🎬", tone: "red" },
+    { test: /\b(image|photo|gallery|picture|visual)\b/i, icon: "🖼️", tone: "green" },
+    { test: /\b(code|developer|development|html|css|javascript|script)\b/i, icon: "💻", tone: "cyan" },
+    { test: /\b(security|secure|lock|privacy|protect)\b/i, icon: "🔐", tone: "gold" },
+    { test: /\b(data|chart|report|analytics|metrics|stats)\b/i, icon: "📊", tone: "green" },
+    { test: /\b(math|calculate|calculator|number|count)\b/i, icon: "🧮", tone: "violet" },
+    { test: /\b(paint|art|design|color|palette|draw)\b/i, icon: "🎨", tone: "orange" },
+    { test: /\b(prompt|ai|brain|neural|intelligence)\b/i, icon: "🧠", tone: "violet" },
+    { test: /\b(print)\b/i, icon: "🖨️", tone: "blue" },
+    { test: /\b(help|info|about|guide|learn)\b/i, icon: "❔", tone: "cyan" },
+    { test: /\b(close|cancel|stop|exit)\b/i, icon: "✕", tone: "red" },
+    { test: /\b(open|launch|enter|view|visit)\b/i, icon: "↗", tone: "cyan" }
+  ];
+  var HEADING_ICONS = [
+    { icon: "✦", tone: "cyan" },
+    { icon: "◆", tone: "violet" },
+    { icon: "●", tone: "gold" },
+    { icon: "⬢", tone: "green" },
+    { icon: "✹", tone: "orange" },
+    { icon: "◈", tone: "red" }
+  ];
+
+  function iconChoice(element, text) {
+    for (var index = 0; index < ICON_RULES.length; index += 1) {
+      if (ICON_RULES[index].test.test(text)) return ICON_RULES[index];
+    }
+    if (element.matches("h2,h3")) {
+      var hash = Array.from(text).reduce(function (total, character) {
+        return (total + character.codePointAt(0)) % HEADING_ICONS.length;
+      }, 0);
+      return HEADING_ICONS[hash];
+    }
+    if (element.matches("label")) return { icon: "●", tone: "violet" };
+    if (element.matches("a")) return { icon: "◆", tone: "blue" };
+    return { icon: "⚡", tone: "cyan" };
+  }
+
+  function iconCandidate(element) {
+    if (!element || element.dataset.n8Iconized === "true") return false;
+    if (element.closest("#n8t-shell,#n8t-context,#n8t-clipboard,#n8t-modal,#n8x-skip")) return false;
+    if (element.querySelector(".n8t-page-icon")) return false;
+    if (element.matches("a,button") && element.querySelector("img,svg,canvas,video,[class*='icon' i],[data-icon]")) return false;
+    var text = element.textContent.replace(/\s+/g, " ").trim();
+    var limit = element.matches("h2,h3") ? 72 : element.matches("label") ? 36 : 44;
+    if (text.length < 2 || text.length > limit) return false;
+    if (/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]/u.test(text.slice(0, 4))) return false;
+    if (element.matches("button") && /^[\W_]{1,4}$/.test(text)) return false;
+    return true;
+  }
+
+  function addColorIcon(element) {
+    if (!iconCandidate(element)) return false;
+    var text = element.textContent.replace(/\s+/g, " ").trim();
+    var choice = iconChoice(element, text);
+    var icon = document.createElement("span");
+    icon.className = "n8t-page-icon";
+    icon.dataset.tone = choice.tone;
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = choice.icon;
+    element.insertBefore(icon, element.firstChild);
+    element.dataset.n8Iconized = "true";
+    element.classList.add("n8t-iconized");
+    return true;
+  }
+
+  function decoratePageIcons(root) {
+    if (!root || root.nodeType !== 1) return;
+    var selector = "button,a,h2,h3,label";
+    var candidates = [];
+    if (root.matches && root.matches(selector)) candidates.push(root);
+    if (root.querySelectorAll) candidates = candidates.concat(Array.from(root.querySelectorAll(selector)));
+    var added = 0;
+    candidates.forEach(function (element) {
+      if (added < 140 && addColorIcon(element)) added += 1;
+    });
+    var total = document.querySelectorAll(".n8t-page-icon").length;
+    document.documentElement.dataset.n8ColorIcons = String(total);
+  }
+
+  function observeIconTargets() {
+    if (!window.MutationObserver) return;
+    var queue = [];
+    var scheduled = false;
+    var observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        mutation.addedNodes.forEach(function (node) {
+          if (node.nodeType === 1 && !node.closest("#n8t-shell,#n8t-context,#n8t-clipboard,#n8t-modal")) queue.push(node);
+        });
+      });
+      if (scheduled || !queue.length) return;
+      scheduled = true;
+      setTimeout(function () {
+        var nodes = queue.splice(0, queue.length);
+        scheduled = false;
+        nodes.forEach(decoratePageIcons);
+      }, 60);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
   function cleanLegacy() {
     [
       "n8bot-shell", "n8bot-context", "n8bot-toast", "n8bot-progress",
@@ -137,10 +260,10 @@
       '      <span class="n8t-status">Systems online</span>',
       '    </header>',
       '    <div class="n8t-tabs" role="tablist" aria-label="N8 Tool sections">',
-      '      <button class="n8t-tab" id="n8t-tab-bot" role="tab" aria-selected="true" aria-controls="n8t-view-bot" data-tab="bot">Pathfinder</button>',
-      '      <button class="n8t-tab" id="n8t-tab-features" role="tab" aria-selected="false" aria-controls="n8t-view-features" data-tab="features">Features</button>',
-      '      <button class="n8t-tab" id="n8t-tab-fleet" role="tab" aria-selected="false" aria-controls="n8t-view-fleet" data-tab="fleet">Fleet</button>',
-      '      <button class="n8t-tab" id="n8t-tab-modes" role="tab" aria-selected="false" aria-controls="n8t-view-modes" data-tab="modes">Modes</button>',
+      '      <button class="n8t-tab" id="n8t-tab-bot" role="tab" aria-selected="true" aria-controls="n8t-view-bot" data-tab="bot"><span aria-hidden="true">✦</span>Pathfinder</button>',
+      '      <button class="n8t-tab" id="n8t-tab-features" role="tab" aria-selected="false" aria-controls="n8t-view-features" data-tab="features"><span aria-hidden="true">🧰</span>Features</button>',
+      '      <button class="n8t-tab" id="n8t-tab-fleet" role="tab" aria-selected="false" aria-controls="n8t-view-fleet" data-tab="fleet"><span aria-hidden="true">🧭</span>Fleet</button>',
+      '      <button class="n8t-tab" id="n8t-tab-modes" role="tab" aria-selected="false" aria-controls="n8t-view-modes" data-tab="modes"><span aria-hidden="true">🎨</span>Modes</button>',
       '    </div>',
       '    <div class="n8t-stage">',
       '      <section class="n8t-view n8t-bot" id="n8t-view-bot" role="tabpanel" aria-labelledby="n8t-tab-bot">',
@@ -249,6 +372,8 @@
     setPinned(state.pinned, false);
     restorePosition();
     updateProgress();
+    decoratePageIcons(document.body);
+    observeIconTargets();
   }
 
   function bind() {
@@ -418,7 +543,7 @@
 
   function pageIntel() {
     var clone = document.body.cloneNode(true);
-    clone.querySelectorAll("#n8t-shell,#n8t-context,#n8t-clipboard,#n8t-modal,#n8t-ruler,#n8t-toast,#n8t-mode-layer,#n8x-skip,#n8x-progress").forEach(function (node) {
+    clone.querySelectorAll("#n8t-shell,#n8t-context,#n8t-clipboard,#n8t-modal,#n8t-ruler,#n8t-toast,#n8t-mode-layer,#n8x-skip,#n8x-progress,.n8t-page-icon").forEach(function (node) {
       node.remove();
     });
     var words = (clone.textContent || "").trim().split(/\s+/).filter(Boolean).length;
