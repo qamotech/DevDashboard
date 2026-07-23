@@ -96,6 +96,7 @@
     .section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin: 25px 0 14px; }
     .section-head h2 { margin: 0; font-size: clamp(24px, 4vw, 42px); letter-spacing: -.05em; }
     .result-count { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     .prompt-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
     .prompt-card {
       position: relative; isolation: isolate; min-height: 196px; padding: 0; overflow: hidden;
@@ -270,12 +271,13 @@
           <input id="search" type="search" autocomplete="off" placeholder="Search navigation, SEO, React, database…" aria-label="Search prompts">
           <button id="clearSearch" type="button" aria-label="Clear search">×</button>
         </div>
-        <div class="filters" id="filters" aria-label="Filter by category"></div>
+        <div class="filters" id="filters" role="group" aria-label="Filter prompts by category"></div>
       </section>
 
       <div class="section-head">
         <h2>Choose your build move.</h2>
         <div class="result-count" id="resultCount">Showing 50 prompts</div>
+        <div class="sr-only" id="resultAnnouncement" role="status" aria-live="polite" aria-atomic="true"></div>
       </div>
       <section class="prompt-grid" id="promptGrid" aria-label="50 webbuilding prompts"></section>
       <div class="empty" id="emptyState"><strong>No prompt found.</strong>Try a broader search or switch categories.</div>
@@ -290,7 +292,7 @@
     <footer><span>BUILD//50 · AI website production system</span><span>Copy locally · API-ready execution hook</span></footer>
   </div>
 
-  <div class="modal" id="promptModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal" id="promptModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-top">
         <div class="copy-state" id="copyState">Copied to clipboard</div>
@@ -387,6 +389,7 @@
     const search = document.getElementById("search");
     const emptyState = document.getElementById("emptyState");
     const resultCount = document.getElementById("resultCount");
+    const resultAnnouncement = document.getElementById("resultAnnouncement");
     const modal = document.getElementById("promptModal");
     const promptOutput = document.getElementById("promptOutput");
     const executeButton = document.getElementById("executePrompt");
@@ -396,14 +399,19 @@
     let activePrompt = null;
     let lastTrigger = null;
     let toastTimer;
+    let executionTimer;
+    let resultAnnouncementTimer;
 
     const categories = ["All", ...new Set(prompts.map(item => item.category))];
 
-    function renderFilters() {
-      filters.innerHTML = categories.map(category => `<button class="filter${category === activeCategory ? " active" : ""}" type="button" data-category="${category}">${category}</button>`).join("");
+    function renderFilters(focusCategory) {
+      filters.innerHTML = categories.map(category => `<button class="filter${category === activeCategory ? " active" : ""}" type="button" data-category="${category}" aria-pressed="${category === activeCategory}" aria-controls="promptGrid">${category}</button>`).join("");
+      if (focusCategory) {
+        [...filters.querySelectorAll(".filter")].find(button => button.dataset.category === focusCategory)?.focus();
+      }
     }
 
-    function renderPrompts() {
+    function renderPrompts(announcementDelay) {
       const query = search.value.trim().toLowerCase();
       const visible = prompts.filter(item => {
         const matchesCategory = activeCategory === "All" || item.category === activeCategory;
@@ -421,7 +429,15 @@
           </span>
         </button>`).join("");
 
-      resultCount.textContent = `Showing ${visible.length} ${visible.length === 1 ? "prompt" : "prompts"}`;
+      const countMessage = `Showing ${visible.length} ${visible.length === 1 ? "prompt" : "prompts"}`;
+      resultCount.textContent = countMessage;
+      if (Number.isFinite(announcementDelay)) {
+        clearTimeout(resultAnnouncementTimer);
+        resultAnnouncement.textContent = "";
+        resultAnnouncementTimer = setTimeout(() => {
+          resultAnnouncement.textContent = countMessage;
+        }, announcementDelay);
+      }
       emptyState.style.display = visible.length ? "none" : "block";
     }
 
@@ -450,6 +466,17 @@
       toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
     }
 
+    function resetExecution() {
+      clearTimeout(executionTimer);
+      executionTimer = undefined;
+      runPanel.className = "run-panel";
+      document.getElementById("runPercent").textContent = "0%";
+      document.getElementById("runStatus").textContent = "Preparing request payload";
+      document.getElementById("runResult").textContent = "This placeholder is ready to be replaced with your AI API request.";
+      executeButton.disabled = false;
+      executeButton.textContent = "Simulate AI execution →";
+    }
+
     function addRipple(card, event) {
       const rect = card.getBoundingClientRect();
       const size = Math.max(rect.width, rect.height);
@@ -474,9 +501,8 @@
       document.getElementById("modalTitle").textContent = item.title;
       document.getElementById("copyState").textContent = copied ? "Copied to clipboard" : "Prompt ready — copy manually";
       promptOutput.textContent = item.prompt;
-      runPanel.className = "run-panel";
-      executeButton.disabled = false;
-      executeButton.textContent = "Simulate AI execution →";
+      resetExecution();
+      modal.setAttribute("aria-hidden", "false");
       modal.classList.add("open");
       document.body.classList.add("modal-open");
       document.getElementById("closeModal").focus();
@@ -484,9 +510,30 @@
     }
 
     function closeModal() {
+      resetExecution();
       modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
       document.body.classList.remove("modal-open");
       if (lastTrigger) lastTrigger.focus();
+    }
+
+    function keepFocusInModal(event) {
+      if (event.key !== "Tab" || !modal.classList.contains("open")) return;
+      const focusable = [...modal.querySelectorAll('button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])')]
+        .filter(element => !element.hidden && element.getClientRects().length);
+      if (!focusable.length) {
+        event.preventDefault();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     }
 
     grid.addEventListener("click", event => {
@@ -500,15 +547,18 @@
       const button = event.target.closest(".filter");
       if (!button) return;
       activeCategory = button.dataset.category;
-      renderFilters();
-      renderPrompts();
+      renderFilters(activeCategory);
+      renderPrompts(0);
     });
 
-    search.addEventListener("input", renderPrompts);
-    document.getElementById("clearSearch").addEventListener("click", () => { search.value = ""; search.focus(); renderPrompts(); });
+    search.addEventListener("input", () => renderPrompts(400));
+    document.getElementById("clearSearch").addEventListener("click", () => { search.value = ""; search.focus(); renderPrompts(0); });
     document.getElementById("closeModal").addEventListener("click", closeModal);
     modal.addEventListener("click", event => { if (event.target === modal) closeModal(); });
-    document.addEventListener("keydown", event => { if (event.key === "Escape" && modal.classList.contains("open")) closeModal(); });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && modal.classList.contains("open")) closeModal();
+      else keepFocusInModal(event);
+    });
 
     document.getElementById("copyAgain").addEventListener("click", async () => {
       if (!activePrompt) return;
@@ -534,8 +584,9 @@
         document.getElementById("runStatus").textContent = label;
         index += 1;
         if (index < statuses.length) {
-          setTimeout(step, 520);
+          executionTimer = setTimeout(step, 520);
         } else {
+          executionTimer = undefined;
           runPanel.classList.add("success");
           document.getElementById("runResult").textContent = "Success. The execution hook completed. Replace simulateExecution() with your secure server-side AI endpoint when you are ready to connect a live model.";
           executeButton.textContent = "Simulation complete ✓";
