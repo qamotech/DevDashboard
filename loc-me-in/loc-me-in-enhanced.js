@@ -24,8 +24,8 @@
       document.documentElement.style.setProperty('--lmi-pointer-y', `${event.clientY + scrollY}px`);
     }, { passive: true });
 
-    // Adaptive 8K master hair-filament canvas. The expensive master frame is drawn
-    // once, then animated by the compositor for fluid motion and stable mobile use.
+    // Adaptive luxury salon-light canvas. The master frame uses soft vanity halos,
+    // bokeh, and restrained gold glints without strand-like curves.
     const hero = $('.hero-banner');
     if (hero) {
       const canvas = document.createElement('canvas'); canvas.id = 'lmi-hero-canvas'; canvas.ariaHidden = 'true'; hero.prepend(canvas);
@@ -34,22 +34,24 @@
       const renderWidth = fullTier ? 7680 : 3840, renderHeight = fullTier ? 4320 : 2160, width = 1920, height = 1080;
       canvas.width = renderWidth; canvas.height = renderHeight; canvas.dataset.renderTier = fullTier ? '8K' : '4K-adaptive';
       ctx.setTransform(renderWidth / width, 0, 0, renderHeight / height, 0, 0);
-      const nodes = Array.from({ length: 90 }, (_, i) => ({ x: Math.random(), y: Math.random(), r: .45 + Math.random() * 1.8, phase: i * 1.73 }));
+      const nodes = Array.from({ length: 72 }, (_, i) => ({ x: Math.random(), y: Math.random(), r: 1.2 + Math.random() * 5.2, phase: i * 1.73 }));
       const drawMaster = () => {
         ctx.clearRect(0, 0, width, height);
-        const glow = ctx.createRadialGradient(width * .57, height * .44, 5, width * .57, height * .44, width * .46);
-        glow.addColorStop(0, 'rgba(236,72,153,.12)'); glow.addColorStop(1, 'rgba(168,85,247,0)'); ctx.fillStyle = glow; ctx.fillRect(0, 0, width, height);
-        for (let i = 0; i < 14; i++) {
-          const x = width * (.12 + i * .061), wave = 58 + (i % 3) * 18;
-          ctx.beginPath(); ctx.moveTo(x, height * .03); ctx.bezierCurveTo(x - wave, height * .28, x + wave, height * .63, x - 24 + (i % 2) * 46, height * 1.04);
-          ctx.lineCap = 'round'; ctx.lineWidth = 8 + (i % 4) * 1.5; ctx.strokeStyle = i % 3 === 0 ? 'rgba(30,13,35,.64)' : 'rgba(18,9,25,.58)'; ctx.shadowColor = 'rgba(168,85,247,.28)'; ctx.shadowBlur = 18; ctx.stroke();
-          ctx.lineWidth = i % 4 === 0 ? 1.25 : .7; ctx.strokeStyle = i % 5 === 0 ? 'rgba(246,197,111,.44)' : 'rgba(221,184,255,.25)'; ctx.shadowBlur = 7; ctx.stroke();
-          if (i % 3 === 1) { const cuffY = height * (.34 + (i % 4) * .09); ctx.beginPath(); ctx.ellipse(x + Math.sin(i) * 28, cuffY, 13, 5, -.25, 0, Math.PI * 2); ctx.lineWidth = 2.2; ctx.strokeStyle = 'rgba(246,197,111,.72)'; ctx.shadowColor = 'rgba(246,197,111,.45)'; ctx.shadowBlur = 14; ctx.stroke(); }
+        const glow = ctx.createRadialGradient(width * .56, height * .42, 10, width * .56, height * .42, width * .5);
+        glow.addColorStop(0, 'rgba(236,72,153,.15)'); glow.addColorStop(.48, 'rgba(168,85,247,.07)'); glow.addColorStop(1, 'rgba(168,85,247,0)'); ctx.fillStyle = glow; ctx.fillRect(0, 0, width, height);
+        for (const [x, y, radius, color] of [
+          [width * .18, height * .27, 190, 'rgba(246,197,111,.08)'],
+          [width * .82, height * .24, 250, 'rgba(236,72,153,.09)'],
+          [width * .74, height * .76, 310, 'rgba(168,85,247,.08)']
+        ]) {
+          const halo = ctx.createRadialGradient(x, y, 0, x, y, radius);
+          halo.addColorStop(0, color); halo.addColorStop(.38, color); halo.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.fill();
         }
         ctx.shadowBlur = 0;
         for (const node of nodes) {
           const x = node.x * width, y = (node.y + Math.sin(node.phase) * .012) * height;
-          ctx.beginPath(); ctx.fillStyle = node.phase % 5 < 1 ? `rgba(246,197,111,${.2 + node.r / 5})` : `rgba(255,${145 + (node.phase % 90)},230,${.18 + node.r / 5})`; ctx.arc(x, y, node.r, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.fillStyle = node.phase % 5 < 1 ? `rgba(246,197,111,${.06 + node.r / 45})` : `rgba(255,190,232,${.04 + node.r / 55})`; ctx.arc(x, y, node.r, 0, Math.PI * 2); ctx.fill();
         }
       };
       drawMaster();
@@ -202,11 +204,14 @@
     // Keep the appointment kit current when the existing planner changes.
     $('#booking')?.addEventListener('click', () => { const out = $('#lmi-kit-output'); if (out && out.textContent) out.textContent = kitText(); });
 
-    // Private studio contact delivery. The destination inbox exists only in the
-    // Worker and is never shipped in page markup, client JavaScript, or endpoint URLs.
+    // Deliver a branded table-style inquiry email directly to the studio inbox.
     const contactForm = $('#lmi-contact-form'), contactStatus = $('#lmi-contact-status'), contactSubmit = $('#lmi-contact-submit');
     if (contactForm) {
       const started = $('#lmi-contact-started'); started.value = String(Date.now());
+      const messageField = $('#lmi-contact-message'), messageCount = $('#lmi-message-count');
+      const updateMessageCount = () => { if (messageField && messageCount) messageCount.textContent = `${messageField.value.length} / 1800 characters`; };
+      messageField?.addEventListener('input', updateMessageCount);
+      updateMessageCount();
       $('#profile-select')?.addEventListener('change', event => {
         const service = $('#lmi-contact-service'), profile = event.target.value;
         const match = [...service.options].find(option => profile.toLowerCase().includes(option.text.toLowerCase().replace(' / ', ' ')) || option.text.toLowerCase().includes(profile.toLowerCase().split(' ')[0]));
@@ -216,13 +221,21 @@
         event.preventDefault();
         contactStatus.dataset.state = '';
         if (!contactForm.checkValidity()) { contactForm.reportValidity(); contactStatus.textContent = 'Please complete the required fields so the studio can respond.'; contactStatus.dataset.state = 'error'; return; }
-        const payload = Object.fromEntries(new FormData(contactForm).entries()); payload.stylePlan = kitText();
+        const payload = Object.fromEntries(new FormData(contactForm).entries());
+        payload._subject = `New Loc Me In inquiry from ${String(payload.name || 'a prospective client').replace(/[\r\n]/g, ' ')}`;
+        payload._template = 'table';
+        payload._replyto = payload.email;
+        payload._honey = payload.company || '';
+        payload['Style plan'] = kitText();
+        payload['Submitted from'] = location.href;
+        delete payload.company;
+        delete payload.startedAt;
         contactSubmit.disabled = true; contactSubmit.querySelector('span').textContent = 'SENDING SECURELY…'; contactStatus.textContent = 'Delivering your inquiry to the studio…';
         try {
-          const response = await fetch('/api/locmein-contact', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload) });
+          const response = await fetch('https://formsubmit.co/ajax/ontarialocmein@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload) });
           const result = await response.json().catch(() => ({}));
-          if (!response.ok) throw new Error(result.error || 'Delivery was unavailable.');
-          contactStatus.textContent = 'Your inquiry was sent. The studio will reply directly to the address you provided.'; contactStatus.dataset.state = 'success'; notify('Private inquiry sent successfully.'); contactForm.reset(); started.value = String(Date.now());
+          if (!response.ok || result.success === false || result.success === 'false') throw new Error(result.message || result.error || 'Delivery was unavailable.');
+          contactStatus.textContent = 'Your inquiry was sent. The studio will reply directly to the address you provided.'; contactStatus.dataset.state = 'success'; notify('Private inquiry sent successfully.'); contactForm.reset(); updateMessageCount(); started.value = String(Date.now());
         } catch (error) {
           contactStatus.textContent = error.message || 'The message could not be delivered. Please try again shortly.'; contactStatus.dataset.state = 'error'; notify('Message delivery needs another try.');
         } finally { contactSubmit.disabled = false; contactSubmit.querySelector('span').textContent = 'SEND PRIVATE INQUIRY'; }
