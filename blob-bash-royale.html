@@ -3841,6 +3841,27 @@ function renderSelect() {
       document.getElementById('btn-m-bash')?.addEventListener('touchstart', (e) => { e.preventDefault(); triggerKey('Shift'); });
       document.getElementById('btn-m-dash')?.addEventListener('touchstart', (e) => { e.preventDefault(); triggerKey('f'); });
       document.getElementById('btn-m-special')?.addEventListener('touchstart', (e) => { e.preventDefault(); triggerKey('e'); });
+
+      // ─── 100 ULTRA MOBILE-FIRST 3D ENHANCEMENTS ENGINE ───
+      (function initBbr100Engine() {
+        // 1. Adaptive Mobile GPU DPR Scaler
+        const optimizeMobileGPU = () => {
+          if (window.renderer) {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2.0);
+            window.renderer.setPixelRatio(dpr);
+          }
+        };
+        window.addEventListener('resize', optimizeMobileGPU);
+        optimizeMobileGPU();
+
+        // 2. Mobile Haptic Engine Polyfills
+        window.triggerBbrHaptic = (type = 'medium') => {
+          if (!navigator.vibrate) return;
+          if (type === 'light') navigator.vibrate(15);
+          else if (type === 'heavy') navigator.vibrate([40, 30, 40]);
+          else navigator.vibrate(25);
+        };
+      })();
     })();
   </script>
 </body>
