@@ -3866,5 +3866,204 @@ function renderSelect() {
       })();
     })();
   </script>
+<!-- ════════════════════════════════════════════════════
+     BBR FUTURISTIC ENHANCEMENT PACK #21
+     ✦ Holographic CRT Scanline HUD Overlay
+     ✦ Neon Aurora Particle Drift Field
+     ✦ Cyber-Pulse Attack Trail FX
+     ════════════════════════════════════════════════════ -->
+<style id="bbr-fx21-css">
+  /* ── CRT Holographic Scanline Overlay ── */
+  #bbr-crt-overlay{
+    position:fixed;inset:0;z-index:2147483000;pointer-events:none;
+    background:repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,0,0,.045) 3px,
+      rgba(0,0,0,.045) 4px
+    );
+    mix-blend-mode:multiply;
+    opacity:0;
+    transition:opacity .4s ease;
+  }
+  body.bbr-ultra #bbr-crt-overlay{opacity:1}
+  #bbr-crt-overlay::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(
+      180deg,
+      rgba(110,248,255,.015) 0%,
+      transparent 8%,
+      transparent 92%,
+      rgba(160,108,255,.018) 100%
+    );
+    animation:bbrScanDrift21 8s linear infinite;
+  }
+  @keyframes bbrScanDrift21{
+    0%{transform:translateY(0)}
+    100%{transform:translateY(4px)}
+  }
+
+  /* ── Aurora Particle Field ── */
+  #bbr-aurora-canvas{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    opacity:0;transition:opacity .8s ease;
+  }
+  body.bbr-ultra #bbr-aurora-canvas{opacity:.55}
+
+  /* ── Cyber-Pulse Attack Trail ── */
+  .bbr-attack-trail{
+    position:fixed;pointer-events:none;z-index:2147482900;
+    width:18px;height:18px;border-radius:50%;
+    background:radial-gradient(circle,rgba(110,248,255,.92),rgba(255,79,163,.0));
+    box-shadow:0 0 28px 8px rgba(110,248,255,.46);
+    transform:translate(-50%,-50%) scale(0);
+    animation:bbrTrailPop21 .55s cubic-bezier(.2,.8,.3,1) forwards;
+  }
+  @keyframes bbrTrailPop21{
+    0%{transform:translate(-50%,-50%) scale(0);opacity:1}
+    60%{transform:translate(-50%,-50%) scale(1.6);opacity:.7}
+    100%{transform:translate(-50%,-50%) scale(2.8);opacity:0}
+  }
+
+  /* ── Holographic Corner Brackets ── */
+  .bbr-holo-corner{
+    position:fixed;width:40px;height:40px;pointer-events:none;
+    z-index:2147482800;opacity:0;transition:opacity .5s ease;
+  }
+  body.bbr-ultra .bbr-holo-corner{opacity:.7}
+  .bbr-holo-corner::before,.bbr-holo-corner::after{
+    content:"";position:absolute;
+    border-color:rgba(110,248,255,.6);border-style:solid;
+  }
+  .bbr-holo-corner.tl{top:8px;left:8px}
+  .bbr-holo-corner.tl::before{top:0;left:0;width:18px;height:18px;border-width:2px 0 0 2px;border-radius:3px 0 0 0}
+  .bbr-holo-corner.tl::after{top:5px;left:5px;width:8px;height:8px;border-width:1px 0 0 1px;border-radius:2px 0 0 0;border-color:rgba(255,79,163,.4)}
+  .bbr-holo-corner.tr{top:8px;right:8px}
+  .bbr-holo-corner.tr::before{top:0;right:0;width:18px;height:18px;border-width:2px 2px 0 0;border-radius:0 3px 0 0}
+  .bbr-holo-corner.tr::after{top:5px;right:5px;width:8px;height:8px;border-width:1px 1px 0 0;border-radius:0 2px 0 0;border-color:rgba(255,79,163,.4)}
+  .bbr-holo-corner.bl{bottom:8px;left:8px}
+  .bbr-holo-corner.bl::before{bottom:0;left:0;width:18px;height:18px;border-width:0 0 2px 2px;border-radius:0 0 0 3px}
+  .bbr-holo-corner.bl::after{bottom:5px;left:5px;width:8px;height:8px;border-width:0 0 1px 1px;border-radius:0 0 2px 0;border-color:rgba(255,79,163,.4)}
+  .bbr-holo-corner.br{bottom:8px;right:8px}
+  .bbr-holo-corner.br::before{bottom:0;right:0;width:18px;height:18px;border-width:0 2px 2px 0;border-radius:0 0 3px 0}
+  .bbr-holo-corner.br::after{bottom:5px;right:5px;width:8px;height:8px;border-width:0 1px 1px 0;border-radius:0 0 2px 0;border-color:rgba(255,79,163,.4)}
+
+  /* ── Scanning Reticle crosshair ── */
+  #bbr-reticle{
+    position:fixed;width:48px;height:48px;pointer-events:none;
+    z-index:2147482800;transform:translate(-50%,-50%);
+    opacity:0;transition:opacity .2s;
+  }
+  #bbr-reticle circle{
+    stroke:rgba(110,248,255,.7);stroke-width:1.5;fill:none;
+    stroke-dasharray:8 4;
+    animation:bbrReticleSpin21 3s linear infinite;
+  }
+  #bbr-reticle line{stroke:rgba(110,248,255,.4);stroke-width:1}
+  @keyframes bbrReticleSpin21{to{stroke-dashoffset:-48}}
+</style>
+
+<!-- CRT overlay + aurora canvas + holo corners + reticle -->
+<div id="bbr-crt-overlay" aria-hidden="true"></div>
+<canvas id="bbr-aurora-canvas" aria-hidden="true"></canvas>
+<div class="bbr-holo-corner tl" aria-hidden="true"></div>
+<div class="bbr-holo-corner tr" aria-hidden="true"></div>
+<div class="bbr-holo-corner bl" aria-hidden="true"></div>
+<div class="bbr-holo-corner br" aria-hidden="true"></div>
+<svg id="bbr-reticle" viewBox="0 0 48 48" aria-hidden="true">
+  <circle cx="24" cy="24" r="20"/>
+  <line x1="4" y1="24" x2="18" y2="24"/>
+  <line x1="30" y1="24" x2="44" y2="24"/>
+  <line x1="24" y1="4" x2="24" y2="18"/>
+  <line x1="24" y1="30" x2="24" y2="44"/>
+</svg>
+
+<script id="bbr-fx21-js">
+(()=>{
+  "use strict";
+  if(window.__bbrFx21)return;
+  window.__bbrFx21=true;
+
+  /* ── Neon Aurora Particle Drift Field ── */
+  const auroraCanvas=document.getElementById("bbr-aurora-canvas");
+  if(auroraCanvas){
+    const ctx=auroraCanvas.getContext("2d");
+    const particles=[];
+    const PALETTE=["rgba(110,248,255,.55)","rgba(160,108,255,.5)","rgba(255,79,163,.45)","rgba(255,226,107,.4)"];
+    function resizeAurora(){auroraCanvas.width=innerWidth;auroraCanvas.height=innerHeight}
+    resizeAurora();
+    window.addEventListener("resize",resizeAurora);
+    for(let i=0;i<55;i++){
+      particles.push({
+        x:Math.random()*innerWidth,
+        y:Math.random()*innerHeight,
+        r:Math.random()*3+1.5,
+        dx:(Math.random()-.5)*.4,
+        dy:(Math.random()-.5)*.3,
+        color:PALETTE[Math.floor(Math.random()*PALETTE.length)],
+        life:Math.random()*200+100,
+        age:0,
+      });
+    }
+    function tickAurora(){
+      ctx.clearRect(0,0,auroraCanvas.width,auroraCanvas.height);
+      particles.forEach((p,i)=>{
+        p.age++;
+        if(p.age>p.life){
+          particles[i]={
+            x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+            r:Math.random()*3+1.5,dx:(Math.random()-.5)*.4,dy:(Math.random()-.5)*.3,
+            color:PALETTE[Math.floor(Math.random()*PALETTE.length)],
+            life:Math.random()*200+100,age:0,
+          };
+          return;
+        }
+        const alpha=Math.sin(p.age/p.life*Math.PI);
+        p.x+=p.dx;p.y+=p.dy;
+        if(p.x<0)p.x=innerWidth;if(p.x>innerWidth)p.x=0;
+        if(p.y<0)p.y=innerHeight;if(p.y>innerHeight)p.y=0;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=p.color.replace(/[\d.]+\)$/,v=>alpha.toFixed(2)+")");
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r*3,0,Math.PI*2);
+        const grd=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*3);
+        grd.addColorStop(0,p.color.replace(/[\d.]+\)$/,(alpha*.18).toFixed(2)+")"));
+        grd.addColorStop(1,"transparent");
+        ctx.fillStyle=grd;ctx.fill();
+      });
+      requestAnimationFrame(tickAurora);
+    }
+    tickAurora();
+  }
+
+  /* ── Cyber-Pulse Attack Trail FX on game canvas pointer events ── */
+  const gameEl=document.getElementById("game");
+  if(gameEl){
+    gameEl.addEventListener("pointerdown",(e)=>{
+      const el=document.createElement("div");
+      el.className="bbr-attack-trail";
+      el.style.cssText=`left:${e.clientX}px;top:${e.clientY}px`;
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),600);
+    });
+  }
+
+  /* ── Scanning Reticle follows pointer on game canvas ── */
+  const reticle=document.getElementById("bbr-reticle");
+  if(reticle&&gameEl){
+    gameEl.addEventListener("pointermove",(e)=>{
+      reticle.style.left=e.clientX+"px";
+      reticle.style.top=e.clientY+"px";
+      reticle.style.opacity="1";
+    });
+    gameEl.addEventListener("pointerleave",()=>{
+      reticle.style.opacity="0";
+    });
+  }
+})();
+</script>
 </body>
 </html>
