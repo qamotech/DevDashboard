@@ -3,22 +3,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="bbr-graphics-edition" content="ultra">
-  <meta name="bbr-graphics-upgrade-count" content="50">
-  <title>Blob Bash Royale: Ascension</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
-        "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
-      }
-    }
-  </script>
-  <style>
-    :root {
       --sky-a: #7fe7ff;
       --sky-b: #fff06f;
       --sky-c: #ff7ac8;
@@ -3775,6 +3759,89 @@ function renderSelect() {
     document.querySelectorAll('a[target="_blank"]').forEach(link=>{const rel=new Set((link.rel||'').split(/s+/).filter(Boolean));rel.add('noopener');rel.add('noreferrer');link.rel=[...rel].join(' ')});
   })();
   </script>
-  <!-- N8-ENHANCEMENTS:BODY:END -->
+  <!-- 100 MOBILE-FIRST TOUCH CONTROLS & HAPTIC VIBRATION OVERLAY -->
+  <div class="mobile-joystick-zone" id="mobile-joystick-zone">
+    <div class="mobile-joystick-knob" id="mobile-joystick-knob"></div>
+  </div>
+
+  <div class="mobile-actions-hub" id="mobile-actions-hub">
+    <button class="mobile-action-btn" id="btn-m-jump" title="Jump (Touch)">🦘</button>
+    <button class="mobile-action-btn" id="btn-m-bash" title="Bash Impulse (Touch)">💥</button>
+    <button class="mobile-action-btn" id="btn-m-dash" title="Dash Boost (Touch)">⚡</button>
+    <button class="mobile-action-btn" id="btn-m-special" title="Ultra Powerup (Touch)">👑</button>
+  </div>
+
+  <div class="mobile-emoji-bar">
+    <button class="mobile-emoji-btn" onclick="if(navigator.vibrate) navigator.vibrate(20);">💥</button>
+    <button class="mobile-emoji-btn" onclick="if(navigator.vibrate) navigator.vibrate(20);">🔥</button>
+    <button class="mobile-emoji-btn" onclick="if(navigator.vibrate) navigator.vibrate(20);">👑</button>
+    <button class="mobile-emoji-btn" onclick="if(navigator.vibrate) navigator.vibrate(20);">⚡</button>
+  </div>
+
+  <script>
+    /* MOBILE HAPTIC VIBRATION & VIRTUAL JOYSTICK ENGINE */
+    (function(){
+      const jZone = document.getElementById('mobile-joystick-zone');
+      const jKnob = document.getElementById('mobile-joystick-knob');
+      let activeTouchId = null, startX = 0, startY = 0;
+
+      if(jZone && jKnob) {
+        jZone.addEventListener('touchstart', (e) => {
+          if (activeTouchId !== null) return;
+          const touch = e.changedTouches[0];
+          activeTouchId = touch.identifier;
+          startX = touch.clientX;
+          startY = touch.clientY;
+          if(navigator.vibrate) navigator.vibrate(15);
+        }, {passive:false});
+
+        window.addEventListener('touchmove', (e) => {
+          if (activeTouchId === null) return;
+          for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === activeTouchId) {
+              const touch = e.changedTouches[i];
+              let dx = touch.clientX - startX;
+              let dy = touch.clientY - startY;
+              const dist = Math.hypot(dx, dy);
+              const maxDist = 40;
+              if (dist > maxDist) {
+                dx = (dx / dist) * maxDist;
+                dy = (dy / dist) * maxDist;
+              }
+              jKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+              // Dispatch artificial key events for movement
+              const eventName = 'keydown';
+              if (dx < -15) window.dispatchEvent(new KeyboardEvent(eventName, {key: 'ArrowLeft'}));
+              if (dx > 15) window.dispatchEvent(new KeyboardEvent(eventName, {key: 'ArrowRight'}));
+              if (dy < -15) window.dispatchEvent(new KeyboardEvent(eventName, {key: 'ArrowUp'}));
+              if (dy > 15) window.dispatchEvent(new KeyboardEvent(eventName, {key: 'ArrowDown'}));
+            }
+          }
+        }, {passive:false});
+
+        window.addEventListener('touchend', (e) => {
+          if (activeTouchId === null) return;
+          for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === activeTouchId) {
+              activeTouchId = null;
+              jKnob.style.transform = 'translate(0px, 0px)';
+            }
+          }
+        });
+      }
+
+      // Wire Mobile Action Buttons
+      const triggerKey = (keyName) => {
+        if(navigator.vibrate) navigator.vibrate(30);
+        window.dispatchEvent(new KeyboardEvent('keydown', {key: keyName, code: keyName}));
+        setTimeout(() => window.dispatchEvent(new KeyboardEvent('keyup', {key: keyName, code: keyName})), 100);
+      };
+
+      document.getElementById('btn-m-jump')?.addEventListener('touchstart', (e) => { e.preventDefault(); triggerKey(' '); });
+      document.getElementById('btn-m-bash')?.addEventListener('touchstart', (e) => { e.preventDefault(); triggerKey('Shift'); });
+      document.getElementById('btn-m-dash')?.addEventListener('touchstart', (e) => { e.preventDefault(); triggerKey('f'); });
+      document.getElementById('btn-m-special')?.addEventListener('touchstart', (e) => { e.preventDefault(); triggerKey('e'); });
+    })();
+  </script>
 </body>
 </html>
