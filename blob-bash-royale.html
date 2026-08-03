@@ -4523,5 +4523,151 @@ function renderSelect() {
   }
 })();
 </script>
+<!-- ════════════════════════════════════════════
+     BBR FUTURISTIC ENHANCEMENT PACK #37
+     ✦ Cyber HUD Corner Brackets (animated)
+     ✦ Blob Afterimage Trail System
+     ✦ Neon Terrain Scan-Pulse Underlay
+     ════════════════════════════════════════════ -->
+<style id="bbr-fx37-css">
+  @media(prefers-reduced-motion:reduce){
+    .bbr-corner,.bbr-scan-line{animation:none!important}
+    #bbr-trail-canvas{display:none}
+  }
+
+  /* ── Cyber HUD Corner Brackets ── */
+  .bbr-corner{
+    position:fixed;width:28px;height:28px;z-index:2147483000;pointer-events:none;
+    opacity:0;transition:opacity .4s ease;
+  }
+  body.bbr-ultra .bbr-corner{opacity:1}
+  .bbr-corner::before,.bbr-corner::after{
+    content:"";position:absolute;background:rgba(110,248,255,.75);
+    box-shadow:0 0 6px rgba(110,248,255,.5);
+  }
+  /* top-left */
+  .bbr-corner-tl{top:10px;left:10px}
+  .bbr-corner-tl::before{top:0;left:0;width:12px;height:2px}
+  .bbr-corner-tl::after{top:0;left:0;width:2px;height:12px}
+  /* top-right */
+  .bbr-corner-tr{top:10px;right:10px}
+  .bbr-corner-tr::before{top:0;right:0;width:12px;height:2px}
+  .bbr-corner-tr::after{top:0;right:0;width:2px;height:12px}
+  /* bottom-left */
+  .bbr-corner-bl{bottom:10px;left:10px}
+  .bbr-corner-bl::before{bottom:0;left:0;width:12px;height:2px}
+  .bbr-corner-bl::after{bottom:0;left:0;width:2px;height:12px}
+  /* bottom-right */
+  .bbr-corner-br{bottom:10px;right:10px}
+  .bbr-corner-br::before{bottom:0;right:0;width:12px;height:2px}
+  .bbr-corner-br::after{bottom:0;right:0;width:2px;height:12px}
+
+  .bbr-corner.pulse::before,.bbr-corner.pulse::after{
+    animation:bbrCornerPulse37 .4s ease-out forwards;
+  }
+  @keyframes bbrCornerPulse37{
+    0%{box-shadow:0 0 6px rgba(110,248,255,.5)}
+    50%{box-shadow:0 0 18px rgba(110,248,255,1),0 0 36px rgba(110,248,255,.4)}
+    100%{box-shadow:0 0 6px rgba(110,248,255,.5)}
+  }
+
+  /* ── Blob Afterimage Trail Canvas ── */
+  #bbr-trail-canvas{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    opacity:0;transition:opacity .5s ease;
+    mix-blend-mode:screen;
+  }
+  body.bbr-ultra #bbr-trail-canvas{opacity:.35}
+
+  /* ── Neon Terrain Scan Line ── */
+  #bbr-scan-line{
+    position:fixed;left:0;width:100%;height:2px;z-index:2147482100;
+    pointer-events:none;opacity:0;
+    background:linear-gradient(90deg,
+      transparent 0%,rgba(110,248,255,.6) 20%,
+      rgba(160,108,255,.8) 50%,rgba(110,248,255,.6) 80%,transparent 100%);
+    box-shadow:0 0 12px rgba(110,248,255,.4),0 0 24px rgba(160,108,255,.2);
+    animation:bbrScanPulse37 6s linear infinite;
+  }
+  body.bbr-ultra #bbr-scan-line{opacity:1}
+  @keyframes bbrScanPulse37{
+    0%{top:100%;opacity:0}
+    3%{opacity:1}
+    97%{opacity:.8}
+    100%{top:-2px;opacity:0}
+  }
+</style>
+
+<!-- Corner brackets -->
+<div class="bbr-corner bbr-corner-tl" aria-hidden="true"></div>
+<div class="bbr-corner bbr-corner-tr" aria-hidden="true"></div>
+<div class="bbr-corner bbr-corner-bl" aria-hidden="true"></div>
+<div class="bbr-corner bbr-corner-br" aria-hidden="true"></div>
+
+<!-- Afterimage trail canvas -->
+<canvas id="bbr-trail-canvas" aria-hidden="true"></canvas>
+
+<!-- Terrain scan line -->
+<div id="bbr-scan-line" aria-hidden="true"></div>
+
+<script id="bbr-fx37-js">
+(()=>{
+  "use strict";
+  if(window.__bbrFx37)return;
+  window.__bbrFx37=true;
+  const reduced=window.matchMedia?.("(prefers-reduced-motion:reduce)").matches;
+
+  /* ── Afterimage trail canvas ── */
+  const trailCanvas=document.getElementById("bbr-trail-canvas");
+  if(trailCanvas&&!reduced){
+    let tw=0,th=0;
+    function resizeTrail(){
+      tw=trailCanvas.width=innerWidth;
+      th=trailCanvas.height=innerHeight;
+    }
+    resizeTrail();window.addEventListener("resize",resizeTrail);
+    const ctx=trailCanvas.getContext("2d");
+    let trailTick=0;
+    const TRAIL_FRAMES=8;
+    const trail=[];
+    // Capture game canvas snapshot every N frames for ghost overlay
+    const gameCanvas=document.querySelector("#game canvas");
+    const trailDraw=()=>{
+      ctx.clearRect(0,0,tw,th);
+      if(gameCanvas){
+        // Draw fading ghost copies
+        trail.forEach((snap,i)=>{
+          const alpha=((i+1)/TRAIL_FRAMES)*.18;
+          ctx.globalAlpha=alpha;
+          ctx.drawImage(snap,0,0);
+        });
+        ctx.globalAlpha=1;
+        // Capture current frame periodically
+        if(trailTick%3===0){
+          const offscreen=document.createElement("canvas");
+          offscreen.width=gameCanvas.width;offscreen.height=gameCanvas.height;
+          offscreen.getContext("2d").drawImage(gameCanvas,0,0);
+          trail.push(offscreen);
+          if(trail.length>TRAIL_FRAMES)trail.shift();
+        }
+      }
+      trailTick++;requestAnimationFrame(trailDraw);
+    };trailDraw();
+  }
+
+  /* ── Corner bracket pulse on pointerdown ── */
+  const corners=document.querySelectorAll(".bbr-corner");
+  if(!reduced){
+    document.getElementById("game")?.addEventListener("pointerdown",()=>{
+      corners.forEach(c=>{
+        c.classList.remove("pulse");
+        void c.offsetWidth;
+        c.classList.add("pulse");
+        setTimeout(()=>c.classList.remove("pulse"),420);
+      });
+    });
+  }
+})();
+</script>
 </body>
 </html>
