@@ -4070,5 +4070,134 @@ function renderSelect() {
   }
 })();
 </script>
+<!-- ════════════════════════════════════════════════════
+     BBR FUTURISTIC ENHANCEMENT PACK #22
+     ✦ Cyber Matrix Rain Data-Stream Canvas
+     ✦ Plasma Shield Shockwave Hit Burst
+     ✦ Neon Grid Warp Pulse Overlay
+     ════════════════════════════════════════════════════ -->
+<style id="bbr-fx22-css">
+  /* ── Matrix Rain Canvas ── */
+  #bbr-matrix-canvas{
+    position:fixed;inset:0;z-index:2;pointer-events:none;
+    opacity:0;transition:opacity 1s ease;
+    mix-blend-mode:screen;
+  }
+  body.bbr-ultra #bbr-matrix-canvas{opacity:.18}
+
+  /* ── Plasma Shield Shockwave ── */
+  .bbr-shockwave{
+    position:fixed;pointer-events:none;z-index:2147482950;
+    width:0;height:0;border-radius:50%;
+    border:2px solid rgba(110,248,255,.9);
+    box-shadow:0 0 12px rgba(110,248,255,.6),inset 0 0 12px rgba(110,248,255,.15);
+    transform:translate(-50%,-50%);
+    animation:bbrShockwave22 .65s cubic-bezier(.2,.6,.4,1) forwards;
+  }
+  @keyframes bbrShockwave22{
+    0%{width:0;height:0;opacity:.9;border-color:rgba(110,248,255,.9);box-shadow:0 0 12px rgba(110,248,255,.6)}
+    40%{border-color:rgba(160,108,255,.6);box-shadow:0 0 28px rgba(160,108,255,.4)}
+    100%{width:160px;height:160px;opacity:0;border-color:rgba(255,79,163,0);box-shadow:0 0 60px rgba(255,79,163,0)}
+  }
+  .bbr-shockwave-inner{
+    position:fixed;pointer-events:none;z-index:2147482948;
+    width:0;height:0;border-radius:50%;
+    border:1px solid rgba(255,226,107,.7);
+    transform:translate(-50%,-50%);
+    animation:bbrShockwaveInner22 .55s cubic-bezier(.2,.6,.4,1) .05s forwards;
+  }
+  @keyframes bbrShockwaveInner22{
+    0%{width:0;height:0;opacity:.7}
+    100%{width:90px;height:90px;opacity:0}
+  }
+
+  /* ── Neon Grid Warp Pulse ── */
+  #bbr-grid-warp{
+    position:fixed;inset:0;z-index:3;pointer-events:none;
+    opacity:0;
+    background:
+      linear-gradient(rgba(110,248,255,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(110,248,255,.04) 1px, transparent 1px);
+    background-size:48px 48px;
+    transition:opacity .3s ease,transform .3s ease;
+    transform:perspective(600px) rotateX(0deg);
+  }
+  body.bbr-ultra #bbr-grid-warp{opacity:1}
+  #bbr-grid-warp.pulse{
+    animation:bbrGridWarp22 .4s cubic-bezier(.2,.8,.3,1) forwards;
+  }
+  @keyframes bbrGridWarp22{
+    0%{transform:perspective(600px) rotateX(0deg) scale(1);filter:none}
+    25%{transform:perspective(600px) rotateX(2deg) scale(1.008);
+        filter:drop-shadow(0 0 6px rgba(110,248,255,.5))}
+    60%{transform:perspective(600px) rotateX(-1deg) scale(1.003)}
+    100%{transform:perspective(600px) rotateX(0deg) scale(1);filter:none}
+  }
+</style>
+
+<canvas id="bbr-matrix-canvas" aria-hidden="true"></canvas>
+<div id="bbr-grid-warp" aria-hidden="true"></div>
+
+<script id="bbr-fx22-js">
+(()=>{
+  "use strict";
+  if(window.__bbrFx22)return;
+  window.__bbrFx22=true;
+
+  /* ── Cyber Matrix Rain ── */
+  const matCanvas=document.getElementById("bbr-matrix-canvas");
+  if(matCanvas){
+    const ctx=matCanvas.getContext("2d");
+    const GLYPHS="ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍBCDEFGHJKLMNOPQRSTUVWXYZ012345789";
+    let cols=[];
+    function resizeMat(){
+      matCanvas.width=innerWidth;matCanvas.height=innerHeight;
+      const numCols=Math.floor(innerWidth/18);
+      cols=Array.from({length:numCols},()=>Math.floor(Math.random()*innerHeight/18)*-1);
+    }
+    resizeMat();window.addEventListener("resize",resizeMat);
+    function tickMatrix(){
+      ctx.fillStyle="rgba(4,6,18,.18)";ctx.fillRect(0,0,matCanvas.width,matCanvas.height);
+      ctx.font="13px monospace";
+      cols.forEach((y,i)=>{
+        const ch=GLYPHS[Math.floor(Math.random()*GLYPHS.length)];
+        const x=i*18;
+        const bright=Math.random()>.92;
+        ctx.fillStyle=bright?"rgba(255,255,255,.9)":"rgba(110,248,255,.55)";
+        ctx.fillText(ch,x,y*18);
+        cols[i]=y>=matCanvas.height/18?Math.random()>.97?0:y+1:y+1;
+      });
+      requestAnimationFrame(tickMatrix);
+    }
+    tickMatrix();
+  }
+
+  /* ── Plasma Shield Shockwave on pointerdown ── */
+  const gameEl=document.getElementById("game");
+  const gridWarp=document.getElementById("bbr-grid-warp");
+  if(gameEl){
+    gameEl.addEventListener("pointerdown",(e)=>{
+      // Outer ring
+      const ring=document.createElement("div");
+      ring.className="bbr-shockwave";
+      ring.style.cssText=`left:${e.clientX}px;top:${e.clientY}px`;
+      // Inner ring
+      const inner=document.createElement("div");
+      inner.className="bbr-shockwave-inner";
+      inner.style.cssText=`left:${e.clientX}px;top:${e.clientY}px`;
+      document.body.appendChild(ring);
+      document.body.appendChild(inner);
+      setTimeout(()=>{ring.remove();inner.remove()},700);
+      // Grid warp pulse
+      if(gridWarp){
+        gridWarp.classList.remove("pulse");
+        void gridWarp.offsetWidth; // reflow
+        gridWarp.classList.add("pulse");
+        setTimeout(()=>gridWarp.classList.remove("pulse"),420);
+      }
+    });
+  }
+})();
+</script>
 </body>
 </html>
