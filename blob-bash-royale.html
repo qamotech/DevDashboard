@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="description" content="Blob Bash Royale 3D — the ultimate browser arena brawler. Choose your blob fighter, battle across neon arenas, unlock achievements, and climb the leaderboard with ultra HD visuals and particle FX.">
   <meta property="og:title" content="Blob Bash Royale 3D — Neon Arena Brawler">
   <meta property="og:description" content="Pick your blob, bash your rivals, and dominate the arena in this epic browser party game with 3D effects, ultra-visuals, and real-time multiplayer.">
@@ -38,7 +38,7 @@
       color-scheme: dark;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
 
     html, body {
       width: 100%;
@@ -473,6 +473,31 @@
       color: #172038;
       font-weight: 1000;
       box-shadow: 0 10px 24px rgba(0,0,0,.18);
+      transition: transform 0.1s, background 0.1s;
+    }
+    
+    .touch button:active {
+      transform: scale(0.92);
+      background: rgba(255,255,255,0.95);
+    }
+    
+    #orientation-prompt {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000;
+      color: #fff;
+      place-items: center;
+      font-family: "Baloo 2", system-ui, sans-serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    @media (orientation: portrait) and (max-width: 900px) {
+      #orientation-prompt { display: grid; }
     }
 
     .select-screen {
@@ -810,6 +835,7 @@
   <!-- N8-ENHANCEMENTS:HEAD:END -->
 </head>
 <body>
+  <div id="orientation-prompt">Please rotate your device to landscape for the best experience.</div>
   <div id="crt-frame" aria-hidden="true"></div>
   <div class="gemma-fade" aria-hidden="true"></div>
   <div class="intro" aria-hidden="true"><div class="intro-card"><h1>Qamelot</h1><p>N8 Combat Systems</p></div></div>
