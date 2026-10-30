@@ -6,12 +6,6 @@
     "category": "Experiments & Archives"
   },
   {
-    "number": 2,
-    "title": "N8 Asset Hub",
-    "file": "n8AHub.html",
-    "category": "Developer Studios"
-  },
-  {
     "number": 3,
     "title": "N8 Asset Hub Prime",
     "file": "n8AHubPrime.html",
@@ -19,7 +13,7 @@
   },
   {
     "number": 4,
-    "title": "WHO//ROAD — Neon Conversation Lab",
+    "title": "WHO//ROAD \u2014 Neon Conversation Lab",
     "file": "who-road-convo-lab.html",
     "category": "Experiments & Archives"
   },
@@ -67,19 +61,19 @@
   },
   {
     "number": 14,
-    "title": "⚡ Web App Dev Dashboard",
+    "title": "\u26a1 Web App Dev Dashboard",
     "file": "web-app-dev-dashboard.html",
     "category": "Developer Studios"
   },
   {
     "number": 15,
-    "title": "🪃 N8 Animation Hub",
+    "title": "\ud83e\ude83 N8 Animation Hub",
     "file": "n8AnimHub.html",
     "category": "Developer Studios"
   },
   {
     "number": 16,
-    "title": "🥷🏾 Miyagi Throw!",
+    "title": "\ud83e\udd77\ud83c\udffe Miyagi Throw!",
     "file": "MiyagiThrow.html",
     "category": "Games & Simulations"
   },
@@ -114,14 +108,8 @@
     "category": "Featured Sites"
   },
   {
-    "number": 23,
-    "title": "EcoTechComm | Secure Frequency",
-    "file": "ecotechcomm-secure-frequency.html",
-    "category": "Featured Sites"
-  },
-  {
     "number": 25,
-    "title": "HomeHub — Command Your Day. Build Your Future.",
+    "title": "HomeHub \u2014 Command Your Day. Build Your Future.",
     "file": "homehub.html",
     "category": "Experiments & Archives"
   },
@@ -133,7 +121,7 @@
   },
   {
     "number": 28,
-    "title": "Lattice — The AI Context Lab",
+    "title": "Lattice \u2014 The AI Context Lab",
     "file": "lattice-a-the-ai-context-lab.html",
     "category": "Experiments & Archives"
   },
@@ -147,12 +135,6 @@
     "number": 30,
     "title": "Eco-Tech Motion Library",
     "file": "eco-tech-motion-library.html",
-    "category": "Tools & Productivity"
-  },
-  {
-    "number": 31,
-    "title": "BUILD//50 — AI Webbuilding Prompt Deck",
-    "file": "n8Prompt.html",
     "category": "Tools & Productivity"
   },
   {
@@ -175,7 +157,7 @@
   },
   {
     "number": 35,
-    "title": "Qamelot Menu — Every Webpage",
+    "title": "Qamelot Menu \u2014 Every Webpage",
     "file": "index.html",
     "category": "Experiments & Archives"
   },
@@ -196,12 +178,6 @@
     "title": "QAMELOT // MATH_CORE",
     "file": "qamelot-math-core.html",
     "category": "Tools & Productivity"
-  },
-  {
-    "number": 40,
-    "title": "Qamelot Media Component",
-    "file": "qamelot-media-1.html",
-    "category": "Experiments & Archives"
   },
   {
     "number": 41,
@@ -241,25 +217,25 @@
   },
   {
     "number": 47,
-    "title": "N8 Tools — Your browser workbench",
+    "title": "N8 Tools \u2014 Your browser workbench",
     "file": "n8-tools.html",
     "category": "Tools & Productivity"
   },
   {
     "number": 49,
-    "title": "funPromptz — Creative Media Prompt Arcade",
+    "title": "funPromptz \u2014 Creative Media Prompt Arcade",
     "file": "funPromptz.html",
     "category": "Tools & Productivity"
   },
   {
     "number": 50,
-    "title": "masterPrompt — Animated AI Webbuilding Command Deck",
+    "title": "masterPrompt \u2014 Animated AI Webbuilding Command Deck",
     "file": "masterPrompt.html",
     "category": "Tools & Productivity"
   },
   {
     "number": 51,
-    "title": "Qamelot Menu — Compatibility Directory",
+    "title": "Qamelot Menu \u2014 Compatibility Directory",
     "file": "QamelotMenu.html",
     "category": "Experiments & Archives"
   }
