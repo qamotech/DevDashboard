@@ -30,12 +30,6 @@
     "category": "Experiments & Archives"
   },
   {
-    "number": 7,
-    "title": "Social Footer",
-    "file": "social-footer.html",
-    "category": "Experiments & Archives"
-  },
-  {
     "number": 9,
     "title": "Contractor Tool Belt - Tactical Utility Engine",
     "file": "contractor-tool-belt-tactical-utility-engine.html",
@@ -60,12 +54,6 @@
     "category": "Games & Simulations"
   },
   {
-    "number": 14,
-    "title": "\u26a1 Web App Dev Dashboard",
-    "file": "web-app-dev-dashboard.html",
-    "category": "Developer Studios"
-  },
-  {
     "number": 15,
     "title": "\ud83e\ude83 N8 Animation Hub",
     "file": "n8AnimHub.html",
@@ -78,22 +66,10 @@
     "category": "Games & Simulations"
   },
   {
-    "number": 17,
-    "title": "Push Complete",
-    "file": "push-complete.html",
-    "category": "Developer Studios"
-  },
-  {
     "number": 18,
     "title": "Qamelot Conquest: Super Arcade Edition",
     "file": "qamelot-conquest-super-arcade-edition.html",
     "category": "Games & Simulations"
-  },
-  {
-    "number": 20,
-    "title": "DevDash SVG Studio",
-    "file": "devdash-svg-studio.html",
-    "category": "Developer Studios"
   },
   {
     "number": 21,
@@ -189,12 +165,6 @@
     "number": 42,
     "title": "Qamelot Media - Forward Flick Edition",
     "file": "qamelot-media-3.html",
-    "category": "Experiments & Archives"
-  },
-  {
-    "number": 43,
-    "title": "Interactive Nebula Screensaver",
-    "file": "screensaver.html",
     "category": "Experiments & Archives"
   },
   {
