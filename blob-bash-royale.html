@@ -802,7 +802,7 @@
 
 
 
-<link href="qamelot-media-assets/site.webmanifest" rel="manifest"/>
+<link rel="manifest" href="blobbash.webmanifest"/>
 
 
 <meta content="website" property="og:type"/>
@@ -5000,5 +5000,28 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
 <!-- PRACTICE KIT -->
 <script src="../activity-kit.js" data-activity="blob-bash-royale" data-title="Blob Bash Royale" data-goals="[&quot;Practice recovery after leaving a platform.&quot;, &quot;Use a defensive option before attacking.&quot;, &quot;Compare two fighters or stages and note a difference.&quot;]" defer></script>
 <!-- /PRACTICE KIT -->
+
+<style id="n8-pwa-css">
+#n8-install-btn{position:fixed;right:16px;bottom:16px;z-index:99999;display:none;align-items:center;gap:8px;background:#0ea5e9;color:#fff;border:none;border-radius:999px;padding:12px 20px;font:700 15px/1 system-ui,sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.45);cursor:pointer}
+#n8-install-btn:active{transform:scale(.97)}
+#n8-install-toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);z-index:99999;display:none;max-width:88vw;background:#111827;color:#f9fafb;border:1px solid #374151;border-radius:12px;padding:12px 16px;font:500 14px/1.45 system-ui,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.5);text-align:center}
+</style>
+<button id="n8-install-btn" type="button">⚡ INSTALL APP</button>
+<div id="n8-install-toast"></div>
+<script id="n8-pwa-js">
+(function(){
+  // Register the Blob Bash SW only outside KidHub: kidhub's root scope belongs to the hub's own sw.js.
+  if('serviceWorker' in navigator && location.pathname.toLowerCase().indexOf('/kidhub/')===-1){navigator.serviceWorker.register('sw-blobbash.js').catch(function(){});}
+  var btn=document.getElementById('n8-install-btn'),toast=document.getElementById('n8-install-toast'),dp=null;
+  function standalone(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;}
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;if(!standalone())btn.style.display='flex';});
+  window.addEventListener('appinstalled',function(){btn.style.display='none';});
+  btn.addEventListener('click',function(){
+    if(dp){dp.prompt();dp.userChoice.then(function(){dp=null;btn.style.display='none';});}
+    else{toast.textContent='To install: open your browser menu (⋮) and tap "Install app" or "Add to Home screen".';toast.style.display='block';setTimeout(function(){toast.style.display='none';},4200);}
+  });
+})();
+</script>
+
 </body>
 </html>
