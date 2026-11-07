@@ -9032,5 +9032,135 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
 })();
 </script>
 
+
+<script id="bbr-revamp-camera">
+(() => {
+  try {
+    if (window.BBRRevampCamera) return;
+    const A = window.BBRAscension;
+    if (typeof updateCamera !== "function" || typeof camera === "undefined") {
+      window.BBRRevampCamera = { version: "1.0.0", active: false, error: "camera hooks unavailable" };
+      return;
+    }
+    const VW = 1280, VH = 720, WORLD_W = 1600, WORLD_H = 720;
+    const S = { frames: 0, applied: 0, yielded: 0, last: null };
+    const prevCam = updateCamera;
+
+    const aliveF = f => { try { return !!f && isFinite(f.x) && isFinite(f.y) && !f.teamOut && !f.out; } catch (e) { return false; } };
+    const fighters = () => {
+      const out = [];
+      try { if (typeof p1 !== "undefined" && aliveF(p1)) out.push(p1); } catch (e) {}
+      try { if (typeof p2 !== "undefined" && aliveF(p2)) out.push(p2); } catch (e) {}
+      try { if (typeof ally1 !== "undefined" && aliveF(ally1)) out.push(ally1); } catch (e) {}
+      try { if (typeof foe2 !== "undefined" && aliveF(foe2)) out.push(foe2); } catch (e) {}
+      return out;
+    };
+    const cineOn = () => {
+      try {
+        if (document.body.classList.contains("bbr-cine-on")) return true;
+        const k = window.BBRRevampKOCine;
+        if (k && typeof k.state === "function" && k.state().cineActive) return true;
+      } catch (e) {}
+      return false;
+    };
+
+    updateCamera = function () {
+      prevCam();
+      S.frames++;
+      try {
+        if (typeof fightLive === "undefined" || !fightLive) return;   // menus/results: engine framing rules
+        if (cineOn()) { S.yielded++; return; }                          // KO cinematic owns the camera
+        if (A && A.config && A.config.camera === "fixed") return;       // player chose fixed framing
+        const fs = fighters();
+        if (!fs.length) return;
+        let minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
+        for (const f of fs) {
+          // Clamp runaway launch positions so a KO-bound fighter tugs the
+          // frame dramatically but never absurdly.
+          const fx = Math.max(-170, Math.min(WORLD_W + 170, f.x));
+          const fy = Math.max(-180, Math.min(WORLD_H + 170, f.y));
+          const r = (f.r || 34) + 42;
+          if (fx - r < minX) minX = fx - r;
+          if (fx + r > maxX) maxX = fx + r;
+          if (fy - r - 26 < minY) minY = fy - r - 26;
+          if (fy + r > maxY) maxY = fy + r;
+        }
+        const bw = Math.max(540, (maxX - minX) + 300);
+        const bh = Math.max(380, (maxY - minY) + 200);
+        let tz = Math.min(VW / bw, VH / bh);
+        tz = Math.max(.52, Math.min(1.38, tz));
+        const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+        let tx = cx - (VW / 2) / tz;
+        let ty = cy - (VH / 2) / tz;
+        const maxTx = WORLD_W - VW / tz;
+        tx = maxTx <= 0 ? maxTx / 2 : Math.max(0, Math.min(maxTx, tx));
+        const maxTy = WORLD_H - VH / tz;
+        ty = maxTy <= 0 ? Math.max(-130, Math.min(0, maxTy / 2)) : Math.max(-130, Math.min(maxTy + 26, ty));
+        camera.zoom += (tz - camera.zoom) * .085;
+        camera.x += (tx - camera.x) * .09;
+        camera.y += (ty - camera.y) * .07;
+        camera.zoom = Math.max(.5, Math.min(1.45, camera.zoom));
+        S.applied++;
+        S.last = { zoom: +tz.toFixed(3), x: Math.round(tx), y: Math.round(ty), n: fs.length };
+      } catch (e) {}
+    };
+
+    window.BBRRevampCamera = {
+      version: "1.0.0", active: true,
+      state: () => ({ frames: S.frames, applied: S.applied, yielded: S.yielded,
+        target: S.last ? { zoom: S.last.zoom, x: S.last.x, y: S.last.y, n: S.last.n } : null,
+        cam: { x: Math.round(camera.x), y: Math.round(camera.y), zoom: +camera.zoom.toFixed(3) } })
+    };
+  } catch (e) {
+    window.BBRRevampCamera = { version: "1.0.0", active: false, error: String(e && e.message || e) };
+  }
+})();
+</script>
+
+
+<style id="bbr-revamp-polish">
+  /* ===== BBR Revamp Polish: one interaction language for every Smash menu ===== */
+  /* Unified transitions on the whole interactive set */
+  .mode-switch button.bbr-smash-tile, .character-card, .board-card,
+  .bbr-random-btn, .bbr-arena-random-btn, .bbr-close, .bbr-action,
+  .bbr-command-button, .bbr-option select, #startGame, #bbrSmashPress {
+    transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease,
+                border-color .16s ease, filter .16s ease, outline-color .16s ease;
+  }
+  /* Unified hover glow (transform left to each screen's own rules) */
+  .mode-switch button.bbr-smash-tile:hover, .character-card:hover, .board-card:hover,
+  .bbr-random-btn:hover, .bbr-arena-random-btn:hover, .bbr-close:hover,
+  .bbr-action:hover, .bbr-command-button:hover, #startGame:hover {
+    box-shadow: 0 0 0 2px rgba(255,210,63,.85), 0 10px 26px rgba(0,0,0,.5),
+                0 0 22px rgba(255,210,63,.35);
+  }
+  /* Unified press feedback */
+  .mode-switch button.bbr-smash-tile:active, .character-card:active, .board-card:active,
+  .bbr-random-btn:active, .bbr-arena-random-btn:active, .bbr-action:active,
+  .bbr-command-button:active, #startGame:active {
+    transform: scale(.97);
+  }
+  /* Unified focus ring — same gold ring everywhere a menu control can take focus */
+  .mode-switch button.bbr-smash-tile:focus-visible, .character-card:focus-visible,
+  .board-card:focus-visible, .bbr-random-btn:focus-visible,
+  .bbr-arena-random-btn:focus-visible, .bbr-close:focus-visible,
+  .bbr-action:focus-visible, .bbr-command-button:focus-visible,
+  .bbr-option select:focus-visible, #startGame:focus-visible, #bbrSmashPress:focus-visible {
+    outline: 3px solid #ffd23f; outline-offset: 2px;
+    box-shadow: 0 0 0 5px rgba(0,0,0,.55), 0 0 18px rgba(255,210,63,.55);
+  }
+  /* Unified heading treatment (family / weight / spacing — sizes stay per-screen) */
+  .select-screen h2, .pick-panel h3, .bbr-panel-head h2,
+  #bbrSmashStageBanner .bbr-stage-name, #bbrSmashVs .vs-name,
+  #bbrSmashVictory .vic-name, .bbr-smash-kicker {
+    font-family: "Baloo 2", "Nunito", system-ui, sans-serif;
+    font-weight: 1000; letter-spacing: .03em;
+  }
+  /* One easing curve for the big overlay screens */
+  #bbrSmashTitle, #bbrSmashVs, #bbrSmashGameSet {
+    transition-timing-function: cubic-bezier(.2,.9,.25,1);
+  }
+</style>
+
 </body>
 </html>
