@@ -4997,9 +4997,6 @@ function renderSelect() {
 b.onclick=()=>{const d=document.documentElement;if(fs()){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}else{const r=(d.requestFullscreen||d.webkitRequestFullscreen);if(r){const pending=r.call(d);pending&&pending.catch&&pending.catch(()=>{})}}};
 const sync=()=>{b.textContent=fs()?'🗗 Exit fullscreen':'⛶ Fullscreen'};document.addEventListener('fullscreenchange',sync);document.addEventListener('webkitfullscreenchange',sync);
 let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(()=>k.classList.add('kh-dim'),3000)};addEventListener('pointermove',wake,{passive:true});wake()})();</script>
-<!-- PRACTICE KIT -->
-<script src="../activity-kit.js" data-activity="blob-bash-royale" data-title="Blob Bash Royale" data-goals="[&quot;Practice recovery after leaving a platform.&quot;, &quot;Use a defensive option before attacking.&quot;, &quot;Compare two fighters or stages and note a difference.&quot;]" defer></script>
-<!-- /PRACTICE KIT -->
 <!-- BBR-ANIMATED-MENU:START -->
 <style id="bbr-animated-menu-css">
   .bbr-menu-bg{position:absolute;inset:0;z-index:7;width:100%;height:100%;pointer-events:none;opacity:.9}
@@ -7157,6 +7154,1883 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
 })();
 </script>
 <!-- BBR-SMASH-GAMESET:END -->
+
+<!-- PRACTICE KIT -->
+<script src="../activity-kit.js" data-activity="blob-bash-royale" data-title="Blob Bash Royale" data-goals="[&quot;Practice recovery after leaving a platform.&quot;, &quot;Use a defensive option before attacking.&quot;, &quot;Compare two fighters or stages and note a difference.&quot;]" defer></script>
+<!-- /PRACTICE KIT -->
+
+<style id="bbr-revamp-touch-css">
+  /* Revamp touch gamepad: shown only on touch-capable hardware (JS adds the
+     body class); the legacy width-only .touch pad yields to it. */
+  body.bbr-revamp-touch-on .touch{display:none!important}
+  #bbrTouchPad{position:absolute;left:.55rem;right:.55rem;bottom:.55rem;z-index:8;
+    display:none;justify-content:space-between;align-items:flex-end;gap:.6rem;
+    pointer-events:none;touch-action:none;-webkit-user-select:none;user-select:none;
+    -webkit-touch-callout:none;font-family:"Nunito",system-ui,sans-serif}
+  body.bbr-revamp-touch-on #bbrTouchPad{display:flex}
+  #bbrTouchPad .cluster{display:flex;align-items:flex-end;gap:.5rem;pointer-events:none}
+  #bbrTouchPad .dpad{display:grid;grid-template-columns:repeat(3,3.4rem);grid-template-rows:repeat(2,3.4rem);gap:.32rem;pointer-events:none}
+  #bbrTouchPad .actions{display:grid;grid-template-columns:repeat(4,3.4rem);grid-template-rows:repeat(2,3.4rem);gap:.32rem;pointer-events:none}
+  #bbrTouchPad button{pointer-events:auto;touch-action:none;border:2px solid rgba(255,255,255,.55);
+    border-radius:50%;background:rgba(10,14,34,.62);color:#fff;font-weight:1000;line-height:1;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.08rem;
+    box-shadow:0 6px 18px rgba(0,0,0,.35),inset 0 -4px 0 rgba(0,0,0,.35);cursor:pointer;padding:0}
+  #bbrTouchPad button .ic{font-size:1.15rem;line-height:1}
+  #bbrTouchPad button .lb{font-size:.52rem;letter-spacing:.08em;text-transform:uppercase;opacity:.92}
+  #bbrTouchPad button.on{background:#ffd84d;color:#172038;border-color:#fff;transform:scale(1.07);
+    box-shadow:0 0 22px rgba(255,216,77,.65),inset 0 -4px 0 rgba(0,0,0,.2)}
+  #bbrTouchPad button[data-rt="punch"]{background:rgba(230,0,18,.62)}
+  #bbrTouchPad button[data-rt="melee"]{background:rgba(46,107,255,.62)}
+  #bbrTouchPad button[data-rt="smash"]{background:rgba(255,123,53,.66)}
+  #bbrTouchPad button[data-rt="special"]{background:rgba(154,92,255,.62)}
+  #bbrTouchPad button[data-rt="jump"]{background:rgba(66,234,196,.55)}
+  #bbrTouchPad button.on{color:#172038;background:#ffd84d}
+  #bbrTouchPad .spacer{visibility:hidden}
+  #bbrTouchToggle{position:absolute;right:.55rem;bottom:.55rem;z-index:7;display:none;
+    border:2px solid rgba(255,255,255,.5);border-radius:999px;background:rgba(10,14,34,.62);color:#fff;
+    font:1000 .68rem/1 "Nunito",system-ui,sans-serif;letter-spacing:.08em;padding:.55rem .7rem;cursor:pointer}
+  body.bbr-revamp-touch-on.pad-hidden #bbrTouchPad{display:none}
+  body.bbr-revamp-touch-on.pad-hidden #bbrTouchToggle{display:block}
+  @media (max-width:640px){
+    #bbrTouchPad{left:.35rem;right:.35rem;bottom:.35rem}
+    #bbrTouchPad .dpad{grid-template-columns:repeat(3,2.72rem);grid-template-rows:repeat(2,2.72rem);gap:.26rem}
+    #bbrTouchPad .actions{grid-template-columns:repeat(4,2.72rem);grid-template-rows:repeat(2,2.72rem);gap:.26rem}
+    #bbrTouchPad button{background:rgba(10,14,34,.48)}
+    #bbrTouchPad button .ic{font-size:.95rem}
+    #bbrTouchPad button .lb{font-size:.46rem}
+  }
+</style>
+<script id="bbr-revamp-touch">
+(() => {
+  try {
+    if (window.BBRRevampTouch) return;
+    const shell = document.querySelector(".stage-shell");
+    if (!shell || typeof touch === "undefined") throw new Error("stage/touch unavailable");
+    const isTouch = (window.matchMedia && matchMedia("(pointer: coarse)").matches)
+      || "ontouchstart" in window || (navigator.maxTouchPoints || 0) > 0;
+    const pad = document.createElement("div");
+    pad.id = "bbrTouchPad";
+    pad.setAttribute("aria-label", "Blob Bash touch gamepad");
+    const B = (name, ic, lb, cls) =>
+      '<button type="button" data-rt="' + name + '"' + (cls ? ' class="' + cls + '"' : '') +
+      ' aria-label="' + lb + '"><span class="ic">' + ic + '</span><span class="lb">' + lb + "</span></button>";
+    pad.innerHTML =
+      '<div class="cluster"><div class="dpad">' +
+        '<span class="spacer"></span>' + B("up", "▲", "Up") + '<span class="spacer"></span>' +
+        B("left", "◀", "Left") + B("down", "▼", "Down") + B("right", "▶", "Right") +
+      "</div></div>" +
+      '<div class="cluster"><div class="actions">' +
+        B("smash", "💥", "Smash") + B("melee", "🥊", "Strike") + B("punch", "👊", "Punch") + B("special", "🌀", "Pulse") +
+        B("shield", "🛡️", "Shield") + B("grab", "✊", "Grab") + B("dodge", "💨", "Dodge") + B("jump", "⬆️", "Jump") +
+      "</div></div>";
+    shell.appendChild(pad);
+    const toggle = document.createElement("button");
+    toggle.id = "bbrTouchToggle"; toggle.type = "button"; toggle.textContent = "🎮 PAD";
+    toggle.setAttribute("aria-label", "Show touch gamepad");
+    toggle.addEventListener("click", () => document.body.classList.remove("pad-hidden"));
+    shell.appendChild(toggle);
+    pad.addEventListener("dblclick", () => document.body.classList.add("pad-hidden"));
+    pad.addEventListener("contextmenu", e => e.preventDefault());
+
+    // Multi-touch: each button tracks its own pointer ids, so holding Left
+    // while tapping Punch works (the legacy pad lost simultaneous presses).
+    pad.querySelectorAll("button[data-rt]").forEach(btn => {
+      const name = btn.dataset.rt, ids = new Set();
+      const on = e => {
+        e.preventDefault();
+        ids.add(e.pointerId);
+        try { btn.setPointerCapture(e.pointerId); } catch (err) {}
+        touch.add(name); btn.classList.add("on");
+        if (navigator.vibrate) { try { navigator.vibrate(8); } catch (err) {} }
+      };
+      const off = e => {
+        ids.delete(e.pointerId);
+        if (!ids.size) { touch.delete(name); btn.classList.remove("on"); }
+      };
+      btn.addEventListener("pointerdown", on);
+      btn.addEventListener("pointerup", off);
+      btn.addEventListener("pointercancel", off);
+      btn.addEventListener("lostpointercapture", off);
+    });
+    if (isTouch) document.body.classList.add("bbr-revamp-touch-on");
+    window.BBRRevampTouch = {
+      version: "1.0.0", active: true, isTouch,
+      visible: () => document.body.classList.contains("bbr-revamp-touch-on") && !document.body.classList.contains("pad-hidden"),
+      pressed: () => [...touch],
+      buttons: () => pad.querySelectorAll("button[data-rt]").length,
+      show: () => document.body.classList.remove("pad-hidden"),
+      hide: () => document.body.classList.add("pad-hidden")
+    };
+  } catch (e) {
+    window.BBRRevampTouch = { version: "1.0.0", active: false, error: String(e && e.message || e) };
+  }
+})();
+</script>
+
+<style id="bbr-revamp-hazards-css">
+  #bbrHazardBanner{position:absolute;top:.55rem;left:50%;transform:translateX(-50%) translateY(-8px);z-index:9;
+    pointer-events:none;opacity:0;transition:opacity .18s ease,transform .18s ease;
+    font:1000 .82rem/1.15 "Nunito",system-ui,sans-serif;letter-spacing:.06em;text-align:center;
+    color:#fff;background:rgba(20,6,10,.78);border:2px solid #ff5a3c;border-radius:999px;
+    padding:.42rem .95rem;box-shadow:0 0 24px rgba(255,90,60,.55);white-space:nowrap}
+  #bbrHazardBanner.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #bbrHazardBanner .hz-sub{display:block;font-size:.6rem;letter-spacing:.14em;color:#ffd84d}
+  @media (max-width:640px){#bbrHazardBanner{font-size:.68rem;max-width:94%;white-space:normal}}
+</style>
+<script id="bbr-revamp-hazards">
+(() => {
+  try {
+    if (window.BBRRevampHazards) return;
+    // One signature hazard per arena theme. All are telegraphed zone strikes:
+    // warn (90f) -> strike (24f). Small damage + knockback, never instant-KO.
+    const HAZ = {
+      cloud:   { name: "SKY GUST",       icon: "🌬️", kind: "gust",   dmg: 2, color: "#bdf3ff" },
+      dojo:    { name: "NEON SHOCK",     icon: "⚡", kind: "column", dmg: 7, vy: -12, color: "#ff3f9c" },
+      harbor:  { name: "METEOR DROP",    icon: "☄️", kind: "column", dmg: 8, vy: -9,  color: "#ffd84d" },
+      lava:    { name: "MAGMA ERUPTION", icon: "🌋", kind: "floor",  dmg: 8, vy: -13, color: "#ff7b35" },
+      crystal: { name: "SHARD PULSE",    icon: "💎", kind: "column", dmg: 6, vy: -6,  color: "#60f7ff" },
+      jungle:  { name: "POLLEN GUST",    icon: "🌿", kind: "gust",   dmg: 2, color: "#c8ff73", slow: 100 },
+      tempest: { name: "LIGHTNING ARC",  icon: "🌩️", kind: "column", dmg: 9, vy: -11, color: "#b9f6ff", stun: 20 },
+      void:    { name: "GRAVITY WELL",   icon: "🌀", kind: "well",   dmg: 4, vy: -7,  color: "#e243d4" },
+      foundry: { name: "LAVA BURST",     icon: "🔥", kind: "floor",  dmg: 8, vy: -13, color: "#ffb13b" },
+      glacier: { name: "ICICLE DROP",    icon: "🧊", kind: "column", dmg: 7, vy: -9,  color: "#bdf3ff" },
+      armada:  { name: "TAILWIND GUST",  icon: "💨", kind: "gust",   dmg: 2, color: "#ffe9a8" }
+    };
+    const IDLE = 400, WARN = 90, STRIKE = 24, ZW = 160;
+    const S = { phase: "idle", timer: IDLE + Math.floor(Math.random() * 180), zone: null, def: null,
+                theme: null, dir: 1, strikes: 0, lastFrame: -1, applied: false };
+    const shell = document.querySelector(".stage-shell");
+    const banner = document.createElement("div");
+    banner.id = "bbrHazardBanner"; banner.setAttribute("aria-live", "polite");
+    if (shell) shell.appendChild(banner);
+    let actx = null;
+    const blip = (freq, dur) => { try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+      const o = actx.createOscillator(), g = actx.createGain(), now = actx.currentTime;
+      o.type = "sawtooth"; o.frequency.setValueAtTime(freq, now);
+      o.frequency.exponentialRampToValueAtTime(Math.max(40, freq * .4), now + dur);
+      g.gain.setValueAtTime(.06, now); g.gain.exponentialRampToValueAtTime(.0001, now + dur);
+      o.connect(g).connect(actx.destination); o.start(now); o.stop(now + dur);
+    } catch (e) {} };
+    const active = () => {
+      try { return typeof hazardsEnabled !== "undefined" && hazardsEnabled &&
+        typeof fightLive !== "undefined" && fightLive && typeof matchStarted !== "undefined" && matchStarted &&
+        typeof countdown !== "undefined" && countdown <= 0 && typeof paused !== "undefined" && !paused; }
+      catch (e) { return false; }
+    };
+    const themeNow = () => { try { return boards[boardIndex] && boards[boardIndex].theme; } catch (e) { return null; } };
+    const mainPlat = () => { try { return platforms.find(pl => pl.main) || platforms[0]; } catch (e) { return null; } };
+    const fighters = () => { const out = []; try { if (typeof p1 !== "undefined" && p1) out.push(p1); } catch (e) {}
+      try { if (typeof p2 !== "undefined" && p2) out.push(p2); } catch (e) {} return out; };
+    function pickZone() {
+      const mp = mainPlat(); if (!mp) return null;
+      const x = mp.x + 50 + Math.random() * Math.max(40, mp.w - ZW - 100);
+      return { x, w: ZW, cx: x + ZW / 2, floorY: mp.y };
+    }
+    function showBanner(html, sub) {
+      banner.innerHTML = html + (sub ? '<span class="hz-sub">' + sub + "</span>" : "");
+      banner.classList.add("show");
+    }
+    function hideBanner() { banner.classList.remove("show"); }
+    function applyHit(f, def) {
+      if (!f || f.invuln > 0 || f.stocks <= 0) return;
+      const away = f.x < S.zone.cx ? -1 : 1;
+      f.damage = Math.min(999, (f.damage || 0) + def.dmg);
+      if (def.kind === "floor" || def.kind === "column") {
+        f.vy = Math.min(f.vy || 0, def.vy); f.vx = away * (def.kind === "floor" ? 3.2 : 5.2);
+        f.ground = false; f.hurt = Math.max(f.hurt || 0, 16);
+      } else if (def.kind === "well") {
+        f.vy = Math.min(f.vy || 0, def.vy); f.hurt = Math.max(f.hurt || 0, 12);
+      }
+      if (def.stun) f.stun = Math.max(f.stun || 0, def.stun);
+      if (def.slow) f.slow = Math.max(f.slow || 0, def.slow);
+      try { pop(f.x, f.y, def.color, 10, 3); floatText(f.x, f.y - 84, def.name + "!", def.color); } catch (e) {}
+    }
+    function strikeStart() {
+      const def = S.def; if (!def || !S.zone) return;
+      S.applied = true; S.strikes++;
+      blip(def.kind === "gust" ? 320 : 140, .22);
+      fighters().forEach(f => {
+        if (def.kind === "gust") { if (def.slow) applyHit(f, def); return; }
+        const inZone = f.x >= S.zone.x - 6 && f.x <= S.zone.x + S.zone.w + 6;
+        const nearFloor = (f.y + f.r) > S.zone.floorY - 70;
+        if (def.kind === "floor" && inZone && nearFloor) applyHit(f, def);
+        else if (def.kind === "column" && inZone) applyHit(f, def);
+        else if (def.kind === "well" && Math.abs(f.x - S.zone.cx) <= 190) applyHit(f, def);
+      });
+      showBanner(def.icon + " " + def.name + "!", "");
+      setTimeout(hideBanner, 650);
+    }
+    function step(frames) {
+      if (!active()) { if (S.phase !== "idle") { S.phase = "idle"; S.timer = IDLE; hideBanner(); } return; }
+      const theme = themeNow(); const def = theme && HAZ[theme];
+      if (!def) return;
+      S.timer -= frames;
+      if (S.phase === "idle" && S.timer <= 0) {
+        S.theme = theme; S.def = def; S.zone = pickZone(); S.dir = Math.random() < .5 ? -1 : 1;
+        if (!S.zone) { S.timer = 60; return; }
+        S.phase = "warn"; S.timer = WARN; S.applied = false;
+        blip(660, .09);
+        showBanner("⚠️ INCOMING: " + def.icon + " " + def.name,
+          def.kind === "gust" ? (S.dir < 0 ? "◀◀ WIND INBOUND ◀◀" : "▶▶ WIND INBOUND ▶▶") : "GET OUT OF THE ZONE!");
+      } else if (S.phase === "warn" && S.timer <= 0) {
+        S.phase = "strike"; S.timer = STRIKE; strikeStart();
+      } else if (S.phase === "strike") {
+        // Continuous effects for the whole strike window.
+        if (S.def.kind === "gust") fighters().forEach(f => { if (f && f.stocks > 0) f.vx += S.dir * .85; });
+        if (S.def.kind === "well" && S.zone) fighters().forEach(f => {
+          if (f && f.stocks > 0) f.vx += Math.sign(S.zone.cx - f.x) * .55;
+        });
+        if (S.timer <= 0) { S.phase = "idle"; S.timer = IDLE + Math.floor(Math.random() * 180); hideBanner(); }
+      }
+    }
+    // Frame driver: advance by matchFrames delta so it tracks game speed.
+    (function loop() {
+      requestAnimationFrame(loop);
+      try {
+        if (typeof matchFrames === "undefined") return;
+        if (S.lastFrame < 0) { S.lastFrame = matchFrames; return; }
+        const d = matchFrames - S.lastFrame;
+        if (d > 0) { S.lastFrame = matchFrames; step(Math.min(d, 5)); }
+      } catch (e) {}
+    })();
+    // Canvas telegraphs, drawn in stage coordinates via the drawPlatforms chain.
+    try {
+      const baseDP = drawPlatforms;
+      drawPlatforms = function () {
+        baseDP();
+        if (!S.zone || !S.def || (S.phase !== "warn" && S.phase !== "strike")) return;
+        if (typeof hazardsEnabled === "undefined" || !hazardsEnabled) return;
+        const def = S.def, z = S.zone, mp = mainPlat(); if (!mp) return;
+        ctx.save();
+        const pulse = .5 + .5 * Math.sin(performance.now() * .02);
+        if (def.kind === "gust" || def.kind === "well") {
+          ctx.globalAlpha = S.phase === "strike" ? .30 : .16 + .10 * pulse;
+          ctx.fillStyle = def.color; ctx.fillRect(mp.x, mp.y - 190, mp.w, 190);
+          ctx.globalAlpha = .95; ctx.fillStyle = def.color;
+          ctx.font = "1000 30px Nunito"; ctx.textAlign = "center";
+          const arrow = def.kind === "well" ? "➜ 🌀 ⬅" : (S.dir < 0 ? "◀ ◀ ◀" : "▶ ▶ ▶");
+          ctx.fillText(arrow, 800, mp.y - 120);
+        } else {
+          ctx.globalAlpha = S.phase === "strike" ? .55 : .20 + .22 * pulse;
+          ctx.fillStyle = S.phase === "strike" ? "#ffffff" : def.color;
+          if (def.kind === "floor") ctx.fillRect(z.x, z.floorY - 26, z.w, 26);
+          else ctx.fillRect(z.x, 60, z.w, z.floorY - 60);
+          ctx.globalAlpha = .95; ctx.strokeStyle = def.color; ctx.lineWidth = 3;
+          if (def.kind === "floor") ctx.strokeRect(z.x, z.floorY - 26, z.w, 26);
+          else ctx.strokeRect(z.x, 60, z.w, z.floorY - 60);
+          ctx.fillStyle = def.color; ctx.font = "1000 17px Nunito"; ctx.textAlign = "center";
+          ctx.fillText(def.icon + " " + def.name, z.cx, def.kind === "floor" ? z.floorY - 38 : 52);
+          if (S.phase === "strike") { try { pop(z.cx, z.floorY - 20, def.color, 4, 3); } catch (e) {} }
+        }
+        ctx.restore();
+      };
+    } catch (e) {}
+    window.BBRRevampHazards = {
+      version: "1.0.0", active: true,
+      hazards: Object.fromEntries(Object.entries(HAZ).map(([k, v]) => [k, v.name])),
+      state: () => ({ phase: S.phase, timer: S.timer, theme: S.theme, strikes: S.strikes,
+                      zone: S.zone && { x: Math.round(S.zone.x), w: S.zone.w } }),
+      forceWarn: () => { S.phase = "idle"; S.timer = 0; step(1); return S.phase; },
+      forceStrike: () => { if (S.phase === "warn") { S.phase = "strike"; S.timer = STRIKE; strikeStart(); } return S.phase; }
+    };
+  } catch (e) {
+    window.BBRRevampHazards = { version: "1.0.0", active: false, error: String(e && e.message || e) };
+  }
+})();
+</script>
+
+<style id="bbr-revamp-modifiers-css">
+  #bbrModBox{margin-top:.65rem}
+  #bbrModBox .mod-row{display:flex;flex-wrap:wrap;gap:.45rem}
+  #bbrModBox .mod-chip{flex:1 1 30%;min-width:9.5rem;display:flex;align-items:center;gap:.5rem;
+    border:2px solid rgba(255,255,255,.35);border-radius:10px;padding:.5rem .6rem;cursor:pointer;
+    background:rgba(10,14,34,.35);color:inherit;font:inherit;text-align:left}
+  body:not(.dark) #bbrModBox .mod-chip{background:rgba(255,255,255,.5)}
+  #bbrModBox .mod-chip .mi{font-size:1.25rem;line-height:1}
+  #bbrModBox .mod-chip b{display:block;font-size:.86rem;line-height:1.1}
+  #bbrModBox .mod-chip small{display:block;font-size:.68rem;opacity:.75;line-height:1.15}
+  #bbrModBox .mod-chip .st{margin-left:auto;font-weight:1000;font-size:.7rem;letter-spacing:.08em;opacity:.6}
+  #bbrModBox .mod-chip.on{border-color:#ffd84d;background:rgba(255,216,77,.22);
+    box-shadow:0 0 14px rgba(255,216,77,.35)}
+  #bbrModBox .mod-chip.on .st{opacity:1;color:#ffd84d}
+  body:not(.dark) #bbrModBox .mod-chip.on .st{color:#9a6b00}
+  #bbrModBadges{position:absolute;top:9%;left:50%;transform:translateX(-50%);z-index:5;
+    display:none;gap:.45rem;flex-wrap:wrap;justify-content:center;max-width:92%}
+  #bbrSmashVs.show #bbrModBadges{display:flex}
+  #bbrModBadges .bdg{font:1000 .78rem/1 "Nunito",system-ui,sans-serif;letter-spacing:.06em;
+    color:#172038;background:#ffd84d;border:2px solid #fff;border-radius:999px;padding:.5em .85em;
+    box-shadow:0 4px 14px rgba(0,0,0,.4)}
+  #bbrModStrip{position:absolute;top:.55rem;right:.55rem;z-index:8;display:none;gap:.3rem;flex-wrap:wrap;justify-content:flex-end;max-width:60%}
+  #bbrModStrip.show{display:flex}
+  #bbrModStrip .bdg{font:1000 .62rem/1 "Nunito",system-ui,sans-serif;letter-spacing:.05em;color:#fff;
+    background:rgba(10,14,34,.66);border:1.5px solid rgba(255,216,77,.8);border-radius:999px;padding:.42em .6em}
+  @media (max-width:640px){
+    #bbrModBox .mod-chip{min-width:7.8rem;flex:1 1 44%}
+    #bbrModBadges .bdg{font-size:.64rem}
+    #bbrModStrip{max-width:52%}
+  }
+</style>
+<script id="bbr-revamp-modifiers">
+(() => {
+  try {
+    if (window.BBRRevampModifiers) return;
+    const MODS = [
+      { id: "moon",    icon: "🌙", name: "Moon Gravity", desc: "Floaty falls, higher jumps" },
+      { id: "giant",   icon: "🍄", name: "Giant Mode",   desc: "Blobs grow ×1.45" },
+      { id: "tiny",    icon: "🐜", name: "Tiny Mode",    desc: "Blobs shrink ×0.62" },
+      { id: "vampire", icon: "🧛", name: "Vampire",      desc: "Heal 35% of damage you deal" },
+      { id: "chaos",   icon: "💥", name: "Chaos Items",  desc: "Double the pickups" }
+    ];
+    const KEY = "bbr-revamp-modifiers";
+    const MOON_LIFT = 0.34, GIANT = 1.45, TINY = 0.62, HEAL = 0.35;
+    let on = new Set();
+    try { (JSON.parse(localStorage.getItem(KEY)) || []).forEach(id => { if (MODS.some(m => m.id === id)) on.add(id); }); } catch (e) {}
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...on])); } catch (e) {} };
+    const isOn = id => on.has(id);
+    const scale = () => (isOn("giant") ? GIANT : 1) * (isOn("tiny") ? TINY : 1);
+
+    /* ---------- select-screen toggle box ---------- */
+    const select = document.querySelector("#selectScreen");
+    const anchor = select && select.querySelector(".match-options");
+    const box = document.createElement("div");
+    box.className = "option-box"; box.id = "bbrModBox";
+    box.innerHTML = "<span>🎲 Match Modifiers — mix &amp; match</span>" +
+      '<div class="mod-row">' + MODS.map(m =>
+        '<button type="button" class="mod-chip" data-mod="' + m.id + '" aria-pressed="false">' +
+        '<span class="mi">' + m.icon + '</span><span><b>' + m.name + '</b><small>' + m.desc + "</small></span>" +
+        '<span class="st">OFF</span></button>').join("") + "</div>";
+    if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(box, anchor.nextSibling);
+    else if (select) select.appendChild(box);
+    const paint = () => box.querySelectorAll(".mod-chip").forEach(ch => {
+      const act = isOn(ch.dataset.mod);
+      ch.classList.toggle("on", act); ch.setAttribute("aria-pressed", String(act));
+      ch.querySelector(".st").textContent = act ? "ON" : "OFF";
+    });
+    box.querySelectorAll(".mod-chip").forEach(ch => ch.addEventListener("click", () => {
+      const id = ch.dataset.mod;
+      if (on.has(id)) on.delete(id); else on.add(id);
+      save(); paint(); refreshBadges();
+    }));
+    paint();
+
+    /* ---------- VS-splash badges + in-match strip ---------- */
+    const vs = document.querySelector("#bbrSmashVs");
+    const badges = document.createElement("div"); badges.id = "bbrModBadges";
+    if (vs) vs.appendChild(badges);
+    const shell = document.querySelector(".stage-shell");
+    const strip = document.createElement("div"); strip.id = "bbrModStrip";
+    if (shell) shell.appendChild(strip);
+    function refreshBadges() {
+      const act = MODS.filter(m => on.has(m.id));
+      badges.innerHTML = act.map(m => '<span class="bdg">' + m.icon + " " + m.name.toUpperCase() + "</span>").join("");
+      strip.innerHTML = act.map(m => '<span class="bdg">' + m.icon + " " + m.name + "</span>").join("");
+      strip.classList.toggle("show", act.length > 0);
+    }
+    refreshBadges();
+
+    /* ---------- fighter size (radius is the engine's size) ---------- */
+    const fighters = () => { const out = []; try { if (typeof p1 !== "undefined" && p1) out.push(p1); } catch (e) {}
+      try { if (typeof p2 !== "undefined" && p2) out.push(p2); } catch (e) {} return out; };
+    function applySize(f) {
+      if (!f) return;
+      if (f.__bbrModBaseR == null) f.__bbrModBaseR = f.r;
+      f.r = Math.round(f.__bbrModBaseR * scale() * 10) / 10;
+    }
+
+    /* ---------- physics + lifesteal wrappers ---------- */
+    try {
+      const prevUF = updateFighter;
+      updateFighter = function (f, other, input) {
+        const wasAir = f && !f.ground;
+        prevUF(f, other, input);
+        if (!f) return;
+        applySize(f);
+        // Moon gravity: bleed off part of each frame's gravity gain while airborne.
+        if (isOn("moon") && wasAir && !f.ground && !f.slam && !f.ledge) f.vy -= MOON_LIFT;
+      };
+    } catch (e) {}
+    function heal(attacker, dealt) {
+      if (!isOn("vampire") || !attacker || dealt <= 0 || attacker.damage <= 0) return;
+      const amt = dealt * HEAL;
+      attacker.damage = Math.max(0, Math.round((attacker.damage - amt) * 10) / 10);
+      if (amt >= 1) { try { floatText(attacker.x, attacker.y - 92, "🧛 +" + (Math.round(amt * 10) / 10) + "%", "#ff5a7a"); } catch (e) {} }
+    }
+    try {
+      const prevHit = hitCheck;
+      hitCheck = function (attacker, target) {
+        const before = target ? target.damage : 0;
+        prevHit(attacker, target);
+        if (target) heal(attacker, target.damage - before);
+      };
+    } catch (e) {}
+    try {
+      const prevProj = updateProjectiles;
+      updateProjectiles = function () {
+        let d1 = null, d2 = null;
+        try { d1 = p1.damage; d2 = p2.damage; } catch (e) {}
+        prevProj();
+        if (d1 == null) return;
+        try {
+          if (p1.damage > d1) heal(p2, p1.damage - d1);
+          if (p2.damage > d2) heal(p1, p2.damage - d2);
+        } catch (e) {}
+      };
+    } catch (e) {}
+
+    /* ---------- match start: sizes, chaos pickups, badges ---------- */
+    try {
+      const prevStart = startMatch;
+      startMatch = function () {
+        prevStart();
+        fighters().forEach(applySize);
+        if (isOn("chaos")) {
+          try { const n = pickups.length; for (let i = 0; i < n; i++) pickups.push(makePickup()); } catch (e) {}
+        }
+        refreshBadges();
+      };
+    } catch (e) {}
+
+    window.BBRRevampModifiers = {
+      version: "1.0.0", active: true, mods: MODS,
+      isOn, active: () => [...on], scale,
+      gravityLift: MOON_LIFT, healPct: HEAL,
+      set: (id, val) => { if (!MODS.some(m => m.id === id)) return false;
+        if (val) on.add(id); else on.delete(id); save(); paint(); refreshBadges(); return true; },
+      toggle: id => { if (!MODS.some(m => m.id === id)) return false;
+        if (on.has(id)) on.delete(id); else on.add(id); save(); paint(); refreshBadges(); return true; },
+      badgesText: () => badges.textContent
+    };
+  } catch (e) {
+    window.BBRRevampModifiers = { version: "1.0.0", active: false, error: String(e && e.message || e) };
+  }
+})();
+</script>
+
+
+<style id="bbr-revamp-suddendeath-css">
+  #bbrSuddenBanner{position:absolute;top:.55rem;left:50%;transform:translateX(-50%) translateY(-8px);z-index:10;
+    pointer-events:none;opacity:0;transition:opacity .18s ease,transform .18s ease;
+    font:1000 .9rem/1.15 "Nunito",system-ui,sans-serif;letter-spacing:.07em;text-align:center;
+    color:#fff;background:rgba(38,4,8,.82);border:2px solid #ff4f5e;border-radius:999px;
+    padding:.45rem 1.05rem;box-shadow:0 0 28px rgba(255,79,94,.65);white-space:nowrap}
+  #bbrSuddenBanner.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #bbrSuddenBanner .sd-sub{display:block;font-size:.62rem;letter-spacing:.15em;color:#ffb3ba}
+  #bbrSuddenStrip{position:absolute;bottom:3.4rem;left:.55rem;z-index:8;display:none;
+    font:1000 .66rem/1 "Nunito",system-ui,sans-serif;letter-spacing:.06em;color:#fff;
+    background:rgba(38,4,8,.72);border:1.5px solid rgba(255,79,94,.9);border-radius:999px;padding:.5em .75em}
+  #bbrSuddenStrip.show{display:block}
+  @media (max-width:640px){#bbrSuddenBanner{font-size:.72rem;max-width:94%;white-space:normal}
+    #bbrSuddenStrip{font-size:.58rem}}
+</style>
+<script id="bbr-revamp-suddendeath">
+(() => {
+  try {
+    if (window.BBRRevampSuddenDeath) return;
+    // Engine blast zone (base game): x<-220 | x>1820 | y>950, clamp top ~-260.
+    // Sudden death steps it inward 80px every 5s, 6 steps over 30s.
+    const STEP_FRAMES = 300, MAX_STEP = 6, STEP_PX = 80, CREEP_FRAMES = 120;
+    const BASE = { left: -220, right: 1820, bottom: 950, top: -260 };
+    const S = { active: false, forced: false, startFrame: 0, step: 0, creepTicks: 0,
+                lastCreep: 0, kos: 0, lastFrame: -1, announced: false };
+    const shell = document.querySelector(".stage-shell");
+    const banner = document.createElement("div");
+    banner.id = "bbrSuddenBanner"; banner.setAttribute("aria-live", "polite");
+    if (shell) shell.appendChild(banner);
+    const strip = document.createElement("div");
+    strip.id = "bbrSuddenStrip";
+    if (shell) shell.appendChild(strip);
+    let actx = null;
+    const blip = (freq, dur) => { try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+      const o = actx.createOscillator(), g = actx.createGain(), now = actx.currentTime;
+      o.type = "sawtooth"; o.frequency.setValueAtTime(freq, now);
+      o.frequency.exponentialRampToValueAtTime(Math.max(40, freq * .35), now + dur);
+      g.gain.setValueAtTime(.07, now); g.gain.exponentialRampToValueAtTime(.0001, now + dur);
+      o.connect(g).connect(actx.destination); o.start(now); o.stop(now + dur);
+    } catch (e) {} };
+    const boundsFor = step => { const s = Math.max(0, Math.min(MAX_STEP, step)) * STEP_PX;
+      return { left: BASE.left + s, right: BASE.right - s,
+               bottom: BASE.bottom - Math.round(s * .7), top: BASE.top + Math.round(s * .55) }; };
+    const fighters = () => { const out = []; try { if (typeof p1 !== "undefined" && p1) out.push(p1); } catch (e) {}
+      try { if (typeof p2 !== "undefined" && p2) out.push(p2); } catch (e) {} return out; };
+    const live = () => { try { return typeof fightLive !== "undefined" && fightLive &&
+      typeof matchStarted !== "undefined" && matchStarted &&
+      typeof countdown !== "undefined" && countdown <= 0 && typeof paused !== "undefined" && !paused; }
+      catch (e) { return false; } };
+    function showBanner(html, sub, holdMs) {
+      banner.innerHTML = html + (sub ? '<span class="sd-sub">' + sub + "</span>" : "");
+      banner.classList.add("show");
+      clearTimeout(showBanner.timer);
+      if (holdMs) showBanner.timer = setTimeout(() => banner.classList.remove("show"), holdMs);
+    }
+    function activate() {
+      S.active = true; S.announced = true;
+      try { S.startFrame = matchFrames; } catch (e) { S.startFrame = 0; }
+      S.step = 0; S.creepTicks = 0; S.lastCreep = 0;
+      blip(130, .35);
+      showBanner("🔥 SUDDEN DEATH 🔥", "BLAST ZONES CLOSING IN · +1% EVERY 2s", 2600);
+      strip.classList.add("show");
+      try { window.BBRAscension && BBRAscension.announce && BBRAscension.announce("🔥 SUDDEN DEATH · BLAST ZONES CLOSING IN", 2200); } catch (e) {}
+    }
+    function reset() {
+      S.active = false; S.forced = false; S.step = 0; S.announced = false;
+      banner.classList.remove("show"); strip.classList.remove("show");
+    }
+    function triggerCheck() {
+      if (S.forced) return true;
+      try {
+        const A = window.BBRAscension;
+        if (A && A.match && A.match.sudden) return true;
+        const cfg = A && A.config;
+        if (!cfg || cfg.matchType === "training") return false;
+        const limit = Number(cfg.timer) || 0;
+        if (limit <= 0) return false;
+        const remaining = limit - matchFrames / 60;
+        return remaining <= 30;
+      } catch (e) { return false; }
+    }
+    function enforce(f, b) {
+      if (!f || f.stocks <= 0) return false;
+      if (f.x < b.left || f.x > b.right || f.y > b.bottom || f.y < b.top) {
+        S.kos++;
+        try { floatText(800, 210, "🔥 BLAST ZONE KO!", "#ff8089"); } catch (e) {}
+        try { respawn(f); } catch (e) {}
+        return true;
+      }
+      return false;
+    }
+    function step(frames) {
+      if (!live()) { if (S.active) reset(); S.lastFrame = -1; return; }
+      if (!S.active) { if (triggerCheck()) activate(); else return; }
+      let elapsed = 0;
+      try { elapsed = matchFrames - S.startFrame; } catch (e) {}
+      const newStep = Math.max(0, Math.min(MAX_STEP, Math.floor(elapsed / STEP_FRAMES)));
+      if (newStep !== S.step) {
+        S.step = newStep;
+        blip(90, .3);
+        showBanner("🔥 BLAST ZONES CLOSE IN — STEP " + newStep + "/" + MAX_STEP + " 🔥",
+          newStep >= MAX_STEP ? "MAXIMUM SHRINK · NO ESCAPE" : "THE ARENA IS SHRINKING", 1900);
+        try { shake = Math.max(shake || 0, 7); } catch (e) {}
+      }
+      // Damage creep: +1% to every living fighter every 2s.
+      if (elapsed - S.lastCreep >= CREEP_FRAMES) {
+        S.lastCreep = elapsed; S.creepTicks++;
+        fighters().forEach(f => { if (f && f.stocks > 0) {
+          f.damage = Math.min(999, (f.damage || 0) + 1);
+          try { pop(f.x, f.y - f.r - 8, "#ff4f5e", 2, 2); } catch (e) {}
+        } });
+      }
+      strip.textContent = "🔥 SUDDEN DEATH · ZONE STEP " + S.step + "/" + MAX_STEP + " · +" + S.creepTicks + "% CREEP";
+      const b = boundsFor(S.step);
+      for (const f of fighters()) { if (enforce(f, b)) { if (!live()) break; } }
+    }
+    (function loop() {
+      requestAnimationFrame(loop);
+      try {
+        if (typeof matchFrames === "undefined") return;
+        if (S.lastFrame < 0) { S.lastFrame = matchFrames; return; }
+        const d = matchFrames - S.lastFrame;
+        if (d > 0) { S.lastFrame = matchFrames; step(Math.min(d, 5)); }
+      } catch (e) {}
+    })();
+    // Blast walls, drawn in stage coordinates via the drawPlatforms chain.
+    try {
+      const baseDP = drawPlatforms;
+      drawPlatforms = function () {
+        baseDP();
+        if (!S.active) return;
+        const b = boundsFor(S.step);
+        ctx.save();
+        const pulse = .5 + .5 * Math.sin(performance.now() * .014);
+        ctx.fillStyle = "rgba(255,40,60," + (0.20 + 0.12 * pulse) + ")";
+        if (b.left > 0) ctx.fillRect(0, 0, b.left, 720);
+        if (b.right < 1600) ctx.fillRect(b.right, 0, 1600 - b.right, 720);
+        if (b.bottom < 720) ctx.fillRect(0, b.bottom, 1600, 720 - b.bottom);
+        if (b.top > 0) ctx.fillRect(0, 0, 1600, b.top);
+        ctx.strokeStyle = "#ff4f5e"; ctx.lineWidth = 5;
+        ctx.setLineDash([18, 10]); ctx.lineDashOffset = -performance.now() * .05;
+        ctx.beginPath();
+        if (b.left > 0) { ctx.moveTo(b.left, 0); ctx.lineTo(b.left, 720); }
+        if (b.right < 1600) { ctx.moveTo(b.right, 0); ctx.lineTo(b.right, 720); }
+        if (b.bottom < 720) { ctx.moveTo(0, b.bottom); ctx.lineTo(1600, b.bottom); }
+        if (b.top > 0) { ctx.moveTo(0, b.top); ctx.lineTo(1600, b.top); }
+        ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = "#ffb3ba"; ctx.font = "1000 19px Nunito"; ctx.textAlign = "center";
+        if (b.left > 24) ctx.fillText("⚠", Math.max(16, b.left - 26), 360);
+        if (b.right < 1576) ctx.fillText("⚠", Math.min(1584, b.right + 26), 360);
+        ctx.fillText("🔥 BLAST ZONE 🔥", 800, 42);
+        ctx.restore();
+      };
+    } catch (e) {}
+    try {
+      const prevStart = startMatch;
+      startMatch = function () { reset(); prevStart(); };
+    } catch (e) {}
+    window.BBRRevampSuddenDeath = {
+      version: "1.0.0", triggerRemaining: 30, stepFrames: STEP_FRAMES, maxStep: MAX_STEP,
+      creepFrames: CREEP_FRAMES, base: BASE,
+      isActive: () => S.active,
+      state: () => ({ active: S.active, forced: S.forced, step: S.step, creepTicks: S.creepTicks,
+                      kos: S.kos, bounds: boundsFor(S.step) }),
+      boundsFor,
+      forceStart: () => { S.forced = true; if (!S.active) activate(); return S.active; },
+      setElapsed: frames => { try { S.startFrame = matchFrames - Math.max(0, frames | 0); } catch (e) {}
+        S.step = Math.max(0, Math.min(MAX_STEP, Math.floor(Math.max(0, frames | 0) / STEP_FRAMES))); return S.step; },
+      reset
+    };
+  } catch (e) {
+    window.BBRRevampSuddenDeath = { version: "1.0.0", active: false, error: String(e && e.message || e) };
+  }
+})();
+</script>
+
+
+<style id="bbr-revamp-kinghill-css">
+  #bbrHillBanner{position:absolute;top:.55rem;left:50%;transform:translateX(-50%) translateY(-8px);z-index:11;
+    pointer-events:none;opacity:0;transition:opacity .18s ease,transform .18s ease;
+    font:1000 .92rem/1.15 "Nunito",system-ui,sans-serif;letter-spacing:.06em;text-align:center;
+    color:#231a00;background:linear-gradient(180deg,#ffe98a,#ffc93c);border:2px solid #a87400;border-radius:999px;
+    padding:.45rem 1.05rem;box-shadow:0 0 28px rgba(255,201,60,.55);white-space:nowrap}
+  #bbrHillBanner.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #bbrHillBanner .hill-sub{display:block;font-size:.62rem;letter-spacing:.14em;color:#6b4e00}
+  #bbrHillStrip{position:absolute;top:3.1rem;left:.55rem;z-index:9;display:none;
+    font:1000 .7rem/1.25 "Nunito",system-ui,sans-serif;letter-spacing:.05em;color:#ffe98a;
+    background:rgba(43,32,0,.78);border:1.5px solid rgba(255,201,60,.9);border-radius:.7rem;padding:.45em .7em}
+  #bbrHillStrip.show{display:block}
+  #bbrHillStrip .hill-p2{color:#9fd8ff}
+  @media (max-width:640px){#bbrHillBanner{font-size:.74rem;max-width:94%;white-space:normal}
+    #bbrHillStrip{font-size:.6rem;top:2.7rem}}
+</style>
+<script id="bbr-revamp-kinghill">
+(() => {
+  try {
+    if (window.BBRRevampKingHill) return;
+    const A = window.BBRAscension;
+    if (!A) return;
+    const TARGET = 100, SCORE_FRAMES = 30, MOVE_FRAMES = 720, WARN_FRAMES = 90;
+    const S = { active: false, ended: false, scores: { p1: 0, p2: 0 }, zone: null,
+                zoneSince: 0, warnShown: false, holder: null, holdFrames: 0,
+                lastFrame: -1, wins: 0 };
+    if (A.career.hillCrowns === undefined) A.career.hillCrowns = 0;
+    const mt = A.MENU.find(m => m.key === "matchType");
+    if (mt && !mt.choices.some(c => c.value === "kinghill")) {
+      mt.choices.push({ value: "kinghill", label: "👑 King of the Hill · First to 100" });
+    }
+    const saveCfg = () => { try { localStorage.setItem("bbr-ascension-config", JSON.stringify(A.config)); } catch (e) {} };
+    const isHill = () => A.config.matchType === "kinghill";
+    const shell = document.querySelector(".stage-shell");
+    const banner = document.createElement("div");
+    banner.id = "bbrHillBanner"; banner.setAttribute("aria-live", "polite");
+    if (shell) shell.appendChild(banner);
+    const strip = document.createElement("div");
+    strip.id = "bbrHillStrip";
+    if (shell) shell.appendChild(strip);
+    const switchEl = document.querySelector(".mode-switch");
+    const btnHill = document.createElement("button");
+    btnHill.id = "modeKingHill"; btnHill.type = "button"; btnHill.textContent = "👑 King of the Hill";
+    if (switchEl) { switchEl.append(btnHill); switchEl.style.gridTemplateColumns = "repeat(auto-fit,minmax(100px,1fr))"; }
+    btnHill.addEventListener("click", () => { A.config.matchType = "kinghill"; A.applyConfig(false); saveCfg(); renderSelect(); });
+    let actx = null;
+    const blip = (freq, dur, type) => { try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+      const o = actx.createOscillator(), g = actx.createGain(), now = actx.currentTime;
+      o.type = type || "triangle"; o.frequency.setValueAtTime(freq, now);
+      g.gain.setValueAtTime(.06, now); g.gain.exponentialRampToValueAtTime(.0001, now + dur);
+      o.connect(g).connect(actx.destination); o.start(now); o.stop(now + dur);
+    } catch (e) {} };
+    const fighters = () => { const out = []; try { if (typeof p1 !== "undefined" && p1) out.push(["p1", p1]); } catch (e) {}
+      try { if (typeof p2 !== "undefined" && p2) out.push(["p2", p2]); } catch (e) {} return out; };
+    const live = () => { try { return typeof fightLive !== "undefined" && fightLive &&
+      typeof matchStarted !== "undefined" && matchStarted &&
+      typeof countdown !== "undefined" && countdown <= 0 && typeof paused !== "undefined" && !paused; }
+      catch (e) { return false; } };
+    function showBanner(html, sub, holdMs) {
+      banner.innerHTML = html + (sub ? '<span class="hill-sub">' + sub + "</span>" : "");
+      banner.classList.add("show");
+      clearTimeout(showBanner.timer);
+      if (holdMs) showBanner.timer = setTimeout(() => banner.classList.remove("show"), holdMs);
+    }
+    function spots() {
+      try {
+        if (typeof platforms === "undefined" || !platforms.length) return [];
+        return platforms.map((p, i) => ({ idx: i, cx: Math.round(p.x + p.w / 2), py: p.y,
+          hw: Math.max(60, Math.min(150, Math.round(p.w / 2))) }));
+      } catch (e) { return []; }
+    }
+    function pickZone(excludeIdx) {
+      const sp = spots();
+      if (!sp.length) return null;
+      let pool = sp.filter(s => s.idx !== excludeIdx);
+      if (!pool.length) pool = sp;
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+    function inZone(f, z) {
+      if (!f || !z || f.stocks <= 0) return false;
+      const feet = f.y + (f.r || 40);
+      return !!f.ground && Math.abs(f.x - z.cx) <= z.hw && Math.abs(feet - z.py) <= 34;
+    }
+    function renderStrip() {
+      if (!S.active && !S.ended) { strip.classList.remove("show"); return; }
+      strip.classList.add("show");
+      const holdTxt = S.holder === "p1" ? " · 👑 P1 HOLDING" : S.holder === "p2" ? " · 👑 P2 HOLDING"
+        : S.holder === "contested" ? " · ⚔ CONTESTED" : "";
+      strip.innerHTML = "👑 HILL · P1 " + S.scores.p1 + " — <span class='hill-p2'>P2 " + S.scores.p2 + "</span> / " + TARGET + holdTxt;
+    }
+    function endMatch(side) {
+      if (S.ended) return;
+      S.ended = true; S.wins++;
+      const winnerName = side === "p1" ? "PLAYER 1" : (function () { try { return p2.cpu ? "CPU" : "PLAYER 2"; } catch (e) { return "PLAYER 2"; } })();
+      try { matchWinner = winnerName; } catch (e) {}
+      try { fightLive = false; } catch (e) {}
+      if (side === "p1") { A.career.hillCrowns = (A.career.hillCrowns || 0) + 1; try { A.saveCareer(); } catch (e) {}
+        try { A.unlock("hill-king", "King of the Hill", "Ruled the crown zone to 100 points."); } catch (e) {} }
+      blip(660, .18); setTimeout(() => blip(880, .3), 130);
+      showBanner("👑 " + winnerName + " RULES THE HILL! 👑",
+        "FINAL SCORE · P1 " + S.scores.p1 + " — P2 " + S.scores.p2, 3000);
+      try { floatText(800, 210, "👑 KING OF THE HILL!", "#ffc93c"); } catch (e) {}
+      renderStrip();
+    }
+    function timeExpired() {
+      try {
+        const limit = Number(A.config.timer) || 0;
+        if (limit <= 0) return false;
+        return limit - matchFrames / 60 <= 0;
+      } catch (e) { return false; }
+    }
+    function step() {
+      if (!S.active) return;
+      if (!live()) { S.lastFrame = -1; return; }
+      if (S.ended) return;
+      let frames = 0;
+      try { frames = matchFrames; } catch (e) { return; }
+      // Zone relocation cycle.
+      if (!S.zone) { S.zone = pickZone(-1); S.zoneSince = frames; }
+      const age = frames - S.zoneSince;
+      if (age >= MOVE_FRAMES - WARN_FRAMES && !S.warnShown) {
+        S.warnShown = true;
+        showBanner("⚠ CROWN ZONE MOVING… ⚠", "THE HILL RELOCATES IN 1.5s", 1400);
+        blip(520, .15);
+      }
+      if (age >= MOVE_FRAMES) {
+        S.zone = pickZone(S.zone.idx); S.zoneSince = frames; S.warnShown = false; S.holdFrames = 0;
+        showBanner("👑 CROWN ZONE MOVED!", "CLAIM THE GLOWING HILL", 1500);
+        blip(740, .18);
+        try { if (S.zone) pop(S.zone.cx, S.zone.py - 30, "#ffc93c", 8, 3); } catch (e) {}
+      }
+      // Contention + scoring.
+      const fs = fighters();
+      const inside = fs.filter(([, f]) => inZone(f, S.zone)).map(([side]) => side);
+      const holder = inside.length === 1 ? inside[0] : inside.length > 1 ? "contested" : null;
+      if (holder !== S.holder) { S.holder = holder; S.holdFrames = 0; }
+      if (holder === "p1" || holder === "p2") {
+        S.holdFrames++;
+        if (S.holdFrames >= SCORE_FRAMES) {
+          S.holdFrames = 0;
+          S.scores[holder]++;
+          try { const f = holder === "p1" ? p1 : p2; pop(f.x, f.y - (f.r || 40) - 14, "#ffc93c", 3, 2); } catch (e) {}
+          if (S.scores[holder] % 25 === 0) { showBanner("👑 " + (holder === "p1" ? "P1" : "P2") + " AT " + S.scores[holder] + "!", "FIRST TO " + TARGET + " RULES THE HILL", 1400); blip(980, .15); }
+          if (S.scores[holder] >= TARGET) { endMatch(holder); return; }
+        }
+      }
+      // Timer end: highest score wins; a tie falls through to sudden death.
+      if (timeExpired() && S.scores.p1 !== S.scores.p2) { endMatch(S.scores.p1 > S.scores.p2 ? "p1" : "p2"); return; }
+      renderStrip();
+    }
+    (function loop() {
+      requestAnimationFrame(loop);
+      try {
+        if (typeof matchFrames === "undefined") return;
+        if (S.lastFrame < 0) { S.lastFrame = matchFrames; return; }
+        const d = matchFrames - S.lastFrame;
+        if (d > 0) { S.lastFrame = matchFrames; for (let i = 0; i < Math.min(d, 5); i++) step(); }
+      } catch (e) {}
+    })();
+    // Crown zone, drawn in stage coordinates via the drawPlatforms chain.
+    try {
+      const baseDP = drawPlatforms;
+      drawPlatforms = function () {
+        baseDP();
+        if (!S.active || !S.zone) return;
+        const z = S.zone;
+        const pulse = .5 + .5 * Math.sin(performance.now() * .008);
+        const held = S.holder === "p1" || S.holder === "p2";
+        ctx.save();
+        const grad = ctx.createLinearGradient(0, z.py - 190, 0, z.py);
+        grad.addColorStop(0, "rgba(255,201,60,0)");
+        grad.addColorStop(1, "rgba(255,201,60," + (held ? .42 : .26 + .12 * pulse) + ")");
+        ctx.fillStyle = grad;
+        ctx.fillRect(z.cx - z.hw, z.py - 190, z.hw * 2, 190);
+        ctx.fillStyle = held ? "#ffd94d" : "rgba(255,217,77,.85)";
+        ctx.fillRect(z.cx - z.hw, z.py - 8, z.hw * 2, 8);
+        ctx.strokeStyle = "#ffc93c"; ctx.lineWidth = 3;
+        ctx.setLineDash([12, 8]); ctx.lineDashOffset = -performance.now() * .04;
+        ctx.strokeRect(z.cx - z.hw, z.py - 190, z.hw * 2, 190);
+        ctx.setLineDash([]);
+        ctx.font = (26 + Math.round(4 * pulse)) + "px Nunito"; ctx.textAlign = "center";
+        ctx.fillText("👑", z.cx, z.py - 148);
+        ctx.font = "1000 15px Nunito";
+        ctx.lineWidth = 4; ctx.strokeStyle = "rgba(43,32,0,.85)";
+        const lbl = held ? "HILL CLAIMED!" : "KING OF THE HILL";
+        ctx.strokeText(lbl, z.cx, z.py - 122);
+        ctx.fillStyle = "#ffe98a";
+        ctx.fillText(lbl, z.cx, z.py - 122);
+        ctx.restore();
+      };
+    } catch (e) {}
+    try {
+      const prevStart = startMatch;
+      startMatch = function () {
+        if (!isHill()) {
+          S.active = false; S.ended = false; S.zone = null; S.holder = null;
+          banner.classList.remove("show"); strip.classList.remove("show");
+          prevStart();
+          return;
+        }
+        prevStart();
+        A.config.matchType = "kinghill"; saveCfg();
+        S.active = true; S.ended = false;
+        S.scores = { p1: 0, p2: 0 }; S.holder = null; S.holdFrames = 0; S.warnShown = false;
+        S.zone = pickZone(-1);
+        try { S.zoneSince = matchFrames; } catch (e) { S.zoneSince = 0; }
+        showBanner("👑 KING OF THE HILL 👑", "HOLD THE CROWN ZONE · FIRST TO " + TARGET + " WINS", 2600);
+        blip(740, .2);
+        renderStrip();
+      };
+    } catch (e) {}
+    window.BBRRevampKingHill = {
+      version: "1.0.0", target: TARGET, scoreFrames: SCORE_FRAMES, moveFrames: MOVE_FRAMES,
+      isActive: () => S.active,
+      state: () => ({ active: S.active, ended: S.ended, scores: { p1: S.scores.p1, p2: S.scores.p2 },
+                      holder: S.holder, zone: S.zone, hillCrowns: A.career.hillCrowns || 0 }),
+      inZone: side => { const z = S.zone; if (!z) return false;
+        try { return inZone(side === "p1" ? p1 : p2, z); } catch (e) { return false; } },
+      setScores: (a, b) => { S.scores.p1 = a | 0; S.scores.p2 = b | 0; renderStrip(); return S.scores; },
+      forceZone: idx => { const sp = spots(); const z = sp.find(s => s.idx === idx) || sp[0] || null;
+        if (z) { S.zone = z; try { S.zoneSince = matchFrames; } catch (e) {} S.warnShown = false; } return S.zone; },
+      relocate: () => { if (S.zone) { S.zone = pickZone(S.zone.idx); try { S.zoneSince = matchFrames; } catch (e) {} } return S.zone; },
+      reset: () => { S.active = false; S.ended = false; S.zone = null; strip.classList.remove("show"); }
+    };
+  } catch (e) {
+    window.BBRRevampKingHill = { version: "1.0.0", active: false, error: String(e && e.message || e) };
+  }
+})();
+</script>
+
+<style id="bbr-revamp-assist-css">
+  #bbrBuddyStrip{position:absolute;top:3.1rem;right:.55rem;z-index:9;display:none;
+    font:1000 .7rem/1.25 "Nunito",system-ui,sans-serif;letter-spacing:.05em;color:#ffe9fb;
+    background:rgba(46,8,40,.8);border:1.5px solid rgba(255,140,230,.9);border-radius:.7rem;padding:.45em .7em}
+  #bbrBuddyStrip.show{display:block}
+  @media (max-width:640px){#bbrBuddyStrip{font-size:.6rem;top:2.7rem}}
+</style>
+<script id="bbr-revamp-assist">
+(() => {
+  try {
+    if (window.BBRRevampAssist) return;
+    const A = window.BBRAscension;
+    if (!A) return;
+    const DUR = 480; // 8 seconds at 60fps
+    const BUD = { p1: null, p2: null, timers: { p1: 0, p2: 0 }, summons: 0, pops: 0, hits: 0 };
+    if (A.career.buddySummons === undefined) A.career.buddySummons = 0;
+    const shell = document.querySelector(".stage-shell");
+    const strip = document.createElement("div");
+    strip.id = "bbrBuddyStrip";
+    if (shell) shell.appendChild(strip);
+    let actx = null;
+    const blip = (freq, dur) => { try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+      const o = actx.createOscillator(), g = actx.createGain(), now = actx.currentTime;
+      o.type = "triangle"; o.frequency.setValueAtTime(freq, now);
+      g.gain.setValueAtTime(.06, now); g.gain.exponentialRampToValueAtTime(.0001, now + dur);
+      o.connect(g).connect(actx.destination); o.start(now); o.stop(now + dur);
+    } catch (e) {} };
+    const ownerOf = side => { try { return side === "p1" ? p1 : p2; } catch (e) { return null; } };
+    const rivalOf = side => { try { return side === "p1" ? p2 : p1; } catch (e) { return null; } };
+    const sideOf = f => { try { if (f === p1) return "p1"; if (f === p2) return "p2"; } catch (e) {} return null; };
+
+    function popBuddy(side, why) {
+      const b = BUD[side];
+      if (!b) return;
+      BUD[side] = null; BUD.timers[side] = 0; BUD.pops++;
+      try { pop(b.x, b.y, "#ff8ce6", 26, 6); } catch (e) {}
+      try { floatText(b.x, b.y - 60, why === "ko" ? "BUDDY LAUNCHED! 💥" : "BUDDY POP! 🫧", "#ff8ce6"); } catch (e) {}
+      blip(300, .16);
+      renderStrip();
+    }
+    function summon(side) {
+      const owner = ownerOf(side);
+      if (!owner || owner.stocks <= 0) return null;
+      if (BUD[side]) popBuddy(side, "swap");
+      let b = null;
+      try { b = makeFighter((owner.name || side.toUpperCase()) + " Buddy", owner.x - (owner.face || 1) * 74, owner.y - 12, owner.color, true); } catch (e) { return null; }
+      b.r = 24; b.stocks = 1; b.isBuddy = true; b.buddySide = side; b.face = owner.face || 1;
+      b.invuln = Math.max(b.invuln || 0, 30);
+      BUD[side] = b; BUD.timers[side] = DUR; BUD.summons++;
+      A.career.buddySummons = (A.career.buddySummons || 0) + 1;
+      try { A.saveCareer(); } catch (e) {}
+      try { A.unlock("buddy-up", "Buddy Up", "Summoned a Blob Buddy assist."); } catch (e) {}
+      try { floatText(owner.x, owner.y - 96, "🤝 BLOB BUDDY!", "#ff8ce6"); pop(owner.x, owner.y - 20, "#ff8ce6", 22, 5); } catch (e) {}
+      blip(880, .14); setTimeout(() => blip(1174, .18), 90);
+      renderStrip();
+      return b;
+    }
+    function renderStrip() {
+      const parts = [];
+      if (BUD.p1) parts.push("🤝 P1 BUDDY " + Math.ceil(BUD.timers.p1 / 60) + "s");
+      if (BUD.p2) parts.push("🤝 P2 BUDDY " + Math.ceil(BUD.timers.p2 / 60) + "s");
+      strip.textContent = parts.join("  ·  ");
+      strip.classList.toggle("show", parts.length > 0);
+    }
+    function outOfBounds(b) {
+      return b.x < -240 || b.x > 1840 || b.y < -300 || b.y > 990;
+    }
+    function stepBuddy(side) {
+      const b = BUD[side];
+      if (!b) return;
+      const target = rivalOf(side);
+      if (!target || target.stocks <= 0) { popBuddy(side, "done"); return; }
+      BUD.timers[side]--;
+      if (BUD.timers[side] <= 0) { popBuddy(side, "time"); return; }
+      if (outOfBounds(b)) { popBuddy(side, "ko"); return; }
+      let input = null;
+      try { input = cpuInput(b, target); } catch (e) {}
+      if (!input) input = { x: Math.sign(target.x - b.x), y: 0, jump: false, punch: false, melee: false, smash: false, shield: false, grab: false, dodge: false, special: false };
+      input.special = false; // base pulses can only target p1/p2
+      const dmgBeforeStep = target.damage;
+      prevUF(b, target, input);
+      if (target.damage > dmgBeforeStep) BUD.hits++;
+      if (outOfBounds(b)) { popBuddy(side, "ko"); return; }
+      if (b.attack) {
+        const before = target.damage;
+        try { hitCheck(b, target); } catch (e) {}
+        if (target.damage > before) BUD.hits++;
+        const rb = BUD[side === "p1" ? "p2" : "p1"];
+        if (rb && rb.attack === null) {}
+        if (rb) { try { hitCheck(b, rb); } catch (e) {} }
+      }
+      renderStrip();
+    }
+
+    // --- pickup integration: a 'buddy' orb kind in the spawn pool ---
+    const prevMake = makePickup;
+    makePickup = function () {
+      const pickup = prevMake();
+      if (Math.random() < .16) pickup.kind = "buddy";
+      return pickup;
+    };
+    const prevColor = pickupColor;
+    pickupColor = function (pickup) { return pickup.kind === "buddy" ? "#ff8ce6" : prevColor(pickup); };
+    const prevLabel = pickupLabel;
+    pickupLabel = function (pickup) { return pickup.kind === "buddy" ? "🤝" : prevLabel(pickup); };
+    const prevCheck = pickupCheck;
+    pickupCheck = function (f, pickup, i) {
+      if (pickup.active && pickup.kind === "buddy" && Math.hypot(f.x - pickup.x, f.y - pickup.y) < f.r + 30) {
+        const side = sideOf(f);
+        if (side) { summon(side); try { A.match.items++; A.career.items++; } catch (e) {} }
+      }
+      prevCheck(f, pickup, i);
+    };
+
+    // --- stepping + hittability, hung off the owner's update ---
+    const prevUF = updateFighter;
+    updateFighter = function (f, other, input) {
+      prevUF(f, other, input);
+      const side = sideOf(f);
+      if (!side) return;
+      // The real fighter's swing can also connect with the enemy buddy.
+      const foeSide = side === "p1" ? "p2" : "p1";
+      const foeBuddy = BUD[foeSide];
+      if (f.attack && foeBuddy) { try { hitCheck(f, foeBuddy); } catch (e) {} }
+      // Step my own buddy once per owner frame.
+      if (BUD[side]) stepBuddy(side);
+    };
+
+    // --- drawing: buddies ride the render chain like team extras ---
+    const prevDraw = drawFighter;
+    drawFighter = function (f) {
+      if (f && f.isBuddy) {
+        ctx.save();
+        ctx.strokeStyle = "rgba(255,255,255,.95)"; ctx.lineWidth = 3;
+        ctx.setLineDash([7, 6]); ctx.lineDashOffset = -performance.now() * .03;
+        ctx.shadowColor = "#ff8ce6"; ctx.shadowBlur = 12;
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r + 9, 0, Math.PI * 2); ctx.stroke();
+        ctx.setLineDash([]); ctx.shadowBlur = 0;
+        ctx.font = "1000 11px Nunito"; ctx.textAlign = "center"; ctx.fillStyle = "#ffd7f6";
+        ctx.fillText("🤝 BUDDY", f.x, f.y - f.r - 16);
+        ctx.restore();
+      }
+      prevDraw(f);
+    };
+    const prevRender = render;
+    render = function () {
+      prevRender();
+      const extras = [BUD.p1, BUD.p2].filter(Boolean);
+      if (!extras.length) return;
+      try {
+        if (typeof fightLive === "undefined" || !fightLive) return;
+        const view = scaleCanvas();
+        ctx.save();
+        ctx.translate(view.ox, view.oy);
+        ctx.scale(view.scale, view.scale);
+        worldToScreen();
+        extras.forEach(b => drawFighter(b));
+        ctx.restore();
+      } catch (e) {}
+    };
+
+    const prevRespawn = respawn;
+    respawn = function (f) {
+      const side = sideOf(f);
+      if (side && BUD[side]) popBuddy(side, "down");
+      prevRespawn(f);
+    };
+    const prevStart = startMatch;
+    startMatch = function () {
+      BUD.p1 = null; BUD.p2 = null; BUD.timers.p1 = 0; BUD.timers.p2 = 0;
+      strip.classList.remove("show");
+      prevStart();
+      BUD.p1 = null; BUD.p2 = null; BUD.timers.p1 = 0; BUD.timers.p2 = 0;
+    };
+    const prevRS = renderSelect;
+    renderSelect = function () {
+      prevRS();
+      const sum = document.querySelector("#selectSummary");
+      if (sum && !/BLOB BUDDY/.test(sum.textContent)) sum.textContent += " · Assist orb: 🤝 Blob Buddy (8s ally)";
+    };
+
+    window.BBRRevampAssist = {
+      version: "1.0.0", duration: DUR,
+      summon: side => summon(side === "p2" ? "p2" : "p1"),
+      state: () => ({ p1: !!BUD.p1, p2: !!BUD.p2, timers: { p1: BUD.timers.p1, p2: BUD.timers.p2 },
+                      summons: BUD.summons, pops: BUD.pops, hits: BUD.hits,
+                      buddySummons: A.career.buddySummons || 0,
+                      buddyPos: { p1: BUD.p1 ? { x: Math.round(BUD.p1.x), y: Math.round(BUD.p1.y), r: BUD.p1.r, dmg: Math.round(BUD.p1.damage) } : null,
+                                  p2: BUD.p2 ? { x: Math.round(BUD.p2.x), y: Math.round(BUD.p2.y), r: BUD.p2.r, dmg: Math.round(BUD.p2.damage) } : null } }),
+      clear: () => { BUD.p1 = null; BUD.p2 = null; BUD.timers.p1 = 0; BUD.timers.p2 = 0; renderStrip(); }
+    };
+  } catch (e) {
+    window.BBRRevampAssist = { version: "1.0.0", active: false, error: String(e && e.message || e) };
+  }
+})();
+</script>
+
+<style id="bbr-revamp-announcer-css">
+  #bbrCallout{position:fixed;left:50%;top:21%;transform:translate(-50%,0) scale(.8);z-index:2147482500;
+    max-width:min(760px,92vw);padding:.32em .9em .42em;text-align:center;pointer-events:none;opacity:0;
+    color:#fff;background:linear-gradient(100deg,#e60012,#7a000b 70%);border:3px solid #fff;
+    box-shadow:8px 8px 0 rgba(0,0,0,.55),0 18px 50px rgba(0,0,0,.5);
+    font:1000 clamp(1.7rem,6vw,3.6rem)/1.05 "Baloo 2","Nunito",system-ui,sans-serif;letter-spacing:.02em;
+    text-transform:uppercase;text-shadow:3px 3px 0 #000;transition:opacity .12s,transform .12s}
+  #bbrCallout.show{opacity:1;transform:translate(-50%,0) scale(1)}
+  #bbrCallout.gold{background:linear-gradient(100deg,#b8860b,#ffcf3f 55%,#b8860b);color:#231a00;text-shadow:1px 1px 0 #fff3b0}
+  #bbrCallout.blue{background:linear-gradient(100deg,#123a8f,#2f7bff 70%)}
+  #bbrCalloutSub{display:block;font-size:.38em;letter-spacing:.22em;margin-top:.25em}
+  @media (max-width:640px){#bbrCallout{top:17%;border-width:2px}}
+</style>
+<script id="bbr-revamp-announcer">
+(() => {
+  try {
+    if (window.BBRRevampAnnouncer) return;
+    const A = window.BBRAscension;
+    if (!A) return;
+    const banner = document.createElement("div");
+    banner.id = "bbrCallout";
+    banner.setAttribute("role", "status");
+    banner.setAttribute("aria-live", "polite");
+    document.body.appendChild(banner);
+
+    const S = { firstBlood: false, goShown: false, suddenShown: false, lastCue: 0,
+                maxDeficit: { p1: 0, p2: 0 }, finalStock: { p1: false, p2: false },
+                perfectShown: false, lastCheerCombo: 0, callouts: [],
+                audio: { bass: 0, gasp: 0, cheer: 0, stinger: 0 } };
+    let hideTimer = 0, actx = null;
+    const ac = () => { try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+      return actx;
+    } catch (e) { return null; } };
+    const tone = (type, f0, f1, dur, vol, delay) => { try {
+      const c = ac(); if (!c) return;
+      const t = c.currentTime + (delay || 0);
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type; o.frequency.setValueAtTime(f0, t);
+      o.frequency.exponentialRampToValueAtTime(Math.max(28, f1), t + dur);
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(c.destination); o.start(t); o.stop(t + dur);
+    } catch (e) {} };
+    const noise = (dur, vol, freq, delay) => { try {
+      const c = ac(); if (!c) return;
+      const t = c.currentTime + (delay || 0);
+      const len = Math.max(1, Math.floor(c.sampleRate * dur));
+      const buf = c.createBuffer(1, len, c.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const srcN = c.createBufferSource(); srcN.buffer = buf;
+      const f = c.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = freq; f.Q.value = .8;
+      const g = c.createGain();
+      g.gain.setValueAtTime(.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t + dur * .35);
+      g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      srcN.connect(f).connect(g).connect(c.destination); srcN.start(t); srcN.stop(t + dur);
+    } catch (e) {} };
+    const audio = {
+      bassDrop: (intensity) => { S.audio.bass++; tone("sine", 130, 34, .38, .22, 0); tone("sine", 65, 30, .3, .12, .02); },
+      gasp: () => { S.audio.gasp++; noise(.28, .14, 950, 0); tone("sine", 620, 880, .16, .03, 0); },
+      cheer: () => { S.audio.cheer++; noise(.65, .1, 1400, 0); tone("sine", 523, 523, .14, .05, .02); tone("sine", 659, 659, .14, .05, .14); tone("sine", 784, 784, .22, .06, .26); },
+      stinger: (kind) => { S.audio.stinger++;
+        if (kind === "ko") { tone("square", 196, 98, .22, .09, 0); tone("square", 392, 392, .18, .07, .1); }
+        else if (kind === "go") { tone("square", 523, 523, .1, .08, 0); tone("square", 784, 784, .22, .09, .09); }
+        else if (kind === "alert") { tone("sawtooth", 220, 440, .2, .07, 0); }
+        else { tone("square", 330, 330, .09, .06, 0); tone("square", 440, 440, .12, .06, .08); } }
+    };
+    function show(text, opts) {
+      opts = opts || {};
+      const entry = { text: String(text), frame: 0 };
+      try { entry.frame = matchFrames; } catch (e) {}
+      S.callouts.push(entry); if (S.callouts.length > 60) S.callouts.shift();
+      banner.textContent = "";
+      banner.appendChild(document.createTextNode(String(text)));
+      if (opts.sub) { const s = document.createElement("span"); s.id = "bbrCalloutSub"; s.textContent = opts.sub; banner.appendChild(s); }
+      banner.className = ""; void banner.offsetWidth;
+      banner.className = "show" + (opts.tone ? " " + opts.tone : "");
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => { banner.classList.remove("show"); }, opts.dur || 1500);
+      if (opts.sound) audio.stinger(opts.sound);
+      return entry;
+    }
+    const sideOf = f => { try { if (f === p1) return "p1"; if (f === p2) return "p2"; } catch (e) {} return null; };
+    const nameOf = f => { try { return (f.color && f.color.name || "FIGHTER").toUpperCase(); } catch (e) { return "FIGHTER"; } };
+
+    // --- hits: first blood, deficits, heavy-hit audio layering, streak cheers ---
+    const prevHit = hitCheck;
+    hitCheck = function (attacker, target) {
+      let before = null, foeBefore = null;
+      try { before = target.damage; foeBefore = attacker.damage; } catch (e) {}
+      prevHit(attacker, target);
+      try {
+        if (before === null) return;
+        const dealt = target.damage - before;
+        if (dealt <= 0) return;
+        const tSide = sideOf(target), aSide = sideOf(attacker);
+        if (!tSide || !aSide) return; // buddies / extras don't trigger callouts
+        if (!S.firstBlood) { S.firstBlood = true; show("🩸 FIRST BLOOD!", { sub: nameOf(attacker) + " STRIKES FIRST", dur: 1400, sound: "alert" }); }
+        const deficit = target.damage - attacker.damage;
+        if (deficit > (S.maxDeficit[tSide] || 0)) S.maxDeficit[tSide] = deficit;
+        if (dealt >= 12 || (target.damage >= 100 && dealt >= 8)) {
+          audio.bassDrop(dealt);
+          if (target.damage >= 90) audio.gasp();
+        } else if (target.damage >= 115) { audio.gasp(); }
+        const combo = attacker.combo || 0;
+        if (combo >= 4 && combo !== S.lastCheerCombo) {
+          S.lastCheerCombo = combo; audio.cheer();
+          if (combo === 4 || combo % 4 === 0) show("🔥 " + combo + "-HIT STREAK!", { sub: nameOf(attacker) + " IS ON FIRE", dur: 1200, tone: "gold" });
+        }
+      } catch (e) {}
+    };
+
+    // --- KOs: KO!, final stock, comeback, perfect stock ---
+    const prevRespawn = respawn;
+    respawn = function (f) {
+      let beforeStocks = null, foe = null, foeStocks = null, totalStocks = null;
+      try { beforeStocks = f.stocks; foe = f === p1 ? p2 : p1; foeStocks = foe.stocks; totalStocks = selectedStocks; } catch (e) {}
+      prevRespawn(f);
+      try {
+        if (beforeStocks === null || beforeStocks <= 0) return;
+        const side = sideOf(f), foeSide = sideOf(foe);
+        show("💥 KO!", { sub: nameOf(f) + " LAUNCHED", dur: 1200, sound: "ko" });
+        audio.bassDrop(20);
+        if (foeSide && (S.maxDeficit[foeSide] || 0) >= 50) {
+          const hero = nameOf(foe);
+          setTimeout(() => show("😱 WHAT A COMEBACK!", { sub: hero + " WAS DOWN " + Math.round(S.maxDeficit[foeSide]) + "%", dur: 1700, tone: "gold", sound: "alert" }), 1250);
+          S.maxDeficit[foeSide] = 0;
+        }
+        if (side) S.maxDeficit[side] = 0;
+        if (f.stocks === 1 && side && !S.finalStock[side]) {
+          S.finalStock[side] = true;
+          setTimeout(() => { try { if (fightLive) show("⚠️ FINAL STOCK!", { sub: nameOf(f) + " · ONE LIFE LEFT", dur: 1500, sound: "alert" }); } catch (e) {} }, foeSide && (S.callouts.length && false) ? 2400 : 1250);
+        }
+        if (f.stocks <= 0 && foeStocks !== null && totalStocks && foeStocks >= totalStocks && !S.perfectShown) {
+          S.perfectShown = true;
+          setTimeout(() => show("👑 PERFECT STOCK!", { sub: nameOf(foe) + " · FLAWLESS VICTORY", dur: 1900, tone: "gold", sound: "go" }), 2500);
+        }
+      } catch (e) {}
+    };
+
+    // --- countdown / GO! / sudden death via the HUD chain ---
+    const prevHud = updateHud;
+    updateHud = function () {
+      prevHud();
+      try {
+        if (typeof countdown !== "undefined" && countdown > 0 && typeof matchStarted !== "undefined" && matchStarted) {
+          const cue = countdown > 120 ? 3 : countdown > 60 ? 2 : 1;
+          if (cue !== S.lastCue) { S.lastCue = cue; show(String(cue), { dur: 620, sound: "cue" }); }
+        }
+        if (typeof countdown !== "undefined" && countdown <= 0 && typeof fightLive !== "undefined" && fightLive && !S.goShown) {
+          S.goShown = true; show("🟢 GO!", { dur: 900, sound: "go" });
+        }
+        if (A.match && A.match.sudden && !S.suddenShown) {
+          S.suddenShown = true; show("🔥 SUDDEN DEATH!", { sub: "NEXT LAUNCH WINS", dur: 1900, sound: "alert" });
+        }
+      } catch (e) {}
+    };
+
+    const prevStart = startMatch;
+    startMatch = function () {
+      S.firstBlood = false; S.goShown = false; S.suddenShown = false; S.lastCue = 0;
+      S.maxDeficit = { p1: 0, p2: 0 }; S.finalStock = { p1: false, p2: false };
+      S.perfectShown = false; S.lastCheerCombo = 0; S.callouts = [];
+      prevStart();
+    };
+    const prevRS = renderSelect;
+    renderSelect = function () {
+      prevRS();
+      const sum = document.querySelector("#selectSummary");
+      if (sum && !/ANNOUNCER PACK/.test(sum.textContent)) sum.textContent += " · Announcer pack: 📣 callouts + crowd audio";
+    };
+
+    window.BBRRevampAnnouncer = {
+      version: "1.0.0",
+      show: (text, opts) => show(text, opts),
+      audio,
+      state: () => ({ firstBlood: S.firstBlood, goShown: S.goShown, suddenShown: S.suddenShown,
+                      maxDeficit: { p1: Math.round(S.maxDeficit.p1), p2: Math.round(S.maxDeficit.p2) },
+                      finalStock: { p1: S.finalStock.p1, p2: S.finalStock.p2 },
+                      audio: { bass: S.audio.bass, gasp: S.audio.gasp, cheer: S.audio.cheer, stinger: S.audio.stinger },
+                      callouts: S.callouts.map(c => c.text),
+                      banner: banner.textContent, bannerShown: banner.classList.contains("show") })
+    };
+  } catch (e) {
+    window.BBRRevampAnnouncer = { version: "1.0.0", active: false, error: String(e && e.message || e) };
+  }
+})();
+</script>
+
+<style id="bbr-revamp-kocine-css">
+  .bbrCineBar{position:fixed;left:0;right:0;height:0;background:#000;z-index:2147482100;transition:height .18s ease;pointer-events:none}
+  #bbrCineBarTop{top:0}#bbrCineBarBot{bottom:0}
+  body.bbr-cine-on .bbrCineBar{height:11vh}
+  #bbrCineFlash{position:fixed;inset:0;background:radial-gradient(ellipse at center,rgba(60,0,0,.25),rgba(10,0,0,.78));opacity:0;pointer-events:none;z-index:2147482050;transition:opacity .09s}
+  #bbrCineFlash.show{opacity:1}
+  #bbrCineStreaks{position:fixed;inset:0;opacity:0;pointer-events:none;z-index:2147482060;
+    background:repeating-linear-gradient(115deg,transparent 0 46px,rgba(255,32,32,.55) 46px 49px,transparent 49px 110px,rgba(255,90,90,.35) 110px 112px,transparent 112px 190px)}
+  #bbrCineStreaks.show{opacity:1}
+  #bbrCineCaption{position:fixed;left:50%;bottom:13vh;transform:translateX(-50%);z-index:2147482150;pointer-events:none;
+    max-width:92vw;text-align:center;color:#fff;opacity:0;transition:opacity .15s;
+    background:rgba(0,0,0,.62);padding:.35em .8em .45em;border-radius:14px;box-shadow:0 10px 34px rgba(0,0,0,.5);
+    font:1000 clamp(1.4rem,4.6vw,2.6rem)/1.1 "Baloo 2","Nunito",system-ui,sans-serif;letter-spacing:.03em;
+    text-transform:uppercase;text-shadow:3px 3px 0 #000,0 0 22px rgba(255,30,30,.8)}
+  #bbrCineCaption.show{opacity:1}
+  #bbrCineCaption small{display:block;font-size:.42em;letter-spacing:.24em;color:#ffd7d7;margin-top:.3em}
+  #bbrVictoryPose{position:fixed;left:50%;top:16%;transform:translate(-50%,0) scale(.85);z-index:2147482150;pointer-events:none;
+    max-width:min(680px,92vw);padding:.35em 1em .45em;text-align:center;opacity:0;transition:opacity .15s,transform .15s;
+    color:#231a00;background:linear-gradient(100deg,#b8860b,#ffcf3f 55%,#b8860b);border:3px solid #fff;
+    box-shadow:8px 8px 0 rgba(0,0,0,.55),0 18px 50px rgba(0,0,0,.5);
+    font:1000 clamp(1.5rem,5vw,3rem)/1.08 "Baloo 2","Nunito",system-ui,sans-serif;text-transform:uppercase}
+  #bbrVictoryPose.show{opacity:1;transform:translate(-50%,0) scale(1)}
+  #bbrVictoryPose small{display:block;font-size:.4em;letter-spacing:.22em;margin-top:.25em}
+  @media (max-width:640px){#bbrCineCaption{bottom:15vh}}
+</style>
+<script id="bbr-revamp-kocine">
+(() => {
+  try {
+    if (window.BBRRevampKOCine) return;
+    const A = window.BBRAscension;
+    if (!A) return;
+    const mk = (id, cls) => { const d = document.createElement("div"); d.id = id; if (cls) d.className = cls; document.body.appendChild(d); return d; };
+    const barT = mk("bbrCineBarTop", "bbrCineBar"), barB = mk("bbrCineBarBot", "bbrCineBar");
+    const flash = mk("bbrCineFlash"), streaks = mk("bbrCineStreaks");
+    const caption = mk("bbrCineCaption"), pose = mk("bbrVictoryPose");
+
+    const S = { telegraphs: 0, lastTelegraph: null, cinematics: 0, skipped: 0,
+                cine: null, poseShown: false, poseCount: 0, lastWinner: "", lastLoser: "",
+                audio: { thunder: 0, boom: 0 } };
+    let flashTimer = 0, cineTimer = 0, poseTimer = 0, cineCamTimer = 0, actx = null;
+    const ac = () => { try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+      return actx;
+    } catch (e) { return null; } };
+    const tone = (type, f0, f1, dur, vol, delay) => { try {
+      const c = ac(); if (!c) return;
+      const t = c.currentTime + (delay || 0);
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type; o.frequency.setValueAtTime(f0, t);
+      o.frequency.exponentialRampToValueAtTime(Math.max(26, f1), t + dur);
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(c.destination); o.start(t); o.stop(t + dur);
+    } catch (e) {} };
+    const noise = (dur, vol, freq, delay) => { try {
+      const c = ac(); if (!c) return;
+      const t = c.currentTime + (delay || 0);
+      const len = Math.max(1, Math.floor(c.sampleRate * dur));
+      const buf = c.createBuffer(1, len, c.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const srcN = c.createBufferSource(); srcN.buffer = buf;
+      const f = c.createBiquadFilter(); f.type = "highpass"; f.frequency.value = freq;
+      const g = c.createGain();
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      srcN.connect(f).connect(g).connect(c.destination); srcN.start(t); srcN.stop(t + dur);
+    } catch (e) {} };
+    const nameOf = f => { try { return (f.color && f.color.name || "FIGHTER").toUpperCase(); } catch (e) { return "FIGHTER"; } };
+    const POSES = ["STRIKES A CHAMPION POSE 🏆", "FLEXES FOR THE CROWD 💪", "TAKES A VICTORY BOW 🙌", "PLANTS THE WINNER'S FLAG 🚩"];
+
+    // --- red-lightning prediction: ballistic sim vs the engine blast zone ---
+    // Engine KO check (updateFighter): x<-220 | x>stage.w+220 (1820) | y>stage.h+230 (950).
+    function predictKO(f) {
+      try {
+        if (!f || f.ground || f.stocks <= 0) return false;
+        const speed = Math.hypot(f.vx, f.vy);
+        if (speed < 16) return false;
+        let x = f.x, y = f.y, vx = f.vx, vy = f.vy;
+        const grav = (f.color && f.color.gravity) ? .77 : .72;
+        for (let i = 0; i < 55; i++) {
+          vy += grav; x += vx; y += vy;
+          if (x < -220 || x > 1820 || y > 950) return true;
+          // A platform catch could still save them: if falling back into stage
+          // bounds above the main stage area, do not call it guaranteed.
+          if (vy > 0 && y > 300 && y < 700 && x > 60 && x < 1540 && speed < 26) return false;
+        }
+        return false;
+      } catch (e) { return false; }
+    }
+    function telegraph(f) {
+      S.telegraphs++;
+      S.lastTelegraph = { name: nameOf(f), frame: 0 };
+      try { S.lastTelegraph.frame = matchFrames; } catch (e) {}
+      flash.classList.add("show"); streaks.classList.add("show");
+      clearTimeout(flashTimer);
+      flashTimer = setTimeout(() => { flash.classList.remove("show"); streaks.classList.remove("show"); }, 300);
+      try { hitStop = Math.max(typeof hitStop !== "undefined" ? hitStop : 0, 18); } catch (e) {}
+      S.audio.thunder++; noise(.22, .16, 1800, 0); tone("sine", 110, 30, .3, .18, 0);
+    }
+
+    // --- hits: telegraph any guaranteed-KO launch ---
+    const prevHit = hitCheck;
+    hitCheck = function (attacker, target) {
+      let before = null;
+      try { before = target.damage; } catch (e) {}
+      prevHit(attacker, target);
+      try {
+        if (before === null || target.damage - before <= 0) return;
+        if (target === p1 || target === p2) { if (predictKO(target)) telegraph(target); }
+      } catch (e) {}
+    };
+
+    // --- final-KO cinematic on the last-stock respawn ---
+    function endCine(skipped) {
+      if (!S.cine) return;
+      const winner = S.cine.winnerName;
+      S.cine = null;
+      clearTimeout(cineTimer); clearInterval(cineCamTimer);
+      document.body.classList.remove("bbr-cine-on");
+      caption.classList.remove("show");
+      if (skipped) S.skipped++;
+      // Victory pose banner, then the normal GAME!/results flow continues.
+      pose.textContent = "";
+      pose.appendChild(document.createTextNode("🏆 " + winner));
+      const s = document.createElement("small");
+      s.textContent = S.cinePose || POSES[0];
+      pose.appendChild(s);
+      pose.classList.add("show"); S.poseShown = true; S.poseCount++;
+      clearTimeout(poseTimer);
+      poseTimer = setTimeout(() => { pose.classList.remove("show"); S.poseShown = false; }, 1900);
+    }
+    function startCinematic(loser, koX, koY) {
+      let winnerName = "WINNER";
+      try { winnerName = String(matchWinner || "WINNER"); } catch (e) {}
+      const winnerF = loser === p1 ? p2 : p1;
+      if (winnerName === "PLAYER 1") winnerName = nameOf(p1);
+      else if (winnerName === "PLAYER 2" || winnerName === "CPU") winnerName = nameOf(p2);
+      S.cinematics++;
+      S.lastLoser = nameOf(loser); S.lastWinner = winnerName;
+      S.cinePose = POSES[Math.floor(Math.random() * POSES.length)];
+      S.cine = { loserName: nameOf(loser), winnerName, x: koX, y: koY, started: Date.now() };
+      document.body.classList.add("bbr-cine-on");
+      caption.textContent = "";
+      caption.appendChild(document.createTextNode("🎬 FINAL KO!"));
+      const s = document.createElement("small");
+      s.textContent = nameOf(loser) + " LAUNCHED · TAP / ANY KEY TO SKIP";
+      caption.appendChild(s);
+      caption.classList.add("show");
+      S.audio.boom++; tone("sine", 90, 26, .6, .24, 0); noise(.4, .1, 500, 0);
+      clearTimeout(cineTimer);
+      cineTimer = setTimeout(() => endCine(false), 1200);
+      // updateCamera stops running once fightLive ends, so the zoom is
+      // driven directly while the cinematic plays (render reads camera live).
+      clearInterval(cineCamTimer);
+      cineCamTimer = setInterval(() => { try {
+        if (!S.cine) { clearInterval(cineCamTimer); return; }
+        const tx = Math.max(0, Math.min(1600 - 1280 / 1.45, S.cine.x - 640 / 1.45));
+        camera.zoom += (1.45 - camera.zoom) * .12;
+        camera.x += (tx - camera.x) * .12;
+        camera.y += (-40 - camera.y) * .08;
+      } catch (e) {} }, 33);
+    }
+    const prevRespawn = respawn;
+    respawn = function (f) {
+      let beforeStocks = null, wasLive = false, kx = 0, ky = 0;
+      try { beforeStocks = f.stocks; wasLive = fightLive; kx = f.x; ky = f.y; } catch (e) {}
+      prevRespawn(f);
+      try {
+        if (beforeStocks === 1 && wasLive && !fightLive && (f === p1 || f === p2)) startCinematic(f, kx, ky);
+      } catch (e) {}
+    };
+
+    // --- cinematic camera: zoom onto the KO point while the bars are up ---
+    const prevCam = updateCamera;
+    updateCamera = function () {
+      prevCam();
+      try {
+        if (S.cine) {
+          const tx = Math.max(0, Math.min(1600 - 1280 / 1.45, S.cine.x - 640 / 1.45));
+          camera.zoom += (1.45 - camera.zoom) * .12;
+          camera.x += (tx - camera.x) * .12;
+          camera.y += (-40 - camera.y) * .08;
+        }
+      } catch (e) {}
+    };
+
+    // Skippable: any tap/click or keypress during the cinematic ends it.
+    const skipEvt = () => { if (S.cine) endCine(true); };
+    document.addEventListener("pointerdown", skipEvt, true);
+    document.addEventListener("keydown", skipEvt, true);
+
+    const prevStart = startMatch;
+    startMatch = function () {
+      clearTimeout(cineTimer); clearTimeout(poseTimer); clearInterval(cineCamTimer);
+      S.cine = null; S.poseShown = false;
+      document.body.classList.remove("bbr-cine-on");
+      caption.classList.remove("show"); pose.classList.remove("show");
+      prevStart();
+    };
+    const prevRS = renderSelect;
+    renderSelect = function () {
+      prevRS();
+      const sum = document.querySelector("#selectSummary");
+      if (sum && !/KO CINEMATIC/.test(sum.textContent)) sum.textContent += " · KO cinematic: 🎬 slow-mo final KO + red-lightning telegraphs";
+    };
+
+    window.BBRRevampKOCine = {
+      version: "1.0.0",
+      predictKO: f => predictKO(f),
+      telegraph: f => telegraph(f),
+      showCinematic: (loser) => { try { startCinematic(loser || p2, (loser || p2).x, (loser || p2).y); } catch (e) {} },
+      skip: () => endCine(true),
+      audio: S.audio,
+      state: () => ({ telegraphs: S.telegraphs, lastTelegraph: S.lastTelegraph,
+                      cinematics: S.cinematics, skipped: S.skipped,
+                      cineActive: !!S.cine, cine: S.cine ? { loser: S.cine.loserName, winner: S.cine.winnerName, x: Math.round(S.cine.x), y: Math.round(S.cine.y) } : null,
+                      barsOn: document.body.classList.contains("bbr-cine-on"),
+                      flashShown: flash.classList.contains("show"), streaksShown: streaks.classList.contains("show"),
+                      poseShown: S.poseShown, poseCount: S.poseCount, poseText: pose.textContent,
+                      lastWinner: S.lastWinner, lastLoser: S.lastLoser,
+                      audio: { thunder: S.audio.thunder, boom: S.audio.boom } })
+    };
+  } catch (e) {
+    window.BBRRevampKOCine = { version: "1.0.0", active: false, error: String(e && e.message || e) };
+  }
+})();
+</script>
+
+<style id="bbr-revamp-defense-css">
+  #bbrDefenseStrip{position:absolute;bottom:5.4rem;left:.55rem;z-index:9;display:none;
+    font:1000 .7rem/1.25 "Nunito",system-ui,sans-serif;letter-spacing:.05em;color:#eafcff;
+    background:rgba(6,32,44,.85);border:1.5px solid rgba(119,255,240,.9);border-radius:.7rem;padding:.45em .7em;
+    text-shadow:1px 1px 0 #000}
+  #bbrDefenseStrip.show{display:block}
+  #bbrParryFlash{position:fixed;inset:0;opacity:0;pointer-events:none;z-index:2147482200;
+    background:radial-gradient(ellipse at center,transparent 42%,rgba(119,255,240,.5) 78%,rgba(255,255,255,.85))}
+  #bbrParryFlash.show{opacity:1}
+  @media (max-width:640px){#bbrDefenseStrip{font-size:.6rem;bottom:4.6rem}}
+</style>
+<script id="bbr-revamp-defense">
+(() => {
+  try {
+    if (window.BBRRevampDefense) return;
+    const A = window.BBRAscension;
+    if (!A) return;
+    const S = { di: 0, techs: 0, parries: 0, lastDI: null, lastTech: null, lastParry: null,
+                audio: { parry: 0, tech: 0 } };
+    const shell = document.querySelector(".stage-shell");
+    const strip = document.createElement("div");
+    strip.id = "bbrDefenseStrip";
+    if (shell) shell.appendChild(strip);
+    const flash = document.createElement("div");
+    flash.id = "bbrParryFlash";
+    document.body.appendChild(flash);
+    let stripTimer = 0, flashTimer = 0, actx = null;
+    const blip = (f0, f1, dur, vol) => { try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === "suspended") actx.resume();
+      const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime;
+      o.type = "triangle"; o.frequency.setValueAtTime(f0, t);
+      o.frequency.exponentialRampToValueAtTime(Math.max(30, f1), t + dur);
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g).connect(actx.destination); o.start(t); o.stop(t + dur);
+    } catch (e) {} };
+    const nameOf = f => { try { return (f.color && f.color.name || "FIGHTER").toUpperCase(); } catch (e) { return "FIGHTER"; } };
+    const showStrip = label => {
+      strip.textContent = label + "  ·  🧭 DI " + S.di + "  🛡️ TECH " + S.techs + "  ⚡ PARRY " + S.parries;
+      strip.classList.add("show");
+      clearTimeout(stripTimer);
+      stripTimer = setTimeout(() => strip.classList.remove("show"), 2600);
+    };
+
+    // ---------- (a) DI: blend the held direction into the launch angle ----------
+    const MAX_DI = 0.23; // ~13 degrees, the genre-standard DI cap
+    function applyDI(f, held) {
+      try {
+        if (!f || !held) return 0;
+        const hx = +held.x || 0, hy = +held.y || 0;
+        if (Math.hypot(hx, hy) < .35) return 0;
+        const speed = Math.hypot(f.vx, f.vy);
+        if (speed < 5) return 0;
+        const cur = Math.atan2(f.vy, f.vx), want = Math.atan2(hy, hx);
+        let diff = want - cur;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        const blend = Math.max(-MAX_DI, Math.min(MAX_DI, diff));
+        if (Math.abs(blend) < .02) return 0;
+        const na = cur + blend;
+        f.vx = Math.cos(na) * speed; f.vy = Math.sin(na) * speed;
+        S.di++;
+        S.lastDI = { name: nameOf(f), deg: Math.round(blend * 180 / Math.PI), held: { x: Math.round(hx * 10) / 10, y: Math.round(hy * 10) / 10 } };
+        if (Math.abs(blend) >= .1) { try { floatText(f.x, f.y - 92, "🧭 DI!", "#77fff0"); } catch (e) {} }
+        showStrip("🧭 DI — " + nameOf(f) + " bent the launch " + S.lastDI.deg + "°");
+        return S.lastDI.deg;
+      } catch (e) { return 0; }
+    }
+    const prevHit = hitCheck;
+    hitCheck = function (attacker, target) {
+      // ---------- (c) flash parry: shield released <=4f before the hit ----------
+      try {
+        if (target && target._defParryWin > 0 && attacker && attacker.attack && !attacker.attack.grab && target.invuln <= 0) {
+          target._defParryWin = 0;
+          const dx = attacker.attack.dx || attacker.face || 1;
+          attacker.attack.hit = true; attacker.attack = null;
+          attacker.hurt = Math.max(attacker.hurt || 0, 18);
+          attacker.stun = Math.max(attacker.stun || 0, 20);
+          attacker.vx = -dx * 12; attacker.vy = -8;
+          target.counter = Math.max(target.counter || 0, 12);
+          target.shield = Math.min(100, (target.shield || 0) + 10);
+          try { hitStop = Math.max(typeof hitStop !== "undefined" ? hitStop : 0, 7); } catch (e) {}
+          try { shake = Math.max(typeof shake !== "undefined" ? shake : 0, 12); } catch (e) {}
+          try { impactFlash = Math.max(typeof impactFlash !== "undefined" ? impactFlash : 0, .6); } catch (e) {}
+          try { ringBurst(target.x, target.y, "#77fff0", 1.5); pop(target.x, target.y, "#ffffff", 54, 11); } catch (e) {}
+          try { floatText(target.x, target.y - 96, "⚡ PARRY!", "#77fff0"); } catch (e) {}
+          flash.classList.add("show");
+          clearTimeout(flashTimer); flashTimer = setTimeout(() => flash.classList.remove("show"), 180);
+          S.parries++; S.audio.parry++; blip(1180, 320, .16, .12);
+          S.lastParry = { name: nameOf(target), attacker: nameOf(attacker) };
+          showStrip("⚡ PARRY — " + nameOf(target) + " flashed " + nameOf(attacker));
+          return;
+        }
+      } catch (e) {}
+      // ---------- normal hit, then (a) DI from the victim's held input ----------
+      let before = null;
+      try { before = target.damage; } catch (e) {}
+      prevHit(attacker, target);
+      try {
+        if (before !== null && target.damage - before > 0 && target.hurt > 0 && target.input) applyDI(target, target.input);
+      } catch (e) {}
+    };
+
+    // ---------- (b) buffered tech + parry-window tracking, per fighter frame ----------
+    const prevUF = updateFighter;
+    updateFighter = function (f, other, input) {
+      const wasGround = !!f.ground, wasHurt = f.hurt || 0, fallSpeed = Math.abs(f.vy || 0);
+      try {
+        const inp = input || {};
+        // Tech buffer: a dodge/shield tap while tumbling through the air arms a
+        // 12-frame window (the base engine only honors a same-frame tap).
+        if (!f.ground && wasHurt > 0 && (inp.dodge || inp.shield)) f._defTechBuf = 12;
+        else if (f._defTechBuf > 0) f._defTechBuf--;
+        // Parry window: shield was up last frame and is released this frame.
+        if (f.shieldHeld && !inp.shield) f._defParryWin = 4;
+        else if (f._defParryWin > 0) f._defParryWin--;
+      } catch (e) {}
+      prevUF(f, other, input);
+      try {
+        if (!wasGround && f.ground && !f.ledge && wasHurt > 0 && fallSpeed >= 6 && f._defTechBuf > 0) {
+          f._defTechBuf = 0;
+          f.vx = 0; f.vy = 0; f.hurt = 0; f.stun = 0;
+          f.landingLag = Math.min(f.landingLag || 0, 2);
+          f.invuln = Math.max(f.invuln || 0, 14);
+          try { ringBurst(f.x, f.y + (f.r || 40), "#77fff0", .9); pop(f.x, f.y + (f.r || 40), "#ffffff", 22, 6); } catch (e) {}
+          try { floatText(f.x, f.y - 84, "🛡️ TECH!", "#77fff0"); } catch (e) {}
+          S.techs++; S.audio.tech++; blip(660, 990, .1, .08);
+          S.lastTech = { name: nameOf(f), fallSpeed: Math.round(fallSpeed) };
+          showStrip("🛡️ TECH — " + nameOf(f) + " breakfell the landing");
+        }
+      } catch (e) {}
+    };
+
+    const prevStart = startMatch;
+    startMatch = function () {
+      [p1, p2].forEach(f => { try { f._defTechBuf = 0; f._defParryWin = 0; } catch (e) {} });
+      strip.classList.remove("show");
+      prevStart();
+    };
+    const prevRS = renderSelect;
+    renderSelect = function () {
+      prevRS();
+      const sum = document.querySelector("#selectSummary");
+      if (sum && !/DEFENSIVE DEPTH/.test(sum.textContent)) sum.textContent += " · Defensive depth: 🧭 DI + 🛡️ buffered tech + ⚡ flash parry";
+    };
+
+    const bufOf = f => { try { return { tech: f && f._defTechBuf || 0, parry: f && f._defParryWin || 0 }; } catch (e) { return { tech: 0, parry: 0 }; } };
+    window.BBRRevampDefense = {
+      version: "1.0.0",
+      applyDI: (f, held) => applyDI(f, held),
+      armTech: f => { if (f) f._defTechBuf = 12; },
+      armParry: f => { if (f) f._defParryWin = 4; },
+      state: () => ({ di: S.di, techs: S.techs, parries: S.parries,
+                      lastDI: S.lastDI, lastTech: S.lastTech, lastParry: S.lastParry,
+                      buffers: { p1: bufOf(typeof p1 !== "undefined" ? p1 : null), p2: bufOf(typeof p2 !== "undefined" ? p2 : null) },
+                      flashShown: flash.classList.contains("show"),
+                      stripShown: strip.classList.contains("show"), stripText: strip.textContent,
+                      audio: { parry: S.audio.parry, tech: S.audio.tech } })
+    };
+  } catch (e) {
+    window.BBRRevampDefense = { version: "1.0.0", active: false, error: String(e && e.message || e) };
+  }
+})();
+</script>
+
+<style id="bbr-revamp-stats-css">
+  #bbrVictoryLap{display:none;margin:.65rem auto 0;max-width:640px;padding:.55em .8em;text-align:center;
+    color:#231a00;background:linear-gradient(100deg,#b8860b,#ffcf3f 55%,#b8860b);border:2px solid #fff;border-radius:.6rem;
+    box-shadow:4px 4px 0 rgba(0,0,0,.45);font:1000 .82rem/1.35 "Nunito",system-ui,sans-serif}
+  #bbrVictoryLap.show{display:block}
+  #bbrRecordsBtn{margin-left:.5rem}
+  #bbrRecordsPanel{position:fixed;inset:0;z-index:2147483000;display:none;align-items:center;justify-content:center;
+    background:rgba(4,6,18,.72);padding:1rem}
+  #bbrRecordsPanel.show{display:flex}
+  #bbrRecordsCard{background:#101736;color:#eef2ff;border:2px solid #ffcf3f;border-radius:1rem;
+    box-shadow:8px 8px 0 rgba(0,0,0,.55);max-width:min(680px,94vw);width:100%;max-height:86vh;overflow:auto;padding:1rem 1.1rem}
+  #bbrRecordsCard h2{margin:.1em 0 .3em;font:1000 1.45rem/1.1 "Baloo 2","Nunito",system-ui,sans-serif;color:#ffcf3f;text-transform:uppercase}
+  #bbrRecordsCard .bbr-rec-sub{font:800 .82rem/1.4 "Nunito",system-ui,sans-serif;color:#bcd0ff;margin-bottom:.6em}
+  #bbrRecordsCard table{width:100%;border-collapse:collapse;font:800 .8rem/1.35 "Nunito",system-ui,sans-serif}
+  #bbrRecordsCard th,#bbrRecordsCard td{padding:.34em .45em;text-align:left;border-bottom:1px solid rgba(255,255,255,.16);white-space:nowrap}
+  #bbrRecordsCard th{color:#ffcf3f;text-transform:uppercase;font-size:.68rem;letter-spacing:.08em}
+  #bbrRecordsCard .bbr-rec-note{font:800 .8rem/1.45 "Nunito",system-ui,sans-serif;color:#dbe7ff;margin-top:.65em}
+  #bbrRecordsClose{margin-top:.8rem}
+  @media (max-width:640px){
+    #bbrRecordsCard{padding:.8rem;font-size:.9rem}
+    #bbrRecordsCard th,#bbrRecordsCard td{padding:.3em .32em}
+    #bbrVictoryLap{font-size:.74rem}
+  }
+</style>
+<script id="bbr-revamp-stats">
+(() => {
+  try {
+    if (window.BBRRevampStats) return;
+    const A = window.BBRAscension;
+    if (!A) return;
+    const KEY = "bbr-revamp-stats-v1";
+    const blank = () => ({ version: 1, totals: { matches: 0, playSeconds: 0, kos: 0, falls: 0 },
+                           fighters: {}, h2h: {}, arenas: {}, lastMatch: null, lastVictoryLap: "" });
+    let store = blank();
+    try { const raw = JSON.parse(localStorage.getItem(KEY)); if (raw && raw.version === 1) store = Object.assign(blank(), raw); } catch (e) {}
+    const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} };
+    const nameOf = f => { try { return (f.color && f.color.name) || "Fighter"; } catch (e) { return "Fighter"; } };
+    const idOf = f => { try { return (f.color && f.color.id) || "unknown"; } catch (e) { return "unknown"; } };
+    function ensureFighter(id, name) {
+      if (!store.fighters[id]) store.fighters[id] = { id, name: name || id, wins: 0, losses: 0, matches: 0, kos: 0, falls: 0, playSeconds: 0, damageDealt: 0 };
+      if (name) store.fighters[id].name = name;
+      return store.fighters[id];
+    }
+    const fmtTime = sec => { sec = Math.max(0, Math.round(sec || 0)); return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0"); };
+    function mostPlayed() {
+      let best = null;
+      Object.values(store.fighters).forEach(r => { if (!best || r.matches > best.matches || (r.matches === best.matches && r.wins > best.wins)) best = r; });
+      return best && best.matches > 0 ? best : null;
+    }
+    function favoriteArena() {
+      let best = null;
+      Object.values(store.arenas).forEach(r => { if (!best || r.plays > best.plays) best = r; });
+      return best && best.plays > 0 ? best : null;
+    }
+    function victoryLapText(m) {
+      const w = store.fighters[m.winnerId], l = store.fighters[m.loserId];
+      const wr = w && w.matches ? Math.round(100 * w.wins / w.matches) : 0;
+      const mp = mostPlayed();
+      return "🏆 Victory Lap — " + m.winnerName + " beat " + m.loserName + " on " + m.arena + " in " + fmtTime(m.seconds) +
+             " · Career: " + m.winnerName + " " + (w ? w.wins : 0) + "-" + (w ? w.losses : 0) + " (" + wr + "%), " + (w ? w.kos : 0) + " KOs" +
+             (mp ? " · Most-played: " + mp.name + " (" + mp.matches + ")" : "");
+    }
+
+    // ---------- DOM: victory-lap line under the results podium + Records panel ----------
+    const lap = document.createElement("div");
+    lap.id = "bbrVictoryLap";
+    const resultsDialog = document.querySelector("#bbrResults .bbr-dialog");
+    if (resultsDialog) resultsDialog.appendChild(lap);
+    const panel = document.createElement("div");
+    panel.id = "bbrRecordsPanel";
+    panel.innerHTML = '<div id="bbrRecordsCard" role="dialog" aria-label="Career records">' +
+      '<h2>🏆 Career Records</h2><div class="bbr-rec-sub" id="bbrRecordsSub"></div>' +
+      '<div id="bbrRecordsBody"></div>' +
+      '<button class="bbr-action primary" id="bbrRecordsClose" type="button">Close</button></div>';
+    document.body.appendChild(panel);
+    function renderRecords() {
+      const sub = panel.querySelector("#bbrRecordsSub"), body = panel.querySelector("#bbrRecordsBody");
+      const mp = mostPlayed(), fa = favoriteArena();
+      sub.textContent = "Total matches: " + store.totals.matches + " · Total playtime: " + fmtTime(store.totals.playSeconds) +
+        " · Total KOs: " + store.totals.kos +
+        (mp ? " · Most-played fighter: " + mp.name + " (" + mp.matches + ")" : "") +
+        (fa ? " · Favorite arena: " + fa.name + " (" + fa.plays + ")" : "");
+      const rows = Object.values(store.fighters).filter(r => r.matches > 0 || r.kos > 0)
+        .sort((a, b) => (b.wins - a.wins) || (b.matches - a.matches) || (b.kos - a.kos));
+      if (!rows.length) { body.innerHTML = '<div class="bbr-rec-note">No matches recorded yet — finish a match and the records will live here.</div>'; return; }
+      let html = "<table><thead><tr><th>Fighter</th><th>W-L</th><th>Win %</th><th>KOs</th><th>Falls</th><th>Playtime</th></tr></thead><tbody>";
+      rows.forEach(r => {
+        html += "<tr><td>" + r.name + "</td><td>" + r.wins + "-" + r.losses + "</td><td>" +
+          (r.matches ? Math.round(100 * r.wins / r.matches) : 0) + "%</td><td>" + r.kos + "</td><td>" + r.falls + "</td><td>" + fmtTime(r.playSeconds) + "</td></tr>";
+      });
+      html += "</tbody></table>";
+      const h2hKeys = Object.keys(store.h2h);
+      if (h2hKeys.length) {
+        html += '<div class="bbr-rec-note">Head-to-head: ' + h2hKeys.map(k => {
+          const h = store.h2h[k];
+          return h.aName + " " + (h.wins[h.aId] || 0) + "–" + (h.wins[h.bId] || 0) + " " + h.bName;
+        }).join(" · ") + "</div>";
+      }
+      if (store.lastVictoryLap) html += '<div class="bbr-rec-note">' + store.lastVictoryLap + "</div>";
+      body.innerHTML = html;
+    }
+    function openPanel() { renderRecords(); panel.classList.add("show"); }
+    function closePanel() { panel.classList.remove("show"); }
+    panel.addEventListener("pointerdown", e => { if (e.target === panel) closePanel(); });
+    panel.querySelector("#bbrRecordsClose").addEventListener("click", closePanel);
+    // Records buttons: one on the fighter-select help row, one in the results actions.
+    const mkBtn = (parent, label) => {
+      if (!parent || parent.querySelector(".bbr-records-open")) return;
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "bbr-action bbr-records-open"; b.textContent = label;
+      b.addEventListener("click", openPanel);
+      parent.appendChild(b);
+    };
+    mkBtn(document.querySelector(".select-help"), "🏆 Records");
+    mkBtn(document.querySelector("#bbrResults .bbr-dialog-actions"), "🏆 Records");
+
+    // ---------- match tracking ----------
+    let pending = null;
+    function currentArena() { try { return boards[boardIndex].name; } catch (e) { return "Unknown Arena"; } }
+    function finalize() {
+      try {
+        if (!pending || pending.counted) return false;
+        let winner = "";
+        try { winner = String(matchWinner || ""); } catch (e) {}
+        if (!winner) return false;
+        const wIsP1 = winner === "PLAYER 1";
+        const wIsP2 = winner === "PLAYER 2" || winner === "CPU";
+        let winnerF, loserF;
+        if (wIsP1) { winnerF = p1; loserF = p2; }
+        else if (wIsP2) { winnerF = p2; loserF = p1; }
+        else {
+          // Named winners (team / hill / other modes): match against a fighter name.
+          const up = winner.toUpperCase();
+          if (up.indexOf(nameOf(p1).toUpperCase()) >= 0 || up.indexOf("RED") >= 0) { winnerF = p1; loserF = p2; }
+          else if (up.indexOf(nameOf(p2).toUpperCase()) >= 0 || up.indexOf("BLUE") >= 0) { winnerF = p2; loserF = p1; }
+          else return false;
+        }
+        pending.counted = true;
+        const seconds = Math.max(0, Math.round((typeof matchFrames !== "undefined" ? matchFrames : 0) / 60));
+        const wRec = ensureFighter(idOf(winnerF), nameOf(winnerF));
+        const lRec = ensureFighter(idOf(loserF), nameOf(loserF));
+        wRec.wins++; wRec.matches++; wRec.playSeconds += seconds;
+        lRec.losses++; lRec.matches++; lRec.playSeconds += seconds;
+        store.totals.matches++; store.totals.playSeconds += seconds;
+        const arenaName = pending.arena || currentArena();
+        if (!store.arenas[arenaName]) store.arenas[arenaName] = { name: arenaName, plays: 0, p1Wins: 0 };
+        store.arenas[arenaName].plays++;
+        if (winnerF === p1) store.arenas[arenaName].p1Wins++;
+        const aId = idOf(p1), bId = idOf(p2);
+        const hKey = [aId, bId].sort().join("|");
+        if (!store.h2h[hKey]) store.h2h[hKey] = { aId, aName: nameOf(p1), bId, bName: nameOf(p2), matches: 0, wins: {} };
+        store.h2h[hKey].matches++;
+        store.h2h[hKey].wins[idOf(winnerF)] = (store.h2h[hKey].wins[idOf(winnerF)] || 0) + 1;
+        const m = { winnerId: idOf(winnerF), winnerName: nameOf(winnerF), loserId: idOf(loserF), loserName: nameOf(loserF), arena: arenaName, seconds, ts: Date.now() };
+        store.lastMatch = m;
+        store.lastVictoryLap = victoryLapText(m);
+        save();
+        lap.textContent = store.lastVictoryLap;
+        lap.classList.add("show");
+        if (panel.classList.contains("show")) renderRecords();
+        return true;
+      } catch (e) { return false; }
+    }
+
+    const prevStart = startMatch;
+    startMatch = function () {
+      prevStart();
+      pending = { counted: false, arena: currentArena(), p1Id: null, p2Id: null };
+      try { pending.p1Id = idOf(p1); pending.p2Id = idOf(p2); } catch (e) {}
+      lap.classList.remove("show");
+    };
+    const prevRespawn = respawn;
+    respawn = function (f) {
+      let beforeStocks = null, wasLive = false;
+      try { beforeStocks = f.stocks; wasLive = fightLive; } catch (e) {}
+      prevRespawn(f);
+      try {
+        if ((f === p1 || f === p2) && beforeStocks !== null && beforeStocks > 0) {
+          const victim = ensureFighter(idOf(f), nameOf(f));
+          const other = f === p1 ? p2 : p1;
+          const scorer = ensureFighter(idOf(other), nameOf(other));
+          victim.falls++; scorer.kos++;
+          store.totals.falls++; store.totals.kos++;
+          save();
+        }
+        if (wasLive) { try { if (!fightLive && matchWinner) finalize(); } catch (e) {} }
+      } catch (e) {}
+    };
+    const prevHit = hitCheck;
+    hitCheck = function (attacker, target) {
+      let before = null;
+      try { before = target.damage; } catch (e) {}
+      prevHit(attacker, target);
+      try {
+        if (before !== null && target && target.damage - before > 0 && attacker && attacker.color) {
+          ensureFighter(idOf(attacker), nameOf(attacker)).damageDealt += Math.round((target.damage - before) * 10) / 10;
+          save();
+        }
+      } catch (e) {}
+    };
+    // Timed / hill / sudden-death endings set matchWinner without a final respawn.
+    setInterval(() => { try { if (pending && !pending.counted && matchWinner && !fightLive) finalize(); } catch (e) {} }, 400);
+    const prevRS = renderSelect;
+    renderSelect = function () {
+      prevRS();
+      const sum = document.querySelector("#selectSummary");
+      if (sum && !/CAREER RECORDS/.test(sum.textContent)) sum.textContent += " · Career records: 🏆 per-fighter stats + victory lap";
+      mkBtn(document.querySelector(".select-help"), "🏆 Records");
+    };
+
+    window.BBRRevampStats = {
+      version: "1.0.0",
+      state: () => JSON.parse(JSON.stringify(store)),
+      mostPlayed: () => { const r = mostPlayed(); return r ? Object.assign({}, r) : null; },
+      favoriteArena: () => { const r = favoriteArena(); return r ? Object.assign({}, r) : null; },
+      victoryLap: () => store.lastVictoryLap || "",
+      finalize: () => finalize(),
+      openPanel, closePanel,
+      panelShown: () => panel.classList.contains("show"),
+      lapShown: () => lap.classList.contains("show"),
+      lapText: () => lap.textContent,
+      reset: () => { store = blank(); save(); lap.classList.remove("show"); lap.textContent = ""; if (panel.classList.contains("show")) renderRecords(); }
+    };
+  } catch (e) {
+    window.BBRRevampStats = { version: "1.0.0", active: false, error: String(e && e.message || e) };
+  }
+})();
+</script>
 
 </body>
 </html>
