@@ -9221,5 +9221,168 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
 })();
 </script>
 <!-- BBR-CLEAN-VIEWS:END -->
+
+<!-- BBR-KIDS-PLAY:START -->
+<style id="bbr-kids-play-css">
+  /* ===== Kids Play: a 3-tap front door (PLAY -> pick a blob -> FIGHT) ===== */
+  #bbrKids{position:fixed;inset:0;z-index:2147483647;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.05rem;
+    padding:1rem;text-align:center;color:#fff;font-family:Nunito,system-ui,sans-serif;overflow-y:auto;
+    background:radial-gradient(circle,rgba(255,255,255,.14) 1.6px,transparent 1.9px) 0 0/20px 20px,
+      linear-gradient(160deg,#241259 0%,#4b1470 52%,#0a2a6b 100%)}
+  #bbrKids[hidden]{display:none!important}
+  #bbrKids .bbr-kids-logo{font-size:clamp(2.4rem,10vw,4.2rem);font-weight:1000;line-height:.95;letter-spacing:.01em;
+    text-shadow:0 4px 0 #0a0d20,0 10px 26px rgba(0,0,0,.5)}
+  #bbrKids .bbr-kids-logo span{color:#ffd84d}
+  #bbrKids .bbr-kids-mascots{display:flex;gap:1.4rem;align-items:flex-end}
+  .bbr-kid-face{position:relative;display:block;border-radius:50%;flex:none;
+    background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.8),rgba(255,255,255,0) 46%),var(--kc,#ff2f73);
+    box-shadow:inset 0 -12px 0 rgba(0,0,0,.16),0 8px 0 rgba(0,0,0,.22)}
+  .bbr-kid-face i{position:absolute;top:34%;width:15%;height:19%;border-radius:50%;background:#fff;box-shadow:inset 0 -3px 0 #0a0d20}
+  .bbr-kid-face i:first-child{left:24%}
+  .bbr-kid-face i:nth-child(2){right:24%}
+  .bbr-kid-face b{position:absolute;left:50%;top:56%;width:36%;height:22%;transform:translateX(-50%);
+    border-bottom:5px solid rgba(10,13,32,.75);border-radius:50%}
+  .bbr-kids-mascots .bbr-kid-face{width:96px;height:96px;animation:bbrKidsBounce 1.6s ease-in-out infinite}
+  .bbr-kids-mascots .bbr-kid-face:last-child{animation-delay:.35s}
+  @keyframes bbrKidsBounce{0%,100%{transform:translateY(0) scale(1,1)}30%{transform:translateY(-14px) scale(.97,1.03)}55%{transform:translateY(0) scale(1.04,.94)}}
+  #bbrKidsPlay{font:1000 clamp(2.1rem,9vw,3.2rem)/1 Nunito,system-ui,sans-serif;color:#07300f;cursor:pointer;
+    padding:1.05rem 3.4rem;border-radius:999px;border:5px solid #fff;
+    background:linear-gradient(180deg,#6df07a,#22b44a);box-shadow:0 10px 0 #0d7a2e,0 18px 34px rgba(0,0,0,.45);
+    animation:bbrKidsPulse 1.25s ease-in-out infinite}
+  #bbrKidsPlay:active{transform:translateY(6px);box-shadow:0 4px 0 #0d7a2e}
+  @keyframes bbrKidsPulse{0%,100%{scale:1}50%{scale:1.05}}
+  #bbrKids .bbr-kids-note{font-size:.85rem;font-weight:700;color:rgba(255,255,255,.75);max-width:34ch}
+  #bbrKidsGrown{position:absolute;top:.65rem;right:.65rem;font:800 .8rem Nunito,system-ui,sans-serif;color:#fff;cursor:pointer;
+    padding:.5rem .8rem;border-radius:999px;border:2px solid rgba(255,255,255,.5);background:rgba(10,13,32,.45)}
+  #bbrKidsBack{position:absolute;top:.65rem;left:.65rem;font:1000 1.5rem/1 Nunito,system-ui,sans-serif;color:#fff;cursor:pointer;
+    width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,.5);background:rgba(10,13,32,.45)}
+  #bbrKidsPickTitle{font-size:clamp(1.7rem,7vw,2.6rem);font-weight:1000;text-shadow:0 3px 0 #0a0d20}
+  #bbrKidsGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:.85rem;width:min(700px,94vw);
+    max-height:54vh;overflow-y:auto;padding:.5rem;scrollbar-width:thin}
+  .bbr-kid-pick{display:flex;flex-direction:column;align-items:center;gap:.4rem;padding:.8rem .3rem .6rem;cursor:pointer;
+    border-radius:22px;border:3px solid rgba(255,255,255,.25);background:rgba(255,255,255,.09);color:#fff;font-family:Nunito,system-ui,sans-serif}
+  .bbr-kid-pick .bbr-kid-face{width:78px;height:78px}
+  .bbr-kid-pick .bbr-kid-name{font-size:1rem;font-weight:1000;line-height:1.05}
+  .bbr-kid-pick.sel{border-color:#ffd84d;background:rgba(255,216,77,.22);transform:scale(1.05)}
+  .bbr-kid-pick.sel .bbr-kid-face{animation:bbrKidsBounce .8s ease-in-out infinite}
+  #bbrKidsFight{font:1000 clamp(1.9rem,8vw,2.7rem)/1 Nunito,system-ui,sans-serif;color:#07300f;cursor:pointer;
+    padding:.95rem 3rem;border-radius:999px;border:5px solid #fff;
+    background:linear-gradient(180deg,#6df07a,#22b44a);box-shadow:0 10px 0 #0d7a2e,0 18px 34px rgba(0,0,0,.45);
+    animation:bbrKidsPulse 1.25s ease-in-out infinite}
+  #bbrKidsFight[hidden]{display:none!important}
+  #bbrKidsFight:active{transform:translateY(6px);box-shadow:0 4px 0 #0d7a2e}
+  /* ===== Kids HUD: big % + stocks, everything else away ===== */
+  body.bbr-kids #bbrLiveHud,body.bbr-kids #bbrHudTimer,body.bbr-kids #bbrModStrip,body.bbr-kids #bbrSuddenStrip,
+  body.bbr-kids #bbrHillStrip,body.bbr-kids #bbrBuddyStrip,body.bbr-kids #bbrDefenseStrip,body.bbr-kids #bbrJuiceBadge{display:none!important}
+  body.bbr-kids .fighter-card .bars,body.bbr-kids .fighter-card .bbr-hud-tier,body.bbr-kids #p1Stats,body.bbr-kids #p2Stats{display:none!important}
+  body.bbr-kids .bbr-hud-pct{font-size:2.7rem!important}
+  body.bbr-kids #bbrTouchPad{transform:scale(1.14);transform-origin:bottom center}
+</style>
+<div id="bbrKids" hidden role="dialog" aria-label="Kids Play">
+  <div id="bbrKidsStep1">
+    <div class="bbr-kids-logo">BLOB <span>BASH</span></div>
+    <div class="bbr-kids-mascots" aria-hidden="true">
+      <span class="bbr-kid-face" style="--kc:#ff2f73"><i></i><i></i><b></b></span>
+      <span class="bbr-kid-face" style="--kc:#37e0c8"><i></i><i></i><b></b></span>
+    </div>
+    <button id="bbrKidsPlay" type="button" aria-label="Play">▶ PLAY</button>
+    <div class="bbr-kids-note">Parents: tap ⭐ Grown-Ups (top right) for every mode, fighter stats and settings.</div>
+  </div>
+  <div id="bbrKidsStep2" hidden>
+    <button id="bbrKidsBack" type="button" aria-label="Back">←</button>
+    <div id="bbrKidsPickTitle">🫧 Pick your blob!</div>
+    <div id="bbrKidsGrid"></div>
+    <button id="bbrKidsFight" type="button" aria-label="Fight" hidden>▶ FIGHT!</button>
+  </div>
+  <button id="bbrKidsGrown" type="button" aria-label="Grown-up modes and settings">⭐ Grown-Ups</button>
+</div>
+<script id="bbr-kids-play">
+(function () {
+  "use strict";
+  try {
+    var kidsActive = true, picked = -1, built = false;
+    var root = document.getElementById("bbrKids");
+    var step1 = document.getElementById("bbrKidsStep1");
+    var step2 = document.getElementById("bbrKidsStep2");
+    var grid = document.getElementById("bbrKidsGrid");
+    var fightBtn = document.getElementById("bbrKidsFight");
+    function show(step) {
+      if (!kidsActive) { root.hidden = true; return; }
+      root.hidden = false;
+      step1.hidden = step !== 1;
+      step2.hidden = step !== 2;
+    }
+    function buildGrid() {
+      if (built) return;
+      var cards = document.querySelectorAll("#p1Choices .character-card");
+      if (!cards.length) return;
+      built = true;
+      cards.forEach(function (card, i) {
+        var strong = card.querySelector("strong");
+        var name = strong ? strong.textContent.trim() : "Blob " + (i + 1);
+        var color = getComputedStyle(card).getPropertyValue("--c").trim() || "#ff2f73";
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "bbr-kid-pick";
+        btn.setAttribute("aria-label", "Pick " + name);
+        var face = document.createElement("span");
+        face.className = "bbr-kid-face";
+        face.style.setProperty("--kc", color);
+        face.innerHTML = "<i></i><i></i><b></b>";
+        var label = document.createElement("span");
+        label.className = "bbr-kid-name";
+        label.textContent = name;
+        btn.appendChild(face);
+        btn.appendChild(label);
+        btn.addEventListener("click", function () {
+          picked = i;
+          grid.querySelectorAll(".sel").forEach(function (x) { x.classList.remove("sel"); });
+          btn.classList.add("sel");
+          fightBtn.hidden = false;
+        });
+        grid.appendChild(btn);
+      });
+    }
+    var tries = 0;
+    var iv = setInterval(function () { buildGrid(); if (built || ++tries > 24) clearInterval(iv); }, 250);
+    document.getElementById("bbrKidsPlay").addEventListener("click", function () { buildGrid(); show(2); });
+    document.getElementById("bbrKidsBack").addEventListener("click", function () { show(1); });
+    document.getElementById("bbrKidsGrown").addEventListener("click", function () {
+      kidsActive = false;
+      root.hidden = true;
+      document.body.classList.remove("bbr-kids");
+    });
+    fightBtn.addEventListener("click", function () {
+      if (picked < 0) return;
+      var cards1 = document.querySelectorAll("#p1Choices .character-card");
+      var cards2 = document.querySelectorAll("#p2Choices .character-card");
+      if (!cards1[picked]) return;
+      var cpu = picked;
+      if (cards2.length > 1) { while (cpu === picked) cpu = Math.floor(Math.random() * cards2.length); }
+      var mode = document.querySelector("#modeCpu");
+      if (mode) mode.click();
+      cards1[picked].click();
+      if (cards2[cpu]) cards2[cpu].click();
+      var easy = Array.prototype.find.call(document.querySelectorAll("#cpuOptions button"), function (b) { return /easy/i.test(b.textContent); });
+      if (easy) easy.click();
+      document.body.classList.add("bbr-kids");
+      root.hidden = true;
+      var start = document.querySelector("#startGame");
+      if (start) start.click();
+    });
+    var ss = document.querySelector("#selectScreen");
+    if (ss) {
+      new MutationObserver(function () {
+        if (kidsActive && !ss.classList.contains("hidden")) { document.body.classList.add("bbr-kids"); show(1); }
+      }).observe(ss, { attributes: true, attributeFilter: ["class"] });
+    }
+    show(1);
+    window.BBRKidsPlay = { version: "1.0.0", active: true };
+  } catch (e) {
+    window.BBRKidsPlay = { version: "1.0.0", active: false, error: String(e && e.message || e) };
+  }
+})();
+</script>
+<!-- BBR-KIDS-PLAY:END -->
 </body>
 </html>
