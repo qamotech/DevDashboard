@@ -1003,20 +1003,17 @@
 <div class="pill"><span>Keyboard fallback</span><b>A/D move, W or Space jump</b></div>
 </div>
 <div class="moves">
-<div class="move"><span class="key">Stick</span><span>Move, fast fall, commit smash direction</span></div>
-<div class="move"><span class="key">B</span><span>Jab; press Up + Jab for a rising strike</span></div>
-<div class="move"><span class="key">A</span><span>Tap strike for tilts and aerials; hold a direction to charge</span></div>
-<div class="move"><span class="key">Air + A/B</span><span>5 aerials per fighter: neutral, forward, back (strong reverse), up (juggle), down (meteor spike) — direction picks the aerial</span></div>
-<div class="move"><span class="key">Ground + A/B</span><span>Per-fighter tilts: forward (step-in poke), up (juggle launcher), down (low sweep); attack while running for a lunging dash attack — neutral tap with no direction stays jab / side tilt</span></div>
-<div class="move"><span class="key">C</span><span>Instant smash: heavy launch power</span></div>
-<div class="move"><span class="key">X / Y</span><span>Two jump buttons</span></div>
-<div class="move"><span class="key">L / R</span><span>Two shield buttons</span></div>
-<div class="move"><span class="key">Z / ZL</span><span>Two grab buttons</span></div>
-<div class="move"><span class="key">Z + Stick</span><span>Forward, back, up, or down throw; press Grab early to tech</span></div>
-<div class="move"><span class="key">Q / 7</span><span>Chromatic pulse; Down + Forward adds an EX burst</span></div>
-<div class="move"><span class="key">I / R3</span><span>Stamina dodge or airborne recovery burst</span></div>
-<div class="move"><span class="key">Shield</span><span>Time with an incoming hit to parry-counter</span></div>
-<div class="move"><span class="key">Start / P</span><span>Pause or resume</span></div>
+<div class="move"><span class="key">Stick</span><span>Move · fast fall · aim your attacks (D-pad works too)</span></div>
+<div class="move"><span class="key">A</span><span>Attack — jab; tilt the stick for tilts, use it in the air for aerials</span></div>
+<div class="move"><span class="key">B</span><span>Special — chromatic Pulse; Down + Forward adds an EX burst (Q on keyboard)</span></div>
+<div class="move"><span class="key">Air + A</span><span>5 aerials per fighter: neutral, forward, back (strong reverse), up (juggle), down (meteor spike) — direction picks the aerial</span></div>
+<div class="move"><span class="key">Ground + A</span><span>Per-fighter tilts: forward (step-in poke), up (juggle launcher), down (low sweep); attack while running for a lunging dash attack — neutral tap with no direction stays jab</span></div>
+<div class="move"><span class="key">C-Stick</span><span>Flick for a Smash attack — in the air it does that direction's aerial instead</span></div>
+<div class="move"><span class="key">X / Y</span><span>Jump — two buttons, either works</span></div>
+<div class="move"><span class="key">L / R</span><span>Shield — hold + Down to dodge, hold + A to grab; time it with a hit to parry-counter</span></div>
+<div class="move"><span class="key">ZL / ZR</span><span>Grab — then push the stick for a forward, back, up or down throw; press Grab early to tech</span></div>
+<div class="move"><span class="key">I</span><span>Stamina dodge or airborne recovery burst (keyboard)</span></div>
+<div class="move"><span class="key">+ / − / P</span><span>Pause or resume</span></div>
 <div class="move"><span class="key">M</span><span>Switch board layout</span></div>
 </div>
 <div class="powers">
@@ -1393,16 +1390,31 @@ function renderSelect() {
         input.x = dead(gp.axes[0] || 0);
         input.y = dead(gp.axes[1] || 0);
         const b = gp.buttons;
-        input.punch = pressed(b, 1);
-        input.melee = pressed(b, 0);
-        input.smash = Math.abs(dead(gp.axes[2] || 0)) > .45 || Math.abs(dead(gp.axes[3] || 0)) > .45;
-        input.jump = pressed(b, 2) || pressed(b, 3) || pressed(b, 12);
-        input.shield = pressed(b, 4) || pressed(b, 5) || pressed(b, 6) || pressed(b, 7);
-        input.grab = pressed(b, 8) || pressed(b, 10);
-        input.dodge = pressed(b, 11);
-        input.pause = pressed(b, 9);
-        input.special = pressed(b, 13) || (pressed(b, 0) && pressed(b, 1));
-        if (pressed(b, 0) && pressed(b, 1)) { input.punch = false; input.melee = false; }
+        /* Smash Bros layout for Switch Pro / standard-mapping controllers:
+           A(1) Attack - B(0) Special - X(3)/Y(2) Jump - L(4)/R(5) Shield -
+           ZL(6)/ZR(7) Grab - C-stick Smash/aerials - Shield+Down Dodge. */
+        const atk = pressed(b, 1);
+        const stickTilt = Math.abs(input.x) > .35 || Math.abs(input.y) > .35;
+        let airborne = false;
+        try { const self = player === 0 ? p1 : p2; airborne = !!(self && !self.ground); } catch (e) {}
+        input.melee = atk && (stickTilt || airborne);
+        input.punch = atk && !input.melee;
+        input.special = pressed(b, 0);
+        const cx = dead(gp.axes[2] || 0), cy = dead(gp.axes[3] || 0);
+        if (Math.abs(cx) > .5 || Math.abs(cy) > .5) {
+          if (Math.abs(input.x) < .2 && Math.abs(input.y) < .2) { input.x = cx; input.y = cy; }
+          if (airborne) { input.melee = true; input.punch = false; } else input.smash = true;
+        }
+        input.jump = pressed(b, 2) || pressed(b, 3);
+        input.shield = pressed(b, 4) || pressed(b, 5);
+        input.grab = pressed(b, 6) || pressed(b, 7) || (input.shield && atk);
+        if (input.shield && atk) { input.punch = false; input.melee = false; }
+        input.dodge = pressed(b, 10) || pressed(b, 11) || (input.shield && input.y > .65);
+        input.pause = pressed(b, 9) || pressed(b, 8);
+        if (pressed(b, 14)) input.x -= 1;
+        if (pressed(b, 15)) input.x += 1;
+        if (pressed(b, 13)) input.y += 1;
+        if (pressed(b, 12)) input.y -= 1;
       }
       if (player === 0) {
         input.x += (keys.has("KeyD") || touch.has("right") ? 1 : 0);
@@ -9384,5 +9396,421 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
 })();
 </script>
 <!-- BBR-KIDS-PLAY:END -->
+
+<!-- BBR-GROWNUP-SIMPLE:START -->
+<style id="bbr-grownup-simple-css">
+  /* Grown-up simplification + menu polish (PLAN-48 items 11-18, 33-40) */
+  #bbrSettingsToggle{width:100%;margin:.15rem 0 .35rem;padding:.55rem .9rem;border-radius:12px;cursor:pointer;
+    border:1.5px solid rgba(255,216,77,.45);background:rgba(10,13,32,.55);color:#ffe9a8;
+    font:800 .86rem Nunito,system-ui,sans-serif;text-align:left}
+  #bbrSettingsToggle:hover{border-color:#ffd84d}
+  .bbr-settings{border:1.5px dashed rgba(255,255,255,.22);border-radius:14px;padding:.45rem .55rem;margin-bottom:.5rem}
+  .bbr-settings[hidden]{display:none!important}
+  .bbr-hide-row{display:none!important}
+  #selectScreen .select-top .mode-switch{display:none!important}
+  #selectScreen .select-help button:not(#startGame){background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);
+    color:#dfe6ff;font-size:.82rem;padding:.5rem .8rem;box-shadow:none}
+  #bbrPause .bbr-action:not(#bbrResume):not(#bbrRestart),
+  #bbrResults .bbr-action:not(#bbrRematch){font-size:.82rem!important;opacity:.85;padding:.55rem .8rem!important}
+  #bbrResults #bbrRematch{animation:bbrRematchPulse 1.6s ease-in-out infinite}
+  @keyframes bbrRematchPulse{0%,100%{scale:1}50%{scale:1.04}}
+  @media (max-width:920px){#bbrOpenCommand{transform:scale(.85);transform-origin:bottom left}}
+  @media (hover:hover){.character-card{transition:transform .15s ease}.character-card:hover{transform:translateY(-4px)}}
+  #selectScreen button:active,.bbr-dialog button:active{transform:scale(.97)}
+  button:focus-visible,[tabindex]:focus-visible{outline:3px solid #ffd84d!important;outline-offset:2px}
+  #selectScreen::-webkit-scrollbar,.bbr-settings::-webkit-scrollbar{width:8px;height:8px}
+  #selectScreen::-webkit-scrollbar-thumb,.bbr-settings::-webkit-scrollbar-thumb{background:rgba(255,216,77,.4);border-radius:99px}
+  .bbr-smash-logowrap{position:relative;overflow:hidden}
+  .bbr-smash-logowrap::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.35) 48%,transparent 62%);
+    transform:translateX(-120%);animation:bbrShine 5.5s ease-in-out infinite}
+  @keyframes bbrShine{0%,55%{transform:translateX(-120%)}85%,100%{transform:translateX(120%)}}
+  .clouds{animation:bbrDrift 30s ease-in-out infinite alternate}
+  @keyframes bbrDrift{from{transform:translateX(-10px)}to{transform:translateX(10px)}}
+  .mode-switch .bbr-smash-tile.active,.mode-switch .bbr-smash-tile[aria-pressed="true"],
+  .mode-switch button.active{box-shadow:0 0 0 2px #ffd84d,0 0 18px rgba(255,216,77,.5)!important}
+  #bbrSmashVs .vs-name{box-shadow:inset 0 -4px 0 var(--c,#ffd84d)}
+</style>
+<script id="bbr-grownup-simple">
+(function () {
+  "use strict";
+  try {
+    var ss = document.querySelector("#selectScreen");
+    var open = false;
+    if (ss) {
+      var parts = [".match-options", "#bbrModBox", ".bbr-smash-stage-box"]
+        .map(function (s) { return ss.querySelector(s); }).filter(Boolean);
+      if (parts.length) {
+        var wrap = document.createElement("div");
+        wrap.className = "bbr-settings";
+        wrap.hidden = true;
+        var toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.id = "bbrSettingsToggle";
+        toggle.textContent = "⚙ Match Settings — stocks · CPU · stage · extras ▸";
+        parts[0].parentNode.insertBefore(toggle, parts[0]);
+        parts[0].parentNode.insertBefore(wrap, parts[0]);
+        parts.forEach(function (el) { wrap.appendChild(el); });
+        toggle.addEventListener("click", function () {
+          open = !open;
+          wrap.hidden = !open;
+          toggle.textContent = open
+            ? "⚙ Match Settings — stocks · CPU · stage · extras ▾"
+            : "⚙ Match Settings — stocks · CPU · stage · extras ▸";
+        });
+      }
+      var helps = ss.querySelectorAll(".select-help");
+      if (helps.length > 1) helps[helps.length - 1].classList.add("bbr-hide-row");
+    }
+    if (window.matchMedia && matchMedia("(max-width: 920px)").matches) {
+      var lab = document.querySelector("#bbrOpenCommand");
+      if (lab) lab.textContent = "⭐ Extras";
+    }
+    window.BBRGrownupSimple = { version: "1.0.0", settingsParts: parts ? parts.length : 0 };
+  } catch (e) {
+    window.BBRGrownupSimple = { version: "1.0.0", error: String(e && e.message || e) };
+  }
+})();
+</script>
+<!-- BBR-GROWNUP-SIMPLE:END -->
+
+<!-- BBR-FEEL-48:START -->
+<style id="bbr-feel-48-css">
+  #bbrPadEcho{margin-top:.35rem;font:800 .72rem Nunito,system-ui,sans-serif;color:#ffe9a8;
+    background:rgba(255,216,77,.1);border:1px solid rgba(255,216,77,.35);border-radius:8px;padding:.25rem .5rem}
+  #bbrFx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:6}
+  .fighter-card.bbr-last-stock{animation:bbrLastStock 1s ease-in-out infinite}
+  @keyframes bbrLastStock{0%,100%{box-shadow:0 0 0 0 rgba(255,60,60,0)}50%{box-shadow:0 0 0 3px rgba(255,60,60,.75)}}
+  .bbr-hud-pct.bbr-dmg-flash{animation:bbrDmgFlash .3s ease-out}
+  @keyframes bbrDmgFlash{0%{scale:1.35;color:#ff5d5d}100%{scale:1}}
+  .stage-shell.bbr-sudden-on{animation:bbrSuddenPulse 1.1s ease-in-out infinite}
+  @keyframes bbrSuddenPulse{0%,100%{box-shadow:inset 0 0 0 0 rgba(255,40,40,0)}50%{box-shadow:inset 0 0 42px 6px rgba(255,40,40,.5)}}
+  #bbrKoArrow{position:absolute;top:34%;z-index:7;font-size:3.2rem;color:#ffd84d;pointer-events:none;
+    text-shadow:0 3px 0 #0a0d20,0 0 22px rgba(255,216,77,.8);opacity:0}
+  #bbrKoArrow.show{animation:bbrKoFlash .65s ease-out}
+  @keyframes bbrKoFlash{0%{opacity:1;scale:1.5}100%{opacity:0;scale:.9}}
+  #bbrCallout.bbr-count-pop{animation:bbrCountPop .3s ease-out}
+  @keyframes bbrCountPop{0%{scale:1.3}100%{scale:1}}
+  #bbrResults.show .bbr-dialog,#bbrResults:not([hidden]) .bbr-dialog{box-shadow:0 0 0 2px rgba(255,216,77,.65),0 0 34px rgba(255,216,77,.35)}
+  body.bbr-lowbatt .clouds{animation:none!important}
+  body.bbr-in-match{overscroll-behavior:none}
+  #bbrKids,#bbrTouchPad,#bbrTouchPad button{touch-action:none}
+  #bbrErrorBar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:2147483647;
+    background:#3a0d18;color:#ffe1e1;border:2px solid #ff5d7a;border-radius:12px;padding:.6rem .9rem;
+    font:800 .85rem Nunito,system-ui,sans-serif;display:flex;gap:.7rem;align-items:center}
+  #bbrErrorBar button{background:#ff5d7a;color:#fff;border:0;border-radius:8px;padding:.4rem .8rem;font:inherit;cursor:pointer}
+</style>
+<script id="bbr-feel-48">
+(function () {
+  "use strict";
+  var report = { version: "1.0.0", fightersLinked: false, echo: false };
+  function F(i) { try { return i === 0 ? p1 : p2; } catch (e) { return null; } }
+  /* ---- controller echo (item 10) ---- */
+  try {
+    var status = document.querySelector(".status");
+    var echo = document.createElement("div");
+    echo.id = "bbrPadEcho";
+    echo.textContent = "🎮 Controller: press any button…";
+    if (status) status.appendChild(echo);
+    var LABELS = { 0: "B · Special", 1: "A · Attack", 2: "Y · Jump", 3: "X · Jump", 4: "L · Shield", 5: "R · Shield", 6: "ZL · Grab", 7: "ZR · Grab", 8: "− · Pause", 9: "+ · Pause", 10: "L3 · Dodge", 11: "R3 · Dodge", 12: "D-pad ↑ · Move", 13: "D-pad ↓ · Move", 14: "D-pad ← · Move", 15: "D-pad → · Move" };
+    var lastEcho = "";
+    setInterval(function () {
+      var gps = navigator.getGamepads ? Array.prototype.filter.call(navigator.getGamepads(), Boolean) : [];
+      if (!gps.length) return;
+      var gp = gps[0], msg = "";
+      gp.buttons.forEach(function (btn, i) { if (btn.pressed && LABELS[i]) msg = LABELS[i]; });
+      var cx = gp.axes[2] || 0, cy = gp.axes[3] || 0;
+      if (Math.abs(cx) > .5 || Math.abs(cy) > .5) msg = "C-Stick · Smash";
+      if (msg && msg !== lastEcho) { lastEcho = msg; echo.textContent = "🎮 Last: " + msg; report.echo = true; }
+    }, 150);
+  } catch (e) {}
+  /* ---- hitstop on heavy hits (item 23) ---- */
+  try {
+    if (typeof updateFighter === "function") {
+      var origUF = updateFighter, freezeUntil = 0, nextOk = 0;
+      updateFighter = function (f, other, input) {
+        var now = performance.now();
+        if (now < freezeUntil) return;
+        var d0 = f ? f.damage : 0;
+        var r = origUF.apply(this, arguments);
+        if (f && f.damage - d0 >= 12 && now > nextOk) { freezeUntil = now + 55; nextOk = now + 380; }
+        return r;
+      };
+      report.hitstop = true;
+    }
+  } catch (e) {}
+  /* ---- particle FX: landing dust, dash dust, pickup sparkle (items 24-26) ---- */
+  try {
+    var shell = document.querySelector(".stage-shell");
+    var main = document.querySelector("#game");
+    if (shell && main) {
+      var fx = document.createElement("canvas");
+      fx.id = "bbrFx";
+      shell.appendChild(fx);
+      var fctx = fx.getContext("2d");
+      var scan = document.createElement("canvas");
+      scan.width = 96; scan.height = 54;
+      var sctx = scan.getContext("2d");
+      var parts = [], spots = [null, null], prevGround = [true, true], prevPick = [0, 0];
+      function hexRgb(h) { var n = parseInt(String(h || "#ffffff").slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+      function findSpot(i) {
+        var f = F(i); if (!f || !f.color) return null;
+        var c = hexRgb(f.color);
+        try {
+          sctx.drawImage(main, 0, 0, 96, 54);
+          var d = sctx.getImageData(0, 0, 96, 54).data, sx = 0, sy = 0, n = 0;
+          for (var y = 0; y < 54; y++) for (var x = 0; x < 96; x++) {
+            var o = (y * 96 + x) * 4, dr = d[o] - c[0], dg = d[o + 1] - c[1], db = d[o + 2] - c[2];
+            if (dr * dr + dg * dg + db * db < 5200 && d[o + 3] > 200) { sx += x; sy += y; n++; }
+          }
+          if (n < 6) return null;
+          var r = main.getBoundingClientRect();
+          return { x: sx / n / 96 * r.width, y: sy / n / 54 * r.height };
+        } catch (e) { return null; }
+      }
+      function burst(x, y, color, n, spread) {
+        for (var k = 0; k < n; k++) parts.push({ x: x, y: y, vx: (Math.random() - .5) * spread, vy: -Math.random() * 1.6 - .3, life: 26 + Math.random() * 14, color: color, r: 2 + Math.random() * 3 });
+        if (parts.length > 240) parts.splice(0, parts.length - 240);
+      }
+      setInterval(function () {
+        for (var i = 0; i < 2; i++) {
+          var f = F(i); if (!f) continue;
+          report.fightersLinked = true;
+          var s = findSpot(i); if (s) spots[i] = s;
+          if (s && prevGround[i] === false && f.ground && f.vy >= 0) burst(s.x, s.y + 14, "#e8e2d4", 10, 3);
+          if (s && f.ground && Math.abs(f.vx) > 7 && Math.random() < .5) burst(s.x, s.y + 14, "#d8d2c2", 2, 1.4);
+          var pk = 0;
+          try { pk = (f.pickups ? f.pickups.length : 0) || (typeof f.pickupCount === "number" ? f.pickupCount : 0); } catch (e) {}
+          if (s && pk > prevPick[i]) burst(s.x, s.y - 6, "#ffd84d", 14, 3.4);
+          prevPick[i] = pk; prevGround[i] = f.ground;
+        }
+      }, 120);
+      (function drawFx() {
+        requestAnimationFrame(drawFx);
+        var r = main.getBoundingClientRect();
+        if (fx.width !== Math.round(r.width) || fx.height !== Math.round(r.height)) { fx.width = Math.round(r.width); fx.height = Math.round(r.height); }
+        fctx.clearRect(0, 0, fx.width, fx.height);
+        parts = parts.filter(function (pt) { return pt.life > 0; });
+        parts.forEach(function (pt) {
+          pt.x += pt.vx; pt.y += pt.vy; pt.vy += .05; pt.life--;
+          fctx.globalAlpha = Math.max(0, pt.life / 34);
+          fctx.fillStyle = pt.color;
+          fctx.beginPath(); fctx.arc(pt.x, pt.y, pt.r, 0, 7); fctx.fill();
+        });
+        fctx.globalAlpha = 1;
+      })();
+      report.fx = true;
+    }
+  } catch (e) {}
+  /* ---- HUD watchers (items 27-32) ---- */
+  try {
+    var shell2 = document.querySelector(".stage-shell");
+    var arrow = document.createElement("div");
+    arrow.id = "bbrKoArrow";
+    if (shell2) shell2.appendChild(arrow);
+    var cards = document.querySelectorAll(".fighter-card");
+    var prevStocks = [null, null];
+    setInterval(function () {
+      for (var i = 0; i < 2; i++) {
+        var f = F(i); if (!f || !cards[i]) continue;
+        if (typeof f.stocks === "number") {
+          cards[i].classList.toggle("bbr-last-stock", f.stocks === 1);
+          if (prevStocks[i] !== null && f.stocks < prevStocks[i]) {
+            var dir = (f.vx && Math.sign(f.vx)) || (f.x < 800 ? -1 : 1);
+            arrow.textContent = dir < 0 ? "◀" : "▶";
+            arrow.style.left = dir < 0 ? "4%" : "auto";
+            arrow.style.right = dir < 0 ? "auto" : "4%";
+            arrow.classList.remove("show"); void arrow.offsetWidth; arrow.classList.add("show");
+          }
+          prevStocks[i] = f.stocks;
+        }
+      }
+      var strip = document.querySelector("#bbrSuddenStrip");
+      if (shell2 && strip) shell2.classList.toggle("bbr-sudden-on", strip.offsetParent !== null || getComputedStyle(strip).display !== "none" && strip.children.length > 0);
+    }, 450);
+    ["#bbrHudP1Pct", "#bbrHudP2Pct"].forEach(function (sel) {
+      var el = document.querySelector(sel); if (!el) return;
+      var last = parseFloat(el.textContent) || 0;
+      new MutationObserver(function () {
+        var v = parseFloat(el.textContent) || 0;
+        if (v > last) { el.classList.remove("bbr-dmg-flash"); void el.offsetWidth; el.classList.add("bbr-dmg-flash"); }
+        last = v;
+      }).observe(el, { characterData: true, childList: true, subtree: true });
+    });
+    var callout = document.querySelector("#bbrCallout");
+    if (callout) new MutationObserver(function () {
+      callout.classList.remove("bbr-count-pop"); void callout.offsetWidth; callout.classList.add("bbr-count-pop");
+    }).observe(callout, { characterData: true, childList: true, subtree: true });
+  } catch (e) {}
+  /* ---- kids pick memory (item 43) ---- */
+  try {
+    var grid = document.querySelector("#bbrKidsGrid");
+    if (grid) {
+      grid.addEventListener("click", function (e) {
+        var btn = e.target.closest(".bbr-kid-pick"); if (!btn) return;
+        var idx = Array.prototype.indexOf.call(grid.children, btn);
+        try { localStorage.setItem("bbrKidsLastPick", String(idx)); } catch (err) {}
+      }, true);
+      var tries = 0;
+      var iv = setInterval(function () {
+        if (grid.children.length) {
+          clearInterval(iv);
+          var saved = -1;
+          try { saved = parseInt(localStorage.getItem("bbrKidsLastPick") || "-1", 10); } catch (err) {}
+          if (saved >= 0 && grid.children[saved]) grid.children[saved].click();
+        } else if (++tries > 30) clearInterval(iv);
+      }, 300);
+    }
+  } catch (e) {}
+  /* ---- auto-pause on focus loss (item 46) ---- */
+  try {
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) return;
+      try {
+        if (typeof matchStarted !== "undefined" && matchStarted && typeof fightLive !== "undefined" && fightLive && typeof paused !== "undefined" && !paused) paused = true;
+      } catch (e) {}
+    });
+  } catch (e) {}
+  /* ---- battery saver (item 47) ---- */
+  try {
+    if (navigator.getBattery) navigator.getBattery().then(function (bat) {
+      var upd = function () { document.body.classList.toggle("bbr-lowbatt", bat.level < .2 && !bat.charging); };
+      bat.onlevelchange = upd; bat.onchargingchange = upd; upd();
+    }).catch(function () {});
+  } catch (e) {}
+  /* ---- error shield (item 48) ---- */
+  try {
+    var shown = false;
+    window.addEventListener("error", function () {
+      if (shown || document.querySelector("#bbrErrorBar")) return;
+      shown = true;
+      var bar = document.createElement("div");
+      bar.id = "bbrErrorBar";
+      bar.innerHTML = "<span>⚠️ Something hiccuped.</span>";
+      var btn = document.createElement("button");
+      btn.type = "button"; btn.textContent = "Tap to reload";
+      btn.addEventListener("click", function () { location.reload(); });
+      bar.appendChild(btn);
+      document.body.appendChild(bar);
+    });
+  } catch (e) {}
+  window.BBRFeel48 = report;
+})();
+</script>
+<!-- BBR-FEEL-48:END -->
+
+<!-- BBR-INTRO:START -->
+<style id="bbr-intro-css">
+  #bbrIntro{position:fixed;inset:0;z-index:2147483647;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:1.1rem;text-align:center;color:#fff;font-family:Nunito,system-ui,sans-serif;overflow:hidden;cursor:pointer;
+    background:radial-gradient(circle,rgba(255,255,255,.13) 1.6px,transparent 1.9px) 0 0/20px 20px,
+      linear-gradient(160deg,#160a38 0%,#3d0f63 55%,#081f52 100%);transition:opacity .35s ease}
+  #bbrIntro[hidden]{display:none!important}
+  #bbrIntro.bye{opacity:0;pointer-events:none}
+  #bbrIntro .bbr-intro-stage{position:relative;width:min(560px,92vw);height:190px}
+  #bbrIntro .bbr-intro-blob{position:absolute;top:44px;width:104px;height:104px}
+  #bbrIntro .bbr-intro-blob.left{left:6%;animation:bbrInLeft 7s ease-in-out infinite}
+  #bbrIntro .bbr-intro-blob.right{right:6%;animation:bbrInRight 7s ease-in-out infinite}
+  @keyframes bbrInLeft{0%{transform:translateX(-70vw)}10%,100%{transform:translateX(0)}16%{transform:translateX(46px) scale(1.06,.9)}22%{transform:translateX(-8px)}30%,100%{transform:translateY(0)}40%{transform:translateY(-12px)}50%{transform:translateY(0)}}
+  @keyframes bbrInRight{0%{transform:translateX(70vw)}10%,100%{transform:translateX(0)}16%{transform:translateX(-46px) scale(1.06,.9)}22%{transform:translateX(8px)}34%{transform:translateY(0)}44%{transform:translateY(-12px)}54%{transform:translateY(0)}}
+  #bbrIntro .bbr-intro-flash{position:absolute;left:50%;top:44px;width:110px;height:110px;transform:translateX(-50%) scale(0);
+    border-radius:50%;background:radial-gradient(circle,#fff 0%,#ffd84d 42%,rgba(255,216,77,0) 72%);opacity:0;
+    animation:bbrInFlash 7s linear infinite}
+  @keyframes bbrInFlash{0%,13%{opacity:0;transform:translateX(-50%) scale(0)}16%{opacity:1;transform:translateX(-50%) scale(1.5)}22%,100%{opacity:0;transform:translateX(-50%) scale(2.1)}}
+  #bbrIntro .bbr-intro-logo{font-size:clamp(2.6rem,11vw,4.6rem);font-weight:1000;line-height:.95;
+    text-shadow:0 5px 0 #0a0d20,0 14px 30px rgba(0,0,0,.55);opacity:0;animation:bbrInLogo 7s ease-out infinite}
+  #bbrIntro .bbr-intro-logo span{color:#ffd84d}
+  @keyframes bbrInLogo{0%,17%{opacity:0;transform:scale(2.3) rotate(-4deg)}23%{opacity:1;transform:scale(.94) rotate(1deg)}27%,100%{opacity:1;transform:scale(1) rotate(0)}}
+  #bbrIntro .bbr-intro-sub{font-size:clamp(1rem,4.5vw,1.35rem);font-weight:1000;letter-spacing:.34em;color:#8ef7e3;
+    opacity:0;animation:bbrInSub 7s ease-out infinite}
+  @keyframes bbrInSub{0%,26%{opacity:0;transform:translateY(12px)}33%,100%{opacity:1;transform:translateY(0)}}
+  #bbrIntro .bbr-intro-hint{font-size:clamp(.95rem,4vw,1.15rem);font-weight:900;color:#fff;opacity:0;
+    animation:bbrInHint 7s ease-out infinite}
+  @keyframes bbrInHint{0%,38%{opacity:0}46%,100%{opacity:.92}50%{scale:1.06}56%{scale:1}62%{scale:1.06}68%{scale:1}}
+  #bbrIntroSkip{position:absolute;right:.7rem;bottom:.7rem;font:800 .78rem Nunito,system-ui,sans-serif;color:#fff;
+    background:rgba(10,13,32,.5);border:2px solid rgba(255,255,255,.45);border-radius:999px;padding:.45rem .8rem;cursor:pointer}
+  .bbr-kid-pick.padcur{outline:4px solid #fff;outline-offset:2px}
+</style>
+<div id="bbrIntro" hidden role="dialog" aria-label="Blob Bash intro">
+  <div class="bbr-intro-stage" aria-hidden="true">
+    <span class="bbr-kid-face bbr-intro-blob left" style="--kc:#ff2f73"><i></i><i></i><b></b></span>
+    <span class="bbr-kid-face bbr-intro-blob right" style="--kc:#37e0c8"><i></i><i></i><b></b></span>
+    <div class="bbr-intro-flash"></div>
+  </div>
+  <div class="bbr-intro-logo">BLOB <span>BASH</span><br>ROYALE</div>
+  <div class="bbr-intro-sub">★ ASCENSION ★</div>
+  <div class="bbr-intro-hint">▶ Tap or press anything to start</div>
+  <button id="bbrIntroSkip" type="button">Skip ✕</button>
+</div>
+<script id="bbr-intro">
+(function () {
+  "use strict";
+  try {
+    var root = document.getElementById("bbrIntro");
+    var seen = false;
+    try { seen = sessionStorage.getItem("bbrIntroSeen") === "1"; } catch (e) {}
+    var dismissedAt = 0;
+    function dismiss() {
+      if (root.hidden) return;
+      root.classList.add("bye");
+      dismissedAt = Date.now();
+      setTimeout(function () { root.hidden = true; }, 360);
+      try { sessionStorage.setItem("bbrIntroSeen", "1"); } catch (e) {}
+    }
+    if (seen) { root.hidden = true; }
+    else {
+      root.hidden = false;
+      try { sessionStorage.setItem("bbrIntroSeen", "1"); } catch (e) {}
+      ["pointerdown", "keydown", "touchstart"].forEach(function (ev) {
+        window.addEventListener(ev, dismiss, { capture: true });
+      });
+      document.getElementById("bbrIntroSkip").addEventListener("click", dismiss);
+    }
+    /* Gamepad: any button skips the intro; then basic pad nav on the Kids door. */
+    var prevBtns = {}, padIdx = 0, lastNav = 0;
+    setInterval(function () {
+      var gps = navigator.getGamepads ? Array.prototype.filter.call(navigator.getGamepads(), Boolean) : [];
+      if (!gps.length) return;
+      var gp = gps[0];
+      var now = Date.now();
+      function hit(i) { var p = !!(gp.buttons[i] && gp.buttons[i].pressed); var was = !!prevBtns[i]; prevBtns[i] = p; return p && !was; }
+      if (!root.hidden) { for (var i = 0; i < gp.buttons.length; i++) if (hit(i)) { dismiss(); return; } return; }
+      var kids = document.getElementById("bbrKids");
+      if (!kids || kids.hidden || now - dismissedAt < 450) return;
+      var step1 = document.getElementById("bbrKidsStep1");
+      var step2 = document.getElementById("bbrKidsStep2");
+      var activate = hit(1) || hit(9);
+      if (step1 && !step1.hidden) { if (activate) { var play = document.getElementById("bbrKidsPlay"); if (play) play.click(); } return; }
+      if (step2 && !step2.hidden) {
+        var picks = Array.prototype.slice.call(document.querySelectorAll("#bbrKidsGrid .bbr-kid-pick"));
+        if (!picks.length) return;
+        var ax = gp.axes[0] || 0, ay = gp.axes[1] || 0;
+        var nav = 0;
+        if (hit(15) || (ax > .6 && now - lastNav > 240)) nav = 1;
+        if (hit(14) || (ax < -.6 && now - lastNav > 240)) nav = -1;
+        if (hit(13) || (ay > .6 && now - lastNav > 240)) nav = 3;
+        if (hit(12) || (ay < -.6 && now - lastNav > 240)) nav = -3;
+        if (nav) {
+          lastNav = now;
+          padIdx = Math.max(0, Math.min(picks.length - 1, padIdx + nav));
+          picks.forEach(function (pk, j) { pk.classList.toggle("padcur", j === padIdx); });
+          return;
+        }
+        if (activate) {
+          var fight = document.getElementById("bbrKidsFight");
+          var sel = document.querySelector("#bbrKidsGrid .bbr-kid-pick.sel");
+          if (fight && !fight.hidden && sel) fight.click();
+          else if (picks[padIdx]) picks[padIdx].click();
+        }
+        if (hit(0)) { var back = document.getElementById("bbrKidsBack"); if (back) back.click(); }
+      }
+    }, 110);
+    window.BBRIntro = { version: "1.0.0", skipped: seen };
+  } catch (e) {
+    window.BBRIntro = { version: "1.0.0", error: String(e && e.message || e) };
+  }
+})();
+</script>
+<!-- BBR-INTRO:END -->
 </body>
 </html>
