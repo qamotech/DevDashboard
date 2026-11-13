@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="ultra" name="bbr-graphics-edition"/>
 <meta content="50" name="bbr-graphics-upgrade-count"/>
-<title>Blob Bash Royale: Ascension</title>
+<title>Blob Bash Royale</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&amp;family=Nunito:wght@600;800;900&amp;display=swap" rel="stylesheet"/>
@@ -783,8 +783,8 @@
     
   </style>
 <!-- N8-ENHANCEMENTS:HEAD:START -->
-<meta content="Play Blob Bash Royale: Ascension, an interactive browser game from the N8 CyberDev collection." name="description"/>
-<meta content="Blob Bash Royale: Ascension, Games &amp; Simulations, N8 CyberDev, Qamelot, interactive web app, standalone HTML" name="keywords"/>
+<meta content="Play Blob Bash Royale, an interactive browser game from the N8 CyberDev collection." name="description"/>
+<meta content="Blob Bash Royale, Games &amp; Simulations, N8 CyberDev, Qamelot, interactive web app, standalone HTML" name="keywords"/>
 <meta content="N8 CyberDev / Qamelot" name="author"/>
 <meta content="N8 CyberDev" name="creator"/>
 <meta content="Qamelot" name="publisher"/>
@@ -808,12 +808,12 @@
 <meta content="website" property="og:type"/>
 <meta content="N8 CyberDev" property="og:site_name"/>
 <meta content="en_US" property="og:locale"/>
-<meta content="Blob Bash Royale: Ascension" property="og:title"/>
-<meta content="Play Blob Bash Royale: Ascension, an interactive browser game from the N8 CyberDev collection." property="og:description"/>
+<meta content="Blob Bash Royale" property="og:title"/>
+<meta content="Play Blob Bash Royale, an interactive browser game from the N8 CyberDev collection." property="og:description"/>
 <meta content="https://qamotech.github.io/DevDashboard/blob-bash-royale.html" property="og:url"/>
 <meta content="summary" name="twitter:card"/>
-<meta content="Blob Bash Royale: Ascension" name="twitter:title"/>
-<meta content="Play Blob Bash Royale: Ascension, an interactive browser game from the N8 CyberDev collection." name="twitter:description"/>
+<meta content="Blob Bash Royale" name="twitter:title"/>
+<meta content="Play Blob Bash Royale, an interactive browser game from the N8 CyberDev collection." name="twitter:description"/>
 
 <!-- N8-ENHANCEMENTS:HEAD:END -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕹️</text></svg>"><style id="kh-kit-css">#kh-kit{position:fixed;left:10px;top:10px;z-index:2147483646;display:flex;gap:6px;font:700 14px system-ui,sans-serif}
@@ -901,7 +901,7 @@
 <canvas id="game"></canvas>
 <div class="bbr-big-text" id="bbrBigText">GO!</div>
 <div aria-live="polite" class="bbr-live-hud" id="bbrLiveHud">
-<div><small>Player 1 · Ascension</small><strong id="bbrP1Combo">Ready</strong><div class="bbr-meter"><i id="bbrP1Ultimate"></i></div></div>
+<div><small>Player 1 · Royale</small><strong id="bbrP1Combo">Ready</strong><div class="bbr-meter"><i id="bbrP1Ultimate"></i></div></div>
 <div class="bbr-timer"><small id="bbrModeLabel">Versus</small><strong id="bbrTimer">∞</strong><small id="bbrArenaLabel">Cloud Crown</small></div>
 <div class="right"><small>Rival · Threat</small><strong id="bbrP2Combo">Ready</strong><div class="bbr-meter"><i id="bbrP2Ultimate"></i></div></div>
 </div>
@@ -1010,8 +1010,8 @@
 <div class="move"><span class="key">Ground + A</span><span>Per-fighter tilts: forward (step-in poke), up (juggle launcher), down (low sweep); attack while running for a lunging dash attack — neutral tap with no direction stays jab</span></div>
 <div class="move"><span class="key">C-Stick</span><span>Flick for a Smash attack — in the air it does that direction's aerial instead</span></div>
 <div class="move"><span class="key">X / Y</span><span>Jump — two buttons, either works</span></div>
-<div class="move"><span class="key">L / R</span><span>Shield — hold + Down to dodge, hold + A to grab; time it with a hit to parry-counter</span></div>
-<div class="move"><span class="key">ZL / ZR</span><span>Grab — then push the stick for a forward, back, up or down throw; press Grab early to tech</span></div>
+<div class="move"><span class="key">L / R</span><span>Shield — all four back buttons block. Hold + Down to dodge; time it with a hit to parry-counter</span></div>
+<div class="move"><span class="key">ZL / ZR</span><span>Shield too — grab is Shield + A, then push the stick for a forward, back, up or down throw</span></div>
 <div class="move"><span class="key">I</span><span>Stamina dodge or airborne recovery burst (keyboard)</span></div>
 <div class="move"><span class="key">+ / − / P</span><span>Pause or resume</span></div>
 <div class="move"><span class="key">M</span><span>Switch board layout</span></div>
@@ -1298,6 +1298,7 @@ function renderSelect() {
       fightLive = true;
       paused = false;
       countdown = 180;
+      window.__bbrCdLast = performance.now();
       matchWinner = "";
       matchFrames = 0;
       document.querySelector("#selectScreen").classList.add("hidden");
@@ -1367,7 +1368,7 @@ function renderSelect() {
 
     function resize() {
       const rect = canvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
       canvas.width = Math.max(1, Math.floor(rect.width * dpr));
       canvas.height = Math.max(1, Math.floor(rect.height * dpr));
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1406,8 +1407,8 @@ function renderSelect() {
           if (airborne) { input.melee = true; input.punch = false; } else input.smash = true;
         }
         input.jump = pressed(b, 2) || pressed(b, 3);
-        input.shield = pressed(b, 4) || pressed(b, 5);
-        input.grab = pressed(b, 6) || pressed(b, 7) || (input.shield && atk);
+        input.shield = pressed(b, 4) || pressed(b, 5) || pressed(b, 6) || pressed(b, 7);
+        input.grab = input.shield && atk;
         if (input.shield && atk) { input.punch = false; input.melee = false; }
         input.dodge = pressed(b, 10) || pressed(b, 11) || (input.shield && input.y > .65);
         input.pause = pressed(b, 9) || pressed(b, 8);
@@ -3281,7 +3282,7 @@ function renderSelect() {
           if (controls.pause && !p1.prev?.pause) paused = !paused;
           p1.prev = { ...(p1.prev || {}), pause: controls.pause };
           if (!paused) {
-            if (countdown > 0) countdown--;
+            if (countdown > 0) { const cdNow = performance.now(); const cdDt = Math.min(1000, cdNow - (window.__bbrCdLast || cdNow)); window.__bbrCdLast = cdNow; countdown = Math.max(0, countdown - cdDt * 0.06); }
             else if (hitStop > 0) hitStop--;
             else {
               matchFrames++;
@@ -3363,7 +3364,7 @@ function renderSelect() {
 <div aria-hidden="true" aria-labelledby="bbrCommandTitle" aria-modal="true" class="bbr-modal" id="bbrCommand" role="dialog">
 <div class="bbr-panel"><div class="bbr-panel-head"><div><h2 id="bbrCommandTitle">Ascension Battle Lab</h2><p>Twenty live rules for shaping every fight. Changes save on this device.</p></div><button aria-label="Close battle lab" class="bbr-close" id="bbrCloseCommand" type="button">×</button></div><div class="bbr-options" id="bbrOptions"></div><div class="bbr-panel-foot"><span id="bbrOptionSummary">20 / 20 systems online</span><div class="bbr-actions"><button class="bbr-action" id="bbrShowFeatures" type="button">40 Upgrade Notes</button><button class="bbr-action" id="bbrDefaults" type="button">Restore Defaults</button><button class="bbr-action primary" id="bbrApply" type="button">Apply &amp; Fight</button></div></div></div>
 </div>
-<div aria-hidden="true" aria-labelledby="bbrFeaturesTitle" aria-modal="true" class="bbr-modal" id="bbrFeatures" role="dialog"><div class="bbr-panel" style="width:min(800px,100%)"><div class="bbr-panel-head"><div><h2 id="bbrFeaturesTitle">Ascension · 40 Upgrades</h2><p>Every system in this edition is playable, visible, or configurable.</p></div><button aria-label="Close upgrade notes" class="bbr-close" id="bbrCloseFeatures" type="button">×</button></div><div class="bbr-feature-list" id="bbrFeatureList" style="padding:16px;margin:0"></div><div class="bbr-panel-foot"><span>Blob Bash Royale · Ascension Edition</span><button class="bbr-action primary" id="bbrFeatureDone" type="button">Ready</button></div></div></div>
+<div aria-hidden="true" aria-labelledby="bbrFeaturesTitle" aria-modal="true" class="bbr-modal" id="bbrFeatures" role="dialog"><div class="bbr-panel" style="width:min(800px,100%)"><div class="bbr-panel-head"><div><h2 id="bbrFeaturesTitle">Ascension · 40 Upgrades</h2><p>Every system in this edition is playable, visible, or configurable.</p></div><button aria-label="Close upgrade notes" class="bbr-close" id="bbrCloseFeatures" type="button">×</button></div><div class="bbr-feature-list" id="bbrFeatureList" style="padding:16px;margin:0"></div><div class="bbr-panel-foot"><span>Blob Bash Royale · Royale Edition</span><button class="bbr-action primary" id="bbrFeatureDone" type="button">Ready</button></div></div></div>
 <div aria-live="polite" class="bbr-announcer" id="bbrAnnouncer" role="status"></div>
 <div aria-live="polite" class="bbr-achievement" id="bbrAchievement" role="status"><i>★</i><div><b id="bbrAchievementTitle">Achievement</b><span id="bbrAchievementText">Unlocked</span></div></div>
 <!-- BBR-ASCENSION:UI:END -->
@@ -3426,7 +3427,7 @@ function renderSelect() {
     {key:"particles",label:"Particle Density",choices:choices([["low","Low"],["standard","Standard"],["max","Maximum"]])},
     {key:"contrast",label:"Visual Contrast",choices:choices([["standard","Standard"],["high","High"],["colorblind","Color Safe"]])},
     {key:"audio",label:"Combat Audio",choices:choices([["mute","Mute"],["low","Low"],["full","Full"]])},
-    {key:"proMode",label:"Engine Mode",choices:choices([["off","Ascension"],["on","Pro Smash"]])}
+    {key:"proMode",label:"Engine Mode",choices:choices([["off","Royale"],["on","Pro Smash"]])}
   ];
   config.proMode = config.proMode || "on";
   MENU.find(item => item.key === "arena").choices = boards.map((board,index) => ({value:String(index),label:board.name}));
@@ -3467,9 +3468,9 @@ function renderSelect() {
   window.addEventListener("keydown",event=>{if(event.code==="F1"){event.preventDefault();setModal("#bbrCommand",q("#bbrCommand").getAttribute("aria-hidden")==="true")}if(event.code==="Escape"&&q("#bbrCommand").getAttribute("aria-hidden")==="false"){event.stopImmediatePropagation();setModal("#bbrCommand",false)}},true);
   const day=Math.floor(Date.now()/86400000),daily=["Win with a reflected pulse","Land a five-hit combo","Collect three pickups","Score a KO below 80% damage","Parry a heavy strike"][day%5];
   q("#bbrPauseBrief").textContent=`Daily challenge: ${daily}. F1 opens the 20-option Battle Lab.`;
-  document.title="Blob Bash Royale: Ascension";
+  document.title="Blob Bash Royale";
   window.BBRAscension={FEATURES,DEFAULTS,config,career,achievements,match,MENU,announce,unlock,applyConfig,saveCareer,resetMatchStats,get training(){return config.matchType==="training"},factors:{gravity:{floaty:.78,standard:1,heavy:1.22},pace:{relaxed:.82,standard:1,rapid:1.18},launch:{soft:.8,standard:1,turbo:1.25},damage:{friendly:.75,standard:1,brutal:1.3},shield:{fragile:.75,standard:1,fortified:1.28},stamina:{slow:.72,standard:1,surge:1.45},shake:{off:0,low:.42,full:1},particles:{low:.45,standard:1,max:1.7}}};
-  unlock("welcome","Ascension Initiate","Opened the upgraded eight-arena combat system.");
+  unlock("welcome","Royale Initiate","Opened the upgraded eight-arena combat system.");
 })();
 </script>
 <!-- BBR-ASCENSION:CORE:END -->
@@ -4170,7 +4171,7 @@ function renderSelect() {
       if (pickup.kind === "orb") { f.orbMagnet = Math.max(f.orbMagnet || 0, DUR.orb); floatText(f.x, f.y - 80, "MAGNET ORB · FOE PULL", META.orb.color); }
       state.lastPickup = { kind: pickup.kind, fighter: f === p1 ? "p1" : f === p2 ? "p2" : "extra" };
       A.match.items++; A.career.items++;
-      A.unlock("gear-up", "New Gear Online", "Collected one of the four new Ascension items.");
+      A.unlock("gear-up", "New Gear Online", "Collected one of the four new Royale items.");
     }
     prevCheck(f, pickup, i);
   };
@@ -5059,7 +5060,7 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
     '<span class="bbr-menu-mascot m1" aria-hidden="true"></span>' +
     '<div><div class="bbr-menu-logo" aria-label="Blob Bash Royale"><span class="line1">' + letters +
     '</span><span class="line2">Royale</span></div>' +
-    '<div class="bbr-menu-sub">Ascension Arena</div></div>' +
+    '<div class="bbr-menu-sub">Royale Arena</div></div>' +
     '<span class="bbr-menu-mascot m2" aria-hidden="true"></span>';
   selectEl.insertBefore(hero, selectEl.firstChild);
 
@@ -6147,7 +6148,7 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
       '<div class="bbr-smash-kicker">Qamelot &middot; N8 Combat Systems</div>' +
       '<div class="bbr-smash-logowrap"><div class="bbr-smash-logo">' +
       '<span class="l1">Blob Bash</span><span class="l2">Royale</span></div></div>' +
-      '<div class="bbr-smash-tag">Ascension <b>Edition</b></div>' +
+      '<div class="bbr-smash-tag">Royale <b>Edition</b></div>' +
       '<div id="bbrSmashPress">&#9654; Press Start</div>' +
       '<div class="bbr-smash-hint">Click / tap anywhere &middot; or press any key</div>';
     document.body.appendChild(splash);
@@ -9292,7 +9293,7 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
 </style>
 <div id="bbrKids" hidden role="dialog" aria-label="Kids Play">
   <div id="bbrKidsStep1">
-    <div class="bbr-kids-logo">BLOB <span>BASH</span></div>
+    <div class="bbr-kids-logo">BLOB <span>BASH</span> ROYALE</div>
     <div class="bbr-kids-mascots" aria-hidden="true">
       <span class="bbr-kid-face" style="--kc:#ff2f73"><i></i><i></i><b></b></span>
       <span class="bbr-kid-face" style="--kc:#37e0c8"><i></i><i></i><b></b></span>
@@ -9512,7 +9513,7 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
     echo.id = "bbrPadEcho";
     echo.textContent = "🎮 Controller: press any button…";
     if (status) status.appendChild(echo);
-    var LABELS = { 0: "B · Special", 1: "A · Attack", 2: "Y · Jump", 3: "X · Jump", 4: "L · Shield", 5: "R · Shield", 6: "ZL · Grab", 7: "ZR · Grab", 8: "− · Pause", 9: "+ · Pause", 10: "L3 · Dodge", 11: "R3 · Dodge", 12: "D-pad ↑ · Move", 13: "D-pad ↓ · Move", 14: "D-pad ← · Move", 15: "D-pad → · Move" };
+    var LABELS = { 0: "B · Special", 1: "A · Attack", 2: "Y · Jump", 3: "X · Jump", 4: "L · Shield", 5: "R · Shield", 6: "ZL · Shield", 7: "ZR · Shield", 8: "− · Pause", 9: "+ · Pause", 10: "L3 · Dodge", 11: "R3 · Dodge", 12: "D-pad ↑ · Move", 13: "D-pad ↓ · Move", 14: "D-pad ← · Move", 15: "D-pad → · Move" };
     var lastEcho = "";
     setInterval(function () {
       var gps = navigator.getGamepads ? Array.prototype.filter.call(navigator.getGamepads(), Boolean) : [];
@@ -9533,7 +9534,7 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
         if (now < freezeUntil) return;
         var d0 = f ? f.damage : 0;
         var r = origUF.apply(this, arguments);
-        if (f && f.damage - d0 >= 12 && now > nextOk) { freezeUntil = now + 55; nextOk = now + 380; }
+        if (f && f.damage - d0 >= 18 && now > nextOk) { freezeUntil = now + 34; nextOk = now + 600; }
         return r;
       };
       report.hitstop = true;
@@ -9570,9 +9571,10 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
       }
       function burst(x, y, color, n, spread) {
         for (var k = 0; k < n; k++) parts.push({ x: x, y: y, vx: (Math.random() - .5) * spread, vy: -Math.random() * 1.6 - .3, life: 26 + Math.random() * 14, color: color, r: 2 + Math.random() * 3 });
-        if (parts.length > 240) parts.splice(0, parts.length - 240);
+        var cap = window.innerWidth < 920 ? 140 : 240; if (parts.length > cap) parts.splice(0, parts.length - cap);
       }
       setInterval(function () {
+        if (document.hidden || document.body.classList.contains("bbr-perf2")) return;
         for (var i = 0; i < 2; i++) {
           var f = F(i); if (!f) continue;
           report.fightersLinked = true;
@@ -9584,7 +9586,7 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
           if (s && pk > prevPick[i]) burst(s.x, s.y - 6, "#ffd84d", 14, 3.4);
           prevPick[i] = pk; prevGround[i] = f.ground;
         }
-      }, 120);
+      }, 200);
       (function drawFx() {
         requestAnimationFrame(drawFx);
         var r = main.getBoundingClientRect();
@@ -9738,7 +9740,7 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
     <div class="bbr-intro-flash"></div>
   </div>
   <div class="bbr-intro-logo">BLOB <span>BASH</span><br>ROYALE</div>
-  <div class="bbr-intro-sub">★ ASCENSION ★</div>
+  <div class="bbr-intro-sub">★ ROYALE ★</div>
   <div class="bbr-intro-hint">▶ Tap or press anything to start</div>
   <button id="bbrIntroSkip" type="button">Skip ✕</button>
 </div>
@@ -9812,5 +9814,54 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
 })();
 </script>
 <!-- BBR-INTRO:END -->
+
+<!-- BBR-SPEED-24:START -->
+<style id="bbr-speed-24-css">
+  body.bbr-perf1 .clouds,body.bbr-perf1 .bbr-smash-logowrap::after{animation:none!important}
+  body.bbr-perf2 #bbrFx{display:none!important}
+</style>
+<script id="bbr-speed-24">
+(function () {
+  "use strict";
+  try {
+    var ema = 60, tier = 0, goodChecks = 0, lastT = performance.now(), lastCheck = lastT;
+    window.BBRPerf = { fps: 60, tier: 0 };
+    function applyTier() {
+      document.body.classList.toggle("bbr-perf1", tier >= 1);
+      document.body.classList.toggle("bbr-perf2", tier >= 2);
+      window.BBRPerf.tier = tier;
+      try {
+        var ug = window.BBRUltraGraphics;
+        if (ug && typeof ug.setQuality === "function") ug.setQuality(tier >= 2 ? "performance" : "balanced");
+      } catch (e) {}
+    }
+    (function meter(now) {
+      requestAnimationFrame(meter);
+      var dt = now - lastT; lastT = now;
+      if (dt > 0 && dt < 250) ema = ema * 0.94 + (1000 / dt) * 0.06;
+      if (now - lastCheck > 2000) {
+        lastCheck = now;
+        window.BBRPerf.fps = Math.round(ema);
+        if (ema < 32) { if (tier < 2) { tier = 2; applyTier(); } goodChecks = 0; }
+        else if (ema < 45) { if (tier < 1) { tier = 1; applyTier(); } goodChecks = 0; }
+        else if (ema > 55) { goodChecks++; if (goodChecks >= 2 && tier > 0) { tier--; goodChecks = 0; applyTier(); } }
+        else goodChecks = 0;
+      }
+    })(lastT);
+    window.addEventListener("contextmenu", function (e) {
+      if (document.body.classList.contains("bbr-in-match")) e.preventDefault();
+    });
+    window.addEventListener("blur", function () {
+      try {
+        if (typeof matchStarted !== "undefined" && matchStarted && typeof fightLive !== "undefined" && fightLive && typeof paused !== "undefined" && !paused) paused = true;
+      } catch (e) {}
+    });
+    window.BBRSpeed24 = { version: "1.0.0" };
+  } catch (e) {
+    window.BBRSpeed24 = { version: "1.0.0", error: String(e && e.message || e) };
+  }
+})();
+</script>
+<!-- BBR-SPEED-24:END -->
 </body>
 </html>
