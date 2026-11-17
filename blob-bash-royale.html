@@ -1013,6 +1013,7 @@
 <div class="move"><span class="key">L / R</span><span>Shield — all four back buttons block. Hold + Down to dodge; time it with a hit to parry-counter</span></div>
 <div class="move"><span class="key">ZL / ZR</span><span>Shield too — grab is Shield + A, then push the stick for a forward, back, up or down throw</span></div>
 <div class="move"><span class="key">I</span><span>Stamina dodge or airborne recovery burst (keyboard)</span></div>
+<div class="move"><span class="key">D-Pad / T·Y·H</span><span>Taunt! Up, side or down — funny, flashy, and totally unsafe</span></div>
 <div class="move"><span class="key">+ / − / P</span><span>Pause or resume</span></div>
 <div class="move"><span class="key">M</span><span>Switch board layout</span></div>
 </div>
@@ -1385,7 +1386,7 @@ function renderSelect() {
     function readControls(player = 0) {
       const gps = navigator.getGamepads ? [...navigator.getGamepads()].filter(Boolean) : [];
       const gp = gps[player];
-      const input = { x: 0, y: 0, jump: false, punch: false, melee: false, smash: false, shield: false, grab: false, dodge: false, special: false };
+      const input = { x: 0, y: 0, jump: false, punch: false, melee: false, smash: false, shield: false, grab: false, dodge: false, special: false, taunt: 0 };
       if (gp) {
         gamepadName = gp.id;
         input.x = dead(gp.axes[0] || 0);
@@ -1412,10 +1413,9 @@ function renderSelect() {
         if (input.shield && atk) { input.punch = false; input.melee = false; }
         input.dodge = pressed(b, 10) || pressed(b, 11) || (input.shield && input.y > .65);
         input.pause = pressed(b, 9) || pressed(b, 8);
-        if (pressed(b, 14)) input.x -= 1;
-        if (pressed(b, 15)) input.x += 1;
-        if (pressed(b, 13)) input.y += 1;
-        if (pressed(b, 12)) input.y -= 1;
+        if (pressed(b, 12)) input.taunt = 1;
+        else if (pressed(b, 13)) input.taunt = 3;
+        else if (pressed(b, 14) || pressed(b, 15)) input.taunt = 2;
       }
       if (player === 0) {
         input.x += (keys.has("KeyD") || touch.has("right") ? 1 : 0);
@@ -1430,6 +1430,9 @@ function renderSelect() {
         input.grab = input.grab || keys.has("KeyU") || touch.has("grab");
         input.dodge = input.dodge || keys.has("KeyI") || touch.has("dodge");
         input.special = input.special || keys.has("KeyQ") || touch.has("special");
+        if (keys.has("KeyY")) input.taunt = 1;
+        else if (keys.has("KeyH")) input.taunt = 3;
+        else if (keys.has("KeyT")) input.taunt = 2;
       } else {
         input.x += (keys.has("ArrowRight") ? 1 : 0);
         input.x -= (keys.has("ArrowLeft") ? 1 : 0);
@@ -1443,6 +1446,8 @@ function renderSelect() {
         input.grab = input.grab || keys.has("Numpad5");
         input.dodge = input.dodge || keys.has("Numpad6");
         input.special = input.special || keys.has("Numpad7");
+        if (keys.has("Numpad8")) input.taunt = 1;
+        else if (keys.has("Numpad9")) input.taunt = 2;
       }
       input.pause = input.pause || keys.has("KeyP") || keys.has("Enter");
       input.x = Math.max(-1, Math.min(1, input.x));
@@ -9513,7 +9518,7 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
     echo.id = "bbrPadEcho";
     echo.textContent = "🎮 Controller: press any button…";
     if (status) status.appendChild(echo);
-    var LABELS = { 0: "B · Special", 1: "A · Attack", 2: "Y · Jump", 3: "X · Jump", 4: "L · Shield", 5: "R · Shield", 6: "ZL · Shield", 7: "ZR · Shield", 8: "− · Pause", 9: "+ · Pause", 10: "L3 · Dodge", 11: "R3 · Dodge", 12: "D-pad ↑ · Move", 13: "D-pad ↓ · Move", 14: "D-pad ← · Move", 15: "D-pad → · Move" };
+    var LABELS = { 0: "B · Special", 1: "A · Attack", 2: "Y · Jump", 3: "X · Jump", 4: "L · Shield", 5: "R · Shield", 6: "ZL · Shield", 7: "ZR · Shield", 8: "− · Pause", 9: "+ · Pause", 10: "L3 · Dodge", 11: "R3 · Dodge", 12: "D-pad ↑ · Taunt", 13: "D-pad ↓ · Taunt", 14: "D-pad ← · Taunt", 15: "D-pad → · Taunt" };
     var lastEcho = "";
     setInterval(function () {
       var gps = navigator.getGamepads ? Array.prototype.filter.call(navigator.getGamepads(), Boolean) : [];
@@ -9556,7 +9561,7 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
       function hexRgb(h) { var n = parseInt(String(h || "#ffffff").slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
       function findSpot(i) {
         var f = F(i); if (!f || !f.color) return null;
-        var c = hexRgb(f.color);
+        var c = hexRgb(typeof f.color === "string" ? f.color : f.color.hex);
         try {
           sctx.drawImage(main, 0, 0, 96, 54);
           var d = sctx.getImageData(0, 0, 96, 54).data, sx = 0, sy = 0, n = 0;
@@ -9863,5 +9868,175 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
 })();
 </script>
 <!-- BBR-SPEED-24:END -->
+
+<!-- BBR-TAUNTS:START -->
+<style id="bbr-taunts-css">
+  .bbr-taunt-bubble{position:absolute;z-index:9;max-width:220px;padding:.45rem .7rem;border-radius:16px;
+    background:#fff;color:#141433;font:1000 .92rem Nunito,system-ui,sans-serif;text-align:center;pointer-events:none;
+    box-shadow:0 6px 0 rgba(10,13,32,.35),0 12px 24px rgba(0,0,0,.35);opacity:0;transform:translate(-50%,-100%) scale(.6)}
+  .bbr-taunt-bubble::after{content:"";position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);
+    border:10px solid transparent;border-top-color:#fff;border-bottom:0}
+  .bbr-taunt-bubble.show{animation:bbrTauntPop 2.4s ease-out forwards}
+  @keyframes bbrTauntPop{0%{opacity:0;transform:translate(-50%,-100%) scale(.6) rotate(-3deg)}
+    10%{opacity:1;transform:translate(-50%,-112%) scale(1.08) rotate(2deg)}
+    18%{transform:translate(-50%,-108%) scale(1) rotate(0)}78%{opacity:1}100%{opacity:0;transform:translate(-50%,-118%) scale(.98)}}
+  #bbrTauntBtn{position:fixed;right:12px;bottom:172px;z-index:2147482000;width:58px;height:58px;border-radius:50%;
+    border:3px solid rgba(255,255,255,.75);background:rgba(20,16,60,.72);font-size:1.65rem;display:none;cursor:pointer}
+  body.bbr-in-match #bbrTauntBtn{display:none}
+  @media (pointer:coarse){body.bbr-in-match #bbrTauntBtn{display:block}}
+</style>
+<script id="bbr-taunts">
+(function () {
+  "use strict";
+  try {
+    var LINES = {
+      "Crimson Bruiser": ["💪 BRING IT!", "Too slow! 😤", "Nap time? 😴"],
+      "Mint Acrobat": ["🌀 Catch me!", "Blink and miss me! ✨", "Wheee! 🤸"],
+      "Azure Anchor": ["⚓ Anchored!", "No drifting! 🌊", "Sink or swim! 🐳"],
+      "Gold Spark": ["✨ Shiny!", "Golden hour! 🌟", "Pure gold, baby! 🏆"],
+      "Violet Vortex": ["🌀 Spin cycle!", "Getting dizzy? 😵", "Vortex power! 🔮"],
+      "Coral Comet": ["☄️ Comet coming!", "Too hot to handle! 🔥", "Starlight! ⭐"],
+      "Onyx Phantom": ["👻 Boo.", "Now you see me... 🌑", "Shadow nap 💤"],
+      "Frost Oracle": ["❄️ Chill out!", "I foresaw this 🧊", "Brain freeze! 🥶"],
+      "Ember Warden": ["🔥 Stoked!", "Warm-up's over 🌋", "Ember guard! 🛡️"],
+      "Gale Sprite": ["🍃 Whoosh!", "Wind's with me! 💨", "Breezy does it 🌬️"],
+      "Terra Colossus": ["🪨 ROCK SOLID!", "Tremble time! 🌋", "Mountain naps 🏔️"]
+    };
+    var shell = document.querySelector(".stage-shell");
+    var main = document.querySelector("#game");
+    var bubbles = [null, null];
+    [0, 1].forEach(function (i) {
+      var bEl = document.createElement("div");
+      bEl.className = "bbr-taunt-bubble";
+      bEl.id = "bbrTauntBubble" + i;
+      if (shell) shell.appendChild(bEl);
+      bubbles[i] = bEl;
+    });
+    /* screen position of a fighter via its color on a tiny canvas scan */
+    var scan = document.createElement("canvas");
+    scan.width = 96; scan.height = 54;
+    var sctx = scan.getContext("2d");
+    function hexRgb(h) { var n = parseInt(String(h || "#ffffff").slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+    function spotOf(f) {
+      if (!main || !f || !f.color) return null;
+      var c = hexRgb(typeof f.color === "string" ? f.color : f.color.hex);
+      try {
+        sctx.drawImage(main, 0, 0, 96, 54);
+        var d = sctx.getImageData(0, 0, 96, 54).data, sx = 0, sy = 0, n = 0;
+        for (var y = 0; y < 54; y++) for (var x = 0; x < 96; x++) {
+          var o = (y * 96 + x) * 4, dr = d[o] - c[0], dg = d[o + 1] - c[1], db = d[o + 2] - c[2];
+          if (dr * dr + dg * dg + db * db < 5200 && d[o + 3] > 200) { sx += x; sy += y; n++; }
+        }
+        if (n < 6 || !shell) return null;
+        var r = main.getBoundingClientRect(), sr = shell.getBoundingClientRect();
+        return { x: (r.left - sr.left) + sx / n / 96 * r.width, y: (r.top - sr.top) + sy / n / 54 * r.height };
+      } catch (e) { return null; }
+    }
+    var AC = null;
+    function chirp(kind) {
+      try {
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!AC) AC = new Ctx();
+        if (AC.state === "suspended") AC.resume();
+        var notes = kind === 1 ? [660, 880] : kind === 3 ? [440, 330] : [523, 659, 784];
+        var t = AC.currentTime;
+        notes.forEach(function (fq, i) {
+          var o = AC.createOscillator(), g = AC.createGain();
+          o.type = "triangle"; o.frequency.value = fq;
+          g.gain.setValueAtTime(0.0001, t + i * 0.09);
+          g.gain.exponentialRampToValueAtTime(0.12, t + i * 0.09 + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.09 + 0.16);
+          o.connect(g); g.connect(AC.destination);
+          o.start(t + i * 0.09); o.stop(t + i * 0.09 + 0.18);
+        });
+      } catch (e) {}
+    }
+    function fighterIdx(f) { try { return f === p2 ? 1 : 0; } catch (e) { return 0; } }
+    function startTaunt(f, kind) {
+      if (!f || f.tauntT > 0) return false;
+      var live = false, cd = 1;
+      try { live = typeof fightLive !== "undefined" && fightLive && typeof matchStarted !== "undefined" && matchStarted; cd = typeof countdown !== "undefined" ? countdown : 0; } catch (e) {}
+      if (!live || cd > 0 || !f.ground || f.attack || (typeof f.stocks === "number" && f.stocks <= 0)) return false;
+      kind = kind >= 1 && kind <= 3 ? kind : 2;
+      f.tauntT = 45;
+      f.tauntDmg = f.damage;
+      f.tauntKind = kind;
+      var idx = fighterIdx(f);
+      var fname = (f.color && f.color.name) || String(f.name || "").replace(/^P[12]\s+/, "").replace(/^CPU\s+/, "");
+      var set = LINES[fname] || ["😜 Taunt!", "😜 Taunt!", "😜 Taunt!"];
+      var bub = bubbles[idx];
+      if (bub && shell) {
+        var s = spotOf(f);
+        var sr = shell.getBoundingClientRect();
+        bub.style.left = (s ? s.x : sr.width * (idx ? .72 : .28)) + "px";
+        bub.style.top = (s ? Math.max(54, s.y - 46) : 120) + "px";
+        bub.textContent = set[kind - 1];
+        bub.classList.remove("show"); void bub.offsetWidth; bub.classList.add("show");
+      }
+      chirp(kind);
+      return true;
+    }
+    function endTaunt(f) {
+      f.tauntT = 0;
+      var bub = bubbles[fighterIdx(f)];
+      if (bub) bub.classList.remove("show");
+    }
+    /* lock-in: while taunting, inputs are neutralized; taking damage cancels */
+    if (typeof updateFighter === "function") {
+      var origUF = updateFighter;
+      updateFighter = function (f, other, input) {
+        if (f) {
+          if (typeof f.tauntT !== "number") f.tauntT = 0;
+          if (f.tauntT > 0) {
+            if (f.damage !== f.tauntDmg || (typeof f.stocks === "number" && f.stocks <= 0)) { endTaunt(f); }
+            else {
+              f.tauntT--;
+              var neutral = { x: 0, y: 0, jump: false, punch: false, melee: false, smash: false, shield: false, grab: false, dodge: false, special: false, pause: false, taunt: 0 };
+              var r = origUF.call(this, f, other, neutral);
+              if (f.tauntT <= 0) endTaunt(f);
+              return r;
+            }
+          } else if (input && input.taunt) {
+            startTaunt(f, input.taunt);
+          }
+        }
+        return origUF.apply(this, arguments);
+      };
+    }
+    /* CPU showboats after scoring a KO (classic Smash behavior) */
+    var prevStocks = [null, null];
+    setInterval(function () {
+      try {
+        var fs = [typeof p1 !== "undefined" ? p1 : null, typeof p2 !== "undefined" ? p2 : null];
+        fs.forEach(function (f, i) { if (f && typeof f.stocks === "number") { if (prevStocks[i] === null) prevStocks[i] = f.stocks; } });
+        fs.forEach(function (f, i) {
+          if (!f || typeof f.stocks !== "number") return;
+          var other = fs[1 - i];
+          if (other && typeof other.stocks === "number" && prevStocks[i] !== null && f.stocks < prevStocks[i]) {
+            if (other.cpu && Math.random() < .45) setTimeout(function () { startTaunt(other, 1 + Math.floor(Math.random() * 3)); }, 650);
+          }
+          prevStocks[i] = f.stocks;
+        });
+      } catch (e) {}
+    }, 400);
+    /* touch taunt button (coarse pointers, in match only via CSS) */
+    var tBtn = document.createElement("button");
+    tBtn.type = "button";
+    tBtn.id = "bbrTauntBtn";
+    tBtn.textContent = "😜";
+    tBtn.setAttribute("aria-label", "Taunt");
+    tBtn.addEventListener("pointerdown", function (e) {
+      e.preventDefault();
+      try { if (typeof p1 !== "undefined" && p1) startTaunt(p1, 1 + Math.floor(Math.random() * 3)); } catch (err) {}
+    });
+    document.body.appendChild(tBtn);
+    window.BBRTaunts = { version: "1.0.0", lines: Object.keys(LINES).length * 3, startTaunt: startTaunt };
+  } catch (e) {
+    window.BBRTaunts = { version: "1.0.0", error: String(e && e.message || e) };
+  }
+})();
+</script>
+<!-- BBR-TAUNTS:END -->
 </body>
 </html>
