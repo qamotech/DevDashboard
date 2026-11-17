@@ -10038,5 +10038,266 @@ let t;const wake=()=>{k.classList.remove('kh-dim');clearTimeout(t);t=setTimeout(
 })();
 </script>
 <!-- BBR-TAUNTS:END -->
+
+<!-- BBR-FAMILY:START -->
+<style id="bbr-family-css">
+  .bbr-fam-panel{position:fixed;right:12px;top:110px;z-index:1250;display:none;width:262px;padding:10px 12px;border-radius:14px;background:rgba(6,20,22,.92);border:1px solid #4dd8c3;box-shadow:0 0 18px rgba(77,216,195,.3);color:#f4fffc;font:700 11px Nunito,sans-serif}
+  .bbr-fam-panel.show{display:block}
+  .bbr-fam-panel h4{margin:0 0 6px;font-size:12px;letter-spacing:.06em;color:#4dd8c3}
+  .bbr-fam-panel .round{margin-top:6px;color:#7edcff;letter-spacing:.06em;font-size:10px}
+  .bbr-fam-panel .fmatch{padding:3px 6px;border-radius:8px;background:rgba(255,255,255,.06);margin-top:3px;line-height:1.5}
+  .bbr-fam-panel .fmatch.live{outline:2px solid #4dd8c3;background:rgba(77,216,195,.13)}
+  .bbr-fam-panel .win{color:#7dffb0}
+  .bbr-fam-panel .score{color:#ffd84d;font-weight:900}
+  .bbr-fam-panel .btns{display:flex;gap:6px;margin-top:8px}
+  .bbr-fam-panel .next{flex:1;padding:8px;border:0;border-radius:9px;background:#4dd8c3;color:#04231e;font:900 12px Nunito,sans-serif;cursor:pointer;display:none}
+  .bbr-fam-panel .next.show{display:block}
+  .bbr-fam-panel .end{padding:8px 10px;border:1px solid rgba(255,255,255,.35);border-radius:9px;background:transparent;color:#ffb0b0;font:900 12px Nunito,sans-serif;cursor:pointer}
+  .bbr-fam-splash{position:fixed;left:50%;top:34%;transform:translate(-50%,-50%);z-index:2147482500;display:none;padding:24px 38px;border-radius:20px;background:rgba(4,26,22,.94);border:2px solid #4dd8c3;box-shadow:0 0 44px rgba(77,216,195,.5);color:#fff;text-align:center;font:900 27px Nunito,sans-serif;pointer-events:none}
+  .bbr-fam-splash.show{display:block}
+  .bbr-fam-splash small{display:block;margin-top:6px;font:700 14px Nunito,sans-serif;color:#4dd8c3;letter-spacing:.05em}
+  #bbrFamSetup{position:fixed;inset:0;z-index:2147483000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;background:rgba(4,8,18,.78);padding:18px 10px}
+  #bbrFamSetup.show{display:flex}
+  .bbr-fam-card{width:min(560px,96vw);background:#0d1526;border:2px solid #4dd8c3;border-radius:18px;padding:16px;color:#eef6ff;font:700 13px Nunito,sans-serif}
+  .bbr-fam-card h3{margin:0 0 4px;font-size:19px;color:#4dd8c3}
+  .bbr-fam-card .sub{color:#9fc6ff;font-size:12px;margin-bottom:10px}
+  .bbr-fam-sizes{display:flex;gap:8px;margin-bottom:10px}
+  .bbr-fam-sizes button{flex:1;padding:9px;border-radius:10px;border:2px solid rgba(255,255,255,.25);background:#16213c;color:#fff;font:900 14px Nunito,sans-serif;cursor:pointer}
+  .bbr-fam-sizes button.on{border-color:#4dd8c3;background:rgba(77,216,195,.18);color:#4dd8c3}
+  .bbr-fam-row{display:flex;gap:6px;align-items:center;margin-top:6px}
+  .bbr-fam-row .seed{width:20px;text-align:center;color:#7edcff;font-weight:900}
+  .bbr-fam-row input[type=text]{flex:1;min-width:0;padding:8px;border-radius:9px;border:1px solid rgba(255,255,255,.3);background:#0a1120;color:#fff;font:700 13px Nunito,sans-serif}
+  .bbr-fam-row select{padding:8px 4px;border-radius:9px;border:1px solid rgba(255,255,255,.3);background:#0a1120;color:#fff;font:700 12px Nunito,sans-serif;max-width:138px}
+  .bbr-fam-actions{display:flex;gap:8px;margin-top:14px}
+  .bbr-fam-actions .go{flex:1;padding:12px;border:0;border-radius:11px;background:#4dd8c3;color:#04231e;font:900 15px Nunito,sans-serif;cursor:pointer}
+  .bbr-fam-actions .cancel{padding:12px 14px;border-radius:11px;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;font:900 13px Nunito,sans-serif;cursor:pointer}
+  #bbrFamOpen{display:block;width:100%;margin-top:8px;padding:11px;border:0;border-radius:11px;background:linear-gradient(90deg,#123f38,#0d2b45);border:2px solid #4dd8c3;color:#aef5e6;font:900 14px Nunito,sans-serif;cursor:pointer}
+  @media (max-width:900px){.bbr-fam-panel{width:212px;top:150px;font-size:10px}}
+</style>
+<script id="bbr-family">
+(function () {
+  "use strict";
+  try {
+    var A = window.BBRAscension;
+    if (!A) return;
+    var q = function (s) { return document.querySelector(s); };
+    var DEFAULT_NAMES = ["Nathan", "Jishawna", "Ne'ala", "J'zaura", "Jaiden", "Naishawn", "Nicholas", "Lak"];
+    var ROUND_NAMES = { 4: ["SEMIFINAL", "FINAL"], 8: ["QUARTERFINAL", "SEMIFINAL", "FINAL"] };
+    var LS_KEY = "bbr-family-bracket";
+    var S = { active: false, completed: false, size: 4, entrants: [], rounds: [], current: null, champion: -1, sides: null, handledResult: false };
+    function power(e) { var c = colors[e.fighter]; return c ? c.punch * c.speed * (c.weight || 1) : 1; }
+    function roundName(r) { return (ROUND_NAMES[S.size] || [])[r] || ("ROUND " + (r + 1)); }
+    function save() { try { if (S.active) localStorage.setItem(LS_KEY, JSON.stringify({ size: S.size, entrants: S.entrants, rounds: S.rounds, current: S.current, completed: S.completed, champion: S.champion })); else localStorage.removeItem(LS_KEY); } catch (e) {} }
+    function load() { try { var d = JSON.parse(localStorage.getItem(LS_KEY) || "null"); if (d && d.entrants && d.rounds) { S.active = true; S.size = d.size; S.entrants = d.entrants; S.rounds = d.rounds; S.current = d.current; S.completed = !!d.completed; S.champion = d.champion; } } catch (e) {} }
+
+    /* ---------- setup overlay ---------- */
+    var setup = document.createElement("div");
+    setup.id = "bbrFamSetup";
+    var size = 4;
+    function fighterOptions(sel) {
+      var h = "";
+      for (var i = 0; i < colors.length; i++) h += '<option value="' + i + '"' + (i === sel ? " selected" : "") + ">" + colors[i].name + "</option>";
+      return h + '<option value="-1"' + (sel === -1 ? " selected" : "") + ">🎲 Random</option>";
+    }
+    function rowsHtml() {
+      var h = "";
+      for (var i = 0; i < size; i++) {
+        h += '<div class="bbr-fam-row"><span class="seed">' + (i + 1) + '</span>' +
+          '<input type="text" id="bbrFamName' + i + '" value="' + DEFAULT_NAMES[i] + '" maxlength="16" aria-label="Player ' + (i + 1) + ' name">' +
+          '<select id="bbrFamFight' + i + '" aria-label="Fighter">' + fighterOptions(i % colors.length) + "</select>" +
+          '<select id="bbrFamCtrl' + i + '" aria-label="Control"><option value="human">🎮 Human</option><option value="cpu">🤖 CPU</option></select></div>';
+      }
+      return h;
+    }
+    function renderSetup() {
+      setup.innerHTML = '<div class="bbr-fam-card"><h3>👨‍👩‍👧‍👦 Family Bracket Night</h3>' +
+        '<div class="sub">Single elimination · every pairing is <b>best of 3</b> (first to 2 game wins takes the set). CPU-vs-CPU sets sim themselves.</div>' +
+        '<div class="bbr-fam-sizes"><button type="button" id="bbrFamSize4" class="' + (size === 4 ? "on" : "") + '">4 Players</button><button type="button" id="bbrFamSize8" class="' + (size === 8 ? "on" : "") + '">8 Players</button></div>' +
+        '<div id="bbrFamRows">' + rowsHtml() + "</div>" +
+        '<div class="bbr-fam-actions"><button type="button" class="go" id="bbrFamStart">🏆 Start Bracket</button><button type="button" class="cancel" id="bbrFamCancel">Cancel</button></div></div>';
+      q("#bbrFamSize4").addEventListener("click", function () { size = 4; renderSetup(); });
+      q("#bbrFamSize8").addEventListener("click", function () { size = 8; renderSetup(); });
+      q("#bbrFamCancel").addEventListener("click", function () { setup.classList.remove("show"); });
+      q("#bbrFamStart").addEventListener("click", startBracket);
+    }
+    function startBracket() {
+      var entrants = [];
+      for (var i = 0; i < size; i++) {
+        var nm = (q("#bbrFamName" + i).value || "").trim() || ("Player " + (i + 1));
+        var fi = parseInt(q("#bbrFamFight" + i).value, 10);
+        if (fi < 0) fi = Math.floor(Math.random() * colors.length);
+        entrants.push({ name: nm, fighter: fi, human: q("#bbrFamCtrl" + i).value !== "cpu" });
+      }
+      S.entrants = entrants; S.size = size; S.active = true; S.completed = false; S.champion = -1; S.sides = null; S.handledResult = false;
+      S.rounds = [];
+      var first = [];
+      for (var j = 0; j < size; j += 2) first.push({ a: j, b: j + 1, winsA: 0, winsB: 0, winner: null });
+      S.rounds.push(first);
+      var w = size / 2;
+      while (w > 1) { var ms = []; for (var k = 0; k < w; k += 2) ms.push({ a: null, b: null, winner: null, winsA: 0, winsB: 0 }); S.rounds.push(ms); w /= 2; }
+      setup.classList.remove("show");
+      settleCpuSets();
+      S.current = findCurrent();
+      save(); renderPanel();
+      if (S.current) announce("🏆 FAMILY BRACKET SET · First up: " + S.entrants[S.rounds[S.current.round][S.current.match].a].name + " vs " + S.entrants[S.rounds[S.current.round][S.current.match].b].name + " — tap Next Game!", 3000);
+    }
+    function propagate(r, m) {
+      var win = S.rounds[r][m].winner;
+      if (win === null || r + 1 >= S.rounds.length) return;
+      var nm = S.rounds[r + 1][Math.floor(m / 2)];
+      if (m % 2 === 0) nm.a = win; else nm.b = win;
+    }
+    function simSet(m) {
+      var ea = S.entrants[m.a], eb = S.entrants[m.b];
+      while (m.winsA < 2 && m.winsB < 2) {
+        if (power(ea) + Math.random() * .22 >= power(eb) + Math.random() * .22) m.winsA++; else m.winsB++;
+      }
+      m.winner = m.winsA > m.winsB ? m.a : m.b;
+    }
+    function settleCpuSets() {
+      var changed = true, guard = 0;
+      while (changed && guard++ < 12) {
+        changed = false;
+        S.rounds.forEach(function (ms, r) {
+          ms.forEach(function (m, i) {
+            if (m.winner === null && m.a !== null && m.b !== null && !S.entrants[m.a].human && !S.entrants[m.b].human) {
+              simSet(m); propagate(r, i); changed = true;
+            }
+          });
+        });
+      }
+    }
+    function findCurrent() {
+      for (var r = 0; r < S.rounds.length; r++) for (var m = 0; m < S.rounds[r].length; m++) {
+        var mt = S.rounds[r][m];
+        if (mt.winner === null && mt.a !== null && mt.b !== null) return { round: r, match: m };
+      }
+      return null;
+    }
+    function announce(txt, ms) { try { A.announce(txt, ms || 2400); } catch (e) {} }
+
+    /* ---------- panel + splash ---------- */
+    var panel = document.createElement("div");
+    panel.id = "bbrFamPanel"; panel.className = "bbr-fam-panel"; panel.setAttribute("aria-live", "polite");
+    panel.innerHTML = '<h4>👨‍👩‍👧‍👦 FAMILY BRACKET · BEST OF 3</h4><div id="bbrFamBody"></div><div class="btns"><button class="next" id="bbrFamNext" type="button">▶ Next Game</button><button class="end" id="bbrFamEnd" type="button">✖ End</button></div>';
+    document.body.appendChild(panel);
+    var splash = document.createElement("div");
+    splash.id = "bbrFamSplash"; splash.className = "bbr-fam-splash";
+    document.body.appendChild(splash);
+    function showSplash(title, sub, ms) {
+      splash.innerHTML = title + "<small>" + sub + "</small>";
+      splash.classList.add("show");
+      clearTimeout(showSplash.timer);
+      showSplash.timer = setTimeout(function () { splash.classList.remove("show"); }, ms || 4200);
+    }
+    function matchInProgress() {
+      try { return typeof matchStarted !== "undefined" && matchStarted && !(A.match && A.match.resultShown); } catch (e) { return false; }
+    }
+    function renderPanel() {
+      if (!S.active) { panel.classList.remove("show"); return; }
+      panel.classList.add("show");
+      var html = "";
+      S.rounds.forEach(function (ms, r) {
+        html += '<div class="round">' + roundName(r) + "</div>";
+        ms.forEach(function (m, i) {
+          var na = m.a === null ? "TBD" : S.entrants[m.a].name, nb = m.b === null ? "TBD" : S.entrants[m.b].name;
+          var live = S.current && S.current.round === r && S.current.match === i && m.winner === null && !S.completed;
+          var wa = m.winner !== null && m.winner === m.a, wb = m.winner !== null && m.winner === m.b;
+          var score = m.a === null ? "" : ' <span class="score">' + m.winsA + "–" + m.winsB + "</span>";
+          html += '<div class="fmatch' + (live ? " live" : "") + '"><span class="' + (wa ? "win" : "") + '">' + na + '</span> vs <span class="' + (wb ? "win" : "") + '">' + nb + "</span>" + score + (m.winner !== null ? " ✓" : live ? " · UP NOW" : "") + "</div>";
+        });
+      });
+      if (S.completed && S.champion >= 0) html += '<div class="round">🏆 CHAMPION: ' + S.entrants[S.champion].name + "</div>";
+      q("#bbrFamBody").innerHTML = html;
+      var cur = S.current ? S.rounds[S.current.round][S.current.match] : null;
+      var gameNum = cur ? cur.winsA + cur.winsB + 1 : 1;
+      var nx = q("#bbrFamNext");
+      nx.textContent = cur ? "▶ Next Game · " + S.entrants[cur.a].name + " vs " + S.entrants[cur.b].name + " (Game " + gameNum + ")" : "▶ Next Game";
+      nx.classList.toggle("show", S.active && !S.completed && !!cur && !matchInProgress());
+    }
+    q("#bbrFamNext").addEventListener("click", function () { if (S.active && !S.completed && S.current) startMatch(); });
+    q("#bbrFamEnd").addEventListener("click", function () {
+      S.active = false; S.completed = false; S.current = null; S.sides = null;
+      save(); renderPanel(); splash.classList.remove("show");
+      announce("Family bracket ended — free play!", 1800);
+    });
+
+    /* ---------- entry button on the select screen ---------- */
+    var startBtn = q("#startGame");
+    if (startBtn && startBtn.parentElement) {
+      var open = document.createElement("button");
+      open.type = "button"; open.id = "bbrFamOpen"; open.textContent = "👨‍👩‍👧‍👦 Family Bracket Night";
+      open.addEventListener("click", function () { renderSetup(); setup.classList.add("show"); });
+      startBtn.parentElement.appendChild(open);
+    }
+    document.body.appendChild(setup);
+
+    /* ---------- match wiring ---------- */
+    function setupSides() {
+      if (!S.current) return false;
+      var m = S.rounds[S.current.round][S.current.match];
+      if (m.a === null || m.b === null || m.winner !== null) return false;
+      var ea = S.entrants[m.a], eb = S.entrants[m.b];
+      if (ea.human && eb.human) { S.sides = { p1: m.a, p2: m.b }; gameMode = "two"; }
+      else if (ea.human) { S.sides = { p1: m.a, p2: m.b }; gameMode = "cpu"; }
+      else if (eb.human) { S.sides = { p1: m.b, p2: m.a }; gameMode = "cpu"; }
+      else return false;
+      p1Choice = S.entrants[S.sides.p1].fighter;
+      p2Choice = S.entrants[S.sides.p2].fighter;
+      return true;
+    }
+    var baseStart = startMatch;
+    startMatch = function () {
+      if (S.active && !S.completed) {
+        try { A.config.matchType = "cpu"; } catch (e) {}
+        if (setupSides()) {
+          var m = S.rounds[S.current.round][S.current.match];
+          announce("🏆 " + roundName(S.current.round) + " · GAME " + (m.winsA + m.winsB + 1) + " · " + S.entrants[S.sides.p1].name + " vs " + S.entrants[S.sides.p2].name + " (set " + m.winsA + "–" + m.winsB + ")", 2200);
+        }
+      }
+      S.handledResult = false;
+      return baseStart.apply(this, arguments);
+    };
+    var baseHud = updateHud;
+    updateHud = function () {
+      var r = baseHud.apply(this, arguments);
+      if (S.active && !S.completed && S.current && A.match.resultShown && !S.handledResult) {
+        S.handledResult = true;
+        var m = S.rounds[S.current.round][S.current.match];
+        var mw = "";
+        try { mw = matchWinner; } catch (e) {}
+        if (S.sides && (mw === "PLAYER 1" || mw === "PLAYER 2" || mw === "CPU")) {
+          var winnerEntrant = mw === "PLAYER 1" ? S.sides.p1 : S.sides.p2;
+          if (winnerEntrant === m.a) m.winsA++; else if (winnerEntrant === m.b) m.winsB++;
+          if (m.winsA >= 2 || m.winsB >= 2) {
+            m.winner = m.winsA > m.winsB ? m.a : m.b;
+            propagate(S.current.round, S.current.match);
+            announce("SET! " + S.entrants[m.winner].name + " takes it " + Math.max(m.winsA, m.winsB) + "–" + Math.min(m.winsA, m.winsB), 2600);
+            settleCpuSets();
+            S.current = findCurrent();
+            if (!S.current) {
+              S.completed = true; S.champion = m.winner;
+              showSplash("🏆 " + S.entrants[S.champion].name.toUpperCase() + " WINS FAMILY BRACKET NIGHT!", S.entrants[S.champion].name + " takes the final " + Math.max(m.winsA, m.winsB) + "–" + Math.min(m.winsA, m.winsB) + " · 👑 Family Champion!", 6000);
+              announce("🏆 FAMILY CHAMPION · " + S.entrants[S.champion].name.toUpperCase(), 3000);
+            }
+          } else {
+            announce("Game to " + S.entrants[winnerEntrant].name + "! Set: " + S.entrants[m.a].name + " " + m.winsA + " – " + m.winsB + " " + S.entrants[m.b].name + " · Game " + (m.winsA + m.winsB + 1) + " up next", 2800);
+          }
+          save(); renderPanel();
+        }
+      }
+      if (S.active) renderPanel();
+      return r;
+    };
+    setInterval(renderPanel, 900);
+    load();
+    renderPanel();
+    window.BBRFamily = { version: "1.0.0", state: S, startBracket: startBracket, renderPanel: renderPanel };
+  } catch (e) {
+    window.BBRFamily = { version: "1.0.0", error: String(e && e.message || e) };
+  }
+})();
+</script>
+<!-- BBR-FAMILY:END -->
 </body>
 </html>
