@@ -192,6 +192,31 @@
     });
     $('#lmi-kit-review')?.addEventListener('click', () => { $('#booking')?.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth' }); });
 
+    // Feature 7 — Loc Journey Tracker.
+    const journeyInput = $('#lmi-journey-start'), journeyOutput = $('#lmi-journey-output'), journeyFill = $('#lmi-journey-fill');
+    const renderJourney = announce => {
+      if (!journeyInput || !journeyOutput) return;
+      const start = new Date(`${journeyInput.value}T12:00:00`), now = new Date();
+      if (Number.isNaN(start.getTime())) { journeyOutput.textContent = 'Choose the day your locs were installed to see your stage and next milestone.'; return; }
+      if (start > now) { journeyOutput.textContent = 'That date is in the future — choose the day your locs were actually installed.'; if (journeyFill) journeyFill.style.width = '0%'; return; }
+      let months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+      const anchorDate = new Date(start); anchorDate.setMonth(anchorDate.getMonth() + months);
+      if (anchorDate > now) { months -= 1; anchorDate.setMonth(anchorDate.getMonth() - 1); }
+      const days = Math.round((now - anchorDate) / 86400000);
+      const stage = months >= 18 ? 'Mature Traditional Locs' : months >= 6 ? 'Teen / Budding Stage' : 'Starter / Baby Locs';
+      let nextLabel, nextDate, spanStart, spanEnd;
+      if (months < 6) { nextLabel = 'Teen / Budding Stage'; nextDate = new Date(start); nextDate.setMonth(nextDate.getMonth() + 6); spanStart = start; spanEnd = nextDate; }
+      else if (months < 18) { nextLabel = 'Mature Traditional Locs'; nextDate = new Date(start); nextDate.setMonth(nextDate.getMonth() + 18); spanStart = new Date(start); spanStart.setMonth(spanStart.getMonth() + 6); spanEnd = nextDate; }
+      else { const years = Math.floor(months / 12); nextLabel = `${years + 1}-year loc-versary`; nextDate = new Date(start); nextDate.setFullYear(nextDate.getFullYear() + years + 1); spanStart = new Date(start); spanStart.setFullYear(spanStart.getFullYear() + years); spanEnd = nextDate; }
+      const pct = Math.min(100, Math.max(0, Math.round((now - spanStart) / (spanEnd - spanStart) * 100)));
+      if (journeyFill) journeyFill.style.width = `${pct}%`;
+      const monthsText = `${months} month${months === 1 ? '' : 's'}` + (days ? ` ${days} day${days === 1 ? '' : 's'}` : '');
+      journeyOutput.textContent = `You're ${monthsText} into your journey — ${stage}. Next milestone: ${nextLabel} on ${nextDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}.`;
+      if (announce) notify('Your loc journey stage is ready.');
+    };
+    $('#lmi-journey-run')?.addEventListener('click', () => { if (journeyInput) store.set('loc-me-in-journey-start', journeyInput.value); renderJourney(true); });
+    const savedJourney = store.get('loc-me-in-journey-start', ''); if (savedJourney && journeyInput) { journeyInput.value = savedJourney; renderJourney(false); }
+
     // Keep the appointment kit current when the existing planner changes.
     $('#booking')?.addEventListener('click', () => { const out = $('#lmi-kit-output'); if (out && out.textContent) out.textContent = kitText(); });
 
