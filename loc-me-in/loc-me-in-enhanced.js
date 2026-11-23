@@ -167,15 +167,6 @@
       notify('Maintenance window calculated.');
     });
 
-    // Feature 4 — Accent Color Studio.
-    $$('.lmi-swatch').forEach(swatch => swatch.addEventListener('click', () => {
-      $$('.lmi-swatch').forEach(item => item.setAttribute('aria-pressed', item === swatch));
-      $('#lmi-strands').style.setProperty('--lmi-hair-color', swatch.dataset.color); $('#lmi-color-output').textContent = `${swatch.dataset.name} selected. Pair it with ${swatch.dataset.tip}.`;
-      store.set('loc-me-in-accent-color', swatch.dataset.name); notify(`${swatch.dataset.name} added to your visual direction.`);
-    }));
-    const savedColor = store.get('loc-me-in-accent-color', 'Honey Gold'), savedSwatch = $$('.lmi-swatch').find(item => item.dataset.name === savedColor) || $('.lmi-swatch');
-    if (savedSwatch) { $$('.lmi-swatch').forEach(item => item.setAttribute('aria-pressed', item === savedSwatch)); $('#lmi-strands').style.setProperty('--lmi-hair-color', savedSwatch.dataset.color); $('#lmi-color-output').textContent = `${savedSwatch.dataset.name} selected. Pair it with ${savedSwatch.dataset.tip}.`; }
-
     // Feature 5 — Persistent Lookbook Favorites.
     function updateFavoriteFeature() { const count = $('#lmi-favorites-count'); if (count) count.textContent = `${favorites.size} saved look${favorites.size === 1 ? '' : 's'}`; }
     $('#lmi-open-favorites')?.addEventListener('click', () => { activeFilter = 'favorites'; const favoritesChip = $('[data-gallery-filter="favorites"]'); $$('.lmi-chip').forEach(item => item.setAttribute('aria-pressed', item === favoritesChip)); window.__lmiApplyGallery?.(); gallery?.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'start' }); });
