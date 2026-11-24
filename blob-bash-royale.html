@@ -820,6 +820,28 @@
 #kh-kit a,#kh-kit button{display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:6px 12px;border-radius:999px;border:2px solid rgba(255,255,255,.7);background:rgba(20,16,50,.72);color:#fff;text-decoration:none;cursor:pointer;backdrop-filter:blur(6px);font:inherit;box-shadow:0 4px 14px rgba(0,0,0,.3)}
 #kh-kit a:focus-visible,#kh-kit button:focus-visible{outline:3px solid #ffe066;outline-offset:2px}
 #kh-kit.kh-dim{opacity:.35}#kh-kit:hover{opacity:1}</style>
+<style id="bbr-fix-101">
+/* Blob Bash v1.0.1 containment fix: menus/panels stay out of live fights.
+   body.bbr-in-fight is toggled every frame from the Ascension HUD updater
+   (matchStarted && fightLive). Panels return between rounds and on menus.
+   Lives in <head> so the portrait stage size is set before the game sizes
+   its canvas at init; selectors carry an extra element of specificity so
+   they win over later per-cycle style blocks. */
+body.bbr-in-fight .bbr-boss-panel,body.bbr-in-fight .bbr-tourney-panel,body.bbr-in-fight .bbr-command-button{display:none!important}
+@media (max-width:920px){body.bbr-in-fight .side{display:none!important}}
+@media (max-width:640px){
+body .stage-shell{aspect-ratio:1600/2560;max-height:94vh}
+body .overlay{grid-template-columns:1fr 1fr;inset:.5rem .5rem auto .5rem}
+body .fighter-card{padding:.45rem .55rem;gap:.22rem}
+body .fighter-card p{font-size:.78rem}
+body .bbr-live-hud{inset:6.7rem .45rem auto}
+body .fighter-card strong{font-size:.9rem;white-space:nowrap;overflow:hidden}
+body .touch{inset:auto .6rem .6rem .6rem;gap:.6rem}
+body .pad{grid-template-columns:repeat(3,2.5rem)}
+body .buttons{grid-template-columns:repeat(3,2.75rem)}
+body .touch button{min-height:2.45rem;font-size:.78rem}
+}
+</style>
 </head>
 <body>
 <div aria-hidden="true" id="crt-frame"></div>
@@ -3530,7 +3552,7 @@ function renderSelect() {
 
   function formatTime(seconds){const value=Math.max(0,Math.ceil(seconds));return`${Math.floor(value/60)}:${String(value%60).padStart(2,"0")}`}
   function showResults(){if(A.match.resultShown||A.training)return;A.match.resultShown=true;A.career.matches++;if(matchWinner==="PLAYER 1")A.career.wins++;else A.career.losses++;A.saveCareer();q("#bbrWinner").textContent=`${matchWinner} WINS`;q("#bbrResultBrief").textContent=`${boards[boardIndex].name} · ${colors[p1Choice].name} vs ${colors[p2Choice].name}`;q("#bbrResultTime").textContent=formatTime(matchFrames/60);q("#bbrResultHits").textContent=String(A.match.hits1+A.match.hits2);q("#bbrResultDamage").textContent=String(Math.round(Math.max(A.match.damage1||0,A.match.damage2||0)));q("#bbrResultParries").textContent=String(A.match.parries);q("#bbrResultItems").textContent=String(A.match.items);q("#bbrResultRecord").textContent=`${A.career.wins}-${A.career.losses}`;q("#bbrResults").classList.add("show");q("#bbrResults").setAttribute("aria-hidden","false");A.announce(`${matchWinner} CLAIMS THE CROWN`,2200);if(matchWinner==="PLAYER 1")A.unlock("first-win","Crowned Champion","Won an Ascension match.")}
-  const baseHud=updateHud;updateHud=function(){baseHud();const training=A.training,timer=Number(A.config.timer);let timeText="∞";if(matchStarted&&fightLive&&!training&&timer>0&&countdown<=0){const elapsed=matchFrames/60,remaining=timer-elapsed;if(remaining<=0&&!A.match.sudden){A.match.sudden=true;A.match.suddenAt=matchFrames;p1.damage=Math.max(250,p1.damage);p2.damage=Math.max(250,p2.damage);p1.stocks=Math.max(1,p1.stocks);p2.stocks=Math.max(1,p2.stocks);A.announce("SUDDEN DEATH · NEXT LAUNCH WINS",2500);A.unlock("overtime","Beyond the Bell","Reached sudden-death overtime.")}if(A.match.sudden){timeText="SD";if(matchFrames-(A.match.suddenAt||matchFrames)>1800){matchWinner=p1.damage<=p2.damage?"PLAYER 1":p2.cpu?"CPU":"PLAYER 2";fightLive=false}}else timeText=formatTime(remaining)}q("#bbrTimer").textContent=training?"LAB":timeText;q("#bbrModeLabel").textContent=training?"Training":gameMode==="two"?"2 Players":`${A.config.cpuLevel} CPU`;q("#bbrArenaLabel").textContent=boards[boardIndex].name;q("#bbrP1Combo").textContent=p1.combo>1?`${p1.combo} HIT STREAK`:p1.rage?"RAGE MODE":p1.specialCooldown<=0?"Pulse Ready":"Engaged";q("#bbrP2Combo").textContent=p2.combo>1?`${p2.combo} HIT STREAK`:p2.rage?"RAGE MODE":p2.specialCooldown<=0?"Pulse Ready":"Engaged";q("#bbrP1Ultimate").style.setProperty("--w",`${Math.min(100,(p1.damageDealt%150)/1.5)}%`);q("#bbrP2Ultimate").style.setProperty("--w",`${Math.min(100,(p2.damageDealt%150)/1.5)}%`);q("#bbrPause").classList.toggle("show",paused&&matchStarted);q("#bbrPause").setAttribute("aria-hidden",String(!(paused&&matchStarted)));q("#modeTraining").classList.toggle("active",training);if(matchStarted&&!fightLive)showResults();if(countdown>0){const cue=countdown>120?3:countdown>60?2:1;if(cue!==A.match.announcedCountdown){A.match.announcedCountdown=cue;sound("ready",180+cue*90,.08)}}};
+  const baseHud=updateHud;updateHud=function(){baseHud();document.body.classList.toggle("bbr-in-fight",!!(matchStarted&&fightLive));const training=A.training,timer=Number(A.config.timer);let timeText="∞";if(matchStarted&&fightLive&&!training&&timer>0&&countdown<=0){const elapsed=matchFrames/60,remaining=timer-elapsed;if(remaining<=0&&!A.match.sudden){A.match.sudden=true;A.match.suddenAt=matchFrames;p1.damage=Math.max(250,p1.damage);p2.damage=Math.max(250,p2.damage);p1.stocks=Math.max(1,p1.stocks);p2.stocks=Math.max(1,p2.stocks);A.announce("SUDDEN DEATH · NEXT LAUNCH WINS",2500);A.unlock("overtime","Beyond the Bell","Reached sudden-death overtime.")}if(A.match.sudden){timeText="SD";if(matchFrames-(A.match.suddenAt||matchFrames)>1800){matchWinner=p1.damage<=p2.damage?"PLAYER 1":p2.cpu?"CPU":"PLAYER 2";fightLive=false}}else timeText=formatTime(remaining)}q("#bbrTimer").textContent=training?"LAB":timeText;q("#bbrModeLabel").textContent=training?"Training":gameMode==="two"?"2 Players":`${A.config.cpuLevel} CPU`;q("#bbrArenaLabel").textContent=boards[boardIndex].name;q("#bbrP1Combo").textContent=p1.combo>1?`${p1.combo} HIT STREAK`:p1.rage?"RAGE MODE":p1.specialCooldown<=0?"Pulse Ready":"Engaged";q("#bbrP2Combo").textContent=p2.combo>1?`${p2.combo} HIT STREAK`:p2.rage?"RAGE MODE":p2.specialCooldown<=0?"Pulse Ready":"Engaged";q("#bbrP1Ultimate").style.setProperty("--w",`${Math.min(100,(p1.damageDealt%150)/1.5)}%`);q("#bbrP2Ultimate").style.setProperty("--w",`${Math.min(100,(p2.damageDealt%150)/1.5)}%`);q("#bbrPause").classList.toggle("show",paused&&matchStarted);q("#bbrPause").setAttribute("aria-hidden",String(!(paused&&matchStarted)));q("#modeTraining").classList.toggle("active",training);if(matchStarted&&!fightLive)showResults();if(countdown>0){const cue=countdown>120?3:countdown>60?2:1;if(cue!==A.match.announcedCountdown){A.match.announcedCountdown=cue;sound("ready",180+cue*90,.08)}}};
 
   const baseResetStats=A.resetMatchStats;A.resetMatchStats=function(){baseResetStats();A.match.damage1=0;A.match.damage2=0;A.match.sudden=false;A.match.suddenAt=0};
   q("#bbrResume").addEventListener("click",()=>sound("ready",330,.05));
